@@ -87,8 +87,13 @@ ZKML (EuroSys 2024) proved a small latent Stable Diffusion model in about 3,600 
 
 ### 2.5 Deployed decentralized image-generation validation (grey literature, primary sources still to be checked)
 
-- **Bittensor SN23, NicheImage.** The validator reproduces the image and scores the match with a 0/1 similarity check, alongside quality and prompt-adherence scores.
-- **Bittensor SN30, WOMBO.** According to its README, validators "check a **reduced set of diffusion steps**" through a diffusion-similarity API, to avoid doubling their workload. **This is the closest practice to step-level checking.** It has no published evaluation of false positives or negatives, no attack model and no tolerance calibration. Read its validator code before claiming novelty.
+- **Bittensor SN23, NicheImage.** **Code audited; see doc 06.** The validator re-runs the whole image, compares CLIP ViT-B/16 embeddings and gives full reward above a cosine of 0.9. An alternative path accepts a pHash Hamming distance of 6 or less.
+- **Bittensor SN30, WOMBO.** **Code audited; see doc 06.** It implements per-step spot checks:
+  - the miner commits the sha256 of all per-step latents;
+  - the validator checks with p = 0.35, at k = 3 random steps, re-running one UNet step each;
+  - it compares by cosine similarity on the flattened latent and rejects if the minimum is below 0.70.
+
+  This is prior art for the mechanism, and it is uncalibrated and has never been evaluated against attacks.
 - **Common Risk Factors in Decentralized AI Subnets** (arXiv:2603.29751). A survey of these subnets.
 - **Nosana, io.net, Render, Akash.** No primary documentation of their verification method was found.
 
@@ -128,7 +133,7 @@ Du et al. (IEEE TMC 2023), Yang et al. (IEEE COMST 2019), Fan et al. (IEEE IoT-J
 | Output-only checks cannot detect cheaper LLMs | **Already shown** by Cai et al. and MET |
 | Honest cross-GPU variation of Stable Diffusion | **Partly done**: Kim et al., with perceptual hashes only, no factors, no adversary |
 | **Cost-saving attacks on diffusion** (fewer steps, quantized or distilled UNet, sampler swap, early exit) **compared with honest cross-GPU variation** | **Open.** No study found. TAO explicitly excludes these attacks |
-| **Sampler-level (per-step) verification of diffusion without operator-level access** | **Open in the academic literature.** TAO lists it as future work; WOMBO SN30 does something similar in practice, with no evaluation |
+| Sampler-level (per-step) verification of diffusion without operator-level access | **Mechanism already deployed** by WOMBO SN30 in 2024, with an uncalibrated cosine-0.70 rule. It is absent from the academic literature, where TAO lists it as future work. Open: calibrated evaluation, attacks on the deployed rule, and a hardened two-tier design |
 | **Attacker's best skip fraction and cost-optimal (p, k) under step spot-checks with escrow** | **Open.** Builds on the inspection-game literature |
 | Token escrow on Solana for generative jobs | Engineering only, not novel. Keep it as the substrate |
 

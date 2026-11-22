@@ -11,7 +11,7 @@ The paper is currently a proposal with no results. The current scope and plan ar
 | Path | Contents |
 |---|---|
 | `drafts/` | Original source drafts (PDF and DOCX). Read-only reference |
-| `docs/` | [01 novelty & feasibility](docs/01-novelty-feasibility.md), [02 draft comparison](docs/02-draft-comparison.md), [03 publication plan](docs/03-publication-plan.md), [04 literature review](docs/04-literature-review.md), **[05 revised design (current)](docs/05-revised-design.md)** |
+| `docs/` | [01 novelty & feasibility](docs/01-novelty-feasibility.md), [02 draft comparison](docs/02-draft-comparison.md), [03 publication plan](docs/03-publication-plan.md), [04 literature review](docs/04-literature-review.md), **[05 revised design (current)](docs/05-revised-design.md)**, [06 code audit](docs/06-code-audit.md) |
 | `paper/` | LaTeX manuscript (journal template, `refs.bib`, `figures/`) |
 | `code/program/` | Solana Anchor escrow program (OCC SPL token) |
 | `code/orchestrator/` | Scheduling, state machine, adjudication, reputation |

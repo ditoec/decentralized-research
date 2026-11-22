@@ -15,10 +15,15 @@ The draft spread itself across two backends (ComfyUI and Ollama), black-box chec
 
 Alternative: *What Must a Decentralized GPU Market Verify? Output- versus Trajectory-Level Evidence for Diffusion Workloads*.
 
-**Delta statement (for abstract and cover letter):**
-- *Output-only* reproduction checks (Kim et al.; Bittensor validators) can't tell honest cross-GPU variation from cheaper computation.
+**Delta statement (for abstract and cover letter). Revised after the code audit in `06-code-audit.md`:**
+- Deployed decentralized image networks already validate diffusion work by full re-execution with CLIP-embedding similarity (Bittensor SN23) or by per-step latent spot checks with cosine similarity (SN30, 2024).
+- Their acceptance thresholds are uncalibrated, and they have never been evaluated against cost-saving attacks.
 - *Operator-level* tolerance schemes (TAO, Verde) need instrumented runtimes and explicitly leave undeclared quantization and early exit out of scope.
-- We show where the boundary lies for diffusion. We propose the cheapest evidence level that crosses it: per-step sampler commitments with random one-step re-execution. That level needs only a sampler hook, not operator access. We price it under escrow settlement.
+- We provide the first calibrated evaluation of output-level and step-level rules against cost-saving attacks across consumer GPUs, and we test whether the deployed rules accept cheap forgeries.
+- We propose a hardened two-tier trajectory check: solver consistency on every step plus model consistency at k random steps, with per-step tolerances, an exact seed binding and a deterrence analysis under escrow.
+- **Do not claim** per-step spot-checking itself as new. WOMBO SN30 is prior art.
+
+Working title after the audit: *Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference: Attacking Deployed Validators and Hardening the Protocol*.
 
 ## 3. Revised research questions
 
@@ -38,14 +43,18 @@ RQ1 is pure measurement and always produces a result. RQ2 produces a result whet
 |---|---|---|---|
 | **E0, output** | Image digest | Re-runs the full workflow and compares images: pixel hash, pHash, LPIPS, DINOv2 cosine | ≈ 1.0 |
 | **E1, trajectory endpoints** | Image, plus the Merkle root of the per-step latents x_T … x_0 | Checks x_T = noise(seed) (CPU), the text-encoder conditioning, and VAE(x_0) = image | ≈ 0.05–0.1 |
-| **E2, trajectory spot-check** (proposed) | As E1, with latents stored off-chain until the job closes | E1, plus k randomly chosen steps t: takes the committed x_t, runs **one** sampler step, and compares the result with the committed x_(t−1) against a tolerance τ_t calibrated per step | ≈ (k + c)/T |
+| **E2-W, deployed step check** (reproduction of WOMBO SN30, baseline) | sha256 of all per-step latents | 3 random steps, one UNet step each, cosine on the flattened latent, reject if min cosine < 0.70 | ≈ 3/T |
+| **E0-N, deployed output check** (reproduction of NicheImage SN23, baseline) | Image | Full re-run, CLIP ViT-B/16 cosine, full reward above 0.9 | ≈ 1.0 |
+| **E2-H, hardened trajectory check** (proposed) | Merkle root of (x_i, denoised_i, σ_i) for all i, plus the final x. Kept off-chain until the job closes | E1, plus **Tier A**: solver-consistency check on *every* step (CPU, no UNet). Plus **Tier B**: re-run the UNet at k random steps and compare `denoised_i` with a per-step calibrated τ_i | ≈ (k + c)/T |
 
-**Why E2 is achievable.**
-- ComfyUI's KSampler exposes a per-step callback, so a custom node can record latents without operator-level instrumentation.
-- Each SDXL latent is 128×128×4 in fp16, about 128 KB. At 30 steps that is about 4 MB per job, which is fine to store off-chain.
-- ComfyUI generates the initial noise on the CPU by default (confirm this), so x_T can be reproduced exactly.
+**Why E2-H is achievable** (confirmed in `06-code-audit.md`):
+- ComfyUI's sampler callback provides `x_i` (before the update) and `denoised_i` (the CFG-applied x0-prediction) at every step. A custom node records them, and also captures the sampler's return value for the final x.
+- Storage is about 7.7 MB per 30-step SDXL job, off-chain.
+- **The initial noise is generated on the CPU in float32 from `torch.manual_seed(seed)`** (`comfy/sample.py`). x_T can therefore be checked *exactly*.
 
-**Restrictions.** Use deterministic samplers (Euler, DDIM, DPM++ 2M). Ancestral samplers are supported only if the per-step noise comes from the committed seed. State this as a scope limit.
+**Restrictions** (from the code audit):
+- Per-step noise in ancestral and SDE samplers is drawn on the GPU (`default_noise_sampler`), and a CPU run uses seed+1. So the core study uses **deterministic samplers only** (euler, heun, dpmpp_2m, ddim, uni_pc).
+- Ancestral samplers are allowed only with a CPU noise sampler, and that is a protocol requirement.
 
 ### 4.2 Attack set (cost-saving first, because that is what TAO and output checks miss)
 
@@ -59,6 +68,17 @@ RQ1 is pure measurement and always produces a result. RQ2 produces a result whet
 | A6: early exit, where the trajectory is truncated and the remaining latents are interpolated | proportional to the steps skipped | E2 targets this directly |
 | A7: replay or cache of a near-duplicate prompt | about 100% | |
 | A8: unrelated or corrupted output (sanity class) | 100% | Trivially detected, used as a control |
+
+**Trajectory forgeries.** These target step-level checks and are new relative to the draft:
+
+| Attack | What the forger does |
+|---|---|
+| F1: frame copy | Sets `x_{i+1} := x_i` |
+| F2: interpolation | Linearly interpolates between computed anchor steps |
+| F3: solver inversion | Computes only some steps, then solves for the `denoised_i` values that make Tier A pass |
+| F4: cheap-model trajectory | Commits a full, consistent trajectory from an fp8 or turbo UNet |
+
+**RQ2a (headline):** run all attacks against the faithful reproductions E0-N and E2-W. *Hypothesis W1:* the cosine-0.70 rule of E2-W accepts F1, F2 and F4.
 
 Also test **partial cheating**: a provider who skips a fraction s of the steps, which is the attacker parameter in the theory below. The negative control from the draft (falsified metadata) carries over.
 
@@ -123,7 +143,8 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 | Cross-GPU results are bit-exact under some configuration (e.g., fp32 + CPU noise + no xformers) | Tolerance is unnecessary in that configuration | Report a "deterministic profile" that marketplaces could require, with its throughput cost (compare EigenAI). This is a strong practical result |
 | Fewer than 5 GPU models available | The heterogeneity claim is weaker | Rent short-term. The RQ1 budget is about US$50–150 |
 | A provider fakes trajectories that are consistent step by step | Faking one step needs a true step computation, so cheating gives no savings | State this as a lemma: any trajectory that passes all one-step checks is a valid trajectory for the committed model, up to τ |
-| WOMBO SN30 already does E2 | Novelty shrinks to the evaluation | Our contribution becomes the first calibrated evaluation of it, plus the theory. Still publishable, with a framing of "evaluating step-level validation" |
+| WOMBO SN30 already does E2. **Confirmed by the code audit (2024, archived)** | Per-step spot-checking itself is not new | **Applied:** the framing is now break-and-fix. We evaluate the deployed rules (E0-N, E2-W), then harden the check (E2-H). See doc 06 |
+| The deployed rules turn out robust (W1 is false) | The "attack" headline weakens | It is still a result: the first calibrated FPR and FNR for these rules. E2-H then competes on cost and on theory |
 
 ## 8. Revised timeline (it replaces the table in `03-publication-plan.md` §2)
 

@@ -11,7 +11,7 @@ The paper is currently a proposal with no results. The plan is in [docs/03-publi
 | Path | Contents |
 |---|---|
 | `drafts/` | Original source drafts (PDF and DOCX). Read-only reference |
-| `docs/` | Reviews and plans: [novelty & feasibility](docs/01-novelty-feasibility.md), [draft comparison](docs/02-draft-comparison.md), [publication plan](docs/03-publication-plan.md) |
+| `docs/` | [01 novelty & feasibility](docs/01-novelty-feasibility.md), [02 draft comparison](docs/02-draft-comparison.md), [03 publication plan](docs/03-publication-plan.md), [04 literature review](docs/04-literature-review.md), **[05 revised design (current)](docs/05-revised-design.md)** |
 | `paper/` | LaTeX manuscript (journal template, `refs.bib`, `figures/`) |
 | `code/program/` | Solana Anchor escrow program (OCC SPL token) |
 | `code/orchestrator/` | Scheduling, state machine, adjudication, reputation |

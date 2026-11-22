@@ -4,6 +4,8 @@
 **Review date:** 2026-11-22
 **Target:** Q1 journal (see `03-publication-plan.md`)
 
+> **Update 2026-11-22:** superseded in part by [04-literature-review.md](04-literature-review.md) and [05-revised-design.md](05-revised-design.md). TAO (EuroSys 2026) and Cai et al. (2504.04715) further narrow the novelty, and the paper is refocused on diffusion only.
+
 ---
 
 ## 1. What the paper is
@@ -56,14 +58,14 @@ The paper also says, correctly, that novelty lies in *integration and measuremen
 | Work | Why it matters |
 |---|---|
 | **Kim, Isozaki, Sirkin, Robson, "Generative AI Reproducibility and Consensus," arXiv:2307.01898 (Drexel, 2023/24)** | **The most damaging omission.** It runs Stable Diffusion and LLM tasks, sets tolerance and error bounds for verification, and uses majority vote among 3 independent verifiers for image perceptual collisions. It reports >99.89% detection, and 100% consensus for LLMs with greedy or beam decoding. It frames all of this as groundwork for a blockchain fraud proof. It covers much of G3, and the draft's 2-of-3 adjudication is very close to it. |
-| **NAO: Nondeterminism-Aware Optimistic Verification for Floating-Point NNs, arXiv:2510.16028** | Tolerance-aware verification across heterogeneous accelerators. It calibrates empirical percentile error profiles across GPUs and evaluates CNNs, Transformers, LLMs **and diffusion models**. Its calibrated tolerance across hardware is the same idea as the draft's acceptance-rule calibration. |
+| **TAO: Tolerance-Aware Optimistic Verification for Floating-Point NNs, EuroSys 2026, arXiv:2510.16028** (earlier mislabeled "TAO"). It is white-box, with on-chain bonds and sampled audits: the strongest prior work. See doc 04 | Tolerance-aware verification across heterogeneous accelerators. It calibrates empirical percentile error profiles across GPUs and evaluates CNNs, Transformers, LLMs **and diffusion models**. Its calibrated tolerance across hardware is the same idea as the draft's acceptance-rule calibration. |
 | **DiFR, arXiv:2511.20621** | Inference verification despite nondeterminism, by replaying the provider's output tokens. This bears directly on the Ollama side. |
 | **Proof of Quality, arXiv:2405.17934** | Validates the quality of generative output on-chain instead of the inference itself. It is an alternative design point that reviewers will ask about. |
 | **Hawkeye: Reproducing GPU-level non-determinism, arXiv:2603.20421 (MLSys 2026)** | Weakens the assumption that consumer-GPU outputs cannot be reproduced bit for bit. |
 | **Accelerating mitigation of LLM nondeterminism across GPU architectures, arXiv:2609.25624** | Bears on whether exact-match LLM verification across GPU generations is feasible. |
 | Heterogeneous Decentralized Diffusion Models, arXiv:2603.06741 (CVPR 2026) | Shows diffusion work in decentralized settings. Useful context. |
 
-**Consequence:** the sentence "no study measures ..." would probably not survive review as written. The joint combination is still unoccupied, but G3 (tolerant acceptance rules for diffusion and LLM output) is now partly covered by 2307.01898 and NAO.
+**Consequence:** the sentence "no study measures ..." would probably not survive review as written. The joint combination is still unoccupied, but G3 (tolerant acceptance rules for diffusion and LLM output) is now partly covered by 2307.01898 and TAO.
 
 ### 2.3 What remains defensibly novel
 

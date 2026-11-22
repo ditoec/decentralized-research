@@ -3,6 +3,8 @@
 Main paper: *Tokenized Settlement and Probabilistic Verification in a Decentralized GPU Marketplace for Generative AI Workloads*.
 Plan start: 2026-11-22. Target submission: **mid-June 2027**.
 
+> **Update 2026-11-22:** the scope, RQs and timeline are superseded by [05-revised-design.md](05-revised-design.md) (diffusion-only, evidence-level study, submission mid-May 2027). Sections 0 and 4 (venue, checklist) still apply.
+
 ## 0. Target venue
 
 Check the current SJR or JCR quartile before committing; quartiles shift every year.
@@ -20,7 +22,7 @@ Check the current SJR or JCR quartile before committing; quartiles shift every y
 ## 1. What must change, in order of importance
 
 1. **Produce results.** A Q1 journal will not accept a proposal. Every RQ needs measured answers (WP1–WP3).
-2. **Reposition novelty** against arXiv:2307.01898, NAO (2510.16028), DiFR (2511.20621), Proof of Quality (2405.17934) and Hawkeye (2603.20421). Rewrite "no study measures ..." as a precise delta. See `01-novelty-feasibility.md` §2.
+2. **Reposition novelty** against arXiv:2307.01898, TAO (2510.16028), DiFR (2511.20621), Proof of Quality (2405.17934) and Hawkeye (2603.20421). Rewrite "no study measures ..." as a precise delta. See `01-novelty-feasibility.md` §2.
 3. **Raise the theoretical contribution** above textbook Eqs. (2)–(4):
    - **Proposition 1 (indistinguishability bound):** for an output-only rule V, q_attack ≤ FPR + TV(D_attack, D_honest). This bounds detection of any attack by the total-variation distance between attack and honest output distributions, so a higher p cannot help.
    - **Proposition 2 (cost-optimal sampling):** choose p to minimize p·C_verify + (1−pq)·L_fraud + p·FPR·C_falsereject, subject to the detection target. Give a closed-form p*.
@@ -60,7 +62,7 @@ Buffer: 2–3 weeks before a fallback date of early July 2027.
 ## 3. Manuscript restructure (proposal → journal article)
 
 1. Introduction: the problem, *results-first* contributions (with numbers), and the key finding about black-box limits.
-2. Background and related work: Table I extended with 2307.01898, NAO, DiFR, PoQ and Hawkeye.
+2. Background and related work: Table I extended with 2307.01898, TAO, DiFR, PoQ and Hawkeye.
 3. System and threat model: the current Sections III–IV compressed, with Table II kept.
 4. Protocol: lifecycle, commit-then-sample, verifier commit, adjudication, reputation.
 5. **Analysis:** detection model, Propositions 1–2, deterrence.

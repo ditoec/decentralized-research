@@ -68,4 +68,4 @@ The reference list went from 47 to **57**, with arXiv preprints cut from 18 to *
 - **Decentralized inference on consumer GPUs:** Borzunov et al., NeurIPS 2023 (Petals).
 - **Blockchain payment for computation:** Kumaresan & Bentov, CCS 2014; FairSwap, CCS 2018.
 
-**Tried and dropped:** Slalom (ICLR 2019, trusted hardware plus GPU) and the decentralized foundation-model training paper (NeurIPS 2022). Neither could be confirmed through the APIs because of rate limits and search misses. Add them manually if they are wanted.
+**Added on a second check (59 references in total):** Tramèr & Boneh, *Slalom*, ICLR 2019. Confirmed on the official ICLR 2019 oral schedule (iclr.cc) and by its arXiv record (1806.03287). It is cited as the trusted-hardware route in the related work and the discussion. Yuan et al., *Decentralized training of foundation models in heterogeneous environments*, NeurIPS 2022, 25464–25477. Confirmed on the proceedings.neurips.cc page, with 9 authors. It is cited in the introduction next to Borzunov et al.

@@ -71,6 +71,8 @@ REFS = {
  "rombach2022ldm": "Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 10674–10685. doi:10.1109/CVPR52688.2022.01042.",
  "podell2023sdxl": "Podell, D., English, Z., Lacey, K., Blattmann, A., Dockhorn, T., Müller, J., Penna, J., & Rombach, R. (2024). SDXL: Improving latent diffusion models for high-resolution image synthesis. The Twelfth International Conference on Learning Representations (ICLR 2024), Vienna, Austria.",
  "wilson1927": "Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 209–212. doi:10.1080/01621459.1927.10502953.",
+ "slalom2019": "Tramèr, F., & Boneh, D. (2019). Slalom: Fast, verifiable and private execution of neural networks in trusted hardware. 7th International Conference on Learning Representations (ICLR 2019), New Orleans, United States.",
+ "yuan2022decentral": "Yuan, B., He, Y., Davis, J. Q., Zhang, T., Dao, T., Chen, B., Liang, P., Ré, C., & Zhang, C. (2022). Decentralized training of foundation models in heterogeneous environments. Advances in Neural Information Processing Systems 35 (NeurIPS 2022), 25464–25477.",
  "borzunov2023": "Borzunov, A., Ryabinin, M., Chumachenko, A., Baranchuk, D., Dettmers, T., Belkada, Y., Samygin, P., & Raffel, C. (2023). Distributed inference and fine-tuning of large language models over the internet. Advances in Neural Information Processing Systems 36 (NeurIPS 2023), New Orleans, United States.",
  "zhuang2022": "Zhuang, D., Zhang, X., Song, S., & Hooker, S. (2022). Randomness in neural network training: Characterizing the impact of tooling. Proceedings of Machine Learning and Systems 4 (MLSys 2022), 316–336.",
  "pham2020ase": "Pham, H. V., Qian, S., Wang, J., Lutellier, T., Rosenthal, J., Tan, L., Yu, Y., & Nagappan, N. (2020). Problems and opportunities in training deep learning software systems: An analysis of variance. Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering (ASE ’20), 771–783. doi:10.1145/3324884.3416545.",
@@ -465,8 +467,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H1("1- Introduction")
     Para("Generative AI services increasingly run on GPUs owned by people other than the service operator. "
          "Decentralized physical infrastructure networks (DePIN) pool idle consumer GPUs through blockchain coordination "
-         "and token payments {c|ballandies2023depin,lin2024depin}, and collaborative inference over consumer GPUs "
-         "connected through the internet has been shown to be technically viable {c|borzunov2023}. Decentralized compute "
+         "and token payments {c|ballandies2023depin,lin2024depin}, and collaborative inference {c|borzunov2023} and "
+         "training {c|yuan2022decentral} over heterogeneous GPUs connected through the internet have been shown to be "
+         "technically viable. Decentralized compute "
          "markets such as Render, Akash and "
          "io.net, along with networks dedicated to image generation, now sell diffusion-model inference from such GPUs "
          "{c|render2023,akash2026,ionet2026}. The buyer cannot observe the computation. A blockchain can record that a "
@@ -495,8 +498,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "detects cheating whenever at least one of several servers is honest {c|canetti2011}; its adaptation to machine "
          "learning with bitwise-reproducible operators bisects disputes down to a single operator {c|arun2025verde}. "
          "Deterministic inference can reduce verification to a byte comparison {c|alves2026eigenai}, and optimistic "
-         "protocols resolve disputes by on-chain bisection {c|arbitrum2018}. All of these require control of the operator "
-         "library or access to model internals, and almost all target LLMs.")
+         "protocols resolve disputes by on-chain bisection {c|arbitrum2018}. Trusted execution environments offer a "
+         "hardware route: an enclave can outsource the linear layers of a network to an untrusted GPU and check them "
+         "probabilistically {c|slalom2019}, but this requires trusted hardware on the provider side. All of these require "
+         "control of the operator library, access to model internals or trusted hardware, and almost all target LLMs.")
     Para("{b|Tolerance-aware verification.} TAO {c|yao2026tao} is the closest system. It commits to the weights, the "
          "computation graph and per-operator error thresholds calibrated on four GPU models, narrows disputes to one "
          "operator, and settles with bonds and randomized audits on an Ethereum test network, with 0.3% overhead on the "
@@ -815,7 +820,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "uncalibrated cosine thresholds}.")
     Para("{b|Relation to operator-level verification and to language models.} Sampler-level evidence and the "
          "operator-level evidence of TAO {c|yao2026tao} are complementary: where Tier B cannot separate an attack "
-         "({R|R2.8}), operator-level commitments or trusted execution are required. For LLM inference, output-only detection "
+         "({R|R2.8}), operator-level commitments or trusted execution {c|slalom2019} are required. For LLM inference, output-only detection "
          "of quantized substitution is already known to fail {c|cai2025substitution}, and activation-based schemes apply, "
          "so LLM workloads are not evaluated here.")
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "

@@ -6,6 +6,8 @@ Research repository for the paper *Tokenized Settlement and Probabilistic Verifi
 
 The manuscript draft (`paper/manuscript_ESJ.docx`, Emerging Science Journal format) is written, with result placeholders. The experiments are pending and are run by the engineer following [docs/07-runbook.md](docs/07-runbook.md). Scope and timeline: [docs/05-revised-design.md](docs/05-revised-design.md).
 
+New to blockchain or trajectory verification? Start with the plain-language primer: [docs/09-primer.md](docs/09-primer.md).
+
 ## Layout
 
 | Path | Contents |

@@ -404,7 +404,7 @@ def main(template, out):
         add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
 
     doc.core_properties.title = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference"
-    doc.core_properties.author = "Anjas Risky Maradita"
+    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya"
     doc.save(out)
 
     # footnote contact e-mail (template placeholder)
@@ -438,7 +438,7 @@ def main(template, out):
 # ----------------------------------------------------------------------------------------------
 TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
 AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
-           (", ", set(), False), ("[TODO: co-author(s)]", {"blue"}, False), (" 1", set(), True)]
+           (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 1", set(), True)]
 AFFIL1 = ("1 ", "Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan, Tangerang, Indonesia.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
@@ -841,9 +841,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     # ================================================================== 5 DECLARATIONS
     H1("5- Declarations")
     H2("5-1- Author Contributions")
-    Para("{T|Conceptualization, A.R.M. and X.X.; methodology, A.R.M.; software, X.X.; validation, X.X.; formal analysis, "
-         "A.R.M.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing—original draft preparation, A.R.M.; "
-         "writing—review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.} All "
+    Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
+         "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
+         "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
+         "supervision, D.E.C.; project administration, A.R.M.} All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("5-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "

@@ -1,0 +1,49 @@
+{
+ "run_id": "20261123-dev-w1-cosine-01",
+ "wp": "dev",
+ "purpose": "Early look at hypothesis W1 on dev hardware (not paper data)",
+ "git_commit": "cbd4deca0356ac48e28ddaa6f70fb53c96f4c945",
+ "git_dirty": true,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "Ekkis-MacBook-Pro.local",
+  "os": "macOS-26.6.2-arm64-arm-64bit",
+  "cpu_isa": "arm64",
+  "cpu_model": "arm",
+  "python": "3.12.0",
+  "torch": "2.15.0",
+  "cuda": null,
+  "gpu_name": "Apple MPS"
+ },
+ "start_time": "2026-11-23T13:55:01.980999+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "prompt_set": {
+  "name": "dev_w1_inline",
+  "n": 10
+ },
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9
+ ],
+ "end_time": "2026-11-23T14:03:22.391024+00:00"
+}

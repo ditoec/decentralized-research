@@ -26,3 +26,8 @@ experiments/runs/**/*.safetensors
 
 # Internal host details; the repository is public
 docs/local-nodes.md
+
+# trajver: pinned ComfyUI checkout, model weights, build metadata
+code/.cache/
+*.egg-info/
+.pytest_cache/

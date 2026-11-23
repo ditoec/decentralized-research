@@ -1,0 +1,28 @@
+[project]
+name = "trajver"
+version = "0.1.0"
+description = "Trajectory commitment and verification for escrow-settled diffusion inference (ESJ paper, WP1)"
+requires-python = ">=3.11"
+dependencies = [
+    "torch",
+    "numpy",
+    "safetensors>=0.4.2",
+]
+
+[project.optional-dependencies]
+# Output-level rules E0 and E0-N need image models.
+metrics = ["lpips", "timm", "imagehash", "Pillow"]
+dev = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["trajver*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: needs the pinned ComfyUI checkout and the SD1.5 checkpoint",
+]

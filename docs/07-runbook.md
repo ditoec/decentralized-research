@@ -113,6 +113,24 @@ Run each item as its own run ID.
 
 ## 3. Build the instrumentation (WP1, Dec 7 – Jan 3)
 
+**Implementation status (2026-11-23).** §3.1–§3.3 are implemented in `code/` as the Python package `trajver`, and tested on a Mac (MPS) with SD1.5. See `code/README.md` for setup and commands.
+
+| Spec | Module |
+|---|---|
+| §3.1 recording, trajectory file, Merkle commitment | `trajver/job.py` (`sample_and_record`, `Pipeline.run`), `trajver/trajectory.py`, `trajver/commit.py`; ComfyUI node in `code/comfyui_trajectory/` |
+| §3.2 E1 | `trajver/rules/e1.py`, `trajver/noise.py` |
+| §3.2 Tier A, Tier B, E2-H | `trajver/solvers.py`, `trajver/rules/e2h.py`, `Pipeline.replay_denoised` |
+| §3.2 E2-W, E0-N (deployed rules) | `trajver/rules/e2w.py`, `trajver/rules/e0n.py` (audited source cited in the module docstrings) |
+| §3.2 E0 | `trajver/rules/e0.py` |
+| §3.3 forgeries F1–F3, attack configs | `trajver/attacks/forgeries.py`, `trajver/attacks/configs.py` |
+| Manifests, thresholds, theory | `trajver/manifest.py`, `trajver/thresholds.py`, `trajver/theory.py` |
+
+Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Findings from development, for the paper author:
+1. **ComfyUI's batching depends on free memory.** At every model call it runs the conditional and unconditional CFG passes as one batch only if enough memory is free (`comfy/samplers.py: _calc_cond_batch`), and VAE decoding tiles by free memory too. A different batch changes the arithmetic, so identical jobs can give different trajectories depending on other memory use. T1 failed intermittently until this was pinned. `trajver` now pins both decisions while sampling, replaying and decoding (`comfy_env.pinned_batching`, recorded as `pin_batching` in every trajectory). Treat this as a protocol requirement, and on the shared Sparks as a likely co-tenancy effect: P6 should run with the pin on and off.
+2. **A full frame copy passes Tier A.** With every step faked and D_i := x_i, the solver maps x_i to itself, so the forged trajectory is solver-consistent. Tier B catches it. Partial copies fail Tier A at the boundary.
+3. **Storage is larger than estimated.** ComfyUI keeps latents in float32, not fp16: about 3.9 MB per 30-step SD1.5 job and about 15 MB per SDXL job, plus conditioning. R3.3 is measured, so the paper is unaffected, but the "about 7.7 MB" in doc 05 §4.1 is too low.
+4. **The deployed SN23 black-image filter never fires.** It compares 6×6 hashes of the two images with an 8×8 hash of a black image, so the strings never match. `e0n.py` reproduces this as deployed.
+
 ### 3.1 Trajectory-commit node (a ComfyUI custom node)
 
 Functional spec. These facts were checked in doc 06:

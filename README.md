@@ -15,11 +15,10 @@ New to blockchain or trajectory verification? Start with the plain-language prim
 | `drafts/` | Original source drafts (PDF and DOCX). Read-only reference |
 | `docs/` | [01 novelty & feasibility](docs/01-novelty-feasibility.md), [02 draft comparison](docs/02-draft-comparison.md), [03 publication plan](docs/03-publication-plan.md), [04 literature review](docs/04-literature-review.md), **[05 revised design (current)](docs/05-revised-design.md)**, [06 code audit](docs/06-code-audit.md) |
 | `paper/` | ESJ Word manuscript, journal template and guideline, generator script (`tools/`) |
-| `code/program/` | Solana Anchor escrow program (OCC SPL token) |
-| `code/orchestrator/` | Scheduling, state machine, adjudication, reputation |
-| `code/parkedgpu/` | Provider agent that wraps the ComfyUI and Ollama APIs |
-| `code/verifier/` | Acceptance rules (hash, LPIPS, answer extraction) and the gray-box tier |
-| `code/harness/` | Attack injection, trace replay, run manifests |
+| `code/trajver/` | Python package: trajectory recording and commitment, verifiers (E0, E0-N, E1, E2-W, E2-H), forgeries and attacks, manifests, theory. See [code/README.md](code/README.md) |
+| `code/comfyui_trajectory/` | ComfyUI custom node that records and commits the trajectory |
+| `code/program/` | Solana Anchor escrow program (later milestone) |
+| `code/orchestrator/` | Scheduling, state machine, adjudication, reputation (later milestone) |
 | `experiments/configs/` | Factor-grid configs and frozen thresholds (stored with their hash) |
 | `experiments/runs/` | One folder per run ID, each with a manifest. Large raw data is git-ignored |
 | `analysis/` | Statistics and figure scripts. Every figure cites a run ID |

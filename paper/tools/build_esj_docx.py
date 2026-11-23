@@ -364,9 +364,20 @@ def main(template, out):
         add(fill_para(copy.deepcopy(proto["caption"]), f"{label} {counters[kind]}. {text}", rpr["caption"]))
         return counters[kind]
 
-    def Figure(pid, desc, caption):
+    def Figure(pid, desc, caption, image=None):
         fp = copy.deepcopy(proto["figpara"])
-        add(fill_para(fp, "{R|FIGURE " + pid + ": " + desc + "}", rpr["figpara"]))
+        if image:
+            # a drawn figure from paper/figures/, centred at the text width (168 mm)
+            add(fill_para(fp, "", rpr["figpara"]))
+            para = docx.text.paragraph.Paragraph(fp, doc._body)
+            para.alignment = 1
+            para.paragraph_format.first_line_indent = Mm(0)
+            para.paragraph_format.left_indent = Mm(0)
+            para.paragraph_format.keep_with_next = True
+            fig_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "figures")
+            para.add_run().add_picture(os.path.join(fig_dir, image), width=Mm(165))
+        else:
+            add(fill_para(fp, "{R|FIGURE " + pid + ": " + desc + "}", rpr["figpara"]))
         return Caption("figure", caption)
 
     def Table(caption, header, rows, widths_mm):
@@ -690,7 +701,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Figure("F1", "Flowchart of the research methodology: system and threat model → protocol and evidence levels → "
            "analytical model → hardware and workload setup → RQ1 honest-variation study → calibration and threshold "
            "freezing → RQ2 attack study → RQ3 cost and deterrence → conclusions.",
-           "Flowchart of the research methodology")
+           "Flowchart of the research methodology", image="fig1_methodology.png")
     H2("3-1- System and Threat Model")
     Para("A {i|requester} submits a diffusion job and escrows a payment P. A {i|provider} owns a GPU and runs the job. A "
          "{i|verifier} is an independent node that re-executes parts of sampled jobs. An {i|orchestrator} matches jobs to "
@@ -728,7 +739,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Figure("F2", "Protocol overview: requester escrows P; provider (RTX 5080) runs the workflow and commits the trajectory "
            "Merkle root; delayed slot hash decides sampling and the checked steps; verifier (DGX Spark) runs E1 checks, "
            "Tier A on all steps (CPU) and Tier B at k steps (GPU); verdict, two-of-three escalation, release, refund or "
-           "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement")
+           "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement",
+           image="fig2_protocol.png")
     Para("{b|Seed binding.} ComfyUI draws the initial noise on the CPU in 32-bit floating point from the job seed "
          "{c|comfyui}. The verifier recomputes it and requires an exact match of x{sub|0}. Whether this holds across "
          "processor instruction sets is measured in RQ1 ({R|R1.1}).")

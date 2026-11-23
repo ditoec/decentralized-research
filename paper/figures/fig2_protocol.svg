@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1176" height="600" viewBox="0 0 1176 600"><rect width="1176" height="600" fill="#ffffff"/><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#6b6b6b"/></marker><marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2a62c9"/></marker></defs><rect x="8" y="12" width="1160" height="142" fill="#ffffff" stroke="#dfe2e7" stroke-width="1"/>
+<text x="18" y="83.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">Requester</text>
+<rect x="8" y="154" width="1160" height="142" fill="#eef2f8" stroke="#dfe2e7" stroke-width="1"/>
+<text x="18" y="221.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">Escrow contract</text>
+<text x="18" y="243.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#5a5a5a" text-anchor="start">on-chain (Solana)</text>
+<rect x="8" y="296" width="1160" height="142" fill="#ffffff" stroke="#dfe2e7" stroke-width="1"/>
+<text x="18" y="363.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">Provider</text>
+<text x="18" y="385.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#5a5a5a" text-anchor="start">e.g. RTX 5080</text>
+<rect x="8" y="438" width="1160" height="142" fill="#ffffff" stroke="#dfe2e7" stroke-width="1"/>
+<text x="18" y="505.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">Verifier</text>
+<text x="18" y="527.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#5a5a5a" text-anchor="start">e.g. DGX Spark</text>
+<line x1="158" y1="12" x2="158" y2="580" stroke="#dfe2e7" stroke-width="1"/>
+<rect x="174" y="35.0" width="178" height="96" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="188" y="61.0" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">1. Fund</text>
+<text x="188" y="85.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Submit workflow W;</text>
+<text x="188" y="104.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">lock payment P</text>
+<rect x="174" y="177.0" width="178" height="96" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="188" y="203.0" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">Escrow</text>
+<text x="188" y="227.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Holds P and the</text>
+<text x="188" y="246.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">verifier fee</text>
+<rect x="370" y="309.5" width="178" height="115" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="384" y="335.5" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">2. Run and record</text>
+<text x="384" y="359.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Lock bond B, run W,</text>
+<text x="384" y="378.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">record trajectory</text>
+<text x="384" y="397.5" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#1f1f1f"><tspan>(x</tspan><tspan baseline-shift="sub" font-size="9.4">i</tspan><tspan>, D</tspan><tspan baseline-shift="sub" font-size="9.4">i</tspan><tspan>, σ</tspan><tspan baseline-shift="sub" font-size="9.4">i</tspan><tspan>)</tspan></text>
+<rect x="566" y="177.0" width="178" height="96" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="580" y="203.0" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">3. Commit</text>
+<text x="580" y="227.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Merkle root of the</text>
+<text x="580" y="246.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">trajectory + image</text>
+<rect x="762" y="177.0" width="178" height="96" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="776" y="203.0" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">4. Random draw</text>
+<text x="776" y="227.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Delayed slot hash:</text>
+<text x="776" y="246.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">sample? which k steps?</text>
+<rect x="762" y="451.5" width="178" height="115" rx="9" fill="#e8effb" stroke="#2a62c9" stroke-width="2"/>
+<text x="776" y="477.5" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">5. Verify</text>
+<text x="776" y="501.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Seed and output check</text>
+<text x="776" y="520.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Tier A: all T steps (CPU)</text>
+<text x="776" y="539.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Tier B: k steps (GPU)</text>
+<rect x="970" y="167.5" width="178" height="115" rx="9" fill="#ffffff" stroke="#6b6b6b" stroke-width="1.1"/>
+<text x="984" y="193.5" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" font-style="normal" fill="#1b2f5e" text-anchor="start">6. Settle</text>
+<text x="984" y="217.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Pass: pay P, return B</text>
+<text x="984" y="236.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">Fail: 2-of-3 review,</text>
+<text x="984" y="255.5" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" font-style="normal" fill="#1f1f1f" text-anchor="start">refund P, slash B</text>
+<path d="M263.0 131.0 V175.0" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<path d="M263.0 273.0 V367.0 H368" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="273.0" y="357.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#5a5a5a" text-anchor="start">assign job</text>
+<path d="M548 367.0 H655.0 V275.0" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="558" y="357.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#5a5a5a" text-anchor="start">commit</text>
+<path d="M744 225.0 H760" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<path d="M851.0 177.0 V99.0 H1059.0 V165.5" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="955.0" y="89.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#5a5a5a" text-anchor="middle">not sampled (1 − p): pay P</text>
+<path d="M851.0 273.0 V449.5" fill="none" stroke="#2a62c9" stroke-width="1.4" marker-end="url(#ara)"/>
+<text x="861.0" y="371.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#2a62c9" text-anchor="start">sampled (p)</text>
+<path d="M459.0 424.5 V509.0 H760" fill="none" stroke="#6b6b6b" stroke-width="1.4" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+<text x="469.0" y="499.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#5a5a5a" text-anchor="start">trajectory data, off-chain</text>
+<path d="M940 509.0 H1059.0 V284.5" fill="none" stroke="#6b6b6b" stroke-width="1.4" marker-end="url(#ar)"/>
+<text x="1069.0" y="371.0" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#5a5a5a" text-anchor="start">verdict</text></svg>

@@ -4,7 +4,7 @@ Research repository for the paper *Tokenized Settlement and Probabilistic Verifi
 
 ## Status
 
-The paper is currently a proposal with no results. The current scope and plan are in [docs/05-revised-design.md](docs/05-revised-design.md).
+The manuscript draft (`paper/main.tex`) is written, with result placeholders. The experiments are pending and are run by the engineer following [docs/07-runbook.md](docs/07-runbook.md). Scope and timeline: [docs/05-revised-design.md](docs/05-revised-design.md).
 
 ## Layout
 

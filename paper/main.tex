@@ -1,0 +1,451 @@
+%% Manuscript for Future Generation Computer Systems (Elsevier), elsarticle class.
+%% STATUS: full draft with RESULT PLACEHOLDERS. Every \res{ID} must be filled from a logged run
+%% (see docs/07-runbook.md, "Placeholder map"). Never fill a placeholder by hand-estimate.
+\documentclass[preprint,review,12pt,authoryear]{elsarticle}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,multirow,tabularx}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{algorithm,algpseudocode}
+
+\newcommand{\res}[1]{\textcolor{red}{\textbf{[#1]}}}          % result placeholder
+\newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}            % authoring TODO
+\newcommand{\figph}[2]{\fbox{\parbox{0.9\linewidth}{\centering\vspace{2em}\textcolor{red}{\textbf{[FIGURE #1]}}\\ #2\vspace{2em}}}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\journal{Future Generation Computer Systems}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs: Attacking Deployed Validators and Hardening the Protocol}
+
+\author[uph]{Anjas Risky Maradita\corref{cor1}}
+\ead{\todo{email}}
+\author[uph]{\todo{co-author(s), e.g.\ Dito Eka Cahya, supervisor}}
+\cortext[cor1]{Corresponding author}
+\affiliation[uph]{organization={Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan},
+            city={Tangerang},
+            country={Indonesia}}
+
+\begin{abstract}
+Decentralized GPU marketplaces pay untrusted owners of consumer GPUs to run generative AI jobs. For diffusion workloads, a provider can lower its cost without returning an obviously wrong image: it can run fewer denoising steps, run a quantized or distilled model, or fabricate intermediate sampler states. A verifier that re-executes the job on a different GPU rarely obtains a bit-identical result, so every acceptance rule must tolerate honest variation, and that tolerance is where cheating can hide. We ask what evidence a marketplace must demand to detect cost-saving cheating on diffusion jobs, and at what cost. First, we measure honest variation of pinned ComfyUI SD1.5 and SDXL workflows across five nested levels of heterogeneity (repeated runs, software configuration, physical unit, chip and CPU architecture, and GPU generation) on RTX~5080, DGX~Spark and \res{R0.1: rented GPU models} hardware. Second, we reproduce two validation rules deployed on a public decentralized network, full re-execution with embedding similarity and per-step latent spot checks with cosine similarity, and attack them with eight cost-saving attacks and four trajectory forgeries. \res{R2.1: headline, e.g.\ which deployed rule accepts which forgery, with rate}. Third, we propose a two-tier trajectory check: solver consistency on every step on the CPU, model consistency at $k$ random steps under per-step calibrated tolerances, and an exact binding of the initial noise to the seed. It is integrated with a Solana escrow. At a false-rejection rate of at most 1\%, it detects \res{R2.2: n of m} attacks with sensitivity \res{R2.3} at \res{R3.1}\% of the GPU cost of full re-execution. Finally, we prove a ceiling for output-only rules, give the detection probability of step spot checks, and show that under these checks a rational provider either cheats fully or not at all. This yields a closed-form deterrence condition and a cost-optimal sampling policy, which our measurements confirm \res{R3.2: agreement}.
+\end{abstract}
+
+\begin{highlights}
+\item Honest diffusion outputs vary across GPUs; we measure this at five nested levels.
+\item Deployed validation rules are tested against cost-saving attacks and forgeries.
+\item A two-tier trajectory check binds seed, solver steps and model outputs.
+\item Theory shows a rational provider cheats fully or not at all under spot checks.
+\item Escrow settlement plus calibrated checks deter cheating at low verifier cost.
+\end{highlights}
+
+\begin{keyword}
+decentralized GPU marketplace \sep verifiable inference \sep diffusion models \sep probabilistic verification \sep smart-contract escrow \sep DePIN
+\end{keyword}
+
+\end{frontmatter}
+
+%% ====================================================================
+\section{Introduction}\label{sec:intro}
+
+Generative AI services increasingly run on GPUs owned by people other than the service operator. Decentralized physical infrastructure networks (DePIN) pool idle consumer GPUs through blockchain coordination and token payments \citep{ballandies2023depin,lin2024depin}. Decentralized compute markets such as Render, Akash and io.net, along with networks dedicated to image generation, now sell diffusion-model inference from such GPUs \citep{render2023,akash2026,ionet2026}. The buyer cannot observe the computation. A blockchain can record that a payment was escrowed and that a result digest was committed, but it cannot show that the provider ran the requested model, for the requested number of steps, at the requested precision.
+
+For diffusion workloads this gap has a specific economic shape. The cheapest ways to cheat do not produce garbage. A provider that runs 20 instead of 30 sampler steps, stores the UNet in fp8, or substitutes a distilled ``turbo'' model returns an image that looks plausible and is often semantically close to the honest one, while saving a large fraction of the job's GPU time. On current Blackwell consumer GPUs, fp8 execution is a single command-line flag in the most widely used workflow engine \citep{comfyui}. Detecting such substitution from outputs alone is already known to be very hard for language models \citep{cai2025substitution,gao2025met}. For diffusion models it has not been measured.
+
+The obvious defence is to re-execute a random sample of jobs on an independent node and compare. Two facts complicate it. First, honest re-execution on different hardware is not bit-exact: kernels, reduction order, attention backends and precision differ across GPUs and software stacks \citep{diffusers_repro,atil2024nondeterminism,yuan2025nondeterminism}. Every practical acceptance rule therefore needs a tolerance, and the tolerance determines both false rejections of honest providers and the room left for cheaters. Second, full re-execution doubles the cost of each audited job.
+
+Existing work reaches this problem from two sides. Tolerance-aware optimistic verification (TAO) \citep{yao2026tao} calibrates per-operator error bounds across GPUs and settles disputes on-chain. It requires operator-level instrumentation of the model graph, however, and it states that undeclared quantization and early exit are not caught unless they are committed. At the other end, deployed decentralized image-generation networks validate work either by full re-execution with embedding similarity \citep{nicheimage_repo} or by re-executing a few randomly chosen denoising steps from latents the miner reports \citep{wombo_repo}. Their thresholds are set without calibration and have not, to our knowledge, been evaluated against cost-saving attacks. Kim et al.\ \citep{kim2024reproducibility} measured honest cross-GPU variation of Stable Diffusion outputs with perceptual hashes, without an adversary.
+
+This paper sits between these two lines. It asks: \emph{what is the cheapest evidence that lets a marketplace detect cost-saving cheating on diffusion jobs, given that honest re-execution on other hardware is never bit-exact, and what does it cost under escrow settlement?} We answer three research questions:
+\begin{description}
+\item[RQ1 (Characterize).] How much do honest ComfyUI diffusion outputs vary across GPUs and software configurations, at the level of the final image, the per-step latent and the single sampler step, and which factors drive the variation?
+\item[RQ2 (Separate).] At a false-rejection rate of at most 1\%, which cost-saving attacks and trajectory forgeries can be detected at each evidence level? How do deployed validation rules fare against them?
+\item[RQ3 (Price).] What verifier cost, on-chain cost and latency reach a stated detection and deterrence target under sampled verification with escrow? How does step-level spot checking change the cost-optimal sampling policy?
+\end{description}
+
+\paragraph{Contributions}
+\begin{enumerate}
+\item \textbf{A measurement of honest variation} for SD1.5 and SDXL ComfyUI workflows across five nested heterogeneity levels (L0--L4, Section~\ref{sec:method-hw}). It includes an exact-reproducibility test of the initial noise across x86 and ARM CPUs, which is relevant to any protocol that binds a seed.
+\item \textbf{An attack study of deployed validation rules.} Faithful reproductions of a full-re-execution rule based on embedding similarity and a per-step latent spot-check rule are tested against eight cost-saving attacks and four trajectory forgeries, with calibrated error rates (Section~\ref{sec:rq2}).
+\item \textbf{A hardened two-tier trajectory check.} It verifies solver consistency on every step on the CPU at negligible cost, model consistency at $k$ random steps with per-step tolerances calibrated for a job-level false-rejection target, and an exact seed binding. It needs only a sampler hook, not operator-level access, and it is integrated with a Solana escrow that holds a provider bond (Section~\ref{sec:protocol}).
+\item \textbf{Analysis.} We give a ceiling on what any output-only rule can detect, the detection probability of step spot checks under partial cheating, and a proof that a rational provider's best response is all-or-nothing. This yields a closed-form deterrence condition and a cost-optimal choice of sampling rate and number of checked steps, which we validate against measured separability (Section~\ref{sec:analysis}).
+\item \textbf{An open artifact}: the trajectory-commit node, verifiers, attack injectors, escrow program, datasets and frozen thresholds \res{R0.2: DOI}.
+\end{enumerate}
+
+\paragraph{Summary of findings} \res{R0.3: 3--4 sentences written only after results; e.g.\ magnitude of honest variation at L3/L4, which deployed rule fails on which forgery, sensitivity and cost of E2-H, and whether quantization remains inseparable.}
+
+Section~\ref{sec:related} reviews related work. Section~\ref{sec:model} states the system and threat model, Section~\ref{sec:protocol} the protocol and Section~\ref{sec:analysis} the analysis. Section~\ref{sec:method} describes the methodology, Sections~\ref{sec:rq1}--\ref{sec:rq3} report results, and Sections~\ref{sec:discussion}--\ref{sec:conclusion} discuss implications and limitations.
+
+%% ====================================================================
+\section{Related Work}\label{sec:related}
+
+\paragraph{Cryptographic and white-box verifiable inference}
+Verifiable computation proves arbitrary outsourced computation \citep{gennaro2010vc}. ZK-SNARK systems for neural networks have proved a small latent diffusion model, but with proving times of about an hour per image \citep{chen2024zkml}. This is far from marketplace economics. Activation-based schemes commit to hashed or fingerprinted internal activations of LLMs: TOPLOC \citep{ong2025toploc}, SVIP \citep{sun2024svip}, VeriLLM \citep{wang2025verillm}, sampled layerwise proofs \citep{lim2026seal} and tensor commitments \citep{tensorcommitments2026}. Refereed delegation with bitwise-reproducible operators (Verde) bisects disputes to a single operator \citep{arun2025verde}. Deterministic inference can reduce verification to a byte comparison \citep{alves2026eigenai}. Optimistic fraud proofs and verification games \citep{conway2024opml,teutsch2019truebit} complete this family. All of these require control of the operator library or access to model internals, and almost all target LLMs.
+
+\paragraph{Tolerance-aware verification across heterogeneous accelerators}
+TAO \citep{yao2026tao} is the closest system. It commits Merkle roots of weights, graph and per-operator empirical thresholds calibrated on four GPU models. It narrows disputes to one operator through an $N$-way partition game, adjudicates with IEEE-754 bounds or a committee, and settles with bonds on an Ethereum testnet with randomized audits. It reports 0.3\% happy-path overhead. Diffusion appears only in its cost evaluation, per-step verification of the denoising loop is left to future work, and undeclared quantization and early exit are explicitly out of scope. Our work is complementary. We need no operator-level instrumentation, we evaluate diffusion workflows end to end on consumer GPUs, and we target exactly the cost-saving behaviours that TAO declares out of scope.
+
+\paragraph{Black-box auditing and model substitution}
+Model equality testing frames API auditing as a two-sample test \citep{gao2025met}. Cai et al.\ \citep{cai2025substitution} find that output classifiers detect fp8 and int8 substitution of LLMs at chance level, and that statistical tests lose power under partial random substitution. API-TAIL notes that honest serving variation makes the null hypothesis composite \citep{apitail2026}. That is the same difficulty that cross-GPU variation creates here. Kim et al.\ \citep{kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion outputs across 22 GPUs of five models and analysed majority voting, without an adversary. Proof of Quality scores outputs rather than computation \citep{poq2024}.
+
+\paragraph{Deployed validation in decentralized image networks}
+On a public decentralized AI network, one image-generation subnet validates by regenerating the image and comparing CLIP embeddings with a cosine threshold of 0.9 \citep{nicheimage_repo}. Another asks miners to return all per-step latents with a hash commitment. A validator re-executes three random steps with probability 0.35 and rejects if the minimum cosine similarity to the reported next latent is below 0.70 \citep{wombo_repo}. The second is, to our knowledge, the earliest deployment of per-step spot checking. Neither rule has a published calibration or adversarial evaluation. We use them as baselines (E0-N and E2-W, Table~\ref{tab:evidence}).
+
+\paragraph{Nondeterminism}
+GPU inference is not bitwise reproducible across hardware, batch sizes and library versions \citep{diffusers_repro,atil2024nondeterminism,he2025nondeterminism,yuan2025nondeterminism}. Tools for reproducing GPU-level nondeterminism are emerging \citep{hawkeye2026}. For diffusion, library documentation recommends generating the noise on the CPU to bring outputs closer across machines \citep{diffusers_repro}.
+
+\paragraph{Economics of auditing outsourced computation}
+Optimal contracts that combine audit rate, fines and redundancy for outsourced computation \citep{pham2014contracts}, sampling with a Nash-equilibrium argument \citep{zhang2024posp}, and the verifier's dilemma \citep{teutsch2019truebit,verifierdilemma2024} provide the incentive framework we build on. Our addition is the detection structure specific to step skipping, and its consequence that the attacker's best response is all-or-nothing (Proposition~\ref{prop:allornothing}).
+
+\paragraph{Blockchain compute markets}
+Smart contracts for pricing and trading edge or federated-learning resources \citep{du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} and escrowed delivery of digital goods \citep{asgaonkar2018escrow} address payment but not the integrity of generative output.
+
+\begin{table}[t]
+\centering\small
+\caption{Positioning. ``Cost-saving attacks'' means fewer steps, quantization or distilled-model substitution evaluated as attacks.}\label{tab:positioning}
+\begin{tabularx}{\linewidth}{lXcccc}
+\toprule
+Work & Evidence & No op-level access & Diffusion & Cost-saving attacks & Calibrated FPR \\
+\midrule
+ZKML \citep{chen2024zkml} & proof & -- & partial & n/a & n/a \\
+TOPLOC, SVIP, VeriLLM & activations & -- & -- & partial & yes \\
+Verde \citep{arun2025verde} & reproducible ops & -- & -- & -- & n/a \\
+TAO \citep{yao2026tao} & per-op tolerance & -- & cost only & excluded & yes \\
+Kim et al.\ \citep{kim2024reproducibility} & output pHash & \checkmark & \checkmark & -- & -- \\
+Cai et al.\ \citep{cai2025substitution} & output text & \checkmark & -- & \checkmark & n/a \\
+Deployed SN23 rule \citep{nicheimage_repo} & output embedding & \checkmark & \checkmark & -- & -- \\
+Deployed SN30 rule \citep{wombo_repo} & per-step latents & \checkmark & \checkmark & -- & -- \\
+\textbf{This work} & \textbf{trajectory, two-tier} & \checkmark & \checkmark & \checkmark & \checkmark \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%% ====================================================================
+\section{System and Threat Model}\label{sec:model}
+
+\paragraph{Parties}
+A \emph{requester} submits a diffusion job and escrows payment $P$. A \emph{provider} owns a GPU and runs the job. A \emph{verifier} is an independent node that re-executes parts of sampled jobs. An \emph{orchestrator} matches jobs to providers and relays state transitions. An \emph{escrow program} on Solana holds $P$, an optional provider bond $B$, and a verifier fee. It releases or refunds funds according to the recorded job state and a timeout \citep{yakovenko2018solana}.
+
+\paragraph{Job specification}
+A job $J=(W,H,P)$ consists of a workflow specification $W$, a digest $H$ of its inputs and configuration, and the payment $P$. $W$ is a pinned ComfyUI workflow graph with allowlisted node types: checkpoint hashes, prompt, negative prompt, seed, resolution, classifier-free-guidance (CFG) scale, a \emph{deterministic} sampler ($\in\{\texttt{euler},\texttt{dpmpp\_2m},\dots\}$), a scheduler and the step count $T$. Ancestral and SDE samplers are excluded, because their per-step noise is drawn on the executing GPU (Section~\ref{sec:protocol}).
+
+\paragraph{Adversary}
+The provider is rational and adaptive. It knows the protocol, the acceptance rules and the frozen thresholds. It chooses any execution strategy that lowers its cost, including those in Table~\ref{tab:attacks}. It does not know before committing whether the job will be sampled, or which steps will be checked. In the core study it does not collude with verifiers.
+
+\paragraph{Trust assumptions}
+Table~\ref{tab:trust} lists what the core study trusts and what it claims. The orchestrator is trusted for liveness, not for payment. Escrow timeouts refund the requester if the orchestrator stops responding.
+
+\begin{table}[t]
+\centering\small
+\caption{Trust assumptions and claims of the core study.}\label{tab:trust}
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+Trusted & Escrow program; the source of sampling randomness (a delayed Solana slot hash); the verifier pool (honest, non-colluding); the orchestrator for liveness \\
+Adversary & Rational provider with a stable identity, knowledge of the rules, no advance knowledge of the sampling draw, no collusion \\
+Claimed & Consistency of the committed trajectory and output with $W$ under calibrated tolerances; detection probability; false rejection; verifier cost; on-chain cost and latency; deterrence under the stated payoff model \\
+Not claimed & That a specific physical GPU executed the job; freshness against legitimate caching; prompt privacy; robustness to verifier collusion or Sybil attacks; production economics \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%% ====================================================================
+\section{Protocol}\label{sec:protocol}
+
+\subsection{Evidence levels}
+Table~\ref{tab:evidence} defines the evidence levels compared. A sampler with schedule $\sigma_0>\sigma_1>\dots>\sigma_T$ produces states $x_0,\dots,x_T$, where $x_0$ is the scaled initial noise and $x_T$ the final latent. At step $i$ it also produces the CFG-combined denoised prediction $D_i=\mathrm{CFG}(f_\theta(x_i,\sigma_i,c))$. In ComfyUI, the per-step callback exposes $(i, D_i, x_i)$ in the model's internal latent space, so a custom node can record them without operator-level instrumentation.
+
+\begin{table}[t]
+\centering\small
+\caption{Evidence levels. $T$: number of steps; $k$: number of checked steps; $c_0$: fixed overhead (text encoding and VAE decode) relative to one step.}\label{tab:evidence}
+\begin{tabularx}{\linewidth}{lXXc}
+\toprule
+Level & Provider commits & Verifier checks when sampled & GPU cost / job \\
+\midrule
+E0 & image digest & full re-execution; pixel hash, LPIPS \citep{zhang2018lpips}, DINOv2 \citep{oquab2023dinov2} with calibrated thresholds & $\approx1$ \\
+E0-N (deployed) & image & full re-execution; CLIP \citep{radford2021clip} cosine $>0.9$ & $\approx1$ \\
+E2-W (deployed) & SHA-256 of per-step latents & 3 random steps, one step each; latent cosine $\ge0.70$ & $\approx3/T$ \\
+E1 & Merkle root over $(x_i,D_i,\sigma_i)_{i}$ & $x_0=\mathrm{noise}(\text{seed})$ exactly; conditioning; $\mathrm{VAE}(x_T)=$ image & $\approx c_0/T$ \\
+\textbf{E2-H (ours)} & as E1 & E1 + Tier A on all steps + Tier B at $k$ steps & $\approx (k+c_0)/T$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Seed binding}
+ComfyUI draws the initial noise on the CPU in float32 from \texttt{torch.manual\_seed(seed)} \citep{comfyui}. The verifier recomputes it and requires an exact match of $x_0$. Whether this holds across CPU instruction sets is measured in RQ1 (\res{R1.1: x86 vs ARM result}). If it does not, the protocol fixes a canonical noise path \todo{finalize after R1.1}.
+
+\subsection{Tier A: solver consistency on every step}
+Given the committed $(x_i,D_i,\sigma_i)$, the next state is a deterministic function of committed values only. For the Euler sampler,
+\begin{equation}
+x_{i+1}=x_i+\frac{x_i-D_i}{\sigma_i}\,(\sigma_{i+1}-\sigma_i). \label{eq:euler}
+\end{equation}
+For DPM-Solver++(2M) \citep{lu2022dpmsolverpp}, with $t_i=-\log\sigma_i$, $h_i=t_{i+1}-t_i$ and $r_i=h_{i-1}/h_i$,
+\begin{equation}
+x_{i+1}=\frac{\sigma_{i+1}}{\sigma_i}x_i-\left(e^{-h_i}-1\right)\left[\left(1+\tfrac{1}{2r_i}\right)D_i-\tfrac{1}{2r_i}D_{i-1}\right], \label{eq:dpm2m}
+\end{equation}
+which reduces to the first-order update at $i=0$ and at the final step. Tier A recomputes \eqref{eq:euler} or \eqref{eq:dpm2m} for \emph{all} $i$ on the verifier's CPU and compares the result to the committed $x_{i+1}$ within a tolerance $\epsilon_A$ (\res{R1.2: $\epsilon_A$; is Tier A bit-exact across CPUs?}). It also checks that the committed schedule $(\sigma_i)$ equals the schedule implied by $W$, which catches step-count reduction directly. Tier A costs no GPU time. It detects copied, interpolated and truncated trajectories (F1, F2, A6). A forger can still pass it by solving \eqref{eq:euler} for $D_i$ (forgery F3), and Tier B exists for that case.
+
+\subsection{Tier B: model consistency at random steps}
+After the commitment is final, the verifier draws $k$ distinct step indices $S\subset\{0,\dots,T-1\}$ from the sampling seed. For each $i\in S$ it recomputes $\hat D_i=\mathrm{CFG}(f_\theta(x_i,\sigma_i,c))$ on its own GPU and accepts step $i$ if $d_i(\hat D_i,D_i)\le\tau_i$. Here $d_i$ is a normalized distance (\res{R1.3: chosen metric, e.g.\ relative $\ell_2$ or max-abs}) and $\tau_i$ a per-step tolerance calibrated on honest cross-hardware runs (Section~\ref{sec:method-cal}). A job passes Tier B if all $k$ checked steps pass. Per-step tolerances are needed because honest deviation varies with the noise level (\res{R1.4: shape of honest deviation vs step}).
+
+\subsection{Sampling, verdicts and settlement}
+Each job is sampled with probability $p$ using a Solana slot hash that exists only after the commitment is finalized and a fixed delay has passed, combined with the job identifier. The same draw also seeds $S$. Following the original draft, a fail or inconclusive verdict escalates to a second verifier, and the outcome follows a two-of-three agreement. A confirmed fail refunds the requester, forfeits the provider bond $B$ and lowers the provider's reputation. The verifier commits its recomputed values before it sees the provider's commitment opened, so that it cannot simply copy them. The trajectory itself, about \res{R3.3: MB} per SDXL job, stays off-chain until the job closes. Only the Merkle root and the verdicts are recorded on-chain.
+
+%% ====================================================================
+\section{Analysis}\label{sec:analysis}
+
+\paragraph{An output-only ceiling}
+Let $\mathcal{D}_H$ be the distribution of what an output-only verifier observes for honest execution, including variation across the provider's and verifier's hardware, and let $\mathcal{D}_A$ be the distribution under attack $A$.
+
+\begin{proposition}[Output-only ceiling]\label{prop:ceiling}
+For any (possibly randomized) rule $V$ with false-rejection rate $\alpha=\Pr_{\mathcal{D}_H}[V=\mathrm{fail}]$, the sensitivity to attack $A$ satisfies $q_A=\Pr_{\mathcal{D}_A}[V=\mathrm{fail}]\le\alpha+\mathrm{TV}(\mathcal{D}_A,\mathcal{D}_H)$, independently of the sampling rate $p$.
+\end{proposition}
+\begin{proof}
+For any event $E$, $|\Pr_{\mathcal{D}_A}[E]-\Pr_{\mathcal{D}_H}[E]|\le\mathrm{TV}(\mathcal{D}_A,\mathcal{D}_H)$. Take $E=\{V=\mathrm{fail}\}$. Randomized rules follow by conditioning on the rule's coins. The sampling rate $p$ changes how many jobs are examined, not $\Pr_{\mathcal{D}_A}[E]$.
+\end{proof}
+Raising $p$ therefore cannot rescue an output-only rule against an attack whose output distribution overlaps the honest one. The same argument applies at every evidence level with its own observation space. Richer evidence (E2) helps exactly when it increases the total-variation distance (TV).
+
+\paragraph{Detection by step spot checks}
+Suppose a provider fakes a set $F$ of $m=sT$ steps, in such a way that Tier A passes (forgery F3), and let Tier B check $k$ steps drawn uniformly without replacement. Let $r$ be the probability that a faked step exceeds its tolerance, and $\alpha_s$ the probability that an honest step does.
+
+\begin{proposition}[Spot-check detection]\label{prop:spot}
+Assuming independent per-step outcomes, a sampled faked job fails Tier B with probability
+\begin{equation}
+q(s,k)=1-\sum_{x=0}^{k}\frac{\binom{m}{x}\binom{T-m}{k-x}}{\binom{T}{k}}(1-r)^{x}(1-\alpha_s)^{k-x}, \label{eq:q}
+\end{equation}
+and an honest job fails with probability $\alpha(k)=1-(1-\alpha_s)^k$. When $T$ is large, $q(s,k)\approx1-\bigl(1-sr-(1-s)\alpha_s\bigr)^k$.
+\end{proposition}
+\begin{proof}
+The number $X$ of faked steps among the $k$ checked ones is hypergeometric. Conditional on $X=x$, the job passes only if all $x$ faked steps and all $k-x$ honest steps pass. These events are independent with probabilities $(1-r)^x$ and $(1-\alpha_s)^{k-x}$. The approximation replaces sampling without replacement by sampling with replacement.
+\end{proof}
+\begin{corollary}[Calibrating the per-step tolerance]
+To keep the job-level false-rejection rate at or below $\alpha^\ast$, the per-step tolerance must satisfy $\alpha_s\le1-(1-\alpha^\ast)^{1/k}$. Checking more steps therefore requires a stricter per-step tolerance.
+\end{corollary}
+This trade-off is easy to miss when tolerances are set ad hoc. With $k=3$ and $\alpha^\ast=1\%$, each step may falsely reject at most about $0.33\%$ of the time.
+
+\paragraph{Best response and deterrence}
+Let a job cost the honest provider $c$ in GPU time. Faking a fraction $s$ of the steps saves $\beta_A s c$, where $\beta_A\le1$ is the share of the cost that is avoided per faked step. A detected fraud forfeits payment and bond, a loss of $L=P+B$. Neglecting reputation, the provider's expected gain from cheating relative to honesty is
+\begin{equation}
+\Delta(s)=\beta_A s c-p\,\bigl[q(s,k)-\alpha(k)\bigr]L. \label{eq:gain}
+\end{equation}
+\begin{proposition}[All-or-nothing best response]\label{prop:allornothing}
+Under the approximation in Proposition~\ref{prop:spot}, $\Delta$ is convex on $[0,1]$. Hence the provider's best response is $s^\ast\in\{0,1\}$. Cheating is deterred, meaning $\Delta(s)\le0$ for all $s$, if and only if
+\begin{equation}
+p\,\bigl[1-(1-r_A)^k-\alpha(k)\bigr](P+B)\ \ge\ \beta_A\,c. \label{eq:deter}
+\end{equation}
+\end{proposition}
+\begin{proof}
+With $u=sr+(1-s)\alpha_s$, which is affine in $s$, $q=1-(1-u)^k$ is concave in $s$ for $k\ge1$. So $-pqL$ is convex, and adding the linear term keeps $\Delta$ convex. A convex function on an interval attains its maximum at an endpoint. Since $\Delta(0)=0$, deterrence holds if and only if $\Delta(1)\le0$, which is \eqref{eq:deter}.
+\end{proof}
+For a full substitution attack such as an fp8 or turbo model, $s=1$ and $r_A$ is that attack's per-step separability. Inequality~\eqref{eq:deter} must hold for every attack class $A$ in scope. The marketplace then minimizes the expected verifier cost per job, $C(p,k)=p\,\frac{k+c_0}{T}\,c$, subject to \eqref{eq:deter} for all $A$. For fixed $k$, the smallest feasible rate is
+\begin{equation}
+p^\ast(k)=\max_A\frac{\beta_A\,c}{\bigl[1-(1-r_A)^k-\alpha(k)\bigr](P+B)}, \label{eq:pstar}
+\end{equation}
+and $k^\ast=\arg\min_k p^\ast(k)(k+c_0)$ is a one-dimensional search. Attacks with $r_A\approx\alpha_s$ make \eqref{eq:pstar} infeasible for every $k$. This is the step-level analogue of Proposition~\ref{prop:ceiling}. We estimate $r_A$ and $\beta_A$ in RQ2 and test \eqref{eq:q} and \eqref{eq:deter} in RQ3.
+
+%% ====================================================================
+\section{Methodology}\label{sec:method}
+
+\subsection{Hardware and heterogeneity levels}\label{sec:method-hw}
+Table~\ref{tab:levels} defines the five heterogeneity levels. Owned hardware comprises at least two RTX~5080 GPUs (Blackwell GB203, x86-64 hosts) and at least two NVIDIA DGX~Spark systems (Blackwell GB10 with ARM64 CPU and 128~GB of unified memory). Older GPU generations come from short-term rentals: \res{R0.1: models, e.g.\ RTX 4090, RTX 3090, T4/L4/A100}. The exact driver, CUDA, PyTorch and ComfyUI versions of every node are recorded in each run manifest (\res{R0.4: version table in Appendix}).
+
+\begin{table}[t]
+\centering\small
+\caption{Nested heterogeneity levels.}\label{tab:levels}
+\begin{tabularx}{\linewidth}{llX}
+\toprule
+Level & Comparison & Isolates \\
+\midrule
+L0 & same unit, repeated runs & run-to-run nondeterminism \\
+L1 & same unit, different software configuration & precision, attention backend, deterministic mode, library version \\
+L2 & two units of the same model & unit-to-unit variation \\
+L3 & RTX 5080 vs DGX Spark & chip, compute capability, memory system, CPU ISA \\
+L4 & Blackwell vs older generations (rented) & GPU generation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Workloads}
+We use SD1.5 \citep{rombach2022ldm} at $512^2$ and SDXL \citep{podell2023sdxl} at $1024^2$, with 30 steps, the \texttt{euler} and \texttt{dpmpp\_2m} samplers and a fixed CFG scale, in ComfyUI at a pinned commit. \todo{optional: FLUX.1-schnell.} Prompts come from \todo{PartiPrompts or COCO captions; record the source and licence}, with 3 seeds per prompt. They are split by prompt into calibration, development and test sets (\res{R0.5: sizes}).
+
+\subsection{Attacks and forgeries}
+Table~\ref{tab:attacks} lists the attacks. Savings $\beta_A$ are measured, not assumed.
+
+\begin{table}[t]
+\centering\small
+\caption{Attacks. $\beta_A$: measured fraction of GPU time saved.}\label{tab:attacks}
+\begin{tabularx}{\linewidth}{llXc}
+\toprule
+ID & Attack & Implementation & $\beta_A$ \\
+\midrule
+A1 & fewer steps & $T'\in\{25,20,15\}$ with the schedule re-labelled & \res{R2.4} \\
+A2 & fp8 UNet & ComfyUI \texttt{--fp8\_e4m3fn-unet} & \res{R2.4} \\
+A2b & 4-bit (NVFP4) model & \todo{if supported at the pinned version} & \res{R2.4} \\
+A3 & distilled model & SDXL-Turbo / LCM-LoRA / Lightning & \res{R2.4} \\
+A4 & sampler swap & cheaper sampler, committed as the required one & \res{R2.4} \\
+A5 & low resolution + upscale & $0.5\times$ generation, then upscale & \res{R2.4} \\
+A6 & early exit & truncate, then extrapolate & \res{R2.4} \\
+A7 & replay & output of a near-duplicate prompt & \res{R2.4} \\
+A8 & unrelated output & sanity control & 1.0 \\
+F1 & frame copy & $x_{i+1}\leftarrow x_i$ & \res{R2.4} \\
+F2 & interpolation & linear between computed anchors & \res{R2.4} \\
+F3 & solver inversion & compute $m$ steps, solve \eqref{eq:euler} for the rest of $D_i$ & \res{R2.4} \\
+F4 & cheap-model trajectory & complete trajectory from A2 or A3 & \res{R2.4} \\
+M & falsified metadata & negative control & -- \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Calibration and statistics}\label{sec:method-cal}
+All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 thresholds for E0, $\epsilon_A$ for Tier A, and $\tau_i$ for Tier B, set by the corollary to Proposition~\ref{prop:spot} for $\alpha^\ast=1\%$. They are frozen, with a recorded hash, before any attack data is examined. Error rates are reported on the disjoint test split, with Wilson 95\% intervals \citep{wilson1927}. Medians and costs use cluster-bootstrap intervals over prompt and hardware pair. Zero false rejections in 299 independent honest audits bound the rate below 1\% at 95\% confidence, which sets the minimum honest test count per stratum. Thresholds changed after test results are seen define a new, labelled experiment group.
+
+\subsection{Testbed for RQ3}
+The RTX~5080 nodes act as providers and the DGX~Spark nodes as verifiers. The Anchor escrow program runs on a local validator for volume and on Devnet for fees and latency. For each lifecycle path (accept, sampled-pass, sampled-fail with dispute, timeout refund) we report compute units, fees and the latency to the processed, confirmed and finalized commitment levels \citep{solana_fees}. Scale-out beyond the physical nodes is evaluated by a Monte Carlo simulation of Propositions~\ref{prop:spot} and \ref{prop:allornothing} driven by the measured $r_A$, $\alpha_s$ and $\beta_A$.
+
+%% ====================================================================
+\section{RQ1: Honest Variation}\label{sec:rq1}
+
+\begin{figure}[t]\centering
+\figph{R1.5}{Honest deviation by heterogeneity level L0--L4 (box plots), for final images (LPIPS, DINOv2, pixel equality rate) and per-step $D_i$ distance. Panels: SD1.5, SDXL.}
+\caption{Honest variation across heterogeneity levels.}\label{fig:rq1-levels}
+\end{figure}
+
+\begin{figure}[t]\centering
+\figph{R1.4}{Per-step honest deviation $d_i$ versus step index $i$ for each hardware pair; calibrated $\tau_i$ overlaid.}
+\caption{Honest per-step deviation and calibrated tolerances.}\label{fig:rq1-steps}
+\end{figure}
+
+\paragraph{Exact reproducibility} \res{R1.1: x\_0 bit-exact across x86 and ARM? (n seeds)}. \res{R1.6: fraction of bit-identical images at L0, L2, L3, L4 per sampler and precision}.
+
+\paragraph{Factors} \res{R1.7: table of factor effects (precision, attention backend, deterministic mode); which factor dominates; whether a ``deterministic profile'' exists and what throughput it costs}.
+
+\paragraph{Answer to RQ1} \res{R1.8: two sentences.}
+
+%% ====================================================================
+\section{RQ2: Separating Attacks from Honest Variation}\label{sec:rq2}
+
+\paragraph{RQ2a: deployed rules}
+\begin{table}[t]
+\centering\small
+\caption{Acceptance rate (\%, 95\% CI) of the deployed rules under each attack, on the test split.}\label{tab:rq2a}
+\begin{tabular}{lcc}
+\toprule
+Attack & E0-N (CLIP cos $>0.9$) & E2-W (latent cos $\ge0.70$) \\
+\midrule
+honest (L3/L4) & \res{R2.5} & \res{R2.5} \\
+A1--A8 & \res{R2.5} & \res{R2.5} \\
+F1--F4 & n/a & \res{R2.5} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\res{R2.1: narrative of the deployed-rule results; mention the responsible-disclosure status \todo{}}.
+
+\paragraph{RQ2b: calibrated evidence levels}
+\begin{table}[t]
+\centering\small
+\caption{Sensitivity $q_A$ at job-level FPR $\le1\%$ (95\% CI), by evidence level.}\label{tab:rq2b}
+\begin{tabular}{lcccc}
+\toprule
+Attack & E0 (LPIPS) & E0 (DINOv2) & E1 & E2-H ($k=$\res{R2.6}) \\
+\midrule
+A1--A8, F1--F4 & \res{R2.3} & \res{R2.3} & \res{R2.3} & \res{R2.3} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]\centering
+\figph{R2.7}{Empirical $q(s,k)$ under partial faking (F3 with varying $s$) against Eq.~\eqref{eq:q} using the measured $r$ and $\alpha_s$.}
+\caption{Spot-check detection under partial faking: measurement versus Proposition~\ref{prop:spot}.}\label{fig:rq2-partial}
+\end{figure}
+
+\paragraph{Inseparable attacks} \res{R2.8: which attacks, if any, satisfy $r_A\approx\alpha_s$ (e.g.\ fp8 at L4); interpretation via Proposition~\ref{prop:ceiling}}.
+
+\paragraph{Answer to RQ2} \res{R2.9}
+
+%% ====================================================================
+\section{RQ3: Cost and Deterrence}\label{sec:rq3}
+
+\begin{table}[t]
+\centering\small
+\caption{Verifier and settlement cost per job.}\label{tab:rq3cost}
+\begin{tabular}{lccc}
+\toprule
+Level & Verifier GPU-s (median, p95) & Storage (MB) & Relative to E0 \\
+\midrule
+E0 / E0-N / E2-W / E1 / E2-H & \res{R3.1} & \res{R3.3} & \res{R3.1} \\
+\bottomrule
+\end{tabular}
+\vspace{0.5em}
+
+\begin{tabular}{lccc}
+\toprule
+Escrow path & Compute units & Fee (SOL) & Latency to finalized (median, p95) \\
+\midrule
+accept / sampled-pass / dispute / timeout refund & \res{R3.4} & \res{R3.4} & \res{R3.4} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]\centering
+\figph{R3.5}{Pareto frontier of detection (or deterrence margin) against verifier GPU-seconds per job, for E0, E2-W and E2-H over $(p,k)$.}
+\caption{Cost--detection frontier.}\label{fig:pareto}
+\end{figure}
+
+\begin{figure}[t]\centering
+\figph{R3.6}{Deterrence region of Eq.~\eqref{eq:deter} in the $(p,\,B/P)$ plane for each attack; $p^\ast(k)$ from Eq.~\eqref{eq:pstar}; Monte Carlo and testbed points overlaid.}
+\caption{Deterrence condition and cost-optimal sampling.}\label{fig:deter}
+\end{figure}
+
+\paragraph{Answer to RQ3} \res{R3.2: $k^\ast$, $p^\ast$, required bond ratio, agreement between theory and measurement}.
+
+%% ====================================================================
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{What the blockchain adds} Integrity detection in our design does not depend on the chain: a trusted broker running the same checks would detect the same attacks. The escrow makes the payoff model of Proposition~\ref{prop:allornothing} enforceable without a custodian. Payment and bond are locked before execution, released or forfeited by recorded verdicts, and refunded on timeout if the orchestrator fails. Its cost is \res{R3.4}.
+
+\paragraph{Implications for marketplaces} \res{R4.1: e.g.\ require deterministic samplers and CPU noise; commit full trajectories; calibrate tolerances per step and per job-level FPR; avoid uncalibrated cosine thresholds.}
+
+\paragraph{Relation to TAO and to language models} Our sampler-level evidence and TAO's operator-level evidence are complementary. Where Tier B cannot separate an attack (\res{R2.8}), operator-level commitments or trusted execution are required. For LLM inference, output-only detection of quantized substitution is already known to fail \citep{cai2025substitution}, and activation-based schemes apply. We therefore do not evaluate LLM workloads here.
+
+\paragraph{Responsible disclosure} The deployed rules were reproduced from public source code at fixed commits and attacked offline only. \todo{record the disclosure to the subnet operators and their response.}
+
+%% ====================================================================
+\section{Limitations and Threats to Validity}\label{sec:limits}
+The verifier pool is assumed honest and non-colluding; peer-prediction and random assignment mechanisms \citep{verifierdilemma2024} are complementary. Cross-generation results cover only the rented models tested (\res{R0.1}). Deterministic samplers are required; ancestral samplers need a CPU noise sampler. Proposition~\ref{prop:allornothing} uses the with-replacement approximation and independent per-step outcomes, which we check empirically (\res{R2.7}). Reputation is not modelled in Eq.~\eqref{eq:gain}. Devnet fees do not represent mainnet economics. Re-execution establishes consistency with the committed workload, not that a particular GPU performed it.
+
+%% ====================================================================
+\section{Conclusion}\label{sec:conclusion}
+\res{R5.1: written last. Restate the question, the three answers and the practical recommendation.}
+
+%% ====================================================================
+\section*{CRediT authorship contribution statement}
+\todo{per author: Conceptualization, Methodology, Software, Investigation, Writing.}
+
+\section*{Declaration of competing interest}
+The authors declare no competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. \todo{confirm}
+
+\section*{Data and code availability}
+Code, workflow fingerprints, frozen thresholds, raw trajectories (or a sample of them, if storage limits apply) and checksums are available at \res{R0.2: repository URL and DOI}.
+
+\section*{Declaration of generative AI use}
+\todo{State AI-assisted writing and editing per Elsevier policy.}
+
+\section*{Acknowledgements}
+\todo{}
+
+\appendix
+\section{Software and hardware versions}\label{app:versions}
+\res{R0.4}
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{refs,refs_pending}
+
+\end{document}

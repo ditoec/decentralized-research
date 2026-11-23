@@ -99,13 +99,60 @@ The Solana Anchor escrow, commit-then-sample with slot-hash randomness, and 2-of
 
 RQ3 reports compute units, fees and latency for each lifecycle path, including disputes, in **one table**. The B3-vs-OC comparison (broker vs chain) is answered by argument plus the cost of the refund-on-timeout path. It is no longer a full experimental arm.
 
-### 4.5 Hardware and statistics
+### 4.5 Hardware and statistics (updated 2026-11-23 for available hardware)
 
-- **GPUs:** at least 5 models across at least 3 architectures, for example RTX 3060 and 3090 (Ampere), 4060 Ti and 4090 (Ada), one Turing card (2080 or T4), and one Blackwell card (5090) if possible. Use owned cards plus short rentals. RQ1 needs only about 2–4 GPU-hours per card.
-- **Models:** SD1.5 and SDXL (required). FLUX.1-schnell (optional; it uses a different architecture, a flow transformer).
-- **RQ1 factor grid per GPU:** {fp16, bf16, fp32} × {SDPA, xformers} × {Euler, DPM++ 2M} × {noise on CPU, noise on GPU}, with 200 prompts × 3 seeds on the calibration split.
-- **Splits:** calibration / dev / test, separated by prompt. Thresholds are frozen by hash, as in the draft. Keep the draft's Wilson intervals and cluster bootstrap, and the "299 audits for FPR < 1%" sizing rule.
-- **Replay simulation:** **drop** the 10–100 provider grid. Replace it with a small Monte Carlo that checks Propositions 2 and 3 using the measured r and τ_t. It takes hours, not weeks.
+**Owned hardware: RTX 5080s and DGX Sparks.** Both are Blackwell, so owned hardware covers only one GPU generation, but it varies along three other axes that matter for verification:
+
+| Property | RTX 5080 | DGX Spark (GB10) |
+|---|---|---|
+| GPU | Blackwell GB203, compute capability sm_120, 16 GB GDDR7 (discrete) | Blackwell GB10, sm_121, 128 GB LPDDR5X **unified** with the CPU |
+| Host CPU / ISA | x86-64 (typical desktop) | **ARM64** (Grace-class cores), DGX OS |
+| Natural marketplace role | **Provider** (a typical consumer gaming GPU) | **Verifier** or reference node. Fits every model at full precision |
+| Fits | SD1.5, SDXL (fp16), FLUX.1 in fp8 | Everything, including FLUX.1 in bf16 |
+
+Specs are from NVIDIA product pages. Confirm the exact compute capability and driver/CUDA versions with `nvidia-smi` and `torch.cuda.get_device_capability()` in the pilot.
+
+**Heterogeneity is measured as nested levels.** This replaces "at least 5 GPU models", and it is a stronger design because each level isolates one cause:
+
+| Level | Comparison | Hardware | What it isolates |
+|---|---|---|---|
+| L0 | Same card, repeated runs | owned | Run-to-run nondeterminism |
+| L1 | Same card, different software config (precision, attention backend, `--deterministic`, torch/ComfyUI version) | owned | Software-stack effects (these are the RQ1 factors) |
+| L2 | Different physical units of the same model (5080 ↔ 5080, Spark ↔ Spark) | owned, **needs at least 2 of each** | Unit-to-unit variation (expected: none) |
+| L3 | Same generation, different chip, memory system and CPU ISA (5080 ↔ Spark) | owned | Kernel selection per compute capability, and x86 vs ARM CPU |
+| L4 | Different generation (Blackwell ↔ Ada ↔ Ampere ↔ older) | **rented** | The marketplace reality: providers of mixed generations |
+
+**L4 rentals (short-term marketplace rentals).** Rent 3 models: RTX 4090 (Ada), RTX 3090 (Ampere), and one of T4, L4 or A100 (Turing, Ada datacenter or Ampere datacenter, whichever is cheapest). On rentals, run only the **core config plus the precision factor**, about 3–5 GPU-hours each. Estimated cost: well under US$100 in total. Check current rental prices at booking. With the rentals, cross-GPU results cover **5 GPU models across 3 or more generations** (10 cross-model pairs), and owned hardware carries the full factor grid.
+
+**New exact-reproducibility checks enabled by the Spark (ARM64):**
+- **x_T across CPU ISAs.** ComfyUI draws the initial noise from the CPU (`torch.randn` on the CPU, doc 06 §1). PyTorch uses vectorized normal-distribution paths for larger tensors, and these may differ between x86 (AVX2) and ARM (NEON). Test whether x_T is **bit-identical on x86 and ARM**. If it isn't, the E1 seed binding must name a canonical CPU path, or compare within a tolerance. This costs minutes, and the result is publishable either way.
+- **The Tier A solver check on ARM vs x86**, run on the CPU: is it bit-exact, or does it need a tolerance?
+
+**Blackwell-native low precision makes the attacks realistic.** Blackwell tensor cores run fp8 natively (and NVFP4). An fp8 UNet (`--fp8_e4m3fn-unet`, optionally with `--supports-fp8-compute` / fp8 matmul) is therefore a **fast** attack on these cards, which is exactly a provider's incentive. Add **A2b: NVFP4 / 4-bit quantized model**, if ComfyUI's Blackwell FP4 support covers SDXL or FLUX at the pinned version. Check this in the pilot, and drop A2b if not.
+
+**Software caveats:**
+- On the Spark, use NVIDIA's aarch64 PyTorch/CUDA build for sm_121. **xformers may be unavailable on aarch64/sm_121**, so the attention factor on the Spark is {SDPA, split, quad}. Record exactly which backend is used.
+- Pin one ComfyUI commit across all nodes. Start with `8b25bbc` from the code audit and freeze it at the pilot.
+- If the Anchor toolchain is awkward on ARM, run the local Solana validator (`solana-test-validator`) on an x86 host such as a 5080 machine.
+
+**Models:** SD1.5 and SDXL are required. **FLUX.1-schnell / dev is now affordable**: bf16 on the Spark, fp8 on the 5080. It is still optional, but it adds a second architecture family (a flow transformer).
+
+**RQ1 factor grid on owned hardware:**
+- Factors: {fp16, bf16, fp32} × {SDPA, alternative attention backend} × {euler, dpmpp_2m} × {`--deterministic` off, on}, which is 24 configs.
+- Workload: 200 prompts × 3 seeds = 600 images per config, about 14,400 per GPU per model.
+- At a few seconds per image, that is roughly a day per GPU per model, run overnight on owned cards. Measure the actual rate in the pilot. If it runs over, cut the prompts to 100.
+- The old "noise on CPU vs GPU" factor is dropped. ComfyUI always uses CPU noise, and the CPU-ISA test replaces it.
+
+**Marketplace testbed (end-to-end, RQ3):**
+- Physical providers are the 5080s. Verifiers are the Sparks plus any spare 5080. The escrow runs on a local validator plus Devnet.
+- This replaces "simulated providers replaying traces" for the cost and latency results. The small Monte Carlo (below) covers the scale-out.
+
+**Splits and statistics:**
+- Calibration / dev / test splits are separated by prompt. Thresholds are frozen by hash, as in the draft.
+- Keep the draft's Wilson intervals and cluster bootstrap, and the "299 audits for FPR < 1%" sizing rule.
+- **The independent unit for cross-hardware claims is the hardware pair.** With 5 models, report results per pair and per level (L0–L4). Do not claim results for GPU generations that were not tested.
+
+**Replay simulation:** **drop** the 10–100 provider grid. Replace it with a small Monte Carlo that checks Propositions 2 and 3 using the measured r and τ_t. It takes hours, not weeks.
 
 ## 5. What is dropped or demoted, and why
 
@@ -141,7 +188,9 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 |---|---|---|
 | Honest per-step deviation across architectures is as large as fp8 per-step deviation | A2 is undetectable even at E2 | Report it as a finding: quantization is the irreducible gap without operator-level or TEE evidence. This matches TAO's limitation from the other side |
 | Cross-GPU results are bit-exact under some configuration (e.g., fp32 + CPU noise + no xformers) | Tolerance is unnecessary in that configuration | Report a "deterministic profile" that marketplaces could require, with its throughput cost (compare EigenAI). This is a strong practical result |
-| Fewer than 5 GPU models available | The heterogeneity claim is weaker | Rent short-term. The RQ1 budget is about US$50–150 |
+| Owned hardware is all Blackwell (RTX 5080, DGX Spark) | Cross-generation claims need rentals | L0–L3 run on owned hardware. Rent 3 older models for L4 (core config only, under US$100). If a rental is unavailable, report L4 for the models tested and narrow the claim |
+| The Spark's aarch64 stack lags (no xformers, ComfyUI or custom-node problems on sm_121) | Gaps in the factor grid on the Spark | Use SDPA or split attention on the Spark and record the backend. If ComfyUI fails on the Spark, use it as a verifier-only node with a matched PyTorch/diffusers reference implementation for Tier B, and say so in the paper |
+| x_T differs between x86 and ARM | The exact seed binding breaks across CPUs | Report it as a finding. Fix a canonical noise path in the protocol (a pinned torch version, or scalar `randn` in chunks below the vectorization threshold), or use a tolerance for x_T |
 | A provider fakes trajectories that are consistent step by step | Faking one step needs a true step computation, so cheating gives no savings | State this as a lemma: any trajectory that passes all one-step checks is a valid trajectory for the committed model, up to τ |
 | WOMBO SN30 already does E2. **Confirmed by the code audit (2024, archived)** | Per-step spot-checking itself is not new | **Applied:** the framing is now break-and-fix. We evaluate the deployed rules (E0-N, E2-W), then harden the check (E2-H). See doc 06 |
 | The deployed rules turn out robust (W1 is false) | The "attack" headline weakens | It is still a result: the first calibrated FPR and FNR for these rules. E2-H then competes on cost and on theory |
@@ -150,9 +199,10 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 
 | WP | Content | Dates |
 |---|---|---|
-| WP0 | Finish the priority reads (doc 04, §4). Read WOMBO and NicheImage code. Lock the delta | Nov 24 – Dec 6 |
-| WP1 | ComfyUI trajectory-commit node, verifier (E0 / E1 / E2), attack injectors, run manifests | Dec 7 – Jan 3 |
-| WP2 | **RQ1 study** on at least 5 GPUs. Freeze τ (E0) and τ_t (E2) | Jan 4 – Jan 31 |
+| WP0 | Finish the priority reads (doc 04, §4). The WOMBO and NicheImage code is already read (doc 06). Lock the delta | Nov 24 – Dec 6 |
+| **WP0b** | **Hardware pilot (2–3 days, on owned hardware).** Run it in parallel with WP0. See the checklist below | Nov 26 – Dec 6 |
+| WP1 | ComfyUI trajectory-commit node, verifier (E0-N, E2-W, E2-H), attack injectors (A1–A8, F1–F4), run manifests | Dec 7 – Jan 3 |
+| WP2 | **RQ1 study:** the full factor grid on the owned 5080s and Sparks (L0–L3), plus rentals for L4 (book them in the first week of January). Freeze τ (E0) and τ_i (E2-H) | Jan 4 – Jan 31 |
 | WP3 | RQ2 attack-separability runs and the partial-cheating sweep | Feb 1 – Feb 28 |
 | WP4 | Propositions 1–3 with proofs, and the Monte Carlo (parallel with WP3) | Feb 1 – Feb 28 |
 | WP5 | Anchor escrow with bond and trajectory root, the RQ3 cost table, end-to-end demo runs | Jan 4 – Mar 14 (parallel, second person) |
@@ -161,4 +211,17 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 
 **Submission target: mid-May 2027.** That is about one month earlier than before, because the scope is smaller.
 
-**Go / no-go (Jan 31, after RQ1):** if honest variation is bit-exact everywhere, switch the framing to the "deterministic profile" pivot in §7.
+**WP0b pilot checklist.** It needs owned hardware only, and every item is logged as a run in `experiments/runs/`.
+1. Inventory every node: GPU, compute capability, driver, CUDA, torch, ComfyUI commit, CPU ISA. Record the **number** of 5080s and Sparks, because L2 needs at least 2 of each.
+2. Install the pinned ComfyUI on both a 5080 and a Spark. Note anything that fails on aarch64.
+3. Generate x_T for 100 seeds on the x86 host and on the Spark's ARM CPU, and check whether the bytes match.
+4. Run SDXL, 30 steps, euler, on 20 prompts × 2 seeds, on a 5080 and on a Spark. Compare by pixel hash and record the maximum absolute difference of the latent per step. This first look at L0 and L3 sets expectations for the go/no-go.
+5. Measure the per-image time on each node, to size the RQ1 grid.
+6. Check whether `--fp8_e4m3fn-unet` and any FP4 path work on each node (attacks A2 and A2b).
+7. Quick check of hypothesis W1 (doc 06 §2): the cosine similarity of `frame[i]` vs `frame[i+1]` on a few honest trajectories. If it is above 0.70, the frame-copy forgery F1 already passes WOMBO's rule.
+
+**Go / no-go #0 (Dec 6, after the pilot):**
+- If 5080 ↔ Spark outputs are bit-exact for SDXL, honest cross-hardware variation within Blackwell is zero. The study then depends on the L4 rentals, so book them earlier, in December.
+- If W1 already holds in the pilot, the break-and-fix headline is secured early.
+
+**Go / no-go #1 (Jan 31, after RQ1):** if honest variation is bit-exact everywhere, including L4, switch the framing to the "deterministic profile" pivot in §7.

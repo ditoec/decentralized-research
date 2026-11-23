@@ -14,7 +14,8 @@ from html import escape
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "figures"))
 BROWSERS = [r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-            r"C:\Program Files\Google\Chrome\Application\chrome.exe"]
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"]
 SCALE = 3  # device pixels per SVG unit -> ~500 dpi at 168 mm text width
 
 FONT = "Arial, Helvetica, sans-serif"
@@ -113,7 +114,7 @@ def fig1():
         ("1. Threat model", ["Requester, provider, verifier", "Trust assumptions", "Cost-saving adversary"]),
         ("2. Protocol design", ["Evidence levels E0, E1, E2-H", "Seed binding, two-tier check", "Escrow with provider bond"]),
         ("3. Analytical model", ["P1: output-only ceiling", "P2: spot-check detection", [("P3: deterrence, best (", ""), ("p", "it"), (", ", ""), ("k", "it"), (")", "")]]),
-        ("4. Testbed and workloads", ["RTX 5080, DGX Spark, rented", "GPUs; heterogeneity L0–L4", "SD1.5 and SDXL in ComfyUI"]),
+        ("4. Testbed and workloads", ["DGX Spark and rented x86", "GPUs; heterogeneity L0–L4", "SD1.5 and SDXL in ComfyUI"]),
         ("5. RQ1: honest variation", ["Deviation of images, latents", "and single sampler steps,", "by level and by factor"]),
         ("6. Calibrate and freeze", ["Tolerances for FPR ≤ 1%", "on the calibration split;", "hashed before attack data"]),
         ("7. RQ2: attack separation", ["Attacks A1–A8, forgeries F1–F4", "vs deployed rules E0-N, E2-W", "and E0, E1, E2-H (test split)"]),
@@ -157,7 +158,7 @@ def fig2():
     LX = 168                      # start of the content area (lane labels to the left)
     LH = 142
     lanes = [("Requester", None, 12), ("Escrow contract", "on-chain (Solana)", 12 + LH),
-             ("Provider", "e.g. RTX 5080", 12 + 2 * LH), ("Verifier", "e.g. DGX Spark", 12 + 3 * LH)]
+             ("Provider", "e.g. RTX 5090", 12 + 2 * LH), ("Verifier", "e.g. DGX Spark", 12 + 3 * LH)]
     body = []
     for i, (name, sub, y) in enumerate(lanes):
         fill = CHAIN if i == 1 else "#ffffff"

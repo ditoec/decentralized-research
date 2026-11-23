@@ -23,3 +23,6 @@ experiments/runs/**/*.safetensors
 
 # Office lock files
 ~$*
+
+# Internal host details; the repository is public
+docs/local-nodes.md

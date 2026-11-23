@@ -14,7 +14,7 @@ This is a research-paper repo targeting a Q1 journal: **Emerging Science Journal
 - Keep the novelty claims consistent with `docs/05-revised-design.md` §2 and `docs/06-code-audit.md` §4. Per-step spot-checking itself is NOT new (WOMBO SN30, 2024). Never write "first" or "no prior work" without a fresh literature check.
 
 ## Hardware
-- Owned: RTX 5080s (Blackwell, x86 hosts) and DGX Sparks (GB10 Blackwell, ARM64, 128 GB unified memory). Older GPU generations (L4 level) come from short rentals. Plan: `docs/05-revised-design.md` §4.5.
+- Owned: six DGX Sparks (GB10 Blackwell, ARM64, unified memory), shared with a live production platform. There are no owned RTX 5080s. All x86 GPUs (RTX 5090 for Blackwell, plus Ampere and Ada cards) and the Solana validator host are rented on RunPod, under a hard cap of US$200 for all paid infrastructure. Plan: `docs/05-revised-design.md` §4.5 and `docs/10-paid-infrastructure-and-thesis.md`.
 - ESJ rules: numbered [n] citations; APA references with ALL authors (no "et al." in the reference list); Data Availability Statement before References; structure Introduction / Materials and Methods / Results and Discussion / Conclusion / Declarations / References.
 - Word checks: MS Word is installed. Export a PDF via COM (`Word.Application`, `ExportAsFixedFormat(pdf, 17)`) and render pages to PNG with the WinRT `Windows.Data.Pdf` API in PowerShell. There is no LibreOffice or pdftoppm.
 - Division of labor: Claude works on the paper. An engineer runs the experiments using `docs/07-runbook.md`.

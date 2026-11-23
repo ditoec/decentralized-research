@@ -463,8 +463,8 @@ ABSTRACT = (
  "rarely gives a bit-identical result, so every acceptance rule must tolerate honest variation, and that tolerance is "
  "where cheating can hide. {b|Objectives:} this study determines what evidence a marketplace must demand to detect "
  "cost-saving cheating on diffusion jobs, and at what cost. {b|Methods:} honest variation of pinned ComfyUI SD1.5 and "
- "SDXL workflows is measured across five nested heterogeneity levels on RTX 5080, DGX Spark and {R|R0.1: rented GPU "
- "models} hardware. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
+ "SDXL workflows is measured across five nested heterogeneity levels on DGX Spark systems and {R|R0.1: rented GPU "
+ "models}. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
  "eight cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
  "consistency on every step on the CPU and model consistency at k random steps under per-step calibrated tolerances, "
  "binds the initial noise exactly to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
@@ -739,7 +739,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) exactly; conditioning; decoded final latent equals the image", "≈ c₀/T"],
            ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
           [28, 38, 74, 28])
-    Figure("F2", "Protocol overview: requester escrows P; provider (RTX 5080) runs the workflow and commits the trajectory "
+    Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5090) runs the workflow and commits the trajectory "
            "Merkle root; delayed slot hash decides sampling and the checked steps; verifier (DGX Spark) runs E1 checks, "
            "Tier A on all steps (CPU) and Tier B at k steps (GPU); verdict, two-of-three escalation, release, refund or "
            "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement",
@@ -827,25 +827,34 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
                                  delim(R("P", ("p", "+"), "B")))))))
 
     H2("3-4- Experimental Design")
-    Para("{b|Hardware.} Owned hardware comprises two or more NVIDIA RTX 5080 GPUs (Blackwell GB203, 16 GB, x86-64 hosts) "
-         "and two or more NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, 128 GB unified memory). Older GPU "
-         "generations come from short-term rentals ({R|R0.1}). Table 4 defines the five nested heterogeneity levels; "
+    Para("{b|Hardware.} Owned hardware comprises six NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, unified "
+         "CPU and GPU memory). They were shared with other inference workloads during the study. All x86-64 GPUs are "
+         "rented by the hour from a commercial GPU cloud ({R|R0.1}): one Blackwell model and several models of the Ampere "
+         "and Ada generations. A rented node runs the same pinned software in a container, but its driver is set by the "
+         "host, so the driver version and the hourly price of each rented node are recorded. Results that depend on "
+         "timing are measured only on rented GPUs, which a job has to itself. Table 4 defines the five nested heterogeneity levels; "
          "driver, CUDA, PyTorch and ComfyUI versions of every node are recorded for each run ({R|R0.4}).")
     Table("Nested heterogeneity levels",
           ["Level", "Comparison", "Isolates"],
           [["L0", "Same unit, repeated runs", "Run-to-run nondeterminism"],
            ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode, library version"],
            ["L2", "Two units of the same model", "Unit-to-unit variation"],
-           ["L3", "RTX 5080 versus DGX Spark", "Chip, compute capability, memory system, processor instruction set"],
-           ["L4", "Blackwell versus older generations (rented)", "GPU generation"]],
+           ["L3", "Rented x86 Blackwell GPU versus DGX Spark", "Chip, compute capability, memory system, processor instruction set"],
+           ["L4", "Blackwell versus Ampere and Ada (rented)", "GPU generation"]],
           [18, 70, 80])
     Para("{b|Workloads.} SD1.5 {c|rombach2022ldm} at 512 × 512 and SDXL {c|podell2023sdxl} at 1024 × 1024 pixels are run "
          "with 30 steps, the Euler and DPM-Solver++(2M) samplers and a fixed CFG scale, in ComfyUI at a pinned commit. "
          "Prompts come from {T|PartiPrompts or COCO captions; record source and licence}, with three seeds per prompt, "
-         "split by prompt into calibration, development and test sets ({R|R0.5}). On owned hardware the full factor grid "
+         "split by prompt into calibration, development and test sets ({R|R0.5}). On the DGX Spark systems the full factor grid "
          "is run: precision (fp16, bf16, fp32) × attention implementation (two options) × sampler (two) × deterministic "
-         "mode (off, on). Rented GPUs run the reference configuration and the precision factor only.")
-    Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed.")
+         "mode (off, on). One DGX Spark repeats the grid on a smaller prompt set under a second PyTorch and CUDA version. "
+         "Rented GPUs run the reference configuration and the precision factor; one rented x86 GPU of the Ada "
+         "generation also runs the deterministic-mode and attention factors at fp16. The reference "
+         "configuration (fp16, default attention, both samplers, deterministic mode off) is the one for which tolerances "
+         "are frozen. It is run on a larger prompt set than the other configurations, because the per-step tolerances "
+         "of Equation 6 are extreme quantiles of the honest distribution.")
+    Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed, on rented "
+         "GPUs that the job has to itself.")
     Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
           [["A1", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30", "{R|R2.4}"],
@@ -868,11 +877,16 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split with "
          "Wilson 95% confidence intervals {c|wilson1927}; medians and costs use cluster-bootstrap intervals over prompt and "
          "hardware pair. Zero false rejections in 299 independent honest audits bound the false-rejection rate below 1% at "
-         "95% confidence, which sets the minimum number of honest test jobs per stratum.")
-    Para("{b|Testbed.} RTX 5080 nodes act as providers and DGX Spark nodes as verifiers. The escrow program runs on a "
-         "local validator for volume and on the Solana Devnet for fees and latency. For each lifecycle path (accepted, "
-         "sampled and passed, sampled and disputed, timeout refund) compute units, fees and latency to the processed, "
-         "confirmed and finalized commitment levels are reported {c|solana_fees}. Scale-out beyond the physical nodes is "
+         "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
+         "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
+         "attack, model and hardware pair.")
+    Para("{b|Testbed.} Rented consumer GPUs act as providers and DGX Spark systems as verifiers. The escrow program runs on a "
+         "local validator on a rented x86 host for volume and on the Solana Devnet for fees and latency. For each lifecycle path (accepted, "
+         "sampled and passed, sampled and disputed, timeout refund) signature counts, compute units, fees and latency to "
+         "the processed, confirmed and finalized commitment levels are reported {c|solana_fees}. The Solana mainnet is "
+         "not used. Mainnet fees are calculated from the measured signature counts and compute units at a dated SOL "
+         "price, and are labelled as calculated. Verifier GPU time is also converted to US dollars at the recorded "
+         "rental prices. Scale-out beyond the physical nodes is "
          "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}.")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
@@ -884,7 +898,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Figure("R1.4", "Per-step honest deviation versus step index for each hardware pair, with the calibrated per-step "
            "tolerances overlaid.", "Honest per-step deviation and calibrated tolerances")
     Para("{b|Exact reproducibility.} {R|R1.1: whether the initial noise is bit-exact across x86 and ARM, over n seeds}. "
-         "{R|R1.6: share of bit-identical images at L0, L2, L3 and L4 per sampler and precision}.")
+         "{R|R1.6: share of bit-identical images at L0, L2, L3 and L4 per sampler and precision}. "
+         "{R|R1.9: whether outputs on a DGX Spark are bit-identical with and without co-located inference load}.")
     Para("{b|Factors.} {R|R1.7: effects of precision, attention implementation and deterministic mode; dominant factor; "
          "whether a deterministic profile exists and its throughput cost}.")
     Para("{b|Answer to RQ1.} {R|R1.8}")
@@ -911,13 +926,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Answer to RQ2.} {R|R2.9}")
     H2("4-3- Cost and Deterrence (RQ3)")
     Table("Verifier cost per job by evidence level",
-          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0"],
-          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}"]],
-          [60, 44, 28, 36])
+          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
+          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}", "{R|R3.7}"]],
+          [48, 40, 22, 26, 32])
     Table("Escrow cost per lifecycle path",
-          ["Path", "Compute units", "Fee (SOL)", "Latency to finalized (median, p95)"],
-          [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
-          [70, 30, 30, 38])
+          ["Path", "Compute units", "Fee on Devnet (SOL, measured)", "Fee on mainnet (SOL, calculated)", "Latency to finalized on Devnet (median, p95)"],
+          [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
+          [52, 24, 30, 30, 32])
     Figure("R3.5", "Pareto frontier of detection (or deterrence margin) against verifier GPU-seconds per job for E0, "
            "E2-W and E2-H over (p, k).", "Cost–detection frontier")
     Figure("R3.6", "Deterrence region of Equation 8 in the (p, B/P) plane for each attack, with p*(k) from Equation 9; "
@@ -939,10 +954,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
          "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
     Para("{b|Limitations.} The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
-         "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the rented models "
-         "tested ({R|R0.1}). Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
+         "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
+         "tested ({R|R0.1}), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
          "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
-         "7, Devnet fees do not represent mainnet economics, and re-execution establishes consistency with the committed "
+         "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
+         "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
+         "them. The full grid of software factors was measured on that one GPU platform, under two software stacks; "
+         "on x86 only the precision, deterministic-mode and attention factors were measured. Finally, re-execution establishes consistency with the committed "
          "workload, not that a particular GPU performed it.")
 
     # ================================================================== 4 CONCLUSION

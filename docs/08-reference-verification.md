@@ -44,3 +44,28 @@ TAO (Crossref and arXiv journal_ref), Cai et al., SVIP, Lim & Yong, opML, TrueBi
 
 ## Not changed, but worth a decision
 Several key references are still preprints with no peer-reviewed version found: Cai et al., VeriLLM, Verde, EigenAI, SVIP, PoSP, opML, Kim et al., Proof of Quality, API-TAIL, TensorCommitments, and Lim & Yong. That is acceptable for a fast-moving field. Re-run the check shortly before submission, because several will likely appear at 2026–2027 venues.
+
+---
+
+## Update 2026-11-23 (later): more peer-reviewed references, preprints replaced
+
+The reference list went from 47 to **57**, with arXiv preprints cut from 18 to **6**: Kim et al., Cai et al., VeriLLM, Verde, EigenAI and PoSP. These six have no peer-reviewed equivalent and are central to positioning the paper. Each new entry was verified by Crossref DOI, OpenReview, or the official proceedings page (NeurIPS, MLSys, USENIX) before it was added.
+
+**Removed preprints and what replaced them:**
+
+| Removed | Replaced by (peer-reviewed) |
+|---|---|
+| TrueBit (arXiv), opML (arXiv) | Arbitrum, USENIX Security 2018; Canetti, Riva & Rothblum, CCS 2011 (refereed delegation) |
+| Peer-prediction verifier's dilemma (arXiv) | Luu et al., CCS 2015 (the origin of the verifier's dilemma); Dong et al., CCS 2017 (counter-collusion contracts) |
+| Atil et al. (arXiv) | Zhuang et al., MLSys 2022; Pham et al., ASE 2020 (GPU and tooling nondeterminism) |
+| SVIP, TensorCommitments, Seal-then-Sample (arXiv) | zkCNN, CCS 2021; zkLLM, CCS 2024; SafetyNets, NIPS 2017 |
+| API-TAIL, Proof of Quality (arXiv) | Removed. The composite-null point is now attributed to Cai et al.; Tree-Ring (NeurIPS 2023) and Stable Signature (ICCV 2023) were added as the attribution alternative |
+| Pham, Khouzani & Cid (ePrint) | The same paper in its peer-reviewed version: GameSec 2014, LNCS 8840, 79–98 |
+
+**New peer-reviewed lines of related work:**
+- **Volunteer and outsourced computing:** BOINC (GRID 2004); Golle & Mironov, CT-RSA 2001 (ringers); Sarmenta, *FGCS* 2002 (spot-checking with credibility scores); Belenkiy et al., NetEcon 2008 (audits with fines). Spot-checking against cheating workers predates blockchains by 20 years. This is now a "Precedents" paragraph, and the research-gap statement says these works assume exact re-execution.
+- **Proof-of-learning** (IEEE S&P 2021): the closest precedent for trajectory checking (committed checkpoints, selective re-execution, a tolerance for hardware noise), applied to training rather than inference. Added to the related work and to Table 1.
+- **Decentralized inference on consumer GPUs:** Borzunov et al., NeurIPS 2023 (Petals).
+- **Blockchain payment for computation:** Kumaresan & Bentov, CCS 2014; FairSwap, CCS 2018.
+
+**Tried and dropped:** Slalom (ICLR 2019, trusted hardware plus GPU) and the decentralized foundation-model training paper (NeurIPS 2022). Neither could be confirmed through the APIs because of rate limits and search misses. Add them manually if they are wanted.

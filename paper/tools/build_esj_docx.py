@@ -43,7 +43,6 @@ REFS = {
  "cai2025substitution": "Cai, W., Shi, T., Zhao, X., & Song, D. (2025). Are you getting what you pay for? Auditing model substitution in LLM APIs. arXiv preprint arXiv:2504.04715. doi:10.48550/arXiv.2504.04715.",
  "gao2025met": "Gao, I., Liang, P., & Guestrin, C. (2025). Model equality testing: Which model is this API serving? The Thirteenth International Conference on Learning Representations (ICLR 2025), Singapore.",
  "diffusers_repro": "Hugging Face. (n.d.). Create reproducible pipelines. Diffusers documentation. Available online: https://huggingface.co/docs/diffusers/main/using-diffusers/reproducibility (accessed on November 23, 2026).",
- "atil2024nondeterminism": "Atil, B., Aykent, S., Chittams, A., Fu, L., Passonneau, R. J., Radcliffe, E., Rajagopal, G. R., Sloan, A., Tudrej, T., Ture, F., Wu, Z., Xu, L., & Baldwin, B. (2024). Non-determinism of “deterministic” LLM settings. arXiv preprint arXiv:2408.04667. doi:10.48550/arXiv.2408.04667.",
  "yuan2025nondeterminism": "Yuan, J., Li, H., Ding, X., Xie, W., Li, Y.-J., Zhao, W., Wan, K., Shi, J., Hu, X., & Liu, Z. (2025). Understanding and mitigating numerical sources of nondeterminism in LLM inference. Advances in Neural Information Processing Systems 38 (NeurIPS 2025), 188045–188077. doi:10.52202/085713-5653.",
  "yao2026tao": "Yao, J., Su, H., Liao, T., Cheng, Z., Zhang, H., Wang, X., & Viswanath, P. (2026). TAO: Tolerance-aware optimistic verification for floating-point neural networks. Proceedings of the 21st European Conference on Computer Systems (EuroSys ’26), 1515–1532. doi:10.1145/3767295.3803612.",
  "nicheimage_repo": "SocialTensor. (2025). NicheImage: Bittensor subnet 23 (commit a4a2461) [Computer software]. GitHub. Available online: https://github.com/SocialTensor/SocialTensorSubnet (accessed on November 23, 2026).",
@@ -52,21 +51,12 @@ REFS = {
  "gennaro2010vc": "Gennaro, R., Gentry, C., & Parno, B. (2010). Non-interactive verifiable computing: Outsourcing computation to untrusted workers. Advances in Cryptology – CRYPTO 2010, Lecture Notes in Computer Science, 6223, 465–482. doi:10.1007/978-3-642-14623-7_25.",
  "chen2024zkml": "Chen, B.-J., Waiwitlikhit, S., Stoica, I., & Kang, D. (2024). ZKML: An optimizing system for ML inference in zero-knowledge proofs. Proceedings of the Nineteenth European Conference on Computer Systems (EuroSys ’24), 560–574. doi:10.1145/3627703.3650088.",
  "ong2025toploc": "Ong, J. M., Di Ferrante, M., Pazdera, A., Garner, R., Jaghouar, S., Basra, M., Ryabinin, M., & Hagemann, J. (2025). TOPLOC: A locality sensitive hashing scheme for trustless verifiable inference. Proceedings of the 42nd International Conference on Machine Learning (ICML 2025), PMLR 267, 47196–47211.",
- "sun2024svip": "Sun, Y., Li, Y., Zhang, Y., Jin, Y., & Zhang, H. (2024). SVIP: Towards verifiable inference of open-source large language models. arXiv preprint arXiv:2410.22307. doi:10.48550/arXiv.2410.22307.",
  "wang2025verillm": "Wang, K., Zhao, Z., Song, X., Li, Z., Xia, L., Tong, C., Shi, B., Qu, W., Yang, E., & Ai, L. (2025). VeriLLM: A lightweight framework for publicly verifiable decentralized inference. arXiv preprint arXiv:2509.24257. doi:10.48550/arXiv.2509.24257.",
- "lim2026seal": "Lim, Y., & Yong, S. (2026). Seal, then sample: Sampled layerwise proofs for verifiable LLM inference from GPT-2 to 70B. arXiv preprint arXiv:2609.27367. doi:10.48550/arXiv.2609.27367.",
- "tensorcommitments2026": "Baser, O., Sadeghi, E., Wang, E., Vergauwen, N., Kazemian, S., Kang, H., Chinchali, S. P., & Vishwanath, S. (2026). TensorCommitments: A lightweight verifiable inference for large language models. arXiv preprint arXiv:2602.12630. doi:10.48550/arXiv.2602.12630.",
  "arun2025verde": "Arun, A., St. Arnaud, A., Titov, A., Wilcox, B., Kolobaric, V., Brinkmann, M., Ersoy, O., Fielding, B., & Bonneau, J. (2025). Verde: Verification via refereed delegation for machine learning programs. arXiv preprint arXiv:2502.19405. doi:10.48550/arXiv.2502.19405.",
  "alves2026eigenai": "Ribeiro Alves, D., Patankar, V., Pereira, M., Stephens, J., Vaziri, N., & Kannan, S. (2026). EigenAI: Deterministic inference, verifiable results. arXiv preprint arXiv:2602.00182. doi:10.48550/arXiv.2602.00182.",
- "conway2024opml": "Conway, K. D., So, C., Yu, X., & Wong, K. (2024). opML: Optimistic machine learning on blockchain. arXiv preprint arXiv:2401.17555. doi:10.48550/arXiv.2401.17555.",
- "teutsch2019truebit": "Teutsch, J., & Reitwießner, C. (2019). A scalable verification solution for blockchains. arXiv preprint arXiv:1908.04756. doi:10.48550/arXiv.1908.04756.",
- "apitail2026": "Mei, H., Tian, Y., Yuan, Y., Xu, C., Chen, A., Han, K., & Wang, Y. (2026). API-TAIL: Detecting model substitution in LLM APIs through temperature-aligned likelihood tails. arXiv preprint arXiv:2610.36801. doi:10.48550/arXiv.2610.36801.",
- "poq2024": "Zhang, Z., Rao, Y., Xiao, H., Xiao, X., & Yang, Y. (2024). Proof of quality: A costless paradigm for trustless generative AI model inference on blockchains. arXiv preprint arXiv:2405.17934. doi:10.48550/arXiv.2405.17934.",
  "he2025nondeterminism": "He, H., & Thinking Machines Lab. (2025). Defeating nondeterminism in LLM inference. Thinking Machines Lab: Connectionism, September 10, 2025. Available online: https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/ (accessed on November 23, 2026).",
  "hawkeye2026": "Badash, E., Boneh, D., Komargodski, I., & Srivastava, M. (2026). Hawkeye: Reproducing GPU-level non-determinism. Proceedings of Machine Learning and Systems (MLSys 2026). arXiv:2603.20421. {R|add proceedings pages and DOI when published}",
- "pham2014contracts": "Pham, V., Khouzani, M. H. R., & Cid, C. (2014). Optimal contracts for outsourced computation. Cryptology ePrint Archive, Paper 2014/374. Available online: https://eprint.iacr.org/2014/374 (accessed on November 23, 2026).",
  "zhang2024posp": "Zhang, Y., Wang, S., Tan, S., Liu, X., Moallemi, C. C., & Popa, R. A. (2024). Proof of sampling: A Nash equilibrium-based verification protocol for decentralized systems. arXiv preprint arXiv:2405.00295. doi:10.48550/arXiv.2405.00295.",
- "verifierdilemma2024": "Zhao, Z., Chen, X., & Zhou, Y. (2024). It takes two: A peer-prediction solution for blockchain verifier’s dilemma. arXiv preprint arXiv:2406.01794. doi:10.48550/arXiv.2406.01794.",
  "du2023edgemarket": "Du, Y., Wang, Z., Li, J., Shi, L., Jayakody, D. N. K., Chen, Q., Chen, W., & Han, Z. (2023). Blockchain-aided edge computing market: Smart contract and consensus mechanisms. IEEE Transactions on Mobile Computing, 22(6), 3193–3208. doi:10.1109/TMC.2021.3140080.",
  "fan2021hybrid": "Fan, S., Zhang, H., Zeng, Y., & Cai, W. (2021). Hybrid blockchain-based resource trading system for federated learning in edge computing. IEEE Internet of Things Journal, 8(4), 2252–2264. doi:10.1109/JIOT.2020.3028101.",
  "wang2024stackelberg": "Wang, D., Du, X., Zhang, H., & Wang, Q. (2024). Blockchain enabled credible computing resource sharing: A multi-leader multi-follower Stackelberg game approach. IEEE Transactions on Vehicular Technology, 73(9), 13839–13852. doi:10.1109/TVT.2024.3386331.",
@@ -81,6 +71,26 @@ REFS = {
  "rombach2022ldm": "Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 10674–10685. doi:10.1109/CVPR52688.2022.01042.",
  "podell2023sdxl": "Podell, D., English, Z., Lacey, K., Blattmann, A., Dockhorn, T., Müller, J., Penna, J., & Rombach, R. (2024). SDXL: Improving latent diffusion models for high-resolution image synthesis. The Twelfth International Conference on Learning Representations (ICLR 2024), Vienna, Austria.",
  "wilson1927": "Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 209–212. doi:10.1080/01621459.1927.10502953.",
+ "borzunov2023": "Borzunov, A., Ryabinin, M., Chumachenko, A., Baranchuk, D., Dettmers, T., Belkada, Y., Samygin, P., & Raffel, C. (2023). Distributed inference and fine-tuning of large language models over the internet. Advances in Neural Information Processing Systems 36 (NeurIPS 2023), New Orleans, United States.",
+ "zhuang2022": "Zhuang, D., Zhang, X., Song, S., & Hooker, S. (2022). Randomness in neural network training: Characterizing the impact of tooling. Proceedings of Machine Learning and Systems 4 (MLSys 2022), 316–336.",
+ "pham2020ase": "Pham, H. V., Qian, S., Wang, J., Lutellier, T., Rosenthal, J., Tan, L., Yu, Y., & Nagappan, N. (2020). Problems and opportunities in training deep learning software systems: An analysis of variance. Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering (ASE ’20), 771–783. doi:10.1145/3324884.3416545.",
+ "safetynets2017": "Ghodsi, Z., Gu, T., & Garg, S. (2017). SafetyNets: Verifiable execution of deep neural networks on an untrusted cloud. Advances in Neural Information Processing Systems 30 (NIPS 2017), Long Beach, United States.",
+ "zkcnn2021": "Liu, T., Xie, X., & Zhang, Y. (2021). zkCNN: Zero knowledge proofs for convolutional neural network predictions and accuracy. Proceedings of the 2021 ACM SIGSAC Conference on Computer and Communications Security (CCS ’21), 2968–2985. doi:10.1145/3460120.3485379.",
+ "zkllm2024": "Sun, H., Li, J., & Zhang, H. (2024). zkLLM: Zero knowledge proofs for large language models. Proceedings of the 2024 ACM SIGSAC Conference on Computer and Communications Security (CCS ’24), 4405–4419. doi:10.1145/3658644.3670334.",
+ "canetti2011": "Canetti, R., Riva, B., & Rothblum, G. N. (2011). Practical delegation of computation using multiple servers. Proceedings of the 18th ACM Conference on Computer and Communications Security (CCS ’11), 445–454. doi:10.1145/2046707.2046759.",
+ "arbitrum2018": "Kalodner, H., Goldfeder, S., Chen, X., Weinberg, S. M., & Felten, E. W. (2018). Arbitrum: Scalable, private smart contracts. 27th USENIX Security Symposium (USENIX Security 18), Baltimore, United States, 1353–1370.",
+ "pol2021": "Jia, H., Yaghini, M., Choquette-Choo, C. A., Dullerud, N., Thudi, A., Chandrasekaran, V., & Papernot, N. (2021). Proof-of-learning: Definitions and practice. 2021 IEEE Symposium on Security and Privacy (SP), 1039–1056. doi:10.1109/SP40001.2021.00106.",
+ "treering2023": "Wen, Y., Kirchenbauer, J., Geiping, J., & Goldstein, T. (2023). Tree-rings watermarks: Invisible fingerprints for diffusion images. Advances in Neural Information Processing Systems 36 (NeurIPS 2023), New Orleans, United States.",
+ "stablesig2023": "Fernandez, P., Couairon, G., Jégou, H., Douze, M., & Furon, T. (2023). The stable signature: Rooting watermarks in latent diffusion models. 2023 IEEE/CVF International Conference on Computer Vision (ICCV), 22409–22420. doi:10.1109/ICCV51070.2023.02053.",
+ "anderson2004boinc": "Anderson, D. P. (2004). BOINC: A system for public-resource computing and storage. Fifth IEEE/ACM International Workshop on Grid Computing, Pittsburgh, United States, 4–10. doi:10.1109/GRID.2004.14.",
+ "golle2001": "Golle, P., & Mironov, I. (2001). Uncheatable distributed computations. Topics in Cryptology – CT-RSA 2001, Lecture Notes in Computer Science, 2020, 425–440. doi:10.1007/3-540-45353-9_31.",
+ "sarmenta2002": "Sarmenta, L. F. G. (2002). Sabotage-tolerance mechanisms for volunteer computing systems. Future Generation Computer Systems, 18(4), 561–572. doi:10.1016/S0167-739X(01)00077-2.",
+ "belenkiy2008": "Belenkiy, M., Chase, M., Erway, C. C., Jannotti, J., Küpçü, A., & Lysyanskaya, A. (2008). Incentivizing outsourced computation. Proceedings of the 3rd International Workshop on Economics of Networked Systems (NetEcon ’08), 85–90. doi:10.1145/1403027.1403046.",
+ "pham2014contracts": "Pham, V., Khouzani, M. H. R., & Cid, C. (2014). Optimal contracts for outsourced computation. Decision and Game Theory for Security (GameSec 2014), Lecture Notes in Computer Science, 8840, 79–98. doi:10.1007/978-3-319-12601-2_5.",
+ "dong2017": "Dong, C., Wang, Y., Aldweesh, A., McCorry, P., & van Moorsel, A. (2017). Betrayal, distrust, and rationality: Smart counter-collusion contracts for verifiable cloud computing. Proceedings of the 2017 ACM SIGSAC Conference on Computer and Communications Security (CCS ’17), 211–227. doi:10.1145/3133956.3134032.",
+ "luu2015": "Luu, L., Teutsch, J., Kulkarni, R., & Saxena, P. (2015). Demystifying incentives in the consensus computer. Proceedings of the 22nd ACM SIGSAC Conference on Computer and Communications Security (CCS ’15), 706–719. doi:10.1145/2810103.2813659.",
+ "kumaresan2014": "Kumaresan, R., & Bentov, I. (2014). How to use bitcoin to incentivize correct computations. Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security (CCS ’14), 30–41. doi:10.1145/2660267.2660380.",
+ "fairswap2018": "Dziembowski, S., Eckey, L., & Faust, S. (2018). FairSwap: How to fairly exchange digital goods. Proceedings of the 2018 ACM SIGSAC Conference on Computer and Communications Security (CCS ’18), 967–984. doi:10.1145/3243734.3243857.",
 }
 order = []  # citation keys in order of first appearance
 
@@ -455,7 +465,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H1("1- Introduction")
     Para("Generative AI services increasingly run on GPUs owned by people other than the service operator. "
          "Decentralized physical infrastructure networks (DePIN) pool idle consumer GPUs through blockchain coordination "
-         "and token payments {c|ballandies2023depin,lin2024depin}. Decentralized compute markets such as Render, Akash and "
+         "and token payments {c|ballandies2023depin,lin2024depin}, and collaborative inference over consumer GPUs "
+         "connected through the internet has been shown to be technically viable {c|borzunov2023}. Decentralized compute "
+         "markets such as Render, Akash and "
          "io.net, along with networks dedicated to image generation, now sell diffusion-model inference from such GPUs "
          "{c|render2023,akash2026,ionet2026}. The buyer cannot observe the computation. A blockchain can record that a "
          "payment was escrowed and that a result digest was committed, but it cannot show that the provider ran the "
@@ -470,49 +482,66 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("The obvious defence is to re-execute a random sample of jobs on an independent node and compare. Two facts "
          "complicate it. First, honest re-execution on different hardware is not bit-exact: kernels, reduction order, "
          "attention implementations and numerical precision differ across GPUs and software stacks "
-         "{c|diffusers_repro,atil2024nondeterminism,yuan2025nondeterminism}. Every practical acceptance rule therefore "
+         "{c|diffusers_repro,zhuang2022,yuan2025nondeterminism}. Every practical acceptance rule therefore "
          "needs a tolerance, and the tolerance determines both how often honest providers are falsely rejected and how "
          "much room is left for cheaters. Second, full re-execution doubles the cost of each audited job.")
     H2("1-1- Related Work and Research Gap")
     Para("{b|Cryptographic and white-box verification.} Verifiable computation proves arbitrary outsourced computation "
-         "{c|gennaro2010vc}. Zero-knowledge proof systems for neural networks have proved a small latent diffusion model, "
-         "but with proving times of about an hour per image {c|chen2024zkml}, far from marketplace economics. "
-         "Activation-based schemes commit to hashed or fingerprinted internal activations of large language models (LLMs) "
-         "{c|ong2025toploc,sun2024svip,wang2025verillm,lim2026seal,tensorcommitments2026}. Refereed delegation with "
-         "bitwise-reproducible operators bisects disputes down to a single operator {c|arun2025verde}, deterministic "
-         "inference can reduce verification to a byte comparison {c|alves2026eigenai}, and optimistic fraud proofs and "
-         "verification games complete this family {c|conway2024opml,teutsch2019truebit}. All of these require control of "
-         "the operator library or access to model internals, and almost all target LLMs.")
+         "{c|gennaro2010vc}, and interactive proofs specialized to neural networks reduce its cost at the price of restricted "
+         "arithmetic {c|safetynets2017}. Zero-knowledge proof systems have proved convolutional networks {c|zkcnn2021}, "
+         "large language models (LLMs) {c|zkllm2024} and a small latent diffusion model {c|chen2024zkml}, but with proving "
+         "times of minutes to about an hour per inference, far from marketplace economics. Activation-based schemes commit "
+         "to hashed or fingerprinted internal activations of LLMs {c|ong2025toploc,wang2025verillm}. Refereed delegation "
+         "detects cheating whenever at least one of several servers is honest {c|canetti2011}; its adaptation to machine "
+         "learning with bitwise-reproducible operators bisects disputes down to a single operator {c|arun2025verde}. "
+         "Deterministic inference can reduce verification to a byte comparison {c|alves2026eigenai}, and optimistic "
+         "protocols resolve disputes by on-chain bisection {c|arbitrum2018}. All of these require control of the operator "
+         "library or access to model internals, and almost all target LLMs.")
     Para("{b|Tolerance-aware verification.} TAO {c|yao2026tao} is the closest system. It commits to the weights, the "
          "computation graph and per-operator error thresholds calibrated on four GPU models, narrows disputes to one "
          "operator, and settles with bonds and randomized audits on an Ethereum test network, with 0.3% overhead on the "
          "undisputed path. Diffusion appears only in its cost evaluation, per-step verification of the denoising loop is "
-         "left to future work, and undeclared quantization and early exit are explicitly out of scope.")
+         "left to future work, and undeclared quantization and early exit are explicitly out of scope. Proof-of-learning "
+         "{c|pol2021} is the closest precedent for trajectory checking: a trainer commits checkpoints of its training "
+         "trajectory, and a verifier re-executes selected update steps and accepts reproduction errors below a threshold "
+         "that absorbs hardware noise. It targets training, not diffusion sampling, and does not consider cost-saving "
+         "substitution during inference.")
     Para("{b|Black-box auditing.} Model equality testing frames API auditing as a two-sample test {c|gao2025met}. "
          "Output classifiers detect fp8 and int8 substitution of LLMs only at chance level, and statistical tests lose "
-         "power under partial random substitution {c|cai2025substitution}. Honest serving variation makes the null "
-         "hypothesis composite {c|apitail2026}, which is the same difficulty that cross-GPU variation creates here. Kim et "
-         "al. {c|kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion outputs on 22 GPUs of five "
-         "models and analysed majority voting, without an adversary. Proof of Quality scores outputs rather than "
-         "computation {c|poq2024}.")
+         "power under partial random substitution, partly because honest deployments of the same model already differ "
+         "{c|cai2025substitution}; cross-GPU variation creates the same difficulty here. Kim et al. "
+         "{c|kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion outputs on 22 GPUs of five "
+         "models and analysed majority voting, without an adversary. Watermarks embedded in the initial noise "
+         "{c|treering2023} or in the latent decoder {c|stablesig2023} attribute an image to a model, but they do not show "
+         "how the image was computed: a provider that runs the advertised model with fewer steps would still produce a "
+         "correctly watermarked image.")
     Para("{b|Deployed validators.} On a public decentralized AI network, one image-generation subnet validates by "
          "regenerating the image and comparing CLIP embeddings {c|radford2021clip} against a cosine threshold of 0.9 "
          "{c|nicheimage_repo}. Another asks miners to return all per-step latents with a hash commitment. With "
          "probability 0.35 its validator re-executes three random steps and rejects if the minimum cosine similarity to "
          "the reported next latent is below 0.70 {c|wombo_repo}. The second rule is, to our knowledge, the earliest "
          "deployment of per-step spot checking. Neither rule has a published calibration or adversarial evaluation.")
-    Para("{b|Nondeterminism and audit economics.} GPU inference is not bitwise reproducible across hardware, batch "
-         "sizes and library versions {c|diffusers_repro,atil2024nondeterminism,he2025nondeterminism,yuan2025nondeterminism}, "
-         "and tools for reproducing GPU-level nondeterminism are emerging {c|hawkeye2026}. Optimal audit contracts "
-         "{c|pham2014contracts}, sampling with an equilibrium argument {c|zhang2024posp}, and the verifier’s dilemma "
-         "{c|teutsch2019truebit,verifierdilemma2024} supply the incentive framework used here. Blockchain markets for "
-         "edge and federated-learning resources {c|du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} and "
-         "escrowed delivery of digital goods {c|asgaonkar2018escrow} address payment but not the integrity of generative "
-         "output. Table 1 summarizes the positioning.")
+    Para("{b|Precedents in volunteer and outsourced computing.} Workers that skip computation to save cost were first "
+         "studied in volunteer computing. Projects replicate tasks across hosts {c|anderson2004boinc}, ringers catch "
+         "workers that do not finish their share {c|golle2001}, and spot-checking combined with credibility scores bounds "
+         "the error rate with less redundancy {c|sarmenta2002}. Incentive-based designs audit a random fraction of "
+         "outsourced jobs and fine cheaters {c|belenkiy2008,pham2014contracts}, counter-collusion contracts deter "
+         "redundant cloud providers from agreeing on a wrong answer {c|dong2017}, sampling with an equilibrium argument "
+         "targets decentralized AI inference {c|zhang2024posp}, and the verifier’s dilemma shows that rational verifiers "
+         "skip costly checks unless rewarded {c|luu2015}. These designs assume that honest re-execution reproduces the "
+         "result exactly, which GPU inference does not guarantee: results vary across hardware, batch sizes and library "
+         "versions {c|diffusers_repro,zhuang2022,pham2020ase,he2025nondeterminism,yuan2025nondeterminism}, and tools for "
+         "reproducing GPU-level nondeterminism are only emerging {c|hawkeye2026}.")
+    Para("{b|Blockchain payment for computation.} Smart contracts that pay for correct computation {c|kumaresan2014}, "
+         "fair exchange of digital goods {c|fairswap2018,asgaonkar2018escrow}, and markets for edge and "
+         "federated-learning resources {c|du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} address "
+         "payment but not the integrity of generative output. Table 1 summarizes the positioning.")
     Table("Positioning against the closest work",
           ["Work", "Evidence used", "No operator-level access", "Diffusion", "Cost-saving attacks evaluated", "Calibrated false-rejection rate"],
-          [["ZKML {c|chen2024zkml}", "Zero-knowledge proof", "No", "Partial", "n/a", "n/a"],
-           ["TOPLOC, SVIP, VeriLLM {c|ong2025toploc,sun2024svip,wang2025verillm}", "Activations", "No", "No", "Partial", "Yes"],
+          [["Volunteer-computing spot checks {c|sarmenta2002}", "Re-execution of sampled tasks", "Yes", "No", "No", "No"],
+           ["zkCNN, zkLLM, ZKML {c|zkcnn2021,zkllm2024,chen2024zkml}", "Zero-knowledge proof", "No", "Partial", "n/a", "n/a"],
+           ["TOPLOC, VeriLLM {c|ong2025toploc,wang2025verillm}", "Activations", "No", "No", "Partial", "Yes"],
+           ["Proof-of-learning {c|pol2021}", "Training-trajectory checkpoints", "Yes", "No", "Partial", "Yes"],
            ["Verde {c|arun2025verde}", "Reproducible operators", "No", "No", "No", "n/a"],
            ["TAO {c|yao2026tao}", "Per-operator tolerance", "No", "Cost only", "Excluded", "Yes"],
            ["Kim et al. {c|kim2024reproducibility}", "Output perceptual hash", "Yes", "Yes", "No", "No"],
@@ -521,9 +550,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["Deployed SN30 rule {c|wombo_repo}", "Per-step latents", "Yes", "Yes", "No", "No"],
            ["{b|This work}", "{b|Trajectory, two-tier}", "{b|Yes}", "{b|Yes}", "{b|Yes}", "{b|Yes}"]],
           [38, 32, 24, 20, 28, 26])
-    Para("{b|Research gap.} The two lines of work leave one question open. Operator-level schemes need instrumented "
-         "runtimes and exclude cost-saving behaviour, while deployed output-level and step-level validators use "
-         "uncalibrated thresholds that have never been tested against such behaviour. No study measures whether "
+    Para("{b|Research gap.} This body of work leaves one question open. Classical spot-checking and audit contracts "
+         "assume exact re-execution; operator-level schemes need instrumented runtimes and exclude cost-saving "
+         "behaviour; and deployed output-level and step-level validators use uncalibrated thresholds that have never "
+         "been tested against such behaviour. No study measures whether "
          "cost-saving cheating on diffusion jobs can be separated from honest cross-GPU variation, at which evidence "
          "level, and at what verification cost under escrow settlement.")
     H2("1-2- Research Questions and Contributions")
@@ -790,8 +820,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "so LLM workloads are not evaluated here.")
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
          "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
-    Para("{b|Limitations.} The verifier pool is assumed honest and non-colluding; peer-prediction and random-assignment "
-         "mechanisms {c|verifierdilemma2024} are complementary. Cross-generation results cover only the rented models "
+    Para("{b|Limitations.} The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
+         "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the rented models "
          "tested ({R|R0.1}). Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
          "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
          "7, Devnet fees do not represent mainnet economics, and re-execution establishes consistency with the committed "

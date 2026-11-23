@@ -42,7 +42,7 @@ TAO (Crossref and arXiv journal_ref), Cai et al., SVIP, Lim & Yong, opML, TrueBi
 2. **Hawkeye**: add the MLSys 2026 proceedings pages and DOI once they are published.
 3. **ComfyUI**: update the commit to the one pinned for the experiments.
 
-## Not changed, but worth a decision
+## Not changed, but worth a decision (superseded: see the update below, 6 preprints remain)
 Several key references are still preprints with no peer-reviewed version found: Cai et al., VeriLLM, Verde, EigenAI, SVIP, PoSP, opML, Kim et al., Proof of Quality, API-TAIL, TensorCommitments, and Lim & Yong. That is acceptable for a fast-moving field. Re-run the check shortly before submission, because several will likely appear at 2026–2027 venues.
 
 ---

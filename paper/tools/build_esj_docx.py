@@ -309,8 +309,9 @@ def main(template, out):
                 ap.append(footnote_ref)
             continue
         ap.append(make_run(a_sup if is_sup else a_base, s, fmt))
-    for p_i, text in ((4, AFFIL1), (5, AFFIL2)):
-        p_el = P[p_i]._p
+    affil3_p = copy.deepcopy(P[5]._p)  # template has two affiliation lines; clone the second
+    P[5]._p.addnext(affil3_p)
+    for p_el, text in ((P[4]._p, AFFIL1), (P[5]._p, AFFIL2), (affil3_p, AFFIL3)):
         runs = p_el.findall(qn("w:r"))
         sup_rpr = copy.deepcopy(runs[0].find(qn("w:rPr"))) if runs else None
         base = None
@@ -414,7 +415,7 @@ def main(template, out):
         add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
 
     doc.core_properties.title = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference"
-    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya"
+    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya; Ekki Rinaldi"
     doc.save(out)
 
     # footnote contact e-mail (template placeholder)
@@ -448,9 +449,11 @@ def main(template, out):
 # ----------------------------------------------------------------------------------------------
 TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
 AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
-           (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True)]
-AFFIL1 = ("1 ", "Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan, Tangerang, Indonesia.")
+           (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True),
+           (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True)]
+AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia.")
 AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia.")
+AFFIL3 = ("3 ", "CEO, Vector International, {T|city, country}.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
 ABSTRACT = (
@@ -954,7 +957,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
          "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
          "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
-         "supervision, D.E.C.; project administration, A.R.M.} All "
+         "supervision, D.E.C.; project administration, A.R.M.; add roles for E.R.} All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("6-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "
@@ -970,7 +973,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H2("6-6- Informed Consent Statement")
     Para("Not applicable.", "decl")
     H2("6-7- Conflicts of Interest")
-    Para("The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
+    Para("{T|E.R. is CEO of Vector International: declare any commercial interest in GPU marketplaces or verification, "
+         "or confirm none} The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
          "falsification, double publication and/or submission, and redundancies have been completely observed by the "
          "authors.", "decl")

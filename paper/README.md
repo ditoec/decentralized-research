@@ -14,7 +14,8 @@
 
 | Order | Author | Affiliation | Email | Role |
 |---|---|---|---|---|
-| 1 | Anjas Risky Maradita | Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan, Tangerang, Indonesia | TODO (also goes in the manuscript's CONTACT footnote) | Corresponding author |
+| 1 | Anjas Risky Maradita | Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia | TODO (also goes in the manuscript's CONTACT footnote) | Corresponding author |
 | 2 | Dito Eka Cahya | Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia | dito.eka.cahya@brin.go.id | Co-author |
+| 3 | Ekki Rinaldi | CEO, Vector International (city and country TODO) | — | Co-author |
 
 The ESJ template shows only the corresponding author's email in the manuscript. Co-author emails are entered in the online submission system.

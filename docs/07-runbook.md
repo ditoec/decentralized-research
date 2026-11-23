@@ -7,7 +7,13 @@
 2. Thresholds are frozen and hashed *before* attack data is looked at.
 3. Pin every version, and record it in the run manifest.
 
-Background reading: `docs/05-revised-design.md` (the design), `docs/06-code-audit.md` (the ComfyUI internals this relies on).
+Background reading: `docs/05-revised-design.md` (the design), `docs/06-code-audit.md` (the ComfyUI internals this relies on), and Figure 2 and Section 3-2 of the manuscript (the protocol).
+
+**Who's who.** "The paper author" means the corresponding author, Anjas Risky Maradita. Send results, go/no-go reports and any question that would change a config, threshold or scope there.
+
+**Status.** Last updated 2026-11-23. It matches `paper/manuscript_ESJ.docx` (Emerging Science Journal format): equation numbers, placeholder IDs and notation are as in that file.
+
+**Notation (same as the manuscript).** T = number of sampler steps. x₀ = the initial (noise-scaled) latent, x_T = the final latent. D_i = the CFG-combined denoised prediction at step i. σ_i = the noise level at step i. k = number of steps checked by Tier B. p = probability that a job is sampled. In code and file names, x₀ is `x_000`.
 
 ---
 
@@ -63,7 +69,7 @@ Run each item as its own run ID.
 
 | # | Task | How | Output in `summary.json` |
 |---|---|---|---|
-| P1 | **x_T across CPU ISAs** | On a 5080 host (x86) and a Spark (ARM), for seeds 0–99 and the latent shapes of SD1.5 (1×4×64×64) and SDXL (1×4×128×128), reproduce ComfyUI's noise **exactly as `comfy/sample.py: prepare_noise` does**: `torch.manual_seed(seed)`, then `torch.randn(shape, dtype=float32, device="cpu")`. Store the sha256 of the raw bytes | `n_seeds`, `n_identical` per shape. Also repeat with a second torch version if one is available |
+| P1 | **Initial noise x₀ across CPU ISAs** | On a 5080 host (x86) and a Spark (ARM), for seeds 0–99 and the latent shapes of SD1.5 (1×4×64×64) and SDXL (1×4×128×128), reproduce ComfyUI's noise **exactly as `comfy/sample.py: prepare_noise` does**: `torch.manual_seed(seed)`, then `torch.randn(shape, dtype=float32, device="cpu")`. Store the sha256 of the raw bytes | `n_seeds`, `n_identical` per shape. Also repeat with a second torch version if one is available |
 | P2 | **First look at L0 and L3** | SDXL, 30 steps, euler, fp16 default flags. Use 20 *calibration* prompts × 2 seeds, on 5080-A twice (L0), on 5080-B (L2) and on Spark-A (L3) | Fraction of pixel-identical images per pair, and the median and maximum per-pixel difference |
 | P3 | **Throughput** | Time per image for SD1.5 and SDXL on the 5080 and the Spark, warm cache, n = 20 | s/image, median and p95. This sizes the RQ1 grid (§4) |
 | P4 | **Attack feasibility** | Launch with `--fp8_e4m3fn-unet` on each node type and generate an image. Check whether any FP4/NVFP4 path works at the pinned commit | Works / fails per node, and the speed-up vs fp16 |
@@ -83,7 +89,8 @@ Functional spec. These facts were checked in doc 06:
 - Mirror `nodes.py: common_ksampler`. Pass your own `callback` into `comfy.sample.sample(...)`. ComfyUI calls it as `callback(i, denoised, x, total_steps)`. Here `x` is the latent **before** step i's update, and `denoised` is the CFG-combined prediction D_i.
 - These tensors are in the model's **internal latent space**: `process_latent_in` has already been applied (`comfy/samplers.py`, around L1224). Record them **as they are**, in their native dtype, moved to the CPU. Don't rescale them.
 - Also record `sigmas` (from the sampler or `KSampler.sigmas`), and the **final latent**. The callback never sees the final latent, so capture it from the sampler's return value. It is returned *after* `process_latent_out`, so also save `process_latent_in(final)`, or record x_T inside a wrapper around the sampler function.
-- Write one file per job: `trajectory.safetensors` with keys `x_000..x_{T-1}`, `D_000..D_{T-1}`, `x_final`, `sigmas`, plus metadata (workflow digest, seed, sampler, scheduler, steps, cfg, model sha256).
+- Also record the **conditioning** the sampler received: the positive and negative text-encoder outputs, including the pooled outputs for SDXL, under keys `cond_pos`, `cond_neg` (plus `cond_pos_pooled`, `cond_neg_pooled`). E1 checks them.
+- Write one file per job: `trajectory.safetensors` with keys `x_000..x_{T-1}`, `D_000..D_{T-1}`, `x_final`, `sigmas` and the conditioning keys, plus metadata (workflow digest, seed, sampler, scheduler, steps, cfg, model sha256).
 - Commitment: a Merkle tree whose leaves are `sha256(name || dtype || shape || raw_bytes)` per tensor, in a fixed order. Output the root as a hex string.
 - Only deterministic samplers are allowed: `euler`, `heun`, `dpmpp_2m`, `ddim`, `uni_pc`. **Reject** ancestral and SDE samplers. Their per-step noise is drawn on the GPU (doc 06 §1.1).
 
@@ -100,9 +107,9 @@ Implement five verdict functions. Each returns `pass`, `fail` or `inconclusive` 
 | **E0** | Re-run the full job on the verifier node. Compute the pixel-equality flag, LPIPS (pin the backbone, e.g. AlexNet, and the library version) and DINOv2 cosine, the last with a pinned checkpoint. Thresholds come from calibration (§5) |
 | **E0-N** | **A faithful copy of SN23** (doc 06 §3): CLIP `vit_base_patch16_clip_384.laion2b_ft_in12k_in1k` via timm, cosine of the validator's image against the provider's image. Full reward if > 0.9, `(sim + 0.1)^3` between 0.4 and 0.9, and 0 otherwise. Also implement the pHash rule (Hamming distance ≤ 6). **Copy the logic line by line from the audited commit, and cite the file and lines in a code comment** |
 | **E2-W** | **A faithful copy of SN30** (doc 06 §2): require the frame count to equal the step count, sample 3 indices, re-run one step from `frame[i]`, take the cosine of the flattened result against `frame[i+1]`, compute `score = max(min_cos·0.5 + 0.5, 0)`, and fail if score < 0.85. Because it is our pipeline rather than theirs, use **ComfyUI's** one-step replay (below), and document that adaptation |
-| **E1** | (a) Recompute x_0 noise exactly, as in P1, and compare it with the committed `x_000`. Note that `x_000` is the *noise-scaled* state, so apply `model_sampling.noise_scaling(sigmas[0], noise, latent, max_denoise)` the way `KSAMPLER.sample` does. (b) Check that the committed `sigmas` equal the schedule computed from (scheduler, steps, model). (c) Check that VAE-decoding `x_final` gives the committed image. Pixel-exact is expected on the same GPU; on a different GPU use a calibrated tolerance |
+| **E1** | (a) Recompute the initial noise exactly, as in P1, and compare it with the committed `x_000` (x₀). Note that `x_000` is the *noise-scaled* state, so apply `model_sampling.noise_scaling(sigmas[0], noise, latent, max_denoise)` the way `KSAMPLER.sample` does. (b) Check that the committed `sigmas` equal the schedule computed from (scheduler, steps, model). (c) Check that VAE-decoding `x_final` gives the committed image. Pixel-exact is expected on the same GPU; on a different GPU use a calibrated tolerance. (d) Re-encode the job's prompt and negative prompt with the pinned text encoder(s) and compare with the committed conditioning (`cond_*` keys), with a calibrated tolerance across GPUs. This catches a provider that conditions on a different or truncated prompt |
 | **E2-H, Tier A** | On the CPU, in float64, recompute `x_{i+1}` from the committed `(x_i, D_i, D_{i-1}, σ)` using the solver formula: paper Eq. (1) for euler, Eq. (2) for dpmpp_2m. **Check these against the source of `comfy/k_diffusion/sampling.py: sample_euler` / `sample_dpmpp_2m` at the pinned commit.** Compare with the committed `x_{i+1}` (and `x_final` for the last step) using the max-abs and relative-L2 error. Record both |
-| **E2-H, Tier B** | For k sampled steps, recompute `D̂_i = CFG(model(x_i, σ_i, cond))` on the verifier GPU and compute the distance to the committed `D_i`, using the metric chosen in §5 |
+| **E2-H, Tier B** | For k sampled steps, recompute `D̂_i = CFG(model(x_i, σ_i, cond))` on the verifier GPU and compute the distance to the committed `D_i`, using the metric chosen in §5. **Order matters (commit-before-reveal):** the verifier downloads only the inputs it needs (`x_i`, `σ_i`, the conditioning), computes every `D̂_i`, and records `sha256` of its results in the run log (on-chain in the §7 testbed) *before* it reads the provider's `D_i`. That way a verifier cannot simply copy the provider's values. In offline experiment runs, enforce the same order in code and log both timestamps |
 
 **One-step replay (Tier B and E2-W), the hard part:**
 - Feed the committed `x_i` **in internal latent space** directly to the model wrapper. Do **not** push it through `process_latent_out` / `process_latent_in`; that round trip adds rounding error.
@@ -156,7 +163,7 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 
 Use the **calibration split only**.
 
-1. **E0 thresholds.** Use the draft's rule: `t_pass` is the lowest score at which at least 99% of honest pairs pass, and `t_fail` is the highest score at or below which at most 0.5% of honest pairs fall. Use honest pairs pooled over the levels you intend to support (state which: L3 and L4).
+1. **E0 thresholds.** Use this rule: `t_pass` is the lowest score at which at least 99% of honest pairs pass, and `t_fail` is the highest score at or below which at most 0.5% of honest pairs fall. Use honest pairs pooled over the levels you intend to support (state which: L3 and L4).
 2. **Tier B metric and τ_i.**
    - Choose the distance metric on the **dev** split. Candidates: relative L2, max-abs, cosine on `D_i`. Pick the one with the best honest/attack separation on the dev split, where only F3 and A2 attack samples may be generated, on dev prompts.
    - Then set `α_s = 1 − (1 − 0.01)^(1/k)` for each candidate k ∈ {1, 2, 3, 5, 8}, and set `τ_i` as the (1 − α_s) quantile of honest per-step distances at step i. Pool over hardware pairs, and take the max over pairs if they differ a lot.
@@ -199,8 +206,26 @@ Use the **test split** prompts. Providers: 5080s. Verifiers: Sparks, plus the L4
    | `release` / `refund` / `slash` | Settle funds |
    | `timeout_refund` | Refund if the job stalls |
 
-   State machine: as in Fig. 3 of the original draft.
-2. **Orchestrator.** A minimal service: queue, assignment (5080 = provider, Spark = verifier, a node never verifies itself), transaction relay, and an event log of all on-chain and off-chain events with timestamps.
+   **State machine** (manuscript Figure 2 shows the same flow):
+
+   | From | Event | To | Funds |
+   |---|---|---|---|
+   | — | `create_job` | Funded | P + verifier fee locked |
+   | Funded | `accept_job` | Assigned | bond B locked |
+   | Funded | requester cancels (before assignment) | Closed-refunded | P returned |
+   | Assigned | `commit_result` | Committed | — |
+   | Assigned | deadline passes | Closed-refunded | P returned, B returned |
+   | Committed | `draw_sample` → not sampled | Closed-paid | P to provider, B returned |
+   | Committed | `draw_sample` → sampled | UnderVerification | — |
+   | UnderVerification | `submit_verdict` = pass | Closed-paid | P to provider, B returned, fee to verifier |
+   | UnderVerification | `submit_verdict` = fail or inconclusive | Disputed | — |
+   | Disputed | `final_verdict`: second verifier agrees with the provider | Closed-paid | as for pass |
+   | Disputed | `final_verdict`: both verifiers against the provider | Closed-refunded | P to requester, B slashed |
+   | Disputed | all three disagree | Closed-unresolved | P to requester, B returned (no penalty) |
+   | any open state | `timeout_refund` after the dispute deadline | Closed-refunded | P to requester, B returned |
+
+   The ground-truth attack label is **never** used to resolve a dispute.
+2. **Orchestrator.** A minimal service: queue, assignment (5080 = provider, Spark = verifier, a node never verifies itself), transaction relay, and an event log of all on-chain and off-chain events with timestamps. It also keeps a **reputation record** per provider (start 0.5; a verified pass moves it toward 1; a confirmed fail lowers it), updated from the verdicts and used to exclude providers below a minimum. Reputation is recorded for the testbed only; it is not part of the RQ2 detection metrics.
 3. **Measurement.** For each path (accept unsampled, sampled-pass, sampled-fail with dispute, timeout refund), run at least 100 jobs on the **local validator** and at least 30 on **Devnet**. Record compute units, fee in lamports, and latency to processed, confirmed and finalized. Record the RPC endpoint, the priority-fee policy and the time of day. Interleave the paths. Fill R3.4.
 4. **Verifier cost per job** from the RQ2 runs: verifier GPU-seconds for E0, E0-N, E2-W, E1 and E2-H at each k. Also record storage in MB per job. Fills R3.1 and R3.3.
 5. **Testbed demo.** Run the end-to-end flow with real 5080 providers, including injected attackers, and real Spark verifiers, at p ∈ {0.05, 0.1, 0.25}. These are the points overlaid on Fig. R3.6.
@@ -209,7 +234,19 @@ Use the **test split** prompts. Providers: 5080s. Verifiers: Sparks, plus the L4
 
 ## 8. Monte Carlo (WP4; the paper author can do this from the §6 outputs)
 
-Simulate providers using strategy s ∈ [0, 1], with the measured r_A, α_s and β_A, over (p, k, B/P). Estimate the realized gain Δ(s). This checks Proposition 3 (the all-or-nothing response) and the deterrence boundary of Eq. (6). Inputs: the §6 summaries. Output: R3.2, R3.5 and R3.6.
+Simulate providers using strategy s ∈ [0, 1], with the measured r_A, α_s and β_A, over (p, k, B/P). Estimate the realized gain Δ(s). This checks Proposition 2 (detection probability, manuscript Equation 4) and Proposition 3 (the all-or-nothing response and the deterrence condition, Equation 8; cost-optimal sampling rate, Equation 9). Inputs: the §6 summaries. Output: R3.2, R3.5 and R3.6.
+
+## 8b. Data for the result figures
+
+The paper author draws the five result figures from the data, in the same style as Figures 1–2 (`paper/tools/make_figures.py`). Deliver one CSV per figure in the relevant run folder. Every row carries the `run_id` it came from.
+
+| Figure placeholder | CSV | Columns |
+|---|---|---|
+| R1.5: honest deviation by level | `fig_r1_5_levels.csv` | `level, hw_pair, model, sampler, precision, metric, value` (metric ∈ pixel_equal, lpips, dinov2, step_d_rel_l2) |
+| R1.4: per-step honest deviation | `fig_r1_4_steps.csv` | `hw_pair, model, sampler, step, d_value, tau_step` |
+| R2.7: partial faking | `fig_r2_7_partial.csv` | `attack, s, k, n_jobs, n_detected, alpha_s, r_measured` |
+| R3.5: cost–detection frontier | `fig_r3_5_pareto.csv` | `evidence, p, k, verifier_gpu_s_per_job, detection_rate, fpr` |
+| R3.6: deterrence region | `fig_r3_6_deterrence.csv` | `attack, p, k, bond_ratio, delta_mean, delta_ci_lo, delta_ci_hi, source` (source ∈ monte_carlo, testbed) |
 
 ---
 
@@ -233,7 +270,7 @@ Simulate providers using strategy s ∈ [0, 1], with the measured r_A, α_s and 
 | R0.3 | Summary of findings | Paper author, after all results |
 | R0.4 | Version table | All manifests |
 | R0.5 | Split sizes | §0 prompt files |
-| R1.1 | x_T bit-exact across x86 and ARM | P1 |
+| R1.1 | Initial noise x₀ bit-exact across x86 and ARM | P1 |
 | R1.2 | Tier A ε_A, and whether it is exact across CPUs | §4.3, §5.3 |
 | R1.3 | Tier B metric | §5.2 |
 | R1.4 | Per-step honest deviation vs step, and τ_i | §4.3, §5.2 |

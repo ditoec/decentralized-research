@@ -49,7 +49,7 @@ Check the current SJR or JCR quartile before committing; quartiles shift every y
 | **WP3** | Main experiments: full factor grid (replay), real-GPU fidelity runs, baselines B1–B3, three ablations, gray-box tier, lazy-verifier relaxation, Devnet fee and latency series | `experiments/runs/*` with manifests | 6 | Feb 23 – Apr 5 |
 | **WP4** | Theory: Propositions 1–2 with proofs, deterrence condition, checks of empirical curves against the model | Section VII rewrite plus appendix | 3 (in parallel with WP3) | Mar 2 – Mar 22 |
 | **WP5** | Analysis and figures: Wilson and cluster-bootstrap intervals, Pareto frontier (detection vs GPU-s), censored detection-time curves | `analysis/`, all figures regenerated from the run IDs | 3 | Apr 6 – Apr 26 |
-| **WP6** | Writing in the `elsarticle` template, converting from proposal to results voice. Internal review (co-author plus one outside reader) | `paper/manuscript_ESJ.docx` | 5 | Apr 27 – May 31 |
+| **WP6** | Writing in the ESJ Word template, converting from proposal to results voice. Internal review (co-author plus one outside reader) | `paper/manuscript_ESJ.docx` | 5 | Apr 27 – May 31 |
 | **WP7** | Artifact release (code, traces, thresholds, checksums, Zenodo DOI), arXiv preprint, submission | Submission package | 2 | Jun 1 – Jun 14 |
 
 Buffer: 2–3 weeks before a fallback date of early July 2027.

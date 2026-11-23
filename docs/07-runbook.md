@@ -1,7 +1,7 @@
 # Engineering Runbook: Step-by-Step Technical Work
 
 **Audience:** the engineer who builds and runs the experiments.
-**Paper:** `paper/main.tex`. Every red `[R…]` placeholder in the paper is filled from a run listed in the **Placeholder map** (§10).
+**Paper:** `paper/manuscript_ESJ.docx` (Emerging Science Journal, Word). Every red `[R…]` placeholder in the paper is filled from a run listed in the **Placeholder map** (§10).
 **Ground rules:**
 1. Never type a number into the paper by hand. Every number comes from `experiments/runs/<run_id>/`.
 2. Thresholds are frozen and hashed *before* attack data is looked at.

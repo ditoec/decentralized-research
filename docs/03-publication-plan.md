@@ -3,6 +3,8 @@
 Main paper: *Tokenized Settlement and Probabilistic Verification in a Decentralized GPU Marketplace for Generative AI Workloads*.
 Plan start: 2026-11-22. Target submission: **mid-June 2027**.
 
+> **Update 2026-11-23:** the target journal is now **Emerging Science Journal (ESJ)**, in Word format. The venue table below (FGCS, elsarticle) is historical.
+>
 > **Update 2026-11-22:** the scope, RQs and timeline are superseded by [05-revised-design.md](05-revised-design.md) (diffusion-only, evidence-level study, submission mid-May 2027). Sections 0 and 4 (venue, checklist) still apply.
 
 ## 0. Target venue
@@ -47,7 +49,7 @@ Check the current SJR or JCR quartile before committing; quartiles shift every y
 | **WP3** | Main experiments: full factor grid (replay), real-GPU fidelity runs, baselines B1–B3, three ablations, gray-box tier, lazy-verifier relaxation, Devnet fee and latency series | `experiments/runs/*` with manifests | 6 | Feb 23 – Apr 5 |
 | **WP4** | Theory: Propositions 1–2 with proofs, deterrence condition, checks of empirical curves against the model | Section VII rewrite plus appendix | 3 (in parallel with WP3) | Mar 2 – Mar 22 |
 | **WP5** | Analysis and figures: Wilson and cluster-bootstrap intervals, Pareto frontier (detection vs GPU-s), censored detection-time curves | `analysis/`, all figures regenerated from the run IDs | 3 | Apr 6 – Apr 26 |
-| **WP6** | Writing in the `elsarticle` template, converting from proposal to results voice. Internal review (co-author plus one outside reader) | `paper/main.tex` | 5 | Apr 27 – May 31 |
+| **WP6** | Writing in the `elsarticle` template, converting from proposal to results voice. Internal review (co-author plus one outside reader) | `paper/manuscript_ESJ.docx` | 5 | Apr 27 – May 31 |
 | **WP7** | Artifact release (code, traces, thresholds, checksums, Zenodo DOI), arXiv preprint, submission | Submission package | 2 | Jun 1 – Jun 14 |
 
 Buffer: 2–3 weeks before a fallback date of early July 2027.
@@ -90,7 +92,7 @@ Remove: the "Research proposal | Revised draft" header, "planned", "will" and "e
 
 ## 5. Immediate next actions (this week)
 
-1. Read the full texts of arXiv 2307.01898, 2510.16028, 2511.20621, 2405.17934 and 2603.20421, and add them to `paper/refs.bib`.
+1. Read the full texts of arXiv 2307.01898, 2510.16028, 2511.20621, 2405.17934 and 2603.20421, and add them to the reference list.
 2. Make an inventory of the GPUs you can access, and price 3–4 short rentals for WP2.
 3. Confirm the target journal and download its template into `paper/`.
 4. Start the Anchor escrow program in `code/program/`.

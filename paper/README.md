@@ -9,4 +9,3 @@
   `python -P paper/tools/build_esj_docx.py "paper/Article Template.docx" paper/manuscript_ESJ.docx`
   **Once co-authors edit the .docx by hand, the .docx becomes the master. Stop regenerating it from the script.**
 - Checking the output: Word automation exports `build/manuscript_ESJ.pdf`, and the skill validator passes (see the session notes in CLAUDE.md).
-- `main.tex`, `refs.bib` and `refs_pending.bib`: the earlier LaTeX version (FGCS/elsarticle), kept as an archive. The citation verification status in the .bib files still applies.

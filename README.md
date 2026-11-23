@@ -4,7 +4,7 @@ Research repository for the paper *Tokenized Settlement and Probabilistic Verifi
 
 ## Status
 
-The manuscript draft (`paper/main.tex`) is written, with result placeholders. The experiments are pending and are run by the engineer following [docs/07-runbook.md](docs/07-runbook.md). Scope and timeline: [docs/05-revised-design.md](docs/05-revised-design.md).
+The manuscript draft (`paper/manuscript_ESJ.docx`, Emerging Science Journal format) is written, with result placeholders. The experiments are pending and are run by the engineer following [docs/07-runbook.md](docs/07-runbook.md). Scope and timeline: [docs/05-revised-design.md](docs/05-revised-design.md).
 
 ## Layout
 
@@ -12,7 +12,7 @@ The manuscript draft (`paper/main.tex`) is written, with result placeholders. Th
 |---|---|
 | `drafts/` | Original source drafts (PDF and DOCX). Read-only reference |
 | `docs/` | [01 novelty & feasibility](docs/01-novelty-feasibility.md), [02 draft comparison](docs/02-draft-comparison.md), [03 publication plan](docs/03-publication-plan.md), [04 literature review](docs/04-literature-review.md), **[05 revised design (current)](docs/05-revised-design.md)**, [06 code audit](docs/06-code-audit.md) |
-| `paper/` | LaTeX manuscript (journal template, `refs.bib`, `figures/`) |
+| `paper/` | ESJ Word manuscript, journal template and guideline, generator script (`tools/`) |
 | `code/program/` | Solana Anchor escrow program (OCC SPL token) |
 | `code/orchestrator/` | Scheduling, state machine, adjudication, reputation |
 | `code/parkedgpu/` | Provider agent that wraps the ComfyUI and Ollama APIs |

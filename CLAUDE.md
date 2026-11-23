@@ -10,12 +10,11 @@ This is a research-paper repo targeting a Q1 journal: **Emerging Science Journal
 ## Rules
 - Never invent experimental numbers. Results must come from logged runs in `experiments/runs/`.
 - Do not edit files in `drafts/`. They are the original sources.
-- Citations: verify every reference against its primary source before adding it to `paper/refs.bib`.
+- Citations: verify every reference against its primary source. References live in `REFS` in `paper/tools/build_esj_docx.py` (or in the .docx once it is the master). Unverified entries carry a red `[verify]` marker.
 - Keep the novelty claims consistent with `docs/05-revised-design.md` §2 and `docs/06-code-audit.md` §4. Per-step spot-checking itself is NOT new (WOMBO SN30, 2024). Never write "first" or "no prior work" without a fresh literature check.
 
 ## Hardware
 - Owned: RTX 5080s (Blackwell, x86 hosts) and DGX Sparks (GB10 Blackwell, ARM64, 128 GB unified memory). Older GPU generations (L4 level) come from short rentals. Plan: `docs/05-revised-design.md` §4.5.
-- LaTeX: Tectonic 0.17.0 at `C:\Users\dheet\tools\tectonic\tectonic.exe` (WSL has no network, so apt can't install TeX there). Build: `cd paper && /c/Users/dheet/tools/tectonic/tectonic.exe -X compile main.tex --outdir build --keep-logs`. `paper/build/` is git-ignored.
 - ESJ rules: numbered [n] citations; APA references with ALL authors (no "et al." in the reference list); Data Availability Statement before References; structure Introduction / Materials and Methods / Results and Discussion / Conclusion / Declarations / References.
 - Word checks: MS Word is installed. Export a PDF via COM (`Word.Application`, `ExportAsFixedFormat(pdf, 17)`) and render pages to PNG with the WinRT `Windows.Data.Pdf` API in PowerShell. There is no LibreOffice or pdftoppm.
 - Division of labor: Claude works on the paper. An engineer runs the experiments using `docs/07-runbook.md`.

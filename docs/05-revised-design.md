@@ -206,7 +206,7 @@ Specs are from NVIDIA product pages. Confirm the exact compute capability and dr
 | WP3 | RQ2 attack-separability runs and the partial-cheating sweep | Feb 1 – Feb 28 |
 | WP4 | Propositions 1–3 with proofs, and the Monte Carlo (parallel with WP3) | Feb 1 – Feb 28 |
 | WP5 | Anchor escrow with bond and trajectory root, the RQ3 cost table, end-to-end demo runs | Jan 4 – Mar 14 (parallel, second person) |
-| WP6 | Analysis, figures and writing (elsarticle) | Mar 15 – Apr 25 |
+| WP6 | Analysis, figures and writing (ESJ Word template) | Mar 15 – Apr 25 |
 | WP7 | Internal review, artifact DOI, arXiv, submission | Apr 26 – May 16 |
 
 **Submission target: mid-May 2027.** That is about one month earlier than before, because the scope is smaller.

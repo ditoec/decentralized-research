@@ -1,0 +1,833 @@
+"""Build the ESJ (Emerging Science Journal) Word manuscript from the journal template.
+
+Usage:  python -P paper/tools/build_esj_docx.py "paper/Article Template.docx" paper/manuscript_ESJ.docx
+
+The template's front matter (title, authors, affiliations, abstract box, header, footnote) is edited
+in place; the body is rebuilt by cloning the template's own prototype paragraphs/tables so every
+style matches the journal's. Equations are native Word math (OMML).
+
+Inline markup in content strings:
+  {b|text} bold   {i|text} italic   {sub|text} subscript   {sup|text} superscript
+  {R|ID: text} red result placeholder   {T|text} blue authoring TODO   {c|key1,key2} citation
+Once co-authors start editing the .docx by hand, treat the .docx as the master and stop regenerating.
+"""
+import copy
+import re
+import sys
+import zipfile
+import shutil
+import os
+import tempfile
+
+import docx
+from docx.oxml.ns import qn
+from docx.shared import Mm
+from lxml import etree
+
+W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+RED, BLUE = "C00000", "0070C0"
+
+# ----------------------------------------------------------------------------------------------
+# Citations and references
+# ----------------------------------------------------------------------------------------------
+V = " {R|verify: complete author list and details}"
+REFS = {
+ "ballandies2023depin": "Ballandies, M. C., Wang, H., Law, A. C. C., Yang, J. C., Gösken, C., & Andrew, M. (2023). A taxonomy for blockchain-based decentralized physical infrastructure networks (DePIN). arXiv preprint arXiv:2309.16707. doi:10.48550/arXiv.2309.16707. {R|verify}",
+ "lin2024depin": "Lin, Z., Wang, T., Shi, L., Zhang, S., & Cao, B. (2024). Decentralized physical infrastructure networks (DePIN): Challenges and opportunities. arXiv preprint arXiv:2406.02239. doi:10.48550/arXiv.2406.02239. {R|verify}",
+ "render2023": "Render Foundation. (2023). Render whitepaper. Available online: https://renderfoundation.com/whitepaper (accessed on October 16, 2026). {R|verify}",
+ "akash2026": "Akash Network. (2026). Core concepts. Akash documentation. Available online: https://akash.network/docs/getting-started/core-concepts/ (accessed on October 16, 2026). {R|verify}",
+ "ionet2026": "io.net. (2026). FAQ: How does decentralized GPU compute work? Available online: https://io.net/p/faq-how-does-decentralized-gpu-compute-work (accessed on October 16, 2026). {R|verify}",
+ "comfyui": "Comfy-Org. (2026). ComfyUI (commit 8b25bbc) [Computer software]. GitHub. Available online: https://github.com/Comfy-Org/ComfyUI (accessed on November 22, 2026). {T|update to the pinned experiment commit}",
+ "cai2025substitution": "Cai, W., Shi, T., Zhao, X., & Song, D. (2025). Are you getting what you pay for? Auditing model substitution in LLM APIs. arXiv preprint arXiv:2504.04715. doi:10.48550/arXiv.2504.04715.",
+ "gao2025met": "Gao, I., [remaining authors to be verified] (2025). Model equality testing: Which model is this API serving? International Conference on Learning Representations (ICLR 2025), Singapore." + V,
+ "diffusers_repro": "Hugging Face. (2026). Reproducible pipelines. Diffusers documentation. Available online: https://huggingface.co/docs/diffusers/main/using-diffusers/reproducibility (accessed on November 22, 2026).",
+ "atil2024nondeterminism": "Atil, B., [remaining authors to be verified] (2024). Non-determinism of “deterministic” LLM settings. arXiv preprint arXiv:2408.04667. doi:10.48550/arXiv.2408.04667." + V,
+ "yuan2025nondeterminism": "[Authors to be verified]. (2025). Understanding and mitigating numerical sources of nondeterminism in LLM inference. arXiv preprint arXiv:2506.09501. doi:10.48550/arXiv.2506.09501." + V,
+ "yao2026tao": "Yao, J., Su, H., Liao, T., Cheng, Z., Zhang, H., Wang, X., & Viswanath, P. (2026). TAO: Tolerance-aware optimistic verification for floating-point neural networks. Proceedings of the 21st European Conference on Computer Systems (EuroSys ’26), 1515–1532. doi:10.1145/3767295.3803612.",
+ "nicheimage_repo": "SocialTensor. (2025). NicheImage: Bittensor subnet 23 (commit a4a2461) [Computer software]. GitHub. Available online: https://github.com/SocialTensor/SocialTensorSubnet (accessed on November 22, 2026).",
+ "wombo_repo": "WOMBO. (2024). wombo-bittensor-subnet: Bittensor subnet 30 (commit 91b66fe, archived) [Computer software]. GitHub. Available online: https://github.com/womboai/wombo-bittensor-subnet (accessed on November 22, 2026).",
+ "kim2024reproducibility": "Kim, E., Isozaki, I., Sirkin, N., & Robson, M. (2024). Generative artificial intelligence reproducibility and consensus. arXiv preprint arXiv:2307.01898. doi:10.48550/arXiv.2307.01898.",
+ "gennaro2010vc": "Gennaro, R., Gentry, C., & Parno, B. (2010). Non-interactive verifiable computing: Outsourcing computation to untrusted workers. Advances in Cryptology – CRYPTO 2010, Lecture Notes in Computer Science, 6223, 465–482. doi:10.1007/978-3-642-14623-7_25.",
+ "chen2024zkml": "Chen, B.-J., Waiwitlikhit, S., Stoica, I., & Kang, D. (2024). ZKML: An optimizing system for ML inference in zero-knowledge proofs. Proceedings of the Nineteenth European Conference on Computer Systems (EuroSys ’24), Athens, Greece. {R|verify pages and DOI}",
+ "ong2025toploc": "Ong, J. M., [remaining authors to be verified] (2025). TOPLOC: A locality sensitive hashing scheme for trustless verifiable inference. Proceedings of the 42nd International Conference on Machine Learning (ICML 2025), PMLR 267, Vancouver, Canada." + V,
+ "sun2024svip": "Sun, Y., Li, Y., Zhang, Y., Jin, Y., & Zhang, H. (2024). SVIP: Towards verifiable inference of open-source large language models. arXiv preprint arXiv:2410.22307. doi:10.48550/arXiv.2410.22307. {R|verify}",
+ "wang2025verillm": "Wang, K., [remaining authors to be verified] (2025). VeriLLM: A lightweight framework for publicly verifiable decentralized inference. arXiv preprint arXiv:2509.24257. doi:10.48550/arXiv.2509.24257." + V,
+ "lim2026seal": "Lim, Y., & Yong, S. (2026). Seal, then sample: Sampled layerwise proofs for verifiable LLM inference from GPT-2 to 70B. arXiv preprint arXiv:2609.27367. doi:10.48550/arXiv.2609.27367. {R|verify}",
+ "tensorcommitments2026": "[Authors to be verified]. (2026). TensorCommitments: A lightweight verifiable inference for large language models. arXiv preprint arXiv:2602.12630. doi:10.48550/arXiv.2602.12630." + V,
+ "arun2025verde": "Arun, A., [remaining authors to be verified] (2025). Verde: Verification via refereed delegation for machine learning programs. arXiv preprint arXiv:2502.19405. doi:10.48550/arXiv.2502.19405." + V,
+ "alves2026eigenai": "Ribeiro Alves, D., [remaining authors to be verified] (2026). EigenAI: Deterministic inference, verifiable results. arXiv preprint arXiv:2602.00182. doi:10.48550/arXiv.2602.00182." + V,
+ "conway2024opml": "Conway, K. D., So, C., Yu, X., & Wong, K. (2024). opML: Optimistic machine learning on blockchain. arXiv preprint arXiv:2401.17555. doi:10.48550/arXiv.2401.17555. {R|verify}",
+ "teutsch2019truebit": "Teutsch, J., & Reitwießner, C. (2019). A scalable verification solution for blockchains. arXiv preprint arXiv:1908.04756. doi:10.48550/arXiv.1908.04756. {R|verify}",
+ "apitail2026": "[Authors to be verified]. (2026). API-TAIL: Detecting model substitution in LLM APIs through temperature-aligned likelihood tails. arXiv preprint arXiv:2610.36801. doi:10.48550/arXiv.2610.36801." + V,
+ "poq2024": "[Authors to be verified]. (2024). Proof of quality: A costless paradigm for trustless generative AI model inference on blockchains. arXiv preprint arXiv:2405.17934. doi:10.48550/arXiv.2405.17934." + V,
+ "he2025nondeterminism": "He, H., & Thinking Machines Lab. (2025). Defeating nondeterminism in LLM inference. Thinking Machines Lab: Connectionism. Available online: https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/ (accessed on October 16, 2026). {R|verify}",
+ "hawkeye2026": "[Authors to be verified]. (2026). Hawkeye: Reproducing GPU-level non-determinism. arXiv preprint arXiv:2603.20421. doi:10.48550/arXiv.2603.20421." + V,
+ "pham2014contracts": "Pham, V., Khouzani, M. H. R., & Cid, C. (2014). Optimal contracts for outsourced computation. Cryptology ePrint Archive, Paper 2014/374. {R|verify title}",
+ "zhang2024posp": "Zhang, Y., Wang, S., Tan, S., Liu, X., Moallemi, C. C., & Popa, R. A. (2024). Proof of sampling: A Nash equilibrium-based verification protocol for decentralized systems. arXiv preprint arXiv:2405.00295. doi:10.48550/arXiv.2405.00295. {R|verify}",
+ "verifierdilemma2024": "[Authors to be verified]. (2024). [Title to be verified: peer prediction for the verifier’s dilemma in blockchain verification]. arXiv preprint arXiv:2406.01794." + V,
+ "du2023edgemarket": "Du, Y., [remaining authors to be verified] (2023). Blockchain-aided edge computing market: Smart contract and consensus mechanisms. IEEE Transactions on Mobile Computing, 22(6), 3193–3208. doi:10.1109/TMC.2021.3140080." + V,
+ "fan2021hybrid": "Fan, S., Zhang, H., Zeng, Y., & Cai, W. (2021). Hybrid blockchain-based resource trading system for federated learning in edge computing. IEEE Internet of Things Journal, 8(4), 2252–2264. doi:10.1109/JIOT.2020.3028101. {R|verify}",
+ "wang2024stackelberg": "Wang, D., Du, X., Zhang, H., & Wang, Q. (2024). Blockchain enabled credible computing resource sharing: A multi-leader multi-follower Stackelberg game approach. IEEE Transactions on Vehicular Technology, 73(9), 13839–13852. doi:10.1109/TVT.2024.3386331. {R|verify}",
+ "yang2019survey": "Yang, R., Yu, F. R., Si, P., Yang, Z., & Zhang, Y. (2019). Integrated blockchain and edge computing systems: A survey, some research issues and challenges. IEEE Communications Surveys & Tutorials, 21(2), 1508–1532. doi:10.1109/COMST.2019.2894727. {R|verify}",
+ "asgaonkar2018escrow": "Asgaonkar, A., & Krishnamachari, B. (2018). Solving the buyer and seller’s dilemma: A dual-deposit escrow smart contract for provably cheat-proof delivery and payment for a digital good without a trusted mediator. arXiv preprint arXiv:1806.08379. doi:10.48550/arXiv.1806.08379. {R|verify}",
+ "yakovenko2018solana": "Yakovenko, A. (2018). Solana: A new architecture for a high performance blockchain (v0.8.13). Available online: https://solana.com/solana-whitepaper.pdf (accessed on October 16, 2026). {R|verify}",
+ "solana_fees": "Solana Foundation. (2026). Fees. Solana documentation. Available online: https://solana.com/docs/core/fees (accessed on October 16, 2026). {R|re-access before submission}",
+ "zhang2018lpips": "Zhang, R., Isola, P., Efros, A. A., Shechtman, E., & Wang, O. (2018). The unreasonable effectiveness of deep features as a perceptual metric. 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 586–595. doi:10.1109/CVPR.2018.00068.",
+ "oquab2023dinov2": "Oquab, M., [remaining authors to be verified] (2024). DINOv2: Learning robust visual features without supervision. Transactions on Machine Learning Research. arXiv:2304.07193." + V,
+ "radford2021clip": "Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021). Learning transferable visual models from natural language supervision. Proceedings of the 38th International Conference on Machine Learning (ICML 2021), PMLR 139, 8748–8763.",
+ "lu2022dpmsolverpp": "Lu, C., Zhou, Y., Bao, F., Chen, J., Li, C., & Zhu, J. (2022). DPM-Solver++: Fast solver for guided sampling of diffusion probabilistic models. arXiv preprint arXiv:2211.01095. doi:10.48550/arXiv.2211.01095.",
+ "rombach2022ldm": "Rombach, R., Blattmann, A., Lorenz, D., Esser, P., & Ommer, B. (2022). High-resolution image synthesis with latent diffusion models. 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 10674–10685. doi:10.1109/CVPR52688.2022.01042.",
+ "podell2023sdxl": "Podell, D., [remaining authors to be verified] (2024). SDXL: Improving latent diffusion models for high-resolution image synthesis. International Conference on Learning Representations (ICLR 2024), Vienna, Austria. arXiv:2307.01952." + V,
+ "wilson1927": "Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 209–212. doi:10.1080/01621459.1927.10502953.",
+}
+order = []  # citation keys in order of first appearance
+
+
+def cite_numbers(keys):
+    nums = []
+    for k in keys:
+        k = k.strip()
+        if k not in REFS:
+            raise KeyError(f"no reference entry for {k}")
+        if k not in order:
+            order.append(k)
+        nums.append(order.index(k) + 1)
+    nums = sorted(set(nums))
+    parts, i = [], 0
+    while i < len(nums):
+        j = i
+        while j + 1 < len(nums) and nums[j + 1] == nums[j] + 1:
+            j += 1
+        parts.append(str(nums[i]) if i == j else (f"{nums[i]}, {nums[j]}" if j == i + 1 else f"{nums[i]}–{nums[j]}"))
+        i = j + 1
+    return "[" + ", ".join(parts) + "]"
+
+
+# ----------------------------------------------------------------------------------------------
+# Rich text -> runs
+# ----------------------------------------------------------------------------------------------
+TOKEN = re.compile(r"\{(b|i|bi|sub|sup|R|T|c)\|([^{}]*)\}")
+
+
+def parse(text):
+    """yield (string, fmt-set)"""
+    pos = 0
+    for m in TOKEN.finditer(text):
+        if m.start() > pos:
+            yield text[pos:m.start()], set()
+        kind, val = m.group(1), m.group(2)
+        if kind == "c":
+            yield cite_numbers(val.split(",")), set()
+        elif kind == "R":
+            yield "[" + val + "]", {"red", "b"}
+        elif kind == "T":
+            yield "[TODO: " + val + "]", {"blue"}
+        elif kind == "bi":
+            yield val, {"b", "i"}
+        else:
+            yield val, {kind}
+        pos = m.end()
+    if pos < len(text):
+        yield text[pos:], set()
+
+
+def make_run(base_rpr, s, fmt):
+    r = etree.SubElement(etree.Element(qn("w:dummy")), qn("w:r"))
+    rpr = copy.deepcopy(base_rpr) if base_rpr is not None else etree.Element(qn("w:rPr"))
+    def setflag(tag, val=None):
+        for old in rpr.findall(qn(tag)):
+            rpr.remove(old)
+        el = etree.SubElement(rpr, qn(tag))
+        if val is not None:
+            el.set(qn("w:val"), val)
+    if "b" in fmt:
+        setflag("w:b")
+    if "i" in fmt:
+        setflag("w:i")
+    if "sub" in fmt:
+        setflag("w:vertAlign", "subscript")
+    if "sup" in fmt:
+        setflag("w:vertAlign", "superscript")
+    if "red" in fmt:
+        setflag("w:color", RED)
+    if "blue" in fmt:
+        setflag("w:color", BLUE)
+    # schema order inside rPr matters for strict validators; sort by a canonical order
+    ORDER = ["rStyle", "rFonts", "b", "bCs", "i", "iCs", "caps", "smallCaps", "strike", "noProof", "color",
+             "spacing", "w", "kern", "position", "sz", "szCs", "highlight", "u", "effect", "shd", "vertAlign", "lang"]
+    kids = list(rpr)
+    kids.sort(key=lambda e: ORDER.index(etree.QName(e).localname) if etree.QName(e).localname in ORDER else 99)
+    for k in kids:
+        rpr.remove(k)
+    for k in kids:
+        rpr.append(k)
+    for rf in rpr.findall(qn("w:rFonts")):
+        rf.attrib.pop(qn("w:hint"), None)
+    for lg in rpr.findall(qn("w:lang")):
+        lg.attrib.pop(qn("w:eastAsia"), None)
+    r.append(rpr)
+    t = etree.SubElement(r, qn("w:t"))
+    t.text = s
+    t.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+    return r
+
+
+def fill_para(p_el, text, base_rpr=None):
+    """Remove all content but pPr from paragraph element and add runs from markup text."""
+    for child in list(p_el):
+        if child.tag != qn("w:pPr"):
+            p_el.remove(child)
+    for s, fmt in parse(text):
+        if s:
+            p_el.append(make_run(base_rpr, s, fmt))
+    return p_el
+
+
+def first_rpr(p_el):
+    r = p_el.find(qn("w:r"))
+    if r is None:
+        return None
+    rpr = r.find(qn("w:rPr"))
+    return copy.deepcopy(rpr) if rpr is not None else None
+
+
+# ----------------------------------------------------------------------------------------------
+# OMML builder
+# ----------------------------------------------------------------------------------------------
+def mr(text, plain=False):
+    sty = '<m:rPr><m:sty m:val="p"/></m:rPr>' if plain else ""
+    text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return f'<m:r>{sty}<m:t xml:space="preserve">{text}</m:t></m:r>'
+
+
+def R(*parts):
+    """concatenate fragments; plain strings become italic math runs, ('p', s) plain runs"""
+    out = []
+    for p in parts:
+        if isinstance(p, tuple):
+            out.append(mr(p[1], plain=True))
+        elif p.startswith("<m:"):
+            out.append(p)
+        else:
+            out.append(mr(p))
+    return "".join(out)
+
+
+def sub(base, s):
+    return f"<m:sSub><m:e>{R(base)}</m:e><m:sub>{R(s)}</m:sub></m:sSub>"
+
+
+def sup(base, s):
+    return f"<m:sSup><m:e>{R(base)}</m:e><m:sup>{R(s)}</m:sup></m:sSup>"
+
+
+def frac(n, d, nobar=False):
+    pr = '<m:fPr><m:type m:val="noBar"/></m:fPr>' if nobar else ""
+    return f"<m:f>{pr}<m:num>{R(n)}</m:num><m:den>{R(d)}</m:den></m:f>"
+
+
+def delim(content, beg="(", end=")"):
+    return f'<m:d><m:dPr><m:begChr m:val="{beg}"/><m:endChr m:val="{end}"/></m:dPr><m:e>{R(content)}</m:e></m:d>'
+
+
+def binom(a, b):
+    return delim(frac(a, b, nobar=True))
+
+
+def nsum(lo, hi, body):
+    return (f'<m:nary><m:naryPr><m:chr m:val="∑"/><m:limLoc m:val="undOvr"/></m:naryPr>'
+            f"<m:sub>{R(lo)}</m:sub><m:sup>{R(hi)}</m:sup><m:e>{R(body)}</m:e></m:nary>")
+
+
+def maxover(var, body):
+    return (f"<m:func><m:fName><m:limLow><m:e>{mr('max', True)}</m:e><m:lim>{R(var)}</m:lim></m:limLow></m:fName>"
+            f"<m:e>{R(body)}</m:e></m:func>")
+
+
+def omath(*parts):
+    xml = f'<m:oMath xmlns:m="{M}" xmlns:w="{W}">{R(*parts)}</m:oMath>'
+    return etree.fromstring(xml)
+
+
+# ----------------------------------------------------------------------------------------------
+# Document assembly
+# ----------------------------------------------------------------------------------------------
+def main(template, out):
+    doc = docx.Document(template)
+    body = doc.element.body
+    P = doc.paragraphs
+    T = doc.tables
+
+    proto = {
+        "h1": copy.deepcopy(P[10]._p), "body": copy.deepcopy(P[11]._p), "h2": copy.deepcopy(P[12]._p),
+        "bullet": copy.deepcopy(P[15]._p), "caption": copy.deepcopy(P[21]._p),
+        "figpara": copy.deepcopy(P[22]._p), "decl": copy.deepcopy(P[25]._p), "ref": copy.deepcopy(P[57]._p),
+        "eqtbl": copy.deepcopy(T[2]._tbl),
+    }
+    rpr = {k: first_rpr(v) for k, v in proto.items() if k != "eqtbl"}
+    h2_ppr = proto["h2"].find(qn("w:pPr"))
+    for old in h2_ppr.findall(qn("w:numPr")):
+        h2_ppr.remove(old)
+    num = etree.SubElement(h2_ppr, qn("w:numPr"))
+    etree.SubElement(num, qn("w:ilvl")).set(qn("w:val"), "0")
+    etree.SubElement(num, qn("w:numId")).set(qn("w:val"), "0")
+    # numPr must follow pStyle/keepNext etc. in schema order: move it right after pStyle
+    h2_ppr.remove(num)
+    ps = h2_ppr.find(qn("w:pStyle"))
+    (ps.addnext(num) if ps is not None else h2_ppr.insert(0, num))
+
+    # ---- front matter (edit in place) ----
+    fill_para(P[1]._p, TITLE, first_rpr(P[1]._p))
+    a_base, a_sup = first_rpr(P[3]._p), None
+    for r in P[3].runs:
+        if r.font.superscript:
+            a_sup = copy.deepcopy(r._r.find(qn("w:rPr")))
+            break
+    ap = P[3]._p
+    footnote_ref = None
+    for r in ap.findall(qn("w:r")):
+        if r.find(qn("w:footnoteReference")) is not None:
+            footnote_ref = copy.deepcopy(r)
+    fill_para(ap, "", a_base)
+    for s, fmt, is_sup in AUTHORS:
+        if s == "<FN>":
+            if footnote_ref is not None:
+                ap.append(footnote_ref)
+            continue
+        ap.append(make_run(a_sup if is_sup else a_base, s, fmt))
+    P[5]._p.getparent().remove(P[5]._p)
+    for p_i, text in ((4, AFFIL1),):
+        p_el = P[p_i]._p
+        runs = p_el.findall(qn("w:r"))
+        sup_rpr = copy.deepcopy(runs[0].find(qn("w:rPr"))) if runs else None
+        base = None
+        for r in runs:
+            rp = r.find(qn("w:rPr"))
+            if rp is None or rp.find(qn("w:vertAlign")) is None:
+                base = copy.deepcopy(rp) if rp is not None else None
+                break
+        num, rest = text
+        fill_para(p_el, "", base)
+        p_el.append(make_run(sup_rpr, num, set()))
+        for s, fmt in parse(rest):
+            p_el.append(make_run(base, s, fmt))
+
+    cell0, cell1 = T[0].rows[0].cells
+    abs_p = cell0.paragraphs[1]._p
+    fill_para(abs_p, ABSTRACT, first_rpr(abs_p))
+    kw_p = cell1.paragraphs[0]._p
+    kw_runs = kw_p.findall(qn("w:r"))
+    kw_bold, kw_plain = copy.deepcopy(kw_runs[0].find(qn("w:rPr"))), copy.deepcopy(kw_runs[1].find(qn("w:rPr")))
+    fill_para(kw_p, "", kw_plain)
+    kw_p.append(make_run(kw_bold, "Keywords: ", set()))
+    kw_p.append(make_run(kw_plain, KEYWORDS, set()))
+
+    # ---- remove the template's example body ----
+    sect = body.find(qn("w:sectPr"))
+    start = P[10]._p
+    started = False
+    for el in list(body):
+        if el is start:
+            started = True
+        if started and el is not sect:
+            body.remove(el)
+
+    def add(el):
+        sect.addprevious(el)
+        return el
+
+    counters = {"table": 0, "figure": 0, "eq": 0}
+
+    def H1(t): add(fill_para(copy.deepcopy(proto["h1"]), t, rpr["h1"]))
+    def H2(t): add(fill_para(copy.deepcopy(proto["h2"]), t, rpr["h2"]))
+    def Para(t, kind="body"): add(fill_para(copy.deepcopy(proto[kind]), t, rpr[kind]))
+    def Bullets(items):
+        for t in items:
+            add(fill_para(copy.deepcopy(proto["bullet"]), t, rpr["bullet"]))
+
+    def Caption(kind, text):
+        counters[kind] += 1
+        label = "Table" if kind == "table" else "Figure"
+        add(fill_para(copy.deepcopy(proto["caption"]), f"{label} {counters[kind]}. {text}", rpr["caption"]))
+        return counters[kind]
+
+    def Figure(pid, desc, caption):
+        fp = copy.deepcopy(proto["figpara"])
+        add(fill_para(fp, "{R|FIGURE " + pid + ": " + desc + "}", rpr["figpara"]))
+        return Caption("figure", caption)
+
+    def Table(caption, header, rows, widths_mm):
+        Caption("table", caption)
+        tbl = doc.add_table(rows=1 + len(rows), cols=len(header))  # inserted before sectPr
+        tbl.style = doc.styles["Table Grid"]
+        tbl.alignment = 1
+        for ri, row in enumerate([header] + rows):
+            for ci, txt in enumerate(row):
+                cell = tbl.rows[ri].cells[ci]
+                cell.width = Mm(widths_mm[ci])
+                p = cell.paragraphs[0]
+                p.style = doc.styles["table-text"]
+                fill_para(p._p, ("{b|" + txt + "}") if ri == 0 and "{" not in txt else txt)
+        # spacer paragraph after table
+        add(fill_para(copy.deepcopy(proto["body"]), "", rpr["body"]))
+
+    def Eq(math_el):
+        counters["eq"] += 1
+        t = copy.deepcopy(proto["eqtbl"])
+        om = t.find(".//" + qn("m:oMath"))
+        om.getparent().replace(om, math_el)
+        cells = t.findall(".//" + qn("w:tc"))
+        numcell_p = cells[1].find(qn("w:p"))
+        fill_para(numcell_p, f"({counters['eq']})", first_rpr(numcell_p))
+        add(t)
+        return counters["eq"]
+
+    build_body(H1, H2, Para, Bullets, Figure, Table, Eq)
+
+    # ---- references ----
+    H1("6- References")
+    for n, key in enumerate(order, 1):
+        add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
+
+    doc.core_properties.title = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference"
+    doc.core_properties.author = "Anjas Risky Maradita"
+    doc.save(out)
+
+    # footnote contact e-mail (template placeholder)
+    tmp = tempfile.mkdtemp()
+    with zipfile.ZipFile(out) as z:
+        z.extractall(tmp)
+    fpath = os.path.join(tmp, "word", "footnotes.xml")
+    with open(fpath, encoding="utf8") as f:
+        xml = f.read()
+    # the template splits the e-mail into two runs: "a" + "uthor@institute.xxx"
+    i_contact = xml.find("CONTACT")
+    i_a = xml.find("<w:t>a</w:t>", i_contact)
+    if i_contact >= 0 and i_a >= 0:
+        xml = xml[:i_a] + "<w:t></w:t>" + xml[i_a + len("<w:t>a</w:t>"):]
+    xml = xml.replace("<w:t>uthor@institute.xxx</w:t>", "<w:t>TODO-corresponding-author-email</w:t>")
+    assert "institute.xxx" not in xml, "footnote e-mail placeholder not replaced"
+    with open(fpath, "w", encoding="utf8") as f:
+        f.write(xml)
+    os.remove(out)
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for root, _, files in os.walk(tmp):
+            for fn in files:
+                full = os.path.join(root, fn)
+                z.write(full, os.path.relpath(full, tmp).replace(os.sep, "/"))
+    shutil.rmtree(tmp)
+    print("references:", len(order), "| tables:", counters["table"], "| figures:", counters["figure"], "| equations:", counters["eq"])
+
+
+# ----------------------------------------------------------------------------------------------
+# CONTENT
+# ----------------------------------------------------------------------------------------------
+TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
+AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
+           (", ", set(), False), ("[TODO: co-author(s)]", {"blue"}, False), (" 1", set(), True)]
+AFFIL1 = ("1 ", "Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan, Tangerang, Indonesia.")
+KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
+
+ABSTRACT = (
+ "Decentralized GPU marketplaces pay untrusted owners of consumer GPUs to run generative AI jobs. For diffusion "
+ "models, a provider can lower its cost without returning an obviously wrong image, by running fewer denoising steps, "
+ "a quantized or distilled model, or by fabricating intermediate sampler states. Re-executing the job on another GPU "
+ "rarely gives a bit-identical result, so every acceptance rule must tolerate honest variation, and that tolerance is "
+ "where cheating can hide. {b|Objectives:} this study determines what evidence a marketplace must demand to detect "
+ "cost-saving cheating on diffusion jobs, and at what cost. {b|Methods:} honest variation of pinned ComfyUI SD1.5 and "
+ "SDXL workflows is measured across five nested heterogeneity levels on RTX 5080, DGX Spark and {R|R0.1: rented GPU "
+ "models} hardware. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
+ "eight cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
+ "consistency on every step on the CPU and model consistency at k random steps under per-step calibrated tolerances, "
+ "binds the initial noise exactly to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
+ "{R|R2.1: deployed-rule headline}. At a false-rejection rate of at most 1%, the proposed check detects "
+ "{R|R2.2: n of m} attacks with sensitivity {R|R2.3} at {R|R3.1}% of the GPU cost of full re-execution. "
+ "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
+ "and that under step spot checks a rational provider cheats either fully or not at all. This yields a closed-form "
+ "deterrence condition and a cost-optimal sampling policy, confirmed by measurement {R|R3.2}."
+)
+
+
+def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
+    # ================================================================== 1 INTRODUCTION
+    H1("1- Introduction")
+    Para("Generative AI services increasingly run on GPUs owned by people other than the service operator. "
+         "Decentralized physical infrastructure networks (DePIN) pool idle consumer GPUs through blockchain coordination "
+         "and token payments {c|ballandies2023depin,lin2024depin}. Decentralized compute markets such as Render, Akash and "
+         "io.net, along with networks dedicated to image generation, now sell diffusion-model inference from such GPUs "
+         "{c|render2023,akash2026,ionet2026}. The buyer cannot observe the computation. A blockchain can record that a "
+         "payment was escrowed and that a result digest was committed, but it cannot show that the provider ran the "
+         "requested model, for the requested number of steps, at the requested precision.")
+    Para("For diffusion workloads this gap has a specific economic shape. The cheapest ways to cheat do not produce "
+         "garbage. A provider that runs 20 instead of 30 sampler steps, stores the denoising network in 8-bit floating "
+         "point (fp8), or substitutes a distilled “turbo” model returns an image that looks plausible and is often "
+         "semantically close to the honest one, while saving a large share of the job’s GPU time. On current Blackwell "
+         "consumer GPUs, fp8 execution is a single command-line flag in the most widely used workflow engine {c|comfyui}. "
+         "Detecting such substitution from outputs alone is already known to be very hard for language models "
+         "{c|cai2025substitution,gao2025met}. For diffusion models it has not been measured.")
+    Para("The obvious defence is to re-execute a random sample of jobs on an independent node and compare. Two facts "
+         "complicate it. First, honest re-execution on different hardware is not bit-exact: kernels, reduction order, "
+         "attention implementations and numerical precision differ across GPUs and software stacks "
+         "{c|diffusers_repro,atil2024nondeterminism,yuan2025nondeterminism}. Every practical acceptance rule therefore "
+         "needs a tolerance, and the tolerance determines both how often honest providers are falsely rejected and how "
+         "much room is left for cheaters. Second, full re-execution doubles the cost of each audited job.")
+    H2("1-1- Related Work and Research Gap")
+    Para("{b|Cryptographic and white-box verification.} Verifiable computation proves arbitrary outsourced computation "
+         "{c|gennaro2010vc}. Zero-knowledge proof systems for neural networks have proved a small latent diffusion model, "
+         "but with proving times of about an hour per image {c|chen2024zkml}, far from marketplace economics. "
+         "Activation-based schemes commit to hashed or fingerprinted internal activations of large language models (LLMs) "
+         "{c|ong2025toploc,sun2024svip,wang2025verillm,lim2026seal,tensorcommitments2026}. Refereed delegation with "
+         "bitwise-reproducible operators bisects disputes down to a single operator {c|arun2025verde}, deterministic "
+         "inference can reduce verification to a byte comparison {c|alves2026eigenai}, and optimistic fraud proofs and "
+         "verification games complete this family {c|conway2024opml,teutsch2019truebit}. All of these require control of "
+         "the operator library or access to model internals, and almost all target LLMs.")
+    Para("{b|Tolerance-aware verification.} TAO {c|yao2026tao} is the closest system. It commits to the weights, the "
+         "computation graph and per-operator error thresholds calibrated on four GPU models, narrows disputes to one "
+         "operator, and settles with bonds and randomized audits on an Ethereum test network, with 0.3% overhead on the "
+         "undisputed path. Diffusion appears only in its cost evaluation, per-step verification of the denoising loop is "
+         "left to future work, and undeclared quantization and early exit are explicitly out of scope.")
+    Para("{b|Black-box auditing.} Model equality testing frames API auditing as a two-sample test {c|gao2025met}. "
+         "Output classifiers detect fp8 and int8 substitution of LLMs only at chance level, and statistical tests lose "
+         "power under partial random substitution {c|cai2025substitution}. Honest serving variation makes the null "
+         "hypothesis composite {c|apitail2026}, which is the same difficulty that cross-GPU variation creates here. Kim et "
+         "al. {c|kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion outputs on 22 GPUs of five "
+         "models and analysed majority voting, without an adversary. Proof of Quality scores outputs rather than "
+         "computation {c|poq2024}.")
+    Para("{b|Deployed validators.} On a public decentralized AI network, one image-generation subnet validates by "
+         "regenerating the image and comparing CLIP embeddings {c|radford2021clip} against a cosine threshold of 0.9 "
+         "{c|nicheimage_repo}. Another asks miners to return all per-step latents with a hash commitment. With "
+         "probability 0.35 its validator re-executes three random steps and rejects if the minimum cosine similarity to "
+         "the reported next latent is below 0.70 {c|wombo_repo}. The second rule is, to our knowledge, the earliest "
+         "deployment of per-step spot checking. Neither rule has a published calibration or adversarial evaluation.")
+    Para("{b|Nondeterminism and audit economics.} GPU inference is not bitwise reproducible across hardware, batch "
+         "sizes and library versions {c|diffusers_repro,atil2024nondeterminism,he2025nondeterminism,yuan2025nondeterminism}, "
+         "and tools for reproducing GPU-level nondeterminism are emerging {c|hawkeye2026}. Optimal audit contracts "
+         "{c|pham2014contracts}, sampling with an equilibrium argument {c|zhang2024posp}, and the verifier’s dilemma "
+         "{c|teutsch2019truebit,verifierdilemma2024} supply the incentive framework used here. Blockchain markets for "
+         "edge and federated-learning resources {c|du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} and "
+         "escrowed delivery of digital goods {c|asgaonkar2018escrow} address payment but not the integrity of generative "
+         "output. Table 1 summarizes the positioning.")
+    Table("Positioning against the closest work",
+          ["Work", "Evidence used", "No operator-level access", "Diffusion", "Cost-saving attacks evaluated", "Calibrated false-rejection rate"],
+          [["ZKML {c|chen2024zkml}", "Zero-knowledge proof", "No", "Partial", "n/a", "n/a"],
+           ["TOPLOC, SVIP, VeriLLM {c|ong2025toploc,sun2024svip,wang2025verillm}", "Activations", "No", "No", "Partial", "Yes"],
+           ["Verde {c|arun2025verde}", "Reproducible operators", "No", "No", "No", "n/a"],
+           ["TAO {c|yao2026tao}", "Per-operator tolerance", "No", "Cost only", "Excluded", "Yes"],
+           ["Kim et al. {c|kim2024reproducibility}", "Output perceptual hash", "Yes", "Yes", "No", "No"],
+           ["Cai et al. {c|cai2025substitution}", "Output text", "Yes", "No", "Yes", "n/a"],
+           ["Deployed SN23 rule {c|nicheimage_repo}", "Output embedding", "Yes", "Yes", "No", "No"],
+           ["Deployed SN30 rule {c|wombo_repo}", "Per-step latents", "Yes", "Yes", "No", "No"],
+           ["{b|This work}", "{b|Trajectory, two-tier}", "{b|Yes}", "{b|Yes}", "{b|Yes}", "{b|Yes}"]],
+          [38, 32, 24, 20, 28, 26])
+    Para("{b|Research gap.} The two lines of work leave one question open. Operator-level schemes need instrumented "
+         "runtimes and exclude cost-saving behaviour, while deployed output-level and step-level validators use "
+         "uncalibrated thresholds that have never been tested against such behaviour. No study measures whether "
+         "cost-saving cheating on diffusion jobs can be separated from honest cross-GPU variation, at which evidence "
+         "level, and at what verification cost under escrow settlement.")
+    H2("1-2- Research Questions and Contributions")
+    Para("This study answers three research questions (RQs):")
+    Bullets(["{b|RQ1 (Characterize).} How much do honest ComfyUI diffusion outputs vary across GPUs and software "
+             "configurations, at the level of the final image, the per-step latent and the single sampler step, and which "
+             "factors drive the variation?",
+             "{b|RQ2 (Separate).} At a false-rejection rate of at most 1%, which cost-saving attacks and trajectory "
+             "forgeries can be detected at each evidence level, and how do deployed validation rules fare against them?",
+             "{b|RQ3 (Price).} What verifier cost, on-chain cost and latency reach a stated detection and deterrence target "
+             "under sampled verification with escrow, and how does step-level spot checking change the cost-optimal "
+             "sampling policy?"])
+    Para("The contributions are as follows:")
+    Bullets(["A measurement of honest variation for SD1.5 and SDXL workflows across five nested heterogeneity levels, "
+             "including an exact-reproducibility test of the initial noise across x86 and ARM processors.",
+             "An attack study of faithful reproductions of two deployed validation rules against eight cost-saving attacks "
+             "and four trajectory forgeries, with calibrated error rates.",
+             "A hardened two-tier trajectory check that needs only a sampler hook, not operator-level access, integrated "
+             "with a Solana escrow that holds a provider bond.",
+             "An analytical model: an output-only detection ceiling, the detection probability of step spot checks under "
+             "partial cheating, and a proof that a rational provider’s best response is all-or-nothing, which gives a "
+             "closed-form deterrence condition and a cost-optimal sampling policy.",
+             "An open artifact with code, data and frozen thresholds {R|R0.2: DOI}."])
+    Para("{R|R0.3: summary of findings, written only after results}. Section 2 describes the materials and methods, "
+         "Section 3 reports and discusses the results, and Section 4 concludes.")
+
+    # ================================================================== 2 MATERIALS AND METHODS
+    H1("2- Materials and Methods")
+    Para("Figure 1 shows the research methodology. The protocol and the analytical model (Sections 2-1 to 2-3) define "
+         "what is measured, and the experiments (Section 2-4) measure honest variation, attack separability and cost.")
+    Figure("F1", "Flowchart of the research methodology: system and threat model → protocol and evidence levels → "
+           "analytical model → hardware and workload setup → RQ1 honest-variation study → calibration and threshold "
+           "freezing → RQ2 attack study → RQ3 cost and deterrence → conclusions.",
+           "Flowchart of the research methodology")
+    H2("2-1- System and Threat Model")
+    Para("A {i|requester} submits a diffusion job and escrows a payment P. A {i|provider} owns a GPU and runs the job. A "
+         "{i|verifier} is an independent node that re-executes parts of sampled jobs. An {i|orchestrator} matches jobs to "
+         "providers and relays state transitions. An {i|escrow program} on Solana {c|yakovenko2018solana} holds P, an "
+         "optional provider bond B and a verifier fee, and releases or refunds them according to the recorded job state "
+         "and a timeout. Each job specifies a pinned ComfyUI workflow: checkpoint hashes, prompt, seed, resolution, "
+         "classifier-free guidance (CFG) scale, a deterministic sampler, a scheduler and the step count T. Ancestral and "
+         "stochastic samplers are excluded because their per-step noise is drawn on the executing GPU.")
+    Para("The provider is rational and adaptive. It knows the protocol, the acceptance rules and the frozen thresholds, "
+         "and it may choose any execution strategy that lowers its cost. It does not know before committing whether the "
+         "job will be sampled or which steps will be checked, and in the core study it does not collude with verifiers. "
+         "Table 2 lists the trust assumptions and the scope of the claims.")
+    Table("Trust assumptions and claims of the core study",
+          ["Item", "Treatment"],
+          [["Trusted", "Escrow program; the sampling randomness (a delayed Solana slot hash); the verifier pool (honest, non-colluding); the orchestrator for liveness only"],
+           ["Adversary", "Rational provider with a stable identity, knowledge of the rules, no advance knowledge of the sampling draw, and no collusion"],
+           ["Claimed", "Consistency of the committed trajectory and output with the workflow under calibrated tolerances; detection probability; false rejection; verifier cost; on-chain cost and latency; deterrence under the stated payoff model"],
+           ["Not claimed", "That a specific physical GPU executed the job; freshness against legitimate caching; prompt privacy; robustness to verifier collusion or Sybil attacks; production economics"]],
+          [30, 138])
+
+    H2("2-2- Verification Protocol")
+    Para("A sampler with noise schedule σ{sub|0} > σ{sub|1} > … > σ{sub|T} produces latent states x{sub|0}, …, x{sub|T}, "
+         "where x{sub|0} is the scaled initial noise and x{sub|T} the final latent. At step i it also produces the "
+         "CFG-combined denoised prediction D{sub|i}. In ComfyUI the per-step callback exposes the pair (x{sub|i}, D{sub|i}) "
+         "in the model’s internal latent space, so a custom node can record the full trajectory without operator-level "
+         "instrumentation. Table 3 defines the evidence levels compared in this study, and Figure 2 shows the protocol.")
+    Table("Evidence levels (T: number of steps; k: checked steps; c₀: fixed overhead relative to one step)",
+          ["Level", "Provider commits", "Verifier checks when sampled", "GPU cost per job"],
+          [["E0", "Image digest", "Full re-execution; pixel hash, LPIPS {c|zhang2018lpips} and DINOv2 {c|oquab2023dinov2} with calibrated thresholds", "≈ 1"],
+           ["E0-N (deployed)", "Image", "Full re-execution; CLIP cosine > 0.9", "≈ 1"],
+           ["E2-W (deployed)", "SHA-256 of per-step latents", "Three random steps, one step each; latent cosine ≥ 0.70", "≈ 3/T"],
+           ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) exactly; conditioning; decoded final latent equals the image", "≈ c₀/T"],
+           ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
+          [28, 38, 74, 28])
+    Figure("F2", "Protocol overview: requester escrows P; provider (RTX 5080) runs the workflow and commits the trajectory "
+           "Merkle root; delayed slot hash decides sampling and the checked steps; verifier (DGX Spark) runs E1 checks, "
+           "Tier A on all steps (CPU) and Tier B at k steps (GPU); verdict, two-of-three escalation, release, refund or "
+           "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement")
+    Para("{b|Seed binding.} ComfyUI draws the initial noise on the CPU in 32-bit floating point from the job seed "
+         "{c|comfyui}. The verifier recomputes it and requires an exact match of x{sub|0}. Whether this holds across "
+         "processor instruction sets is measured in RQ1 ({R|R1.1}).")
+    Para("{b|Tier A: solver consistency on every step.} Given the committed values, the next state is a deterministic "
+         "function of committed quantities only. For the Euler sampler:")
+    Eq(omath(sub("x", "i+1"), ("p", "="), sub("x", "i"), ("p", "+"),
+             frac(R(sub("x", "i"), ("p", "−"), sub("D", "i")), sub("σ", "i")),
+             delim(R(sub("σ", "i+1"), ("p", "−"), sub("σ", "i")))))
+    Para("For DPM-Solver++(2M) {c|lu2022dpmsolverpp}, with t{sub|i} = −log σ{sub|i}, h{sub|i} = t{sub|i+1} − t{sub|i} "
+         "and r{sub|i} = h{sub|i−1}/h{sub|i}:")
+    Eq(omath(sub("x", "i+1"), ("p", "="), frac(sub("σ", "i+1"), sub("σ", "i")), sub("x", "i"), ("p", "−"),
+             delim(R(sup("e", R(("p", "−"), sub("h", "i"))), ("p", "−1"))),
+             delim(R(delim(R(("p", "1+"), frac(("p", "1"), R(("p", "2"), sub("r", "i"))))), sub("D", "i"), ("p", "−"),
+                     frac(("p", "1"), R(("p", "2"), sub("r", "i"))), sub("D", "i−1")), "[", "]")))
+    Para("which reduces to the first-order update at the first and the final step. Tier A recomputes Equation 1 or 2 "
+         "for all steps on the verifier’s CPU and compares the result to the committed x{sub|i+1} within a tolerance "
+         "ε{sub|A} ({R|R1.2}). It also checks that the committed schedule equals the schedule implied by the workflow, "
+         "which catches step-count reduction directly. Tier A costs no GPU time and detects copied, interpolated and "
+         "truncated trajectories. A forger can still pass it by solving Equation 1 for D{sub|i}, which is why Tier B exists.")
+    Para("{b|Tier B: model consistency at random steps.} After the commitment is final, k distinct step indices are drawn "
+         "from the sampling seed. For each checked step the verifier recomputes the CFG-combined prediction on its own GPU "
+         "and accepts the step if the distance to the committed D{sub|i} is at most a per-step tolerance τ{sub|i} "
+         "calibrated on honest cross-hardware runs ({R|R1.3: distance metric}). Per-step tolerances are needed because "
+         "honest deviation varies with the noise level ({R|R1.4}).")
+    Para("{b|Sampling, verdicts and settlement.} Each job is sampled with probability p using a Solana slot hash that "
+         "exists only after the commitment is finalized and a fixed delay has passed, combined with the job identifier; "
+         "the same draw seeds the checked steps. A fail or inconclusive verdict escalates to a second verifier and is "
+         "decided by two-of-three agreement. A confirmed fail refunds the requester, forfeits the bond B and lowers the "
+         "provider’s reputation. The verifier commits its recomputed values before the provider’s commitment is opened, "
+         "so it cannot copy them. The trajectory, about {R|R3.3} MB per SDXL job, stays off-chain until the job closes; "
+         "only the Merkle root and verdicts are recorded on-chain.")
+
+    H2("2-3- Analytical Model")
+    Para("Let 𝒟{sub|H} be the distribution of what an output-only verifier observes under honest execution, including "
+         "variation across the provider’s and verifier’s hardware, and 𝒟{sub|A} the distribution under attack A.")
+    Para("{bi|Proposition 1 (output-only ceiling).} For any, possibly randomized, rule with false-rejection rate α, the "
+         "sensitivity q{sub|A} to attack A satisfies Equation 3, independently of the sampling rate p:")
+    Eq(omath(sub("q", "A"), ("p", "≤"), "α", ("p", "+"), ("p", "TV"), delim(R(sub("𝒟", "A"), ("p", ","), sub("𝒟", "H")))))
+    Para("{i|Proof.} For any event E, the probabilities of E under 𝒟{sub|A} and 𝒟{sub|H} differ by at most their "
+         "total-variation distance (TV); take E as the event that the rule returns fail, and condition on the rule’s "
+         "random coins for randomized rules. The sampling rate changes how many jobs are examined, not this probability. "
+         "∎ Raising p therefore cannot rescue an output-only rule against an attack whose outputs overlap honest ones; "
+         "richer evidence helps exactly when it increases the total-variation distance.")
+    Para("{bi|Proposition 2 (spot-check detection).} Suppose a provider fakes m = sT steps so that Tier A passes, and "
+         "Tier B checks k steps drawn uniformly without replacement. Let r be the probability that a faked step exceeds "
+         "its tolerance and α{sub|s} the probability that an honest step does. Assuming independent per-step outcomes, a "
+         "sampled faked job fails Tier B with the probability in Equation 4, and an honest job with the probability in "
+         "Equation 5:")
+    Eq(omath(("p", "q"), delim(("p", "s,k")), ("p", "=1−"),
+             nsum(("p", "x=0"), "k", R(frac(R(binom("m", "x"), binom(R("T", ("p", "−"), "m"), R("k", ("p", "−"), "x"))), binom("T", "k")),
+                                       sup(delim(R(("p", "1−"), "r")), "x"),
+                                       sup(delim(R(("p", "1−"), sub("α", "s"))), R("k", ("p", "−"), "x"))))))
+    Eq(omath("α", delim("k"), ("p", "=1−"), sup(delim(R(("p", "1−"), sub("α", "s"))), "k")))
+    Para("{i|Proof.} The number of faked steps among the checked ones is hypergeometric. Given that x of them are "
+         "checked, the job passes only if all x faked and all k − x honest checked steps pass, with probabilities "
+         "(1 − r){sup|x} and (1 − α{sub|s}){sup|k−x}. ∎ For large T, q(s,k) ≈ 1 − (1 − sr − (1 − s)α{sub|s}){sup|k}. A "
+         "corollary is that keeping the job-level false-rejection rate at or below α* requires the per-step tolerance of "
+         "Equation 6, so checking more steps requires a stricter per-step tolerance; with k = 3 and α* = 1%, each step "
+         "may falsely reject at most about 0.33% of the time.")
+    Eq(omath(sub("α", "s"), ("p", "≤1−"), sup(delim(R(("p", "1−"), sup("α", ("p", "*")))), R(("p", "1/"), "k"))))
+    Para("{bi|Proposition 3 (all-or-nothing best response).} Let an honest job cost the provider c in GPU time, let "
+         "faking a fraction s of the steps save β{sub|A}sc, where β{sub|A} ≤ 1 is the share of cost avoided, and let a "
+         "detected fraud forfeit L = P + B. Neglecting reputation, the expected gain from cheating relative to honesty is "
+         "given by Equation 7. Under the large-T approximation, Δ(s) is convex on [0, 1], so the best response is "
+         "s* ∈ {0, 1}, and cheating is deterred, that is Δ(s) ≤ 0 for all s, if and only if Equation 8 holds:")
+    Eq(omath("Δ", delim("s"), ("p", "="), sub("β", "A"), "s", "c", ("p", "−"), "p",
+             delim(R("q", delim(("p", "s,k")), ("p", "−"), "α", delim("k")), "[", "]"), "L"))
+    Eq(omath("p", delim(R(("p", "1−"), sup(delim(R(("p", "1−"), sub("r", "A"))), "k"), ("p", "−"), "α", delim("k")), "[", "]"),
+             delim(R("P", ("p", "+"), "B")), ("p", "≥"), sub("β", "A"), "c"))
+    Para("{i|Proof.} With u = sr + (1 − s)α{sub|s}, which is affine in s, q = 1 − (1 − u){sup|k} is concave in s for "
+         "k ≥ 1, so −pqL is convex and adding the linear saving keeps Δ convex. A convex function on an interval attains "
+         "its maximum at an endpoint; since Δ(0) = 0, deterrence holds if and only if Δ(1) ≤ 0, which is Equation 8. ∎ "
+         "Equation 8 must hold for every attack class in scope. The marketplace minimizes the expected verifier cost per "
+         "job, p(k + c₀)c/T, subject to Equation 8; for a fixed k the smallest feasible sampling rate is given by "
+         "Equation 9, and the best k follows from a one-dimensional search. Attacks with r{sub|A} ≈ α{sub|s} make "
+         "Equation 9 infeasible for every k, which is the step-level analogue of Proposition 1. The quantities r{sub|A} "
+         "and β{sub|A} are estimated in RQ2, and Equations 4 and 8 are tested in RQ3.")
+    Eq(omath(sup("p", ("p", "*")), delim("k"), ("p", "="),
+             maxover("A", frac(R(sub("β", "A"), "c"),
+                               R(delim(R(("p", "1−"), sup(delim(R(("p", "1−"), sub("r", "A"))), "k"), ("p", "−"), "α", delim("k")), "[", "]"),
+                                 delim(R("P", ("p", "+"), "B")))))))
+
+    H2("2-4- Experimental Design")
+    Para("{b|Hardware.} Owned hardware comprises two or more NVIDIA RTX 5080 GPUs (Blackwell GB203, 16 GB, x86-64 hosts) "
+         "and two or more NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, 128 GB unified memory). Older GPU "
+         "generations come from short-term rentals ({R|R0.1}). Table 4 defines the five nested heterogeneity levels; "
+         "driver, CUDA, PyTorch and ComfyUI versions of every node are recorded for each run ({R|R0.4}).")
+    Table("Nested heterogeneity levels",
+          ["Level", "Comparison", "Isolates"],
+          [["L0", "Same unit, repeated runs", "Run-to-run nondeterminism"],
+           ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode, library version"],
+           ["L2", "Two units of the same model", "Unit-to-unit variation"],
+           ["L3", "RTX 5080 versus DGX Spark", "Chip, compute capability, memory system, processor instruction set"],
+           ["L4", "Blackwell versus older generations (rented)", "GPU generation"]],
+          [18, 70, 80])
+    Para("{b|Workloads.} SD1.5 {c|rombach2022ldm} at 512 × 512 and SDXL {c|podell2023sdxl} at 1024 × 1024 pixels are run "
+         "with 30 steps, the Euler and DPM-Solver++(2M) samplers and a fixed CFG scale, in ComfyUI at a pinned commit. "
+         "Prompts come from {T|PartiPrompts or COCO captions; record source and licence}, with three seeds per prompt, "
+         "split by prompt into calibration, development and test sets ({R|R0.5}). On owned hardware the full factor grid "
+         "is run: precision (fp16, bf16, fp32) × attention implementation (two options) × sampler (two) × deterministic "
+         "mode (off, on). Rented GPUs run the reference configuration and the precision factor only.")
+    Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed.")
+    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved)",
+          ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
+          [["A1", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30", "{R|R2.4}"],
+           ["A2", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", "{R|R2.4}"],
+           ["A2b", "4-bit (NVFP4) model", "{T|only if supported at the pinned version}", "{R|R2.4}"],
+           ["A3", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning", "{R|R2.4}"],
+           ["A4", "Sampler swap", "Cheaper sampler committed as the required one", "{R|R2.4}"],
+           ["A5", "Low resolution + upscale", "Generation at half resolution, then upscaling", "{R|R2.4}"],
+           ["A6", "Early exit", "Truncation, then extrapolation", "{R|R2.4}"],
+           ["A7", "Replay", "Output of a near-duplicate prompt", "{R|R2.4}"],
+           ["A8", "Unrelated output", "Sanity control", "1.0"],
+           ["F1", "Frame copy", "Each faked state copies the previous one", "{R|R2.4}"],
+           ["F2", "Interpolation", "Linear interpolation between computed anchor steps", "{R|R2.4}"],
+           ["F3", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", "{R|R2.4}"],
+           ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "{R|R2.4}"],
+           ["M", "Falsified metadata", "Negative control", "–"]],
+          [14, 40, 90, 24])
+    Para("{b|Calibration and statistics.} All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 "
+         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%. They are frozen "
+         "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split with "
+         "Wilson 95% confidence intervals {c|wilson1927}; medians and costs use cluster-bootstrap intervals over prompt and "
+         "hardware pair. Zero false rejections in 299 independent honest audits bound the false-rejection rate below 1% at "
+         "95% confidence, which sets the minimum number of honest test jobs per stratum.")
+    Para("{b|Testbed.} RTX 5080 nodes act as providers and DGX Spark nodes as verifiers. The escrow program runs on a "
+         "local validator for volume and on the Solana Devnet for fees and latency. For each lifecycle path (accepted, "
+         "sampled and passed, sampled and disputed, timeout refund) compute units, fees and latency to the processed, "
+         "confirmed and finalized commitment levels are reported {c|solana_fees}. Scale-out beyond the physical nodes is "
+         "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}.")
+
+    # ================================================================== 3 RESULTS AND DISCUSSION
+    H1("3- Results and Discussion")
+    H2("3-1- Honest Variation (RQ1)")
+    Figure("R1.5", "Honest deviation by heterogeneity level L0–L4 (box plots) for final images (LPIPS, DINOv2, "
+           "pixel-equality rate) and for per-step D_i distance; panels SD1.5 and SDXL.",
+           "Honest variation across heterogeneity levels")
+    Figure("R1.4", "Per-step honest deviation versus step index for each hardware pair, with the calibrated per-step "
+           "tolerances overlaid.", "Honest per-step deviation and calibrated tolerances")
+    Para("{b|Exact reproducibility.} {R|R1.1: whether the initial noise is bit-exact across x86 and ARM, over n seeds}. "
+         "{R|R1.6: share of bit-identical images at L0, L2, L3 and L4 per sampler and precision}.")
+    Para("{b|Factors.} {R|R1.7: effects of precision, attention implementation and deterministic mode; dominant factor; "
+         "whether a deterministic profile exists and its throughput cost}.")
+    Para("{b|Answer to RQ1.} {R|R1.8}")
+    H2("3-2- Separating Attacks from Honest Variation (RQ2)")
+    Para("{b|Deployed rules.} Table 6 reports the acceptance rate of the reproduced deployed rules under each attack. "
+         "{R|R2.1: narrative of the deployed-rule results}.")
+    Table("Acceptance rate (%, 95% CI) of the deployed rules under each attack, test split",
+          ["Condition", "E0-N (CLIP cosine > 0.9)", "E2-W (latent cosine ≥ 0.70)"],
+          [["Honest (L3/L4)", "{R|R2.5}", "{R|R2.5}"],
+           ["A1–A8 (one row each)", "{R|R2.5}", "{R|R2.5}"],
+           ["F1–F4 (one row each)", "n/a", "{R|R2.5}"]],
+          [56, 56, 56])
+    Para("{b|Calibrated evidence levels.} Table 7 reports the sensitivity of each evidence level at a job-level "
+         "false-rejection rate of at most 1%, and Figure 5 compares the measured detection under partial faking with "
+         "Equation 4.")
+    Table("Sensitivity at a job-level false-rejection rate ≤ 1% (95% CI), by evidence level",
+          ["Attack", "E0 (LPIPS)", "E0 (DINOv2)", "E1", "E2-H (k = {R|R2.6})"],
+          [["A1–A8, F1–F4 (one row each)", "{R|R2.3}", "{R|R2.3}", "{R|R2.3}", "{R|R2.3}"]],
+          [52, 29, 29, 29, 29])
+    Figure("R2.7", "Measured q(s,k) under partial faking (F3 with varying s) against Equation 4 with the measured r and "
+           "α_s.", "Spot-check detection under partial faking: measurement versus Proposition 2")
+    Para("{b|Inseparable attacks.} {R|R2.8: which attacks, if any, have r_A ≈ α_s (for example fp8 at L4), interpreted "
+         "through Proposition 1}.")
+    Para("{b|Answer to RQ2.} {R|R2.9}")
+    H2("3-3- Cost and Deterrence (RQ3)")
+    Table("Verifier cost per job by evidence level",
+          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0"],
+          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}"]],
+          [60, 44, 28, 36])
+    Table("Escrow cost per lifecycle path",
+          ["Path", "Compute units", "Fee (SOL)", "Latency to finalized (median, p95)"],
+          [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
+          [70, 30, 30, 38])
+    Figure("R3.5", "Pareto frontier of detection (or deterrence margin) against verifier GPU-seconds per job for E0, "
+           "E2-W and E2-H over (p, k).", "Cost–detection frontier")
+    Figure("R3.6", "Deterrence region of Equation 8 in the (p, B/P) plane for each attack, with p*(k) from Equation 9; "
+           "Monte Carlo and testbed points overlaid.", "Deterrence condition and cost-optimal sampling")
+    Para("{b|Answer to RQ3.} {R|R3.2: best k, p*, required bond ratio, and agreement between theory and measurement}.")
+    H2("3-4- Discussion")
+    Para("{b|What the blockchain adds.} Integrity detection in this design does not depend on the chain: a trusted "
+         "broker running the same checks would detect the same attacks. The escrow makes the payoff model of Proposition 3 "
+         "enforceable without a custodian, because payment and bond are locked before execution, released or forfeited by "
+         "recorded verdicts, and refunded on timeout if the orchestrator fails. Its cost is {R|R3.4}.")
+    Para("{b|Implications for marketplaces.} {R|R4.1: for example require deterministic samplers and CPU-generated noise; "
+         "commit full trajectories; calibrate tolerances per step against a job-level false-rejection target; avoid "
+         "uncalibrated cosine thresholds}.")
+    Para("{b|Relation to operator-level verification and to language models.} Sampler-level evidence and the "
+         "operator-level evidence of TAO {c|yao2026tao} are complementary: where Tier B cannot separate an attack "
+         "({R|R2.8}), operator-level commitments or trusted execution are required. For LLM inference, output-only detection "
+         "of quantized substitution is already known to fail {c|cai2025substitution}, and activation-based schemes apply, "
+         "so LLM workloads are not evaluated here.")
+    Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
+         "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
+    Para("{b|Limitations.} The verifier pool is assumed honest and non-colluding; peer-prediction and random-assignment "
+         "mechanisms {c|verifierdilemma2024} are complementary. Cross-generation results cover only the rented models "
+         "tested ({R|R0.1}). Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
+         "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
+         "7, Devnet fees do not represent mainnet economics, and re-execution establishes consistency with the committed "
+         "workload, not that a particular GPU performed it.")
+
+    # ================================================================== 4 CONCLUSION
+    H1("4- Conclusion")
+    Para("{R|R5.1: written last. Restate the question, the three answers with key numbers, and the practical recommendation "
+         "for decentralized GPU marketplaces; outline future work such as verifier-collusion resistance and ancestral "
+         "samplers with CPU noise}.")
+
+    # ================================================================== 5 DECLARATIONS
+    H1("5- Declarations")
+    H2("5-1- Author Contributions")
+    Para("{T|Conceptualization, A.R.M. and X.X.; methodology, A.R.M.; software, X.X.; validation, X.X.; formal analysis, "
+         "A.R.M.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing—original draft preparation, A.R.M.; "
+         "writing—review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.} All "
+         "authors have read and agreed to the published version of the manuscript.", "decl")
+    H2("5-2- Data Availability Statement")
+    Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "
+         "include code, workflow fingerprints, frozen thresholds, trajectories (or a sample, if storage limits apply) and "
+         "checksums.", "decl")
+    H2("5-3- Funding")
+    Para("{T|state funder, award number and grant recipient, or:} Funding information is not available.", "decl")
+    H2("5-4- Acknowledgements")
+    Para("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required by "
+         "the journal}", "decl")
+    H2("5-5- Institutional Review Board Statement")
+    Para("Not applicable.", "decl")
+    H2("5-6- Informed Consent Statement")
+    Para("Not applicable.", "decl")
+    H2("5-7- Conflicts of Interest")
+    Para("The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
+         "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
+         "falsification, double publication and/or submission, and redundancies have been completely observed by the "
+         "authors.", "decl")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])

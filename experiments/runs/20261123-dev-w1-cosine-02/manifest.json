@@ -1,0 +1,34 @@
+{
+ "run_id": "20261123-dev-w1-cosine-02",
+ "git_commit": "68c8dacce0554b69c62b15f67a59d158991b5cd4",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "node": {
+  "hostname": "fe118ad44416",
+  "os": "Linux-6.8.0-59-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.3",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 5080",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "86588749-9b98-17be-79b5-ba95cda337a5",
+  "driver": "580.178.04"
+ },
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "start_time": "2026-11-23T14:49:07.754701+00:00",
+ "wp": "dev",
+ "purpose": "W1 dev run on a rented RTX 5080 (Runpod pod jfschvg3u79grv); copied back in compact form before the pod was terminated: per-job rows and raw trajectories were not kept",
+ "provider": "runpod",
+ "cloud_type": "COMMUNITY",
+ "hourly_rate_usd": 0.39,
+ "note": "ran at 68c8dac, before the canonical-schedule fix; the first job of the process used a CPU-computed schedule, later jobs a GPU-computed one. W1 statistics are unaffected in substance."
+}

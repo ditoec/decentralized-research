@@ -1,0 +1,36 @@
+{
+ "run_id": "20261123-dev-rtx5080-smoke-01",
+ "wp": "dev",
+ "purpose": "First x86/CUDA smoke test of trajver on a rented consumer RTX 5080: tests, schedule diagnosis, P1 noise across CPU ISAs, P3 throughput, P4 fp8 feasibility. Dev hardware, not paper data.",
+ "provider": "runpod",
+ "pod_id": "jfschvg3u79grv",
+ "cloud_type": "COMMUNITY",
+ "hourly_rate_usd": 0.39,
+ "image": "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404 (official template runpod-torch-v280)",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "git_commit": "68c8dac + canonical-schedule patch (committed after this run)",
+ "node": {
+  "hostname": "fe118ad44416",
+  "os": "Linux-6.8.0-59-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "AMD EPYC 7663 56-Core Processor",
+  "python": "3.12.3",
+  "torch": "2.8.0+cu128",
+  "cuda": "12.8",
+  "gpu_name": "NVIDIA GeForce RTX 5080",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "86588749-9b98-17be-79b5-ba95cda337a5",
+  "driver": "580.178.04",
+  "host_cuda": "13.0"
+ },
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "start_time": "2026-11-23T14:46:04Z"
+}

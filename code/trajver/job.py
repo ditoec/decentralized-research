@@ -58,6 +58,39 @@ def _cpu(t: torch.Tensor) -> torch.Tensor:
     return t.detach().to("cpu", copy=True)
 
 
+def canonical_sigmas(model, scheduler: str, steps: int, sampler_name: str, denoise: float | None = 1.0) -> torch.Tensor:
+    """The noise schedule, computed on the CPU from a CPU copy of the model's sampling object.
+
+    ``comfy.samplers.KSampler`` computes the schedule on whatever device ``model_sampling`` sits
+    on: the CPU before the first job of a process, the GPU after the model was loaded. The two
+    differ by about one float32 ulp, and that changes the whole trajectory (found on an RTX 5080,
+    2026-11-23: first and second run of the same job differed by up to 0.36 in the final latent).
+    The protocol therefore fixes the schedule as this CPU computation; it mirrors
+    ``KSampler.calculate_sigmas`` / ``set_steps`` at the pinned commit.
+    """
+    import copy
+
+    import comfy.samplers
+
+    ms = copy.deepcopy(model.get_model_object("model_sampling")).to("cpu")
+    KS = comfy.samplers.KSampler
+
+    def calc(n: int) -> torch.Tensor:
+        discard = sampler_name in KS.DISCARD_PENULTIMATE_SIGMA_SAMPLERS
+        if discard:
+            n += 1
+        s = comfy.samplers.calculate_sigmas(ms, scheduler, n)
+        if discard:
+            s = torch.cat([s[:-2], s[-1:]])
+        return s.detach().cpu()
+
+    if denoise is None or denoise > 0.9999:
+        return calc(steps)
+    if denoise <= 0.0:
+        return torch.FloatTensor([])
+    return calc(int(steps / denoise))[-(steps + 1):]
+
+
 def sample_and_record(model, noise, latent, positive, negative, cfg: float, sampler_name: str,
                       sigmas: torch.Tensor, seed: int, allow_nondeterministic: bool = False):
     """``comfy.sample.sample`` with trajectory recording. Shared by Pipeline.run and the node.
@@ -136,7 +169,8 @@ class Pipeline:
                                        denoise=spec.denoise, model_options=self.model.model_options)
 
     def schedule(self, spec: JobSpec) -> torch.Tensor:
-        return self.ksampler(spec).sigmas.detach().cpu()
+        """The canonical (CPU-computed) schedule of the job; see ``canonical_sigmas``."""
+        return canonical_sigmas(self.model, spec.scheduler, spec.steps, spec.sampler, spec.denoise)
 
     def model_sampling(self):
         return self.model.get_model_object("model_sampling")
@@ -156,7 +190,8 @@ class Pipeline:
 
     def latent_out(self, x_internal: torch.Tensor) -> torch.Tensor:
         """process_latent_out as CFGGuider.inner_sample applies it (on float32)."""
-        return self.model.model.process_latent_out(x_internal.to(torch.float32))
+        dev = self.model.load_device
+        return self.model.model.process_latent_out(x_internal.to(device=dev, dtype=torch.float32)).cpu()
 
     # ----------------------------------------------------------- stock path (reference for T1)
     def run_stock(self, spec: JobSpec) -> torch.Tensor:
@@ -168,7 +203,7 @@ class Pipeline:
         with comfy_env.pinned_batching():
             return comfy.sample.sample(self.model, noise, spec.steps, spec.cfg, spec.sampler, spec.scheduler,
                                        pos, neg, latent, denoise=spec.denoise, callback=None,
-                                       disable_pbar=True, seed=spec.seed)
+                                       disable_pbar=True, seed=spec.seed, sigmas=self.schedule(spec))
 
     # ----------------------------------------------------------- recording path
     def run(self, spec: JobSpec, sigmas: torch.Tensor | None = None,
@@ -183,7 +218,7 @@ class Pipeline:
         noise = comfy.sample.prepare_noise(latent, spec.seed)
         pos, neg = self.encode(spec.prompt), self.encode(spec.negative)
         if sigmas is None:
-            sigmas = self.ksampler(spec).sigmas
+            sigmas = self.schedule(spec)
         samples, traj = sample_and_record(self.model, noise, latent, pos, neg, spec.cfg, spec.sampler, sigmas,
                                           spec.seed, allow_nondeterministic)
         traj.job = self.job_record(spec)

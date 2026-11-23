@@ -739,7 +739,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) exactly; conditioning; decoded final latent equals the image", "≈ c₀/T"],
            ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
           [28, 38, 74, 28])
-    Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5090) runs the workflow and commits the trajectory "
+    Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5080) runs the workflow and commits the trajectory "
            "Merkle root; delayed slot hash decides sampling and the checked steps; verifier (DGX Spark) runs E1 checks, "
            "Tier A on all steps (CPU) and Tier B at k steps (GPU); verdict, two-of-three escalation, release, refund or "
            "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement",
@@ -829,8 +829,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H2("3-4- Experimental Design")
     Para("{b|Hardware.} Owned hardware comprises six NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, unified "
          "CPU and GPU memory). They were shared with other inference workloads during the study. All x86-64 GPUs are "
-         "rented by the hour from a commercial GPU cloud ({R|R0.1}): one Blackwell model and several models of the Ampere "
-         "and Ada generations. A rented node runs the same pinned software in a container, but its driver is set by the "
+         "rented by the hour from a commercial GPU cloud ({R|R0.1}): consumer GeForce RTX cards of the "
+         "Blackwell, Ada and Ampere generations. A rented node runs the same pinned software in a container, but its driver is set by the "
          "host, so the driver version and the hourly price of each rented node are recorded. Results that depend on "
          "timing are measured only on rented GPUs, which a job has to itself. Table 4 defines the five nested heterogeneity levels; "
          "driver, CUDA, PyTorch and ComfyUI versions of every node are recorded for each run ({R|R0.4}).")

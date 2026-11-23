@@ -14,7 +14,7 @@ import comfy.samplers
 import folder_paths
 
 from trajver import comfy_env
-from trajver.job import DETERMINISTIC_SAMPLERS, sample_and_record
+from trajver.job import DETERMINISTIC_SAMPLERS, canonical_sigmas, sample_and_record
 
 
 class KSamplerTrajectory:
@@ -45,10 +45,9 @@ class KSamplerTrajectory:
         latent = comfy.sample.fix_empty_latent_channels(model, latent, latent_image.get("downscale_ratio_spacial"),
                                                         latent_image.get("downscale_ratio_temporal"))
         noise = comfy.sample.prepare_noise(latent, seed, latent_image.get("batch_index"))
-        ks = comfy.samplers.KSampler(model, steps=steps, device=model.load_device, sampler=sampler_name,
-                                     scheduler=scheduler, denoise=1.0, model_options=model.model_options)
+        sigmas = canonical_sigmas(model, scheduler, steps, sampler_name, 1.0)
         samples, traj = sample_and_record(model, noise, latent, positive, negative, cfg, sampler_name,
-                                          ks.sigmas, seed)
+                                          sigmas, seed)
         traj.job = {"job_id": job_id, "seed": seed, "steps": steps, "cfg": cfg, "sampler": sampler_name,
                     "scheduler": scheduler, "pin_batching": comfy_env.PIN_BATCHING}
         out_dir = os.path.join(folder_paths.get_output_directory(), "trajectories", job_id)

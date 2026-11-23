@@ -1,0 +1,70 @@
+{
+ "note": "dev hardware, not paper data",
+ "tests_before_fix": {
+  "unit": "28 passed, 2 failed (imagehash not installed)",
+  "integration": "5 passed, 4 failed: T1, T2, final-state, E1 schedule"
+ },
+ "schedule_diagnosis": {
+  "model_sampling_device_before_first_run": "cpu",
+  "after": "cuda:0",
+  "schedule_cpu_vs_gpu_max_abs": 2.384185791015625e-07,
+  "run1_vs_run2_final_latent_max_abs": 0.3619895875453949,
+  "run2_vs_run3_equal": true,
+  "run2_vs_run3_merkle_root_equal": true
+ },
+ "tests_after_canonical_schedule_fix": {
+  "unit": "30 passed",
+  "integration": "9 passed (T1, T2, T3, E1, E2-H forgeries, dpmpp_2m Tier A, E2-W)"
+ },
+ "p1_noise_cpu_isa": {
+  "x86": "AMD EPYC 7663, torch 2.8.0+cu128",
+  "arm": "Apple M1 Pro, torch 2.8.0 and 2.15.0 (identical to each other)",
+  "seed0_1x4x64x64_sha256": {
+   "x86": "24efac55b39e95b2d74d8fb5b3a8e8a8e808bd04129f260c4cdbb225bb952a4d",
+   "arm": "95a4d9a54388cc2e07fca193ded1aec7c0be5245f73a6cf835035a66a7b3d0e4"
+  },
+  "seed0_first6_values": {
+   "x86": [
+    -1.1258398294448853,
+    -1.152360200881958,
+    -0.2505785822868347,
+    -0.4338788092136383,
+    0.8487103581428528,
+    0.6920091509819031
+   ],
+   "arm": [
+    -1.1258398294448853,
+    -1.152360200881958,
+    -0.2505785822868347,
+    -0.4338788390159607,
+    0.8487103581428528,
+    0.6920092105865479
+   ]
+  },
+  "seed0_sum": {
+   "x86": -124.11269989912398,
+   "arm": -124.11298851843458
+  },
+  "small_tensors": "n=4 and n=15 identical on both; n>=16 differ in the last 1-2 ulps (vectorized normal sampler)",
+  "sampled_digests_compared": "seeds 0, 1, 99 for both shapes: 0 of 6 identical"
+ },
+ "p3_throughput": {
+  "sd15_512_30steps_euler_recording_on_s_per_job": [
+   1.87,
+   0.97,
+   0.98,
+   0.97,
+   0.97,
+   0.98
+  ],
+  "warm_median_s": 0.97
+ },
+ "p4_fp8": {
+  "fp16_warm_median_s": 0.974,
+  "fp8_e4m3fn_unet_warm_median_s": 1.378,
+  "fp8_plus_fast_fp8_matrix_mult_warm_median_s": 2.136,
+  "fp8_vs_fp16_final_latent_rel_l2_max": 0.6629931926727295,
+  "fp8mm_vs_fp16_rel_l2_max": 0.6837211847305298,
+  "note": "fp8 is slower on this stack; ComfyUI warns the RTX 50 series wants a cu130+ PyTorch, this image is cu128. Re-test with a CUDA 13 build in the pilot."
+ }
+}

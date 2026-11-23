@@ -15,3 +15,4 @@ This is a research-paper repo targeting a Q1 journal. The main paper is the toke
 
 ## Hardware
 - Owned: RTX 5080s (Blackwell, x86 hosts) and DGX Sparks (GB10 Blackwell, ARM64, 128 GB unified memory). Older GPU generations (L4 level) come from short rentals. Plan: `docs/05-revised-design.md` §4.5.
+- LaTeX: Tectonic 0.17.0 at `C:\Users\dheet\tools\tectonic\tectonic.exe` (WSL has no network, so apt can't install TeX there). Build: `cd paper && /c/Users/dheet/tools/tectonic/tectonic.exe -X compile main.tex --outdir build --keep-logs`. `paper/build/` is git-ignored.

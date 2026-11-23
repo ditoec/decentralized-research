@@ -29,8 +29,8 @@
 \title{Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs: Attacking Deployed Validators and Hardening the Protocol}
 
 \author[uph]{Anjas Risky Maradita\corref{cor1}}
-\ead{\todo{email}}
-\author[uph]{\todo{co-author(s), e.g.\ Dito Eka Cahya, supervisor}}
+\ead{TODO-email@example.com}% TODO: corresponding email (plain text only; \ead cannot contain macros)
+\author[uph]{TODO Co-author(s)}% TODO: e.g. Dito Eka Cahya, supervisor
 \cortext[cor1]{Corresponding author}
 \affiliation[uph]{organization={Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan},
             city={Tangerang},
@@ -197,7 +197,7 @@ which reduces to the first-order update at $i=0$ and at the final step. Tier A r
 After the commitment is final, the verifier draws $k$ distinct step indices $S\subset\{0,\dots,T-1\}$ from the sampling seed. For each $i\in S$ it recomputes $\hat D_i=\mathrm{CFG}(f_\theta(x_i,\sigma_i,c))$ on its own GPU and accepts step $i$ if $d_i(\hat D_i,D_i)\le\tau_i$. Here $d_i$ is a normalized distance (\res{R1.3: chosen metric, e.g.\ relative $\ell_2$ or max-abs}) and $\tau_i$ a per-step tolerance calibrated on honest cross-hardware runs (Section~\ref{sec:method-cal}). A job passes Tier B if all $k$ checked steps pass. Per-step tolerances are needed because honest deviation varies with the noise level (\res{R1.4: shape of honest deviation vs step}).
 
 \subsection{Sampling, verdicts and settlement}
-Each job is sampled with probability $p$ using a Solana slot hash that exists only after the commitment is finalized and a fixed delay has passed, combined with the job identifier. The same draw also seeds $S$. Following the original draft, a fail or inconclusive verdict escalates to a second verifier, and the outcome follows a two-of-three agreement. A confirmed fail refunds the requester, forfeits the provider bond $B$ and lowers the provider's reputation. The verifier commits its recomputed values before it sees the provider's commitment opened, so that it cannot simply copy them. The trajectory itself, about \res{R3.3: MB} per SDXL job, stays off-chain until the job closes. Only the Merkle root and the verdicts are recorded on-chain.
+Each job is sampled with probability $p$ using a Solana slot hash that exists only after the commitment is finalized and a fixed delay has passed, combined with the job identifier. The same draw also seeds $S$. A fail or inconclusive verdict escalates to a second verifier, and the outcome follows a two-of-three agreement. A confirmed fail refunds the requester, forfeits the provider bond $B$ and lowers the provider's reputation. The verifier commits its recomputed values before it sees the provider's commitment opened, so that it cannot simply copy them. The trajectory itself, about \res{R3.3: MB} per SDXL job, stays off-chain until the job closes. Only the Merkle root and the verdicts are recorded on-chain.
 
 %% ====================================================================
 \section{Analysis}\label{sec:analysis}

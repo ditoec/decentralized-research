@@ -309,8 +309,7 @@ def main(template, out):
                 ap.append(footnote_ref)
             continue
         ap.append(make_run(a_sup if is_sup else a_base, s, fmt))
-    P[5]._p.getparent().remove(P[5]._p)
-    for p_i, text in ((4, AFFIL1),):
+    for p_i, text in ((4, AFFIL1), (5, AFFIL2)):
         p_el = P[p_i]._p
         runs = p_el.findall(qn("w:r"))
         sup_rpr = copy.deepcopy(runs[0].find(qn("w:rPr"))) if runs else None
@@ -438,8 +437,9 @@ def main(template, out):
 # ----------------------------------------------------------------------------------------------
 TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
 AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
-           (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 1", set(), True)]
+           (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True)]
 AFFIL1 = ("1 ", "Magister of Informatics, Faculty of Informatics, Universitas Pelita Harapan, Tangerang, Indonesia.")
+AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
 ABSTRACT = (

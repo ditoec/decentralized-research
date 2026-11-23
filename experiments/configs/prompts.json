@@ -1,0 +1,39 @@
+{
+ "source": "PartiPrompts.tsv (google-research/parti, Apache-2.0)",
+ "source_sha256": "fab29e41bb512a169b56acab4cf2a41dcb675e285df2efcde6640c7dd3c440eb",
+ "seed": 20261123,
+ "files": {
+  "prompts_cal.txt": {
+   "n": 400,
+   "sha256": "1ced383d74d80225262279dff15db5982dd9241829e598d58efb66915b068b34"
+  },
+  "prompts_dev.txt": {
+   "n": 200,
+   "sha256": "01548d99259781bb0cae4ef02802f55afa2eb7e5c456cce80190da7b6ac8c646"
+  },
+  "prompts_test.txt": {
+   "n": 400,
+   "sha256": "01bfcdb85c8ae32a4f926ab882addd6f502feb5bb2667a0c510e9e6c4915d51a"
+  },
+  "prompts_rent500.txt": {
+   "n": 500,
+   "sha256": "bdf24f0f969708b77365747826c4b139ef055c582fc96fcc2f0af7997ff3ad55"
+  },
+  "prompts_grid200.txt": {
+   "n": 200,
+   "sha256": "c88e8052e03ff8756d2c780857a76230ca05a89b26c90e9d0f868ec9a40dad85"
+  },
+  "prompts_prec100.txt": {
+   "n": 100,
+   "sha256": "c71ae9b8e002a3afc946df40fbde5b7745efc0a9c79183bc596bdf70d480b75c"
+  },
+  "prompts_l2_50.txt": {
+   "n": 50,
+   "sha256": "de4bd1da3a7d2ad5cdf9f82c03350a94dd14f0b5094f3d79e19394aeaad7a2cb"
+  },
+  "prompts_pilot20.txt": {
+   "n": 20,
+   "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed"
+  }
+ }
+}

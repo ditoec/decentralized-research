@@ -14,6 +14,7 @@ from pathlib import Path
 DEV_DEFAULTS = {
     "version": "dev",
     # E1
+    "x0_max_ulp": 4,              # x_0 across CPU ISAs (finding 6); set from pilot P1, then frozen
     "cond_rel_l2": 1e-3,          # conditioning re-encode, relative L2
     "image_max_abs": 2,           # decoded image vs delivered image, uint8 levels
     # Tier A

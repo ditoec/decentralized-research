@@ -1,0 +1,200 @@
+3	element
+6	protein
+8	wood
+9	metal
+19	black hole
+29	feeling
+48	U.S. 101
+57	a handpalm
+71	A picture of some food in the plate
+75	a hedgehog
+89	a phone
+92	an armchair
+98	a laptop
+101	a cow
+104	a t-shirt
+106	a flag
+114	a canal
+116	lily pads
+118	a house
+147	an iPhone case
+148	a coffee maker
+153	a bird
+165	teacup
+188	a Styracosaurus
+193	an ostrich
+194	a stone path
+196	an F1 race car
+213	a bookshelf
+219	a tidal wave
+221	an airplane
+224	a turtle
+232	a green pepper
+289	A photograph of the inside of a subway train. There are raccoons sitting on the seats. One of them is reading a newspaper. The window shows the city in the background.
+298	A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is holding a garbage bag. Oil painting in the style of traditional Chinese painting.
+311	a portrait of a statue of the Egyptian god Anubis wearing aviator goggles, white t-shirt and leather jacket, flying over the city of Mars.
+312	A photo of the Space Shuttle Endeavor painted yellow and flying over the Earth. The continent of South America is visible.
+313	A close-up photo of a wombat wearing a red backpack and raising both arms in the air. Mount Rushmore is in the background.
+320	A photograph of a portrait of a statue of a pharaoh wearing steampunk glasses, white t-shirt and leather jacket.
+342	An empty fireplace with a television above it. The TV shows a lion hugging a giraffe.
+345	a white rabbit in blue jogging clothes doubled over in pain while a turtle wearing a red tank top dashes confidently through the finish line
+355	a paranoid android freaking out and jumping into the air because it is surrounded by colorful Easter eggs
+365	a white robot, a red robot and a black robot standing together
+367	a tree reflected in the sunroof of a blue car
+371	a pineapple with one beer to its left and two beers on its right
+376	a black dog jumping up to hug a woman wearing a red sweater
+382	a man in a business suit on a ladder that is leaning up against the side of a white house
+386	a man eating a glazed donut and a woman eating a chocolate cake
+396	A punk rock frog in a studded leather jacket shouting into a microphone while standing on a boulder
+399	A punk rock platypus in a studded leather jacket shouting into a microphone while standing on a boulder
+405	A sunken ship becomes the homeland of fish.
+416	The Great Pyramid of Giza situated in front of Mount Everest
+422	a photograph of the mona lisa drinking coffee as she has her breakfast. her plate has an omelette and croissant.
+429	brown white and black white guinea pigs eating parsley handed to them
+432	a white robot with a red mohawk painted as graffiti on a red brick wall
+433	a panda bear playing ping pong using a blue paddle against an ostrich using a red paddle
+436	a shiba inu wearing a beret and black turtleneck
+438	panda mad scientist mixing sparkling chemicals
+440	a dolphin in an astronaut suit on saturn
+448	A bare kitchen has wood cabinets and white appliances
+459	a white cat and a tabby cat looking at each other
+466	a long wooden bench in front of a brick wall
+467	an ornate metal bench by a nature path
+469	a tall horse next to a red car
+479	an owl on top of an elephant's back
+493	The Statue of Liberty on a cloudy day
+495	the Eiffel Tower in winter
+501	the city of London on the moon
+503	a stop sign knocked over on a sidewalk
+505	a dragon breathing fire
+507	a dragon breathing fire onto a knight
+516	a wine bottle with a red ribbon wrapped around it
+539	a snowy owl standing in a grassy field
+544	an F1 race car in a Manhattan street
+558	a small garden with an apple tree behind it
+561	a yellow wall with a large framed oil painting of a car
+584	a kachina doll with feathers on its head and wearing a white dress and brown boots.
+586	a doorknocker shaped like a lion's head
+596	a view of the Kremlin with snow falling
+620	a pair of headphones dangling from a tree branch
+621	a car's wheel crushing a pair of headphones
+633	The Alamo with bright white clouds above it
+651	a volcano exploding next to a marina
+675	a cricketer standing next to a wicket
+681	a child in the air while jumping on a trampoline
+683	a girl riding an ostrich
+694	a fairy flying over a girl's shoulder
+701	A tornado made of sharks crashing into a skyscraper. painting in the style of watercolor.
+704	A tornado made of tigers crashing into a skyscraper. painting in the style of watercolor.
+706	A tornado made of bees crashing into a skyscraper. painting in the style of abstract cubism.
+710	A shiny robot wearing a race car suit and black visor stands proudly in front of an F1 race car. The sun is setting on a cityscape in the background. comic book illustration.
+734	a yellow dump truck filled with soccer balls driving in a coral reef. a blue whale looms in the background.
+741	a horse corral with tigers standing in each stall
+742	a bike rack with some bike locks attached to it but no bicycles
+749	A black dragon perched on top of a tall Egyptian obelisk and breathing flames at a knight on the ground
+757	a snail made of harp
+764	a hedgehog using a calculator
+768	corgi pizza
+772	a smiling banana wearing a bandana
+776	a subway train in an empty station
+781	a red train is coming down the beach
+786	a horse standing on an elephant
+791	a sword slicing through pouring milk
+795	a TV on a horse
+812	a panda bear with aviator glasses on its head
+821	a bicycle wheel that is made of red yarn
+848	a square with an angry face
+857	A squirrel gives an apple to a bird
+870	A man sips a latte and a woman a beer.
+900	a car with no windows
+904	a banana without its peel
+906	a bird landing on a bat
+922	A cat dreaming about becoming a tiger
+932	Saturn rises on the horizon.
+941	a close up of a handpalm with leaves growing from it
+943	An aerial view of Ha Long Bay
+950	a close-up of an old-fashioned cocktail
+958	an aerial photo of a sandy island in the ocean
+959	an ostrich's face
+969	a close-up of the eye of the planet Jupiter
+976	overhead view of three people looking down at the street from the top of a tall building
+984	a metallic blue sphere to the left of a yellow box made of felt
+995	a large blue box with three small yellow boxes on it
+1003	a black background with a large yellow circle and a small red square
+1007	a green pyramid in front of a blue box
+1008	a large yellow sphere behind a small purple pyramid
+1012	a green pepper to the left of a red pepper
+1022	several people putting their hands on a basketball
+1024	two beat-up baseballs on either side of a yellow basketball
+1037	an owl family
+1048	three small yellow boxes
+1051	five frosted glass bottles
+1060	a pile of cash on a wooden table
+1065	five red balls on a table
+1066	three yellow balls and two red boxes on a table
+1074	five green peppers to the right of two red onions
+1088	two motorcycles facing each other
+1137	a robot kicking a soccer ball
+1175	a street in Paris
+1181	a photograph of a house on a mountain
+1182	a peaceful lakeside landscape
+1184	a cat reading a newspaper
+1186	a horse reading a book
+1193	an Egyptian statue in the desert
+1205	a screwdriver on a table
+1208	a bloody mary cocktail
+1211	a tree surrounded by flowers
+1236	a plate with white rice topped by cooked vegetables
+1244	a road ruined by an earthquake
+1245	a volcano erupting near a small town
+1256	an ornate jewel-encrusted key
+1259	an antique chest
+1273	an airplane taking off of a runway
+1286	a hot air balloon floating by the Kremlin
+1291	a yellow diamond-shaped sign
+1303	a massive modern windmill
+1305	a painting of black and white vertical stripes
+1307	a painting of black and white with a red border
+1318	a family on a road trip
+1319	a father and a son playing tennis
+1322	a woman with sunglasses and red hair
+1324	a woman looking at a house
+1330	a frustrated child
+1334	a girl diving into a pool
+1338	Downtown Seattle at sunrise. detailed ink wash.
+1345	Downtown NYC at sunrise. detailed ink wash.
+1376	Portrait of a gecko wearing a train conductor’s hat and holding a flag that has a yin-yang symbol on it. Child's crayon drawing.
+1382	Portrait of a gecko wearing a train conductor’s hat and holding a flag that has a yin-yang symbol on it. Watercolor.
+1385	A photo of an Athenian vase with a painting of pandas playing basketball in the style of Egyptian hieroglyphics
+1387	A photo of an Athenian vase with a painting of pandas playing tennis in the style of Egyptian hieroglyphics
+1401	an old raccoon wearing a top hat and holding an apple, oil painting in the style of van gogh
+1404	a portrait of a man wearing sunglasses and a business suit, painting in pop art style
+1430	a high-quality oil painting of a psychedelic hamster dragon
+1432	a stained glass window of a panda eating bamboo
+1440	a drawing of a bust of homer
+1449	a painting of a canal in Venice
+1454	a cartoon of an angry shark
+1462	a drawing of a peaceful lakeside landscape
+1463	a map of Australia
+1466	a map of Texas
+1481	a drawing of a handsaw
+1483	a cloud in the shape of a teacup
+1493	a diagram of a suburban house
+1498	a coloring book page of a horse next to a stream
+1503	a diagram of the star constellations
+1516	an abstract drawing of the Great Wall
+1523	a diagram of the inside of the Great Pyramid
+1526	a painting of a man standing on a street corner
+1531	a comic about a girl going to a farm
+1536	the mona lisa
+1543	the saying "BE EXCELLENT TO EACH OTHER" on a rough wall with a graffiti image of a green alien wearing a tuxedo.
+1551	Portrait of a tiger wearing a train conductor's hat and holding a skateboard that has a yin-yang symbol on it. oil painting
+1558	A sign that says Deep Learning
+1560	A glass of red wine tipped over on a couch, with a stain that writes "OOPS" on the couch.
+1569	The saying "BE EXCELLENT TO EACH OTHER" written in faded paint on the hull of an old wooden boat and reflected in the water. Wide-angle lens.
+1584	a laptop with a maze sticker on it
+1601	the cover of a book called 'Backpropaganda' by I.C. Gradients
+1602	the saying 'do unto others as they would do unto you' written on a white background
+1604	a sweatshirt with 'Batch Norm' written on it
+1607	a yellow wall with 'Hello, world.' written on it
+1612	a t-shirt with 'Archaelogy Rocks!' written on it

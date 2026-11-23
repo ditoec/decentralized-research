@@ -16,7 +16,21 @@ from ..trajectory import Trajectory
 from . import FAIL, PASS, Verdict, combine
 
 
-def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu") -> Verdict:
+def max_ulp(a: torch.Tensor, b: torch.Tensor) -> int:
+    """Largest distance in float32 units in the last place between two tensors of equal shape."""
+    ia = a.float().contiguous().view(torch.int32).long()
+    ib = b.float().contiguous().view(torch.int32).long()
+    # map the sign-magnitude float order onto a monotone integer line
+    ia = torch.where(ia < 0, -(ia & 0x7FFFFFFF), ia)
+    ib = torch.where(ib < 0, -(ib & 0x7FFFFFFF), ib)
+    return int((ia - ib).abs().max())
+
+
+def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_ulp_tol: int = 0) -> Verdict:
+    """x_0 = noise_scaling(noise(seed)). Exact on the same CPU ISA; across ISAs PyTorch's vectorized
+    normal sampler (AVX2 vs NEON) differs in the last bits (runbook §3 finding 6), so the protocol
+    accepts a distance of at most ``max_ulp_tol`` float32 ULPs, calibrated in pilot P1 (decision of
+    2026-11-24: keep ComfyUI's stock noise path, tolerate the ISA difference)."""
     shape = tuple(traj.xs[0].shape)
     noise = initial_noise(shape, seed)
     latent = torch.zeros(shape, dtype=torch.float32)
@@ -25,9 +39,11 @@ def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu") -> Verdi
     for dev in dict.fromkeys(["cpu", str(device)]):
         exp = expected_x0(model_sampling, noise, traj.sigmas, latent, dev)
         exact = bool(torch.equal(exp, traj.xs[0].float()))
+        ulp = 0 if exact else max_ulp(exp, traj.xs[0])
         scores[f"exact_{dev}"] = exact
+        scores[f"max_ulp_{dev}"] = ulp
         scores[f"max_abs_{dev}"] = (exp.double() - traj.xs[0].double()).abs().max().item()
-        ok = ok or exact
+        ok = ok or exact or ulp <= max_ulp_tol
     return Verdict("E1.x0", PASS if ok else FAIL, scores, [] if ok else ["x_0 is not noise(seed)"])
 
 
@@ -69,7 +85,7 @@ def check_conditioning(traj: Trajectory, fresh: dict[str, torch.Tensor], th: dic
 def e1(traj: Trajectory, pipeline, spec, delivered_uint8: torch.Tensor | None, th: dict) -> Verdict:
     """All E1 checks with a loaded verifier Pipeline."""
     parts = [
-        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device),
+        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_ulp", 0)),
         check_schedule(traj, pipeline.schedule(spec), spec.steps),
     ]
     pos, neg = pipeline.encode(spec.prompt), pipeline.encode(spec.negative)

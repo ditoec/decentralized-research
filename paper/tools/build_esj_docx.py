@@ -398,7 +398,7 @@ def main(template, out):
     build_body(H1, H2, Para, Bullets, Figure, Table, Eq)
 
     # ---- references ----
-    H1("6- References")
+    H1("7- References")
     for n, key in enumerate(order, 1):
         add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
 
@@ -465,82 +465,199 @@ ABSTRACT = (
 def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     # ================================================================== 1 INTRODUCTION
     H1("1- Introduction")
-    Para("Generative AI services increasingly run on GPUs owned by people other than the service operator. "
-         "Decentralized physical infrastructure networks (DePIN) pool idle consumer GPUs through blockchain coordination "
-         "and token payments {c|ballandies2023depin,lin2024depin}, and collaborative inference {c|borzunov2023} and "
-         "training {c|yuan2022decentral} over heterogeneous GPUs connected through the internet have been shown to be "
-         "technically viable. Decentralized compute "
-         "markets such as Render, Akash and "
-         "io.net, along with networks dedicated to image generation, now sell diffusion-model inference from such GPUs "
-         "{c|render2023,akash2026,ionet2026}. The buyer cannot observe the computation. A blockchain can record that a "
-         "payment was escrowed and that a result digest was committed, but it cannot show that the provider ran the "
-         "requested model, for the requested number of steps, at the requested precision.")
-    Para("For diffusion workloads this gap has a specific economic shape. The cheapest ways to cheat do not produce "
-         "garbage. A provider that runs 20 instead of 30 sampler steps, stores the denoising network in 8-bit floating "
-         "point (fp8), or substitutes a distilled “turbo” model returns an image that looks plausible and is often "
-         "semantically close to the honest one, while saving a large share of the job’s GPU time. On current Blackwell "
-         "consumer GPUs, fp8 execution is a single command-line flag in the most widely used workflow engine {c|comfyui}. "
-         "Detecting such substitution from outputs alone is already known to be very hard for language models "
-         "{c|cai2025substitution,gao2025met}. For diffusion models it has not been measured.")
-    Para("The obvious defence is to re-execute a random sample of jobs on an independent node and compare. Two facts "
-         "complicate it. First, honest re-execution on different hardware is not bit-exact: kernels, reduction order, "
-         "attention implementations and numerical precision differ across GPUs and software stacks "
-         "{c|diffusers_repro,zhuang2022,yuan2025nondeterminism}. Every practical acceptance rule therefore "
-         "needs a tolerance, and the tolerance determines both how often honest providers are falsely rejected and how "
-         "much room is left for cheaters. Second, full re-execution doubles the cost of each audited job.")
-    H2("1-1- Related Work and Research Gap")
-    Para("{b|Cryptographic and white-box verification.} Verifiable computation proves arbitrary outsourced computation "
-         "{c|gennaro2010vc}, and interactive proofs specialized to neural networks reduce its cost at the price of restricted "
-         "arithmetic {c|safetynets2017}. Zero-knowledge proof systems have proved convolutional networks {c|zkcnn2021}, "
-         "large language models (LLMs) {c|zkllm2024} and a small latent diffusion model {c|chen2024zkml}, but with proving "
-         "times of minutes to about an hour per inference, far from marketplace economics. Activation-based schemes commit "
-         "to hashed or fingerprinted internal activations of LLMs {c|ong2025toploc,wang2025verillm}. Refereed delegation "
-         "detects cheating whenever at least one of several servers is honest {c|canetti2011}; its adaptation to machine "
-         "learning with bitwise-reproducible operators bisects disputes down to a single operator {c|arun2025verde}. "
-         "Deterministic inference can reduce verification to a byte comparison {c|alves2026eigenai}, and optimistic "
-         "protocols resolve disputes by on-chain bisection {c|arbitrum2018}. Trusted execution environments offer a "
-         "hardware route: an enclave can outsource the linear layers of a network to an untrusted GPU and check them "
-         "probabilistically {c|slalom2019}, but this requires trusted hardware on the provider side. All of these require "
-         "control of the operator library, access to model internals or trusted hardware, and almost all target LLMs.")
-    Para("{b|Tolerance-aware verification.} TAO {c|yao2026tao} is the closest system. It commits to the weights, the "
-         "computation graph and per-operator error thresholds calibrated on four GPU models, narrows disputes to one "
-         "operator, and settles with bonds and randomized audits on an Ethereum test network, with 0.3% overhead on the "
-         "undisputed path. Diffusion appears only in its cost evaluation, per-step verification of the denoising loop is "
-         "left to future work, and undeclared quantization and early exit are explicitly out of scope. Proof-of-learning "
-         "{c|pol2021} is the closest precedent for trajectory checking: a trainer commits checkpoints of its training "
-         "trajectory, and a verifier re-executes selected update steps and accepts reproduction errors below a threshold "
-         "that absorbs hardware noise. It targets training, not diffusion sampling, and does not consider cost-saving "
-         "substitution during inference.")
-    Para("{b|Black-box auditing.} Model equality testing frames API auditing as a two-sample test {c|gao2025met}. "
-         "Output classifiers detect fp8 and int8 substitution of LLMs only at chance level, and statistical tests lose "
-         "power under partial random substitution, partly because honest deployments of the same model already differ "
-         "{c|cai2025substitution}; cross-GPU variation creates the same difficulty here. Kim et al. "
-         "{c|kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion outputs on 22 GPUs of five "
-         "models and analysed majority voting, without an adversary. Watermarks embedded in the initial noise "
-         "{c|treering2023} or in the latent decoder {c|stablesig2023} attribute an image to a model, but they do not show "
-         "how the image was computed: a provider that runs the advertised model with fewer steps would still produce a "
-         "correctly watermarked image.")
-    Para("{b|Deployed validators.} On a public decentralized AI network, one image-generation subnet validates by "
-         "regenerating the image and comparing CLIP embeddings {c|radford2021clip} against a cosine threshold of 0.9 "
-         "{c|nicheimage_repo}. Another asks miners to return all per-step latents with a hash commitment. With "
-         "probability 0.35 its validator re-executes three random steps and rejects if the minimum cosine similarity to "
-         "the reported next latent is below 0.70 {c|wombo_repo}. The second rule is, to our knowledge, the earliest "
-         "deployment of per-step spot checking. Neither rule has a published calibration or adversarial evaluation.")
-    Para("{b|Precedents in volunteer and outsourced computing.} Workers that skip computation to save cost were first "
-         "studied in volunteer computing. Projects replicate tasks across hosts {c|anderson2004boinc}, ringers catch "
-         "workers that do not finish their share {c|golle2001}, and spot-checking combined with credibility scores bounds "
-         "the error rate with less redundancy {c|sarmenta2002}. Incentive-based designs audit a random fraction of "
-         "outsourced jobs and fine cheaters {c|belenkiy2008,pham2014contracts}, counter-collusion contracts deter "
-         "redundant cloud providers from agreeing on a wrong answer {c|dong2017}, sampling with an equilibrium argument "
-         "targets decentralized AI inference {c|zhang2024posp}, and the verifier’s dilemma shows that rational verifiers "
-         "skip costly checks unless rewarded {c|luu2015}. These designs assume that honest re-execution reproduces the "
-         "result exactly, which GPU inference does not guarantee: results vary across hardware, batch sizes and library "
-         "versions {c|diffusers_repro,zhuang2022,pham2020ase,he2025nondeterminism,yuan2025nondeterminism}, and tools for "
-         "reproducing GPU-level nondeterminism are only emerging {c|hawkeye2026}.")
-    Para("{b|Blockchain payment for computation.} Smart contracts that pay for correct computation {c|kumaresan2014}, "
-         "fair exchange of digital goods {c|fairswap2018,asgaonkar2018escrow}, and markets for edge and "
-         "federated-learning resources {c|du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} address "
-         "payment but not the integrity of generative output. Table 1 summarizes the positioning.")
+    Para("Generative artificial intelligence (AI) has turned graphics processing units (GPUs) into one of the most "
+         "contested computing resources. Large cloud providers own most data-centre accelerators, while a large and "
+         "growing pool of consumer GPUs in homes, studios and laboratories sits idle for much of the day. Decentralized "
+         "physical infrastructure networks (DePIN) aim to bridge the two by pooling independently owned hardware through "
+         "blockchain coordination and token payments {c|ballandies2023depin,lin2024depin}. Research systems have shown "
+         "that collaborative inference {c|borzunov2023} and training {c|yuan2022decentral} over heterogeneous GPUs "
+         "connected through the internet are technically viable, and commercial compute markets such as Render, Akash "
+         "and io.net, together with networks dedicated to image generation, already sell GPU time from such providers "
+         "{c|render2023,akash2026,ionet2026,nicheimage_repo,wombo_repo}.")
+    Para("These markets move computation across a trust boundary. The buyer, called the requester here, cannot observe "
+         "what happens on the provider’s machine. A blockchain can record that a payment was escrowed, that a result "
+         "digest was committed at a certain time and that a verdict was reached, but it cannot show that the provider ran "
+         "the requested model, for the requested number of steps, at the requested numerical precision. The underlying "
+         "problem is old: volunteer computing projects found two decades ago that some participants return results they "
+         "did not compute {c|golle2001,sarmenta2002}. What is new is the form it takes for generative AI on heterogeneous "
+         "GPUs.")
+    Para("Diffusion models are a natural place to study this problem. Text-to-image generation with latent diffusion "
+         "models {c|rombach2022ldm,podell2023sdxl} is one of the most common consumer GPU workloads, and open-source "
+         "workflow engines such as ComfyUI {c|comfyui} make it easy to package as a job. A diffusion job is iterative: a "
+         "sampler refines a latent over T steps, and each step calls a large denoising network, so the cost of a job grows "
+         "with the number of steps, the size of the network and its numerical precision. The cheapest ways to cheat follow "
+         "directly from this structure, and none of them produces garbage. A provider that runs 20 instead of 30 steps, "
+         "stores the network in 8-bit floating point (fp8), or substitutes a distilled “turbo” model returns an image that "
+         "looks plausible and is often semantically close to the honest one, while saving a large share of the job’s GPU "
+         "time. On current consumer GPUs, fp8 execution is a single command-line flag in ComfyUI.")
+    Para("Detecting such cost-saving substitution from outputs alone is already known to be very hard for large "
+         "language models (LLMs): classifiers trained to recognise quantized model outputs perform at chance level, and "
+         "statistical tests lose power when only part of the traffic is substituted {c|cai2025substitution,gao2025met}. "
+         "For diffusion models it has not been measured. The obvious defence, re-executing a random sample of jobs on an "
+         "independent node, faces two obstacles. First, honest re-execution on different hardware is not bit-exact, "
+         "because kernels, reduction order, attention implementations and precision differ across GPUs and software stacks "
+         "{c|diffusers_repro,zhuang2022,yuan2025nondeterminism}. Every practical acceptance rule therefore needs a "
+         "tolerance, and the tolerance determines both how often honest providers are falsely rejected and how much room "
+         "is left for cheaters. Second, full re-execution doubles the cost of each audited job.")
+    Para("Existing remedies sit at two extremes. Cryptographic proofs and trusted hardware give strong guarantees but "
+         "are too slow, or require hardware that consumer providers do not have {c|chen2024zkml,slalom2019}. Protocols "
+         "that compare intermediate values at the level of individual operators need instrumented runtimes, and the most "
+         "recent of them explicitly leaves undeclared quantization and early exit out of scope {c|yao2026tao}. At the "
+         "other extreme, the validators deployed today in decentralized image networks compare final images or a few "
+         "intermediate latents against thresholds that were never calibrated or tested against attacks "
+         "{c|nicheimage_repo,wombo_repo}.")
+    Para("This paper exploits a structure that diffusion sampling exposes for free. The sequence of latents and denoised "
+         "predictions produced by the sampler, its trajectory, can be recorded through a hook in the sampler without "
+         "touching the model’s operators. The provider commits to the full trajectory before it knows whether the job will "
+         "be checked. A verifier then checks the arithmetic of every sampler step on a CPU at negligible cost, re-runs the "
+         "denoising network at only k randomly chosen steps, and accepts each step under a tolerance calibrated on "
+         "measured cross-GPU variation. A smart-contract escrow with a provider bond turns detection into a financial "
+         "penalty, and an analytical model shows when that penalty deters a rational provider. The same structure exists, "
+         "in principle, in other iterative generators such as flow-matching and video diffusion models, which are left to "
+         "future work.")
+    H2("1-1- Research Questions")
+    Para("The study answers three research questions (RQs), designed so that each yields a useful answer whatever the "
+         "data show:")
+    Bullets(["{b|RQ1 (Characterize).} How much do honest ComfyUI diffusion outputs vary across GPUs and software "
+             "configurations, at the level of the final image, the per-step latent and the single sampler step, and which "
+             "factors drive the variation?",
+             "{b|RQ2 (Separate).} At a false-rejection rate of at most 1%, which cost-saving attacks and trajectory "
+             "forgeries can be detected at each evidence level, and how do deployed validation rules fare against them?",
+             "{b|RQ3 (Price).} What verifier cost, on-chain cost and latency reach a stated detection and deterrence target "
+             "under sampled verification with escrow, and how does step-level spot checking change the cost-optimal "
+             "sampling policy?"])
+    H2("1-2- Contributions")
+    Bullets(["A measurement of honest variation for SD1.5 and SDXL workflows across five nested heterogeneity levels, "
+             "from repeated runs on one GPU to different GPU generations, including an exact-reproducibility test of the "
+             "initial noise across x86 and ARM processors.",
+             "An attack study of faithful reproductions of two deployed validation rules against eight cost-saving attacks "
+             "and four trajectory forgeries, with calibrated error rates.",
+             "A hardened two-tier trajectory check that needs only a sampler hook, not operator-level access or trusted "
+             "hardware, integrated with a Solana escrow that holds a provider bond.",
+             "An analytical model: an output-only detection ceiling, the detection probability of step spot checks under "
+             "partial cheating, and a proof that a rational provider’s best response is all-or-nothing, which gives a "
+             "closed-form deterrence condition and a cost-optimal sampling policy.",
+             "An open artifact with code, data and frozen thresholds {R|R0.2: DOI}."])
+    Para("{R|R0.3: summary of findings, written only after results}. Section 2 reviews related work, Section 3 describes "
+         "the materials and methods, Section 4 reports and discusses the results, and Section 5 concludes.")
+
+    # ================================================================== 2 RELATED WORK
+    H1("2- Related Work")
+    Para("Work relevant to this paper spans decentralized computing, verifiable computation, auditing of AI services, "
+         "incentive design and numerical reproducibility. The review is organized by the evidence a verifier receives, "
+         "from the strongest (a proof) to the weakest (an output), followed by the incentive and reproducibility work on "
+         "which any sampling scheme depends. Table 1 summarizes the closest approaches.")
+    H2("2-1- Decentralized GPU Computing")
+    Para("DePIN systems coordinate independently owned hardware through blockchain incentives; Ballandies et al. "
+         "{c|ballandies2023depin} propose a taxonomy of such networks, and Lin et al. {c|lin2024depin} survey their "
+         "challenges and opportunities. For machine learning, Petals {c|borzunov2023} runs inference and fine-tuning of "
+         "large language models across unreliable consumer devices connected through the internet, and Yuan et al. "
+         "{c|yuan2022decentral} schedule the training of foundation models over heterogeneous, geographically distributed "
+         "GPUs. Commercial markets sell GPU time from independent providers {c|render2023,akash2026,ionet2026}. This line "
+         "of work establishes that decentralized GPU computing is feasible and economically attractive. Its focus is "
+         "performance, scheduling and fault tolerance; checking that a provider actually performed the computation it "
+         "was paid for is left to other mechanisms, which the following subsections review.")
+    H2("2-2- Cryptographic and Hardware-Based Verification")
+    Para("Verifiable computation lets a client check an outsourced computation with a short proof "
+         "{c|gennaro2010vc}. Interactive proofs specialized to neural networks reduce the cost at the price of "
+         "restricted arithmetic {c|safetynets2017}, and zero-knowledge proof systems have since proved convolutional "
+         "networks {c|zkcnn2021}, large language models {c|zkllm2024} and a small latent diffusion model {c|chen2024zkml}. "
+         "These proofs give the strongest guarantee available, but their proving cost, about an hour per image for the "
+         "diffusion model, is far above the price of the computation being sold in a marketplace.")
+    Para("Trusted execution environments take a hardware route. Slalom {c|slalom2019} runs a network inside a secure "
+         "enclave, outsources its linear layers to an untrusted GPU and checks those layers probabilistically. The "
+         "approach is efficient, but it requires trusted hardware on every provider, which is uncommon on consumer GPUs. "
+         "Both families give guarantees that do not depend on numerical tolerances, and both are a poor fit for "
+         "anonymous consumer hardware today.")
+    H2("2-3- Re-Execution with Disputes and Tolerances")
+    Para("A cheaper family re-executes only what is disputed. Refereed delegation lets a client detect cheating "
+         "whenever at least one of several servers is honest {c|canetti2011}, and optimistic blockchain protocols resolve "
+         "disputes by bisecting a computation down to a single step that an on-chain referee can check {c|arbitrum2018}. "
+         "Verde {c|arun2025verde} adapts refereed delegation to machine learning; to make honest results agree, it "
+         "replaces the operator library with bitwise-reproducible operators. EigenAI {c|alves2026eigenai} pursues the "
+         "same goal by enforcing deterministic inference, so that verification reduces to a byte comparison. Both buy "
+         "exactness by controlling the software stack.")
+    Para("TAO {c|yao2026tao} takes the opposite route and accepts that honest results differ. It commits to the "
+         "weights, the computation graph and per-operator error thresholds calibrated on four GPU models, narrows "
+         "disputes to one operator, and settles with bonds and randomized audits on an Ethereum test network, with "
+         "0.3% overhead on the undisputed path. It is the closest system to this paper. Its evidence, however, is "
+         "operator-level and requires an instrumented runtime; diffusion appears only in its cost evaluation, "
+         "per-step verification of the denoising loop is left to future work, and undeclared quantization and early "
+         "exit are explicitly out of scope.")
+    Para("Proof-of-learning {c|pol2021} is the closest precedent for trajectory checking. A trainer commits checkpoints "
+         "of its training trajectory, and a verifier re-executes selected update steps and accepts reproduction errors "
+         "below a threshold that absorbs hardware noise. The idea of committing to an iterative computation and "
+         "re-checking a few steps under a tolerance is shared with this paper; the setting is not. Proof-of-learning "
+         "targets training, where each step is a gradient update, and does not consider cost-saving substitution during "
+         "inference.")
+    H2("2-4- Activation-Based Checks for Language Models")
+    Para("For LLM inference, several schemes commit to compact fingerprints of internal activations. TOPLOC "
+         "{c|ong2025toploc} hashes the top-k activation values with a locality-sensitive encoding, so that a verifier "
+         "who recomputes the activations can check them at a small fraction of the original cost. VeriLLM "
+         "{c|wang2025verillm} combines sampled checks of hidden states with lightweight on-chain settlement and reports a "
+         "verification cost of about 1% of inference. These schemes show that intermediate state is far more "
+         "informative than the final output. They require access to the model’s internals and target autoregressive "
+         "language models; for diffusion, the sampler trajectory used in this paper plays the role of the activation "
+         "fingerprint and is available without modifying the model.")
+    H2("2-5- Black-Box Auditing and Output Attribution")
+    Para("When only outputs are visible, auditing becomes a statistical test. Model equality testing {c|gao2025met} "
+         "frames the question as a two-sample test between an API and reference weights, and found that 11 of 31 "
+         "commercial Llama endpoints deviated from the reference. Cai et al. {c|cai2025substitution} show the limits of "
+         "this approach for cost-saving substitution: classifiers distinguish fp8 or int8 models from full precision only "
+         "at chance level, statistical tests lose power when only part of the traffic is substituted, and honest "
+         "deployments of the same model already differ. Cross-GPU variation creates the same difficulty for diffusion "
+         "models. For images, Kim et al. {c|kim2024reproducibility} measured perceptual-hash agreement of Stable Diffusion "
+         "outputs on 22 GPUs of five models and analysed majority voting among verifiers, without modelling an adversary.")
+    Para("Watermarking offers a different kind of output evidence. Tree-Ring watermarks {c|treering2023} embed a "
+         "pattern in the initial noise that can be recovered from the image, and Stable Signature {c|stablesig2023} "
+         "fine-tunes the latent decoder so that every image it produces carries a mark. Watermarks attribute an image "
+         "to a model, but they do not show how the image was computed: a provider that runs the advertised model with "
+         "fewer steps would still produce a correctly watermarked image.")
+    H2("2-6- Validators in Deployed Decentralized Image Networks")
+    Para("Two image-generation subnets of a public decentralized AI network show how verification is done in practice. "
+         "The first regenerates each audited image on the validator and compares CLIP {c|radford2021clip} image "
+         "embeddings of the two images, giving full reward above a cosine similarity of 0.9; an alternative path "
+         "accepts perceptual hashes within a Hamming distance of 6 {c|nicheimage_repo}. The second asks miners to "
+         "return every per-step latent together with a SHA-256 commitment. With probability 0.35 its validator samples "
+         "three steps, re-runs one denoising step from each reported latent, and rejects the response if the minimum "
+         "cosine similarity to the reported next latent falls below 0.70 {c|wombo_repo}.")
+    Para("The second rule is, to our knowledge, the earliest deployment of per-step spot checking, and this paper "
+         "does not claim the mechanism as new. Neither rule, however, has a published calibration against honest "
+         "cross-GPU variation or an evaluation against attacks. Whether a cosine threshold of 0.70 on flattened latents "
+         "separates honest work from cheap forgeries is an open empirical question that this paper tests.")
+    H2("2-7- Spot Checking, Incentives and the Verifier’s Dilemma")
+    Para("Sampling-based verification has a long history outside blockchains. Volunteer computing projects replicate "
+         "tasks across hosts and compare results {c|anderson2004boinc}; Golle and Mironov {c|golle2001} plant tasks with "
+         "known answers, called ringers, to catch participants who skip their share; and Sarmenta {c|sarmenta2002} shows "
+         "that spot-checking combined with per-worker credibility scores bounds the error rate with less redundancy than "
+         "voting. In outsourced computing, Belenkiy et al. {c|belenkiy2008} and Pham et al. {c|pham2014contracts} design "
+         "contracts that audit a random fraction of jobs and fine cheaters, choosing the audit rate and penalty so that "
+         "honesty is the provider’s best response. Dong et al. {c|dong2017} add counter-collusion contracts that deter "
+         "redundant cloud providers from agreeing on a wrong answer, and Proof of Sampling {c|zhang2024posp} applies an "
+         "equilibrium argument to sampled verification of decentralized AI inference.")
+    Para("Two further results shape the design of any such scheme. The verifier’s dilemma {c|luu2015} shows that "
+         "rational verifiers skip costly checks unless they are rewarded for performing them. Blockchain contracts can "
+         "enforce payment for correct computation {c|kumaresan2014} and fair exchange of digital goods "
+         "{c|fairswap2018,asgaonkar2018escrow}, and markets for edge and federated-learning resources "
+         "{c|du2023edgemarket,fan2021hybrid,wang2024stackelberg,yang2019survey} price and allocate computation. Almost all "
+         "of this work treats correctness as binary and assumes that an honest re-execution reproduces the result "
+         "exactly. Neither assumption holds for diffusion inference on heterogeneous GPUs, and Proposition 3 of this "
+         "paper shows how the detection structure of step spot checks changes the incentive analysis.")
+    H2("2-8- Numerical Nondeterminism of GPU Inference")
+    Para("Floating-point addition is not associative, and GPUs reorder it freely. As a result, the same model with the "
+         "same inputs can produce different outputs across GPU models, batch sizes, library versions and attention "
+         "implementations. In training, nondeterministic GPU kernels alone produce run-to-run variance in the resulting "
+         "models {c|zhuang2022}, and such variance is large and often unreported {c|pham2020ase}. In LLM inference, "
+         "greedy outputs can diverge when the GPU count, the batch size or the hardware changes, especially at 16-bit "
+         "precision {c|yuan2025nondeterminism}, and a lack of batch invariance in serving kernels is a major cause "
+         "{c|he2025nondeterminism}. Recent work targets reproducing GPU-level nondeterminism itself {c|hawkeye2026}.")
+    Para("For diffusion models, library documentation warns that full reproducibility across hardware is not "
+         "guaranteed and recommends generating the initial noise on the CPU {c|diffusers_repro}. Deterministic samplers "
+         "such as Euler and DPM-Solver++ {c|lu2022dpmsolverpp} add no fresh noise after the first step, so any "
+         "difference between two honest runs comes from numerics alone. Apart from the perceptual-hash study of Kim et "
+         "al. {c|kim2024reproducibility}, how large these differences are at the level of individual sampler steps, and "
+         "which hardware and software factors drive them, has not been measured.")
+    H2("2-9- Summary and Research Gap")
     Table("Positioning against the closest work",
           ["Work", "Evidence used", "No operator-level access", "Diffusion", "Cost-saving attacks evaluated", "Calibrated false-rejection rate"],
           [["Volunteer-computing spot checks {c|sarmenta2002}", "Re-execution of sampled tasks", "Yes", "No", "No", "No"],
@@ -555,45 +672,26 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["Deployed SN30 rule {c|wombo_repo}", "Per-step latents", "Yes", "Yes", "No", "No"],
            ["{b|This work}", "{b|Trajectory, two-tier}", "{b|Yes}", "{b|Yes}", "{b|Yes}", "{b|Yes}"]],
           [38, 32, 24, 20, 28, 26])
-    Para("{b|Research gap.} This body of work leaves one question open. Classical spot-checking and audit contracts "
-         "assume exact re-execution; operator-level schemes need instrumented runtimes and exclude cost-saving "
-         "behaviour; and deployed output-level and step-level validators use uncalibrated thresholds that have never "
-         "been tested against such behaviour. No study measures whether "
-         "cost-saving cheating on diffusion jobs can be separated from honest cross-GPU variation, at which evidence "
-         "level, and at what verification cost under escrow settlement.")
-    H2("1-2- Research Questions and Contributions")
-    Para("This study answers three research questions (RQs):")
-    Bullets(["{b|RQ1 (Characterize).} How much do honest ComfyUI diffusion outputs vary across GPUs and software "
-             "configurations, at the level of the final image, the per-step latent and the single sampler step, and which "
-             "factors drive the variation?",
-             "{b|RQ2 (Separate).} At a false-rejection rate of at most 1%, which cost-saving attacks and trajectory "
-             "forgeries can be detected at each evidence level, and how do deployed validation rules fare against them?",
-             "{b|RQ3 (Price).} What verifier cost, on-chain cost and latency reach a stated detection and deterrence target "
-             "under sampled verification with escrow, and how does step-level spot checking change the cost-optimal "
-             "sampling policy?"])
-    Para("The contributions are as follows:")
-    Bullets(["A measurement of honest variation for SD1.5 and SDXL workflows across five nested heterogeneity levels, "
-             "including an exact-reproducibility test of the initial noise across x86 and ARM processors.",
-             "An attack study of faithful reproductions of two deployed validation rules against eight cost-saving attacks "
-             "and four trajectory forgeries, with calibrated error rates.",
-             "A hardened two-tier trajectory check that needs only a sampler hook, not operator-level access, integrated "
-             "with a Solana escrow that holds a provider bond.",
-             "An analytical model: an output-only detection ceiling, the detection probability of step spot checks under "
-             "partial cheating, and a proof that a rational provider’s best response is all-or-nothing, which gives a "
-             "closed-form deterrence condition and a cost-optimal sampling policy.",
-             "An open artifact with code, data and frozen thresholds {R|R0.2: DOI}."])
-    Para("{R|R0.3: summary of findings, written only after results}. Section 2 describes the materials and methods, "
-         "Section 3 reports and discusses the results, and Section 4 concludes.")
+    Para("Table 1 shows that no existing approach combines the four properties a diffusion marketplace needs: evidence "
+         "that can be collected without instrumenting the model’s operators, coverage of diffusion workloads, evaluation "
+         "against cost-saving attacks, and a false-rejection rate calibrated on honest hardware variation. The gap has "
+         "three parts, each addressed by one research question:")
+    Bullets(["{b|Measurement (RQ1).} Honest variation of diffusion outputs across GPUs has been measured only at the "
+             "level of final-image perceptual hashes, not per sampler step and not by heterogeneity factor.",
+             "{b|Separation (RQ2).} Whether cost-saving attacks can be told apart from honest variation, at which "
+             "evidence level, and whether the deployed validators do so, has not been tested.",
+             "{b|Price (RQ3).} Classical audit contracts assume exact re-execution; the cost and deterrence of "
+             "tolerance-based step spot checks under escrow settlement have not been analysed or measured."])
 
-    # ================================================================== 2 MATERIALS AND METHODS
-    H1("2- Materials and Methods")
-    Para("Figure 1 shows the research methodology. The protocol and the analytical model (Sections 2-1 to 2-3) define "
-         "what is measured, and the experiments (Section 2-4) measure honest variation, attack separability and cost.")
+    # ================================================================== 3 MATERIALS AND METHODS
+    H1("3- Materials and Methods")
+    Para("Figure 1 shows the research methodology. The protocol and the analytical model (Sections 3-1 to 3-3) define "
+         "what is measured, and the experiments (Section 3-4) measure honest variation, attack separability and cost.")
     Figure("F1", "Flowchart of the research methodology: system and threat model → protocol and evidence levels → "
            "analytical model → hardware and workload setup → RQ1 honest-variation study → calibration and threshold "
            "freezing → RQ2 attack study → RQ3 cost and deterrence → conclusions.",
            "Flowchart of the research methodology")
-    H2("2-1- System and Threat Model")
+    H2("3-1- System and Threat Model")
     Para("A {i|requester} submits a diffusion job and escrows a payment P. A {i|provider} owns a GPU and runs the job. A "
          "{i|verifier} is an independent node that re-executes parts of sampled jobs. An {i|orchestrator} matches jobs to "
          "providers and relays state transitions. An {i|escrow program} on Solana {c|yakovenko2018solana} holds P, an "
@@ -613,7 +711,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["Not claimed", "That a specific physical GPU executed the job; freshness against legitimate caching; prompt privacy; robustness to verifier collusion or Sybil attacks; production economics"]],
           [30, 138])
 
-    H2("2-2- Verification Protocol")
+    H2("3-2- Verification Protocol")
     Para("A sampler with noise schedule σ{sub|0} > σ{sub|1} > … > σ{sub|T} produces latent states x{sub|0}, …, x{sub|T}, "
          "where x{sub|0} is the scaled initial noise and x{sub|T} the final latent. At step i it also produces the "
          "CFG-combined denoised prediction D{sub|i}. In ComfyUI the per-step callback exposes the pair (x{sub|i}, D{sub|i}) "
@@ -663,7 +761,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "so it cannot copy them. The trajectory, about {R|R3.3} MB per SDXL job, stays off-chain until the job closes; "
          "only the Merkle root and verdicts are recorded on-chain.")
 
-    H2("2-3- Analytical Model")
+    H2("3-3- Analytical Model")
     Para("Let 𝒟{sub|H} be the distribution of what an output-only verifier observes under honest execution, including "
          "variation across the provider’s and verifier’s hardware, and 𝒟{sub|A} the distribution under attack A.")
     Para("{bi|Proposition 1 (output-only ceiling).} For any, possibly randomized, rule with false-rejection rate α, the "
@@ -713,7 +811,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
                                R(delim(R(("p", "1−"), sup(delim(R(("p", "1−"), sub("r", "A"))), "k"), ("p", "−"), "α", delim("k")), "[", "]"),
                                  delim(R("P", ("p", "+"), "B")))))))
 
-    H2("2-4- Experimental Design")
+    H2("3-4- Experimental Design")
     Para("{b|Hardware.} Owned hardware comprises two or more NVIDIA RTX 5080 GPUs (Blackwell GB203, 16 GB, x86-64 hosts) "
          "and two or more NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, 128 GB unified memory). Older GPU "
          "generations come from short-term rentals ({R|R0.1}). Table 4 defines the five nested heterogeneity levels; "
@@ -763,8 +861,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}.")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
-    H1("3- Results and Discussion")
-    H2("3-1- Honest Variation (RQ1)")
+    H1("4- Results and Discussion")
+    H2("4-1- Honest Variation (RQ1)")
     Figure("R1.5", "Honest deviation by heterogeneity level L0–L4 (box plots) for final images (LPIPS, DINOv2, "
            "pixel-equality rate) and for per-step D_i distance; panels SD1.5 and SDXL.",
            "Honest variation across heterogeneity levels")
@@ -775,7 +873,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Factors.} {R|R1.7: effects of precision, attention implementation and deterministic mode; dominant factor; "
          "whether a deterministic profile exists and its throughput cost}.")
     Para("{b|Answer to RQ1.} {R|R1.8}")
-    H2("3-2- Separating Attacks from Honest Variation (RQ2)")
+    H2("4-2- Separating Attacks from Honest Variation (RQ2)")
     Para("{b|Deployed rules.} Table 6 reports the acceptance rate of the reproduced deployed rules under each attack. "
          "{R|R2.1: narrative of the deployed-rule results}.")
     Table("Acceptance rate (%, 95% CI) of the deployed rules under each attack, test split",
@@ -796,7 +894,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Inseparable attacks.} {R|R2.8: which attacks, if any, have r_A ≈ α_s (for example fp8 at L4), interpreted "
          "through Proposition 1}.")
     Para("{b|Answer to RQ2.} {R|R2.9}")
-    H2("3-3- Cost and Deterrence (RQ3)")
+    H2("4-3- Cost and Deterrence (RQ3)")
     Table("Verifier cost per job by evidence level",
           ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0"],
           [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}"]],
@@ -810,7 +908,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Figure("R3.6", "Deterrence region of Equation 8 in the (p, B/P) plane for each attack, with p*(k) from Equation 9; "
            "Monte Carlo and testbed points overlaid.", "Deterrence condition and cost-optimal sampling")
     Para("{b|Answer to RQ3.} {R|R3.2: best k, p*, required bond ratio, and agreement between theory and measurement}.")
-    H2("3-4- Discussion")
+    H2("4-4- Discussion")
     Para("{b|What the blockchain adds.} Integrity detection in this design does not depend on the chain: a trusted "
          "broker running the same checks would detect the same attacks. The escrow makes the payoff model of Proposition 3 "
          "enforceable without a custodian, because payment and bond are locked before execution, released or forfeited by "
@@ -833,33 +931,33 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "workload, not that a particular GPU performed it.")
 
     # ================================================================== 4 CONCLUSION
-    H1("4- Conclusion")
+    H1("5- Conclusion")
     Para("{R|R5.1: written last. Restate the question, the three answers with key numbers, and the practical recommendation "
          "for decentralized GPU marketplaces; outline future work such as verifier-collusion resistance and ancestral "
          "samplers with CPU noise}.")
 
     # ================================================================== 5 DECLARATIONS
-    H1("5- Declarations")
-    H2("5-1- Author Contributions")
+    H1("6- Declarations")
+    H2("6-1- Author Contributions")
     Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
          "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
          "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
          "supervision, D.E.C.; project administration, A.R.M.} All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
-    H2("5-2- Data Availability Statement")
+    H2("6-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "
          "include code, workflow fingerprints, frozen thresholds, trajectories (or a sample, if storage limits apply) and "
          "checksums.", "decl")
-    H2("5-3- Funding")
+    H2("6-3- Funding")
     Para("{T|state funder, award number and grant recipient, or:} Funding information is not available.", "decl")
-    H2("5-4- Acknowledgements")
+    H2("6-4- Acknowledgements")
     Para("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required by "
          "the journal}", "decl")
-    H2("5-5- Institutional Review Board Statement")
+    H2("6-5- Institutional Review Board Statement")
     Para("Not applicable.", "decl")
-    H2("5-6- Informed Consent Statement")
+    H2("6-6- Informed Consent Statement")
     Para("Not applicable.", "decl")
-    H2("5-7- Conflicts of Interest")
+    H2("6-7- Conflicts of Interest")
     Para("The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
          "falsification, double publication and/or submission, and redundancies have been completely observed by the "

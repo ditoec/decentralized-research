@@ -416,7 +416,7 @@ def main(template, out):
         add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
 
     doc.core_properties.title = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference"
-    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya; Ekki Rinaldi"
+    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya; Ekki Rinaldi; Pujianto Yugopuspito"
     doc.save(out)
 
     # footnote contact e-mail (template placeholder)
@@ -451,10 +451,11 @@ def main(template, out):
 TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
 AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
            (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True),
-           (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True)]
+           (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True),
+           (", ", set(), False), ("Pujianto Yugopuspito", set(), False), (" 1", set(), True)]
 AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia.")
 AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia.")
-AFFIL3 = ("3 ", "CEO, Vector International, {T|city, country}.")
+AFFIL3 = ("3 ", "Founder, Vektor Labs, {T|city, country}.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
 ABSTRACT = (
@@ -1027,7 +1028,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
          "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
          "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
-         "supervision, D.E.C.; project administration, A.R.M.; add roles for E.R.} All "
+         "supervision, D.E.C.; project administration, A.R.M.; add roles for E.R. and P.Y.} All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("6-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "
@@ -1043,7 +1044,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H2("6-6- Informed Consent Statement")
     Para("Not applicable.", "decl")
     H2("6-7- Conflicts of Interest")
-    Para("{T|E.R. is CEO of Vector International: declare any commercial interest in GPU marketplaces or verification, "
+    Para("{T|E.R. is the founder of Vektor Labs: declare any commercial interest in GPU marketplaces or verification, "
          "or confirm none} The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
          "falsification, double publication and/or submission, and redundancies have been completely observed by the "

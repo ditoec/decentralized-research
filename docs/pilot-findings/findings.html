@@ -92,11 +92,11 @@ code { font-family: Menlo, Consolas, monospace; font-size: 7.4pt; }
 <li><b>Budget.</b> All 25,200 planned honest jobs on rented cards would take 27 (RTX 4090) to 57 (RTX 3090) GPU-hours, US$9–29, within the US$60 line. The pilot pods (RTX 4090, 3090, 5090) cost ≈ US$2.8. <b>Risk:</b> an SDXL trajectory is 16.5 MB and the Sparks' site link gave ≈2 MB/s, i.e. ≈2.3 h of transfer per 1,000 rented jobs.</li>
 </ul>
 
-<h2>6. Decisions needed</h2>
+<h2>6. Decisions (accepted 24 Nov 2026)</h2>
 <ol>
-<li>Accept the RTX 5090 as the L3 (consumer Blackwell) card, and drop SDXL fp32 from the RQ1 grid.</li>
-<li>Transfer plan for rented trajectories: keep only the opened steps plus the commitment, verify on a rented card, or pay ≈US$1 of pod time per 1,000 SDXL jobs.</li>
-<li>Keep or drop RQ1's second software stack, now that the noise and schedule checks are build-agnostic.</li>
+<li>The RTX 5090 is the L3 (consumer Blackwell) card; SDXL fp32 is dropped from the RQ1 grid.</li>
+<li>Rented trajectories come home by split: full trajectories for calibration and dev prompts, opened steps plus the commitment for test and attacked jobs, images only for the factor runs.</li>
+<li>The second software stack is dropped: the protocol pins one software image, and the paper does not claim its tolerances for other PyTorch or CUDA versions.</li>
 </ol>
 <div class="small">Details and run IDs: <code>docs/07-runbook.md</code> §3 findings 7–17 and <code>docs/11-go-no-go-0.md</code>. Generated 24 Nov 2026.</div>
 </body></html>

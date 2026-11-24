@@ -78,3 +78,9 @@ Within the US$60 line. Spent so far on RunPod in this pilot: balance 8.66 → 6.
 - Step distances Spark vs 4090 / vs 3090: `…p2-sdxl-spark4-01/figures/p2_sdxl_stepdist_spark_vs_4090`, `…p2-sdxl-rtx3090-01/figures/p2_sdxl_stepdist_spark_vs_3090`
 - W1 and SN30 acceptance: `…p5-w1-*/figures/`
 - Memory per precision: `…p7-sdxl-fp16-spark4-02/figures/p7_memory_spark4`, `…p7-sdxl-fp32-rtx3090-01/figures/p7_memory_rtx3090`
+
+## Decisions (2026-11-24, accepted for the paper author)
+
+1. The RTX 5090 is the L3 (consumer Blackwell) card; SDXL fp32 is dropped from the RQ1 grid.
+2. Transfer plan: options (a) and (c) combined by split (runbook §3.5), as decided above.
+3. The second software stack is dropped, as decided above.

@@ -1,0 +1,59 @@
+{
+ "run_id": "20261124-wp0b-p5-w1-rtx5090-01",
+ "wp": "wp0b",
+ "purpose": "P5: hypothesis W1 (adjacent-state cosine) and E2-W on F1-F3",
+ "git_commit": "f5c0215",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "140c20719c52",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T04:14:58.866945+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "n": 10
+ },
+ "seeds": [
+  0
+ ],
+ "end_time": "2026-11-24T04:16:16.269747+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "cplqc7vbxvscjd",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 0.17783111274242402,
+ "cost_usd": 0.24718524671196937,
+ "raw_checksums": {
+  "20261124-wp0b-p5-w1-rtx5090-01.tar": "57eae5b46c526b5197a21c85ea09acbb5d917e104434ffc68fe4d6acf0dd150f"
+ },
+ "pulled_unix": 1795494116.192009
+}

@@ -26,13 +26,20 @@ def max_ulp(a: torch.Tensor, b: torch.Tensor) -> int:
     return int((ia - ib).abs().max())
 
 
-def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_noise: float = 0.0) -> Verdict:
-    """x_0 = noise_scaling(noise(seed)). Exact when provider and verifier share a CPU and PyTorch build.
-    Across builds PyTorch's vectorized normal sampler rounds differently (runbook §3 findings 6-7):
-    ARM vs ARM differed by <= 3 ULP, but x86 vs ARM by up to 2.3e-6 in absolute terms, which near
-    zero is hundreds of thousands of ULP. The tolerance is therefore absolute, in units of the
-    unit-variance noise: max |x0_expected - x0_committed| / sigma_0 <= ``max_abs_noise``, set from
-    pilot P1 and frozen (decision of 2026-11-24, revised after the x86 P1 run)."""
+# Build-agnostic tolerance for x_0, in units of the unit-variance noise (protocol constant).
+# PyTorch's vectorized normal sampler rounds differently per CPU and build (runbook §3 findings
+# 6-8, 11): the largest difference seen in the pilot is 2.3e-6 (ARM vs x86). The constant is set
+# well above any rounding difference so that no CPU/PyTorch pairing needs its own measurement, and
+# far below anything an attacker could use: a different seed or a doctored x_0 differs by O(1) per
+# element, and 1e-5 of the noise changes no output a provider could profit from.
+X0_TOL = 1e-5
+
+
+def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_noise: float = X0_TOL) -> Verdict:
+    """x_0 = noise_scaling(noise(seed)). Exact when provider and verifier share a CPU and PyTorch
+    build; otherwise accepted if max |x0_expected - x0_committed| / sigma_0 <= ``max_abs_noise``
+    (default the protocol constant X0_TOL; ULP distance is not used: near zero a 2e-6 rounding
+    difference is millions of ULP)."""
     shape = tuple(traj.xs[0].shape)
     noise = initial_noise(shape, seed)
     latent = torch.zeros(shape, dtype=torch.float32)
@@ -89,7 +96,7 @@ def check_conditioning(traj: Trajectory, fresh: dict[str, torch.Tensor], th: dic
 def e1(traj: Trajectory, pipeline, spec, delivered_uint8: torch.Tensor | None, th: dict) -> Verdict:
     """All E1 checks with a loaded verifier Pipeline."""
     parts = [
-        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_abs_noise", 0.0)),
+        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_abs_noise", X0_TOL)),
         check_schedule(traj, pipeline.schedule(spec), spec.steps),
     ]
     pos, neg = pipeline.encode(spec.prompt), pipeline.encode(spec.negative)

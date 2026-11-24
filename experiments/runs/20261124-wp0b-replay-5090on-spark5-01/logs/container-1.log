@@ -1,0 +1,48 @@
+fatal: not a git repository (or any of the parent directories): .git
+p00083_s0 max rel_l2 0.0254
+p00083_s1 max rel_l2 0.0405
+p00186_s0 max rel_l2 0.0449
+p00186_s1 max rel_l2 0.0392
+p00293_s0 max rel_l2 0.0387
+p00293_s1 max rel_l2 0.0308
+p00359_s0 max rel_l2 0.0234
+p00359_s1 max rel_l2 0.0203
+p00445_s0 max rel_l2 0.0272
+p00445_s1 max rel_l2 0.0256
+p00563_s0 max rel_l2 0.0243
+p00563_s1 max rel_l2 0.0232
+p00594_s0 max rel_l2 0.0458
+p00594_s1 max rel_l2 0.0336
+p00606_s0 max rel_l2 0.0382
+p00606_s1 max rel_l2 0.04
+p00647_s0 max rel_l2 0.0254
+p00647_s1 max rel_l2 0.0224
+p00693_s0 max rel_l2 0.0434
+p00693_s1 max rel_l2 0.0337
+p00819_s0 max rel_l2 0.0319
+p00819_s1 max rel_l2 0.0266
+p00954_s0 max rel_l2 0.0404
+p00954_s1 max rel_l2 0.0275
+p01041_s0 max rel_l2 0.0337
+p01041_s1 max rel_l2 0.0291
+p01059_s0 max rel_l2 0.0484
+p01059_s1 max rel_l2 0.0305
+p01116_s0 max rel_l2 0.0264
+p01116_s1 max rel_l2 0.0269
+p01337_s0 max rel_l2 0.0388
+p01337_s1 max rel_l2 0.0394
+p01413_s0 max rel_l2 0.0445
+p01413_s1 max rel_l2 0.0425
+p01417_s0 max rel_l2 0.0216
+p01417_s1 max rel_l2 0.0211
+p01457_s0 max rel_l2 0.0317
+p01457_s1 max rel_l2 0.0251
+p01580_s0 max rel_l2 0.0467
+p01580_s1 max rel_l2 0.026
+{
+ "n_jobs": 40,
+ "frac_steps_exact": 0.0,
+ "tier_b_rel_l2_max": 0.048397890203047036,
+ "tier_a_rel_l2_max": 2.8046977990416523e-08,
+ "tier_a_replica_exact_frac": 1.0
+}

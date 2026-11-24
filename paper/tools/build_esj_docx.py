@@ -748,8 +748,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "{c|comfyui}. The verifier recomputes it and compares it with x{sub|0}. Providers keep ComfyUI’s stock noise "
          "path. Because PyTorch’s vectorized normal sampler rounds differently on different processors and builds, the "
          "check accepts a largest absolute difference of at most u{sub|0}, measured in units of the unit-variance noise "
-         "(the difference in x{sub|0} divided by σ{sub|0}). u{sub|0} is set from the measured cross-processor "
-         "difference ({R|R1.1}) and is 0 when provider and verifier share a processor and PyTorch build.")
+         "(the difference in x{sub|0} divided by σ{sub|0}). u{sub|0} is a fixed protocol constant, 10{sup|−5}, chosen "
+         "so that it holds for any processor and PyTorch build without a per-build measurement: it lies well above the "
+         "largest cross-processor rounding difference we measured ({R|R1.1}) and far below the per-element differences "
+         "of order one that a different seed produces, so it gives an attacker no usable freedom.")
     Para("{b|Reproducibility requirements.} Two sources of variation inside ComfyUI are fixed by the protocol rather "
          "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
          "parameters and passed to the sampler. ComfyUI otherwise computes it on whichever device holds the model, and "

@@ -1,0 +1,64 @@
+{
+ "run_id": "20261124-wp0b-p2-sdxl-rtx5090-01",
+ "wp": "wp0b",
+ "purpose": "P2: first look at L0-L4 (SDXL, fp16 default flags)",
+ "git_commit": "f5c0215",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "140c20719c52",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T04:11:19.839624+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed",
+  "n": 20
+ },
+ "seeds": [
+  0,
+  1
+ ],
+ "save_traj": true,
+ "end_time": "2026-11-24T04:13:29.308096+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "cplqc7vbxvscjd",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 0.1766082771619161,
+ "cost_usd": 0.24548550525506335,
+ "raw_checksums": {
+  "20261124-wp0b-p2-sdxl-rtx5090-01.tar": "a1824747aab10e6f9674626c838a754c7afad7d94102175e8025ad390b8efed7"
+ },
+ "pulled_unix": 1795494111.789801
+}

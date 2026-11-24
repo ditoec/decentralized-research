@@ -1025,10 +1025,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     # ================================================================== 5 DECLARATIONS
     H1("6- Declarations")
     H2("6-1- Author Contributions")
-    Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
-         "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
-         "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
-         "supervision, D.E.C.; project administration, A.R.M.; add roles for E.R. and P.Y.} All "
+    Para("Conceptualization, A.R.M.; methodology, A.R.M. and D.E.C.; software, E.R.; validation, E.R.; formal "
+         "analysis, D.E.C.; investigation, E.R.; resources, E.R.; data curation, E.R.; writing—original draft "
+         "preparation, D.E.C.; writing—review and editing, A.R.M., E.R. and P.Y.; visualization, D.E.C.; supervision, "
+         "P.Y.; project administration, A.R.M. All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("6-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "

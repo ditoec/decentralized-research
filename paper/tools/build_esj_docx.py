@@ -453,9 +453,9 @@ AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>",
            (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True),
            (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True),
            (", ", set(), False), ("Pujianto Yugopuspito", set(), False), (" 1", set(), True)]
-AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia.")
-AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia.")
-AFFIL3 = ("3 ", "Founder, Vektor Labs, {T|city, country}.")
+AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Jakarta, Indonesia.")
+AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia, Jakarta, Indonesia.")
+AFFIL3 = ("3 ", "Founder, Vektor Labs, Jakarta, Indonesia.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
 ABSTRACT = (

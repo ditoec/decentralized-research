@@ -1,0 +1,63 @@
+{
+ "run_id": "20261124-wp0b-p3-sd15-rtx3090-01",
+ "wp": "wp0b",
+ "purpose": "P3: SD1.5 throughput (warm)",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "39dabdff6942",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "compute_capability": [
+   8,
+   6
+  ],
+  "gpu_uuid": "ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T01:14:36.748991+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed",
+  "n": 20
+ },
+ "seeds": [
+  0
+ ],
+ "save_traj": false,
+ "end_time": "2026-11-24T01:15:19.767097+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "gt7s1asmr9si04",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.5,
+ "billed_hours": 0.3823960863881641,
+ "cost_usd": 0.19119804319408204,
+ "raw_checksums": {
+  "20261124-wp0b-p3-sd15-rtx3090-01.tar": "5774d0c45b7c739a581ecb8c5f678cef68466eb1df0cfb3a9ca6474071b816b7"
+ },
+ "pulled_unix": 1795483885.6259131
+}

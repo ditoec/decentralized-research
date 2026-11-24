@@ -1,0 +1,41 @@
+{
+ "run_id": "20261124-wp0b-p4-fp4-rtx3090-01",
+ "wp": "wp0b",
+ "purpose": "P4: NVFP4 feasibility at the pinned commit",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "39dabdff6942",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "compute_capability": [
+   8,
+   6
+  ],
+  "gpu_uuid": "ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T01:17:15.977246+00:00",
+ "end_time": "2026-11-24T01:17:17.734337+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "gt7s1asmr9si04",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.5,
+ "billed_hours": 0.38255549218919543,
+ "cost_usd": 0.19127774609459772,
+ "raw_checksums": {
+  "20261124-wp0b-p4-fp4-rtx3090-01.tar": "23cd3e24a04547cee0036dd75fbf080f269eae49bcc8156707681a19949445ee"
+ },
+ "pulled_unix": 1795483886.199774
+}

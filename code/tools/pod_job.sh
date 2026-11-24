@@ -38,6 +38,7 @@ for m in cfg["models"]:
     print("model ok", m["filename"])
 PY
 nvidia-smi -q > /work/out/nvidia-smi-q.txt 2>&1
+lscpu > /work/out/lscpu.txt 2>&1  # P1 depends on the host CPU and its PyTorch build
 cat > /work/out/pod.json <<EOF
 {"provider": "runpod", "pod_id": "${RUNPOD_POD_ID:-}", "data_center": "${RUNPOD_DC_ID:-}",
  "cloud_type": "${POD_CLOUD:-}", "hourly_rate_usd": ${POD_HOURLY_USD:-null},
@@ -47,7 +48,7 @@ cat > /work/out/pod.json <<EOF
 EOF
 PATH="/work/esj/venv-$STACK/bin:$PATH" bash "$WORKLOAD" || fail "workload"
 cd /work/runs && for r in */; do
-  r="${r%/}"; cp /work/out/pod.json /work/out/nvidia-smi-q.txt "$r/logs/" 2>/dev/null
+  r="${r%/}"; cp /work/out/pod.json /work/out/nvidia-smi-q.txt /work/out/lscpu.txt "$r/logs/" 2>/dev/null
   tar -cf "/work/out/$r.tar" "$r" && sha256sum "/work/out/$r.tar" | cut -d' ' -f1 > "/work/out/$r.tar.sha256"
 done
 ls /work/out/*.tar | xargs -n1 basename > /work/out/INDEX

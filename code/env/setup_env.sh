@@ -23,10 +23,12 @@ case "$STACK" in
 esac
 mkdir -p "$ESJ_HOME"
 export UV_CACHE_DIR="$ESJ_HOME/.uv-cache" UV_PYTHON_INSTALL_DIR="$ESJ_HOME/python" UV_HTTP_TIMEOUT=600 UV_HTTP_RETRIES=8
-if ! command -v uv >/dev/null 2>&1; then
-  curl -LsSf https://astral.sh/uv/0.13.9/install.sh | env UV_INSTALL_DIR="$ESJ_HOME/bin" sh
-  export PATH="$ESJ_HOME/bin:$PATH"
+# always the pinned uv: images may ship an older one that lacks an x86_64 build of $PYVER
+UV_VER=0.13.9
+if [ "$("$ESJ_HOME/bin/uv" --version 2>/dev/null | cut -d' ' -f2)" != "$UV_VER" ]; then
+  curl -LsSf "https://astral.sh/uv/$UV_VER/install.sh" | env UV_INSTALL_DIR="$ESJ_HOME/bin" INSTALLER_NO_MODIFY_PATH=1 sh
 fi
+export PATH="$ESJ_HOME/bin:$PATH"
 VENV="$ESJ_HOME/venv-$STACK"
 uv python install "$PYVER"
 [ -x "$VENV/bin/python" ] || uv venv --python "$PYVER" "$VENV"

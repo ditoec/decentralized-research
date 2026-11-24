@@ -36,8 +36,14 @@ def _label(run: Path) -> str:
     m = json.loads((run / "manifest.json").read_text())
     n = m.get("node", {})
     gpu = n.get("gpu_name", "?").replace("NVIDIA ", "").replace("GeForce ", "")
+    tag = next((p for p in run.name.split("-") if p.startswith("spark")), None)
+    if tag:  # name the Spark: two GB10 boxes otherwise get the same label
+        gpu = f"Spark-{tag[5:]} ({gpu})"
+    files = [x.get("filename", "") for x in m.get("models") or []]
+    model = next(("SDXL" if "sd_xl_base" in f else "SDXL-Turbo" if "turbo" in f else "SD1.5" if "v1-5" in f
+                  else None for f in files), None)
     flags = " ".join(m.get("cli_flags") or [])
-    return f"{gpu}" + (f"\n{flags}" if flags else "")
+    return f"{gpu}" + (f"\n{model}" if model else "") + (f"\n{flags}" if flags else "")
 
 
 def _save(fig, out: str, header: list[str], table: list[list]) -> None:

@@ -1,0 +1,56 @@
+{
+ "run_id": "20261124-wp0b-replay-dpmpp-spark4on-spark5-01",
+ "wp": "wp0b",
+ "purpose": "verifier replay of every step (Tier B distances, Tier A residuals)",
+ "git_commit": "271c061",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "spark5-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "043e8674-8e4b-70a6-fbbb-29b8f40b0484",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-24T05:20:22.197854+00:00",
+ "provider_run": "20261124-wp0b-p2-sdxl-dpmpp-spark4-01",
+ "provider_node": {
+  "hostname": "spark4-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "cd3626b6-dc9e-2fee-89ab-82ba0ad4bb6e",
+  "driver": "580.178.04"
+ },
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "dpmpp_2m",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "pin_batching": true,
+ "end_time": "2026-11-24T05:28:23.504798+00:00"
+}

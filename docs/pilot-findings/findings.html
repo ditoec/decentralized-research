@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>WP0b pilot findings</title>
+<style>
+@page { size: A4; margin: 13mm 14mm 12mm 14mm; }
+* { box-sizing: border-box; }
+body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 8.6pt; line-height: 1.32; color: #1c1c1c; margin: 0; }
+h1 { font-size: 14.5pt; margin: 0 0 1mm 0; letter-spacing: -0.2px; }
+.sub { color: #555; font-size: 8pt; margin-bottom: 3mm; }
+h2 { font-size: 9.8pt; margin: 3.2mm 0 1.2mm 0; padding-bottom: 0.6mm; border-bottom: 1px solid #c9c9c9; color: #0d3b66; }
+p { margin: 0 0 1.4mm 0; }
+ol, ul { margin: 0 0 1.4mm 0; padding-left: 4.6mm; }
+li { margin-bottom: 0.9mm; }
+b { color: #0d1b2a; }
+table { border-collapse: collapse; width: 100%; font-size: 7.9pt; margin: 1mm 0 1.6mm 0; }
+th, td { border-bottom: 1px solid #dedede; padding: 0.7mm 1.2mm; text-align: left; vertical-align: top; }
+th { background: #eef2f6; font-weight: 600; }
+td.n, th.n { text-align: right; white-space: nowrap; }
+.verdict { background: #eaf4ea; border-left: 3px solid #2e7d32; padding: 1.6mm 2.4mm; margin: 0 0 2mm 0; }
+.warn { background: #fdf3e6; border-left: 3px solid #c77700; padding: 1.4mm 2.4mm; margin: 1mm 0 1.6mm 0; }
+.figrow { display: flex; gap: 3mm; align-items: flex-start; margin: 1mm 0 1.2mm 0; }
+.fig { flex: 1; }
+.fig img { width: 100%; display: block; }
+.cap { font-size: 7.3pt; color: #444; margin-top: 0.6mm; }
+.page2 { page-break-before: always; }
+.small { font-size: 7.4pt; color: #555; }
+code { font-family: Menlo, Consolas, monospace; font-size: 7.4pt; }
+</style></head><body>
+
+<h1>Calibrated trajectory verification: pilot findings (WP0b)</h1>
+<div class="sub">Pilot of 23–24 Nov 2026 · Nodes: DGX Spark ×3 (GB10, ARM), rented RTX 5090 (consumer Blackwell, in place of the out-of-stock RTX 5080), RTX 4090, RTX 3090 (x86) · Python 3.12.13, torch 2.14.1+cu130, ComfyUI 8b25bbc, SDXL and SD1.5, 30 steps · Every number comes from a logged run in <code>experiments/runs/20261124-wp0b-*</code></div>
+
+<div class="verdict"><b>Verdict: go.</b> Honest outputs are bit-identical between Sparks and never bit-identical across GPU types, consumer Blackwell included, so there is honest variation to calibrate at every level. The deployed WOMBO rule (SN30) accepts every frame-copy, interpolation and solver-inversion forgery on all four card types. Rented GPU time for the honest runs fits the budget; moving trajectories off rented cards is the cost risk.</div>
+
+<h2>1. Reproducibility: two hardware families</h2>
+<ol>
+<li><b>Same hardware family, bit-identical.</b> Spark-4 vs Spark-5: 40/40 SDXL and 20/20 SD1.5 trajectories identical (Merkle roots), with both samplers (euler, dpmpp_2m). Spark-4 twice: identical.</li>
+<li><b>Shared load changes nothing on a Spark.</b> P6: 60/60 trajectories identical across four conditions (idle or under our own GPU load at 46 TFLOP/s, ComfyUI's batching pinned or free), while the production chat model served requests during up to 30 of the 60 jobs.</li>
+<li><b>Across GPU types, never bit-identical, but close.</b> 0/40 identical for every pair among Spark, RTX 5090, 4090 and 3090 (table 1). Images differ by about 1.2–1.5 grey levels on average.</li>
+<li><b>CPU arithmetic splits into ARM and x86.</b> The seed's initial noise and ComfyUI's CPU-computed noise schedule agree bit for bit among the three x86 hosts (incl. an AVX-512 EPYC 9554) and among the three Sparks, but not between the two: noise differs by up to 2.3·10<sup>−6</sup>, the schedule by one float32 ULP in 4 of 31 entries. Both checks now use fixed, build-agnostic tolerances (noise 10<sup>−5</sup>, schedule 10<sup>−6</sup> relative) that hold for any CPU and PyTorch version without a per-build test, and give an attacker no usable freedom.</li>
+</ol>
+
+<table>
+<tr><th>Honest SDXL pair (40 jobs)</th><th class="n">Identical</th><th class="n">LPIPS median (max)</th><th class="n">DINOv2 min</th><th class="n">SN23 full reward</th></tr>
+<tr><td>Spark-4 ↔ Spark-5</td><td class="n">40/40</td><td class="n">0 (0)</td><td class="n">1.000</td><td class="n">40/40</td></tr>
+<tr><td>Spark ↔ RTX 5090</td><td class="n">0/40</td><td class="n">0.005 (0.079)</td><td class="n">0.981</td><td class="n">40/40</td></tr>
+<tr><td>Spark ↔ RTX 4090</td><td class="n">0/40</td><td class="n">0.005 (0.057)</td><td class="n">0.981</td><td class="n">40/40</td></tr>
+<tr><td>Spark ↔ RTX 3090</td><td class="n">0/40</td><td class="n">0.006 (0.054)</td><td class="n">0.927</td><td class="n"><b>39/40</b></td></tr>
+<tr><td>RTX 4090 ↔ RTX 3090 / 5090</td><td class="n">0/40</td><td class="n">0.008 / 0.005</td><td class="n">0.940 / 0.988</td><td class="n">40/40</td></tr>
+</table>
+<div class="cap" style="margin-top:-1mm">Table 1. Honest cross-hardware variation, SDXL 1024², 20 calibration prompts × 2 seeds. SN23 = the deployed NicheImage image rule (full reward needs CLIP cosine &gt; 0.9).</div>
+
+<h2>2. The deployed image rule penalises honest hardware differences</h2>
+<div class="figrow">
+<div class="fig" style="flex:1.35"><img src="fig/sn23_honest_fail_p00293.png"><div class="cap">Figure 1. One honest SD1.5 job (prompt 293, seed 0) on three cards. The two x86 images agree (CLIP 0.999); the Spark's differs visibly, and SN23 scores it 0.888–0.899 against every x86 card, below its 0.9 line.</div></div>
+<div class="fig" style="flex:1"><p>An image-level rule cannot tell honest hardware variation from a cheaper computation. SN23 failed one honest SDXL pair (Spark ↔ 3090, CLIP 0.899) and, for SD1.5, the same honest job against all three x86 cards (19/20 each). The x86 cards agreed with each other on every job (20/20). The rate needs RQ1's sample, but the mechanism is clear: small numeric differences sometimes change visible detail, and a fixed similarity line then rejects an honest provider.</p></div>
+</div>
+
+<div class="page2"></div>
+<h2>3. Trajectory evidence across hardware</h2>
+<div class="figrow">
+<div class="fig"><img src="fig/tierb_honest_rtx_to_spark.png"><div class="cap">Figure 2. Honest Tier B distance per step when a Spark replays an x86 provider's step (40 jobs per provider). No step is bit-exact; the distance falls from 2.7–2.9% (max 5.3%) at step 0 to 0.04% at step 29, the same profile for all three providers.</div></div>
+<div class="fig"><ul>
+<li><b>Tier B needs per-step thresholds τ<sub>i</sub>.</b> A single threshold would be loose late or tight early by two orders of magnitude.</li>
+<li><b>Tier A (CPU recomputation of the solver step) is bit-exact across hardware for Euler:</b> 3,600/3,600 steps from three x86 providers on a Spark. For DPM-Solver++(2M) the CPU replica matches only 560/1,200 steps even on one node, because ComfyUI computes that sampler's step coefficients on the GPU; its tolerance ε<sub>A</sub> must be calibrated per sampler (≈2·10<sup>−7</sup>). Calibration now refuses to mix samplers.</li>
+<li><b>The deployed WOMBO rule (SN30) is broken by design:</b> adjacent honest states have cosine ≥ 0.977, so frame-copy (F1), interpolation (F2) and solver-inversion (F3) forgeries all pass (10/10 each, at s = 0.25, 0.5, 1.0) on all four card types.</li>
+</ul></div>
+</div>
+
+<h2>4. Detection smoke test (cross-node, in-sample thresholds)</h2>
+<p>Attacked jobs produced on Spark-4 and verified on Spark-5; honest jobs produced on the RTX 5090. Thresholds are the calibration dry run, fitted on these same honest pairs, so this tests the pipeline, not detection rates.</p>
+<table>
+<tr><th>Job set (provider → verifier)</th><th class="n">n</th><th class="n">E1</th><th class="n">Tier A</th><th class="n">Tier B alone k=1 / 3 / 8</th><th class="n">E2-H, k=3</th><th class="n">SN30 (deployed)</th></tr>
+<tr><td>Honest, RTX 5090 → Spark-5</td><td class="n">20</td><td class="n">0</td><td class="n">0</td><td class="n">0 / 0 / 0</td><td class="n"><b>0</b></td><td class="n">0</td></tr>
+<tr><td>A1b: 20 of 30 steps, schedule forged</td><td class="n">10</td><td class="n">0</td><td class="n">10*</td><td class="n">10 / 10 / 10</td><td class="n"><b>10</b></td><td class="n">0</td></tr>
+<tr><td>A3: SDXL-Turbo, 4 steps</td><td class="n">10</td><td class="n">0</td><td class="n">10*</td><td class="n">10 / 10 / 10</td><td class="n"><b>10</b></td><td class="n">0</td></tr>
+<tr><td>A3: LCM-LoRA, 6 steps</td><td class="n">10</td><td class="n">0</td><td class="n">10*</td><td class="n">10 / 10 / 10</td><td class="n"><b>10</b></td><td class="n">0</td></tr>
+<tr><td>F1 / F2 / F3, half the steps faked</td><td class="n">10 each</td><td class="n">0</td><td class="n">10*</td><td class="n">9 / 9 / 10 each</td><td class="n"><b>10 each</b></td><td class="n">0</td></tr>
+</table>
+<div class="cap" style="margin-top:-1mm">Table 2. Rejections (attacks: Spark-4 → Spark-5). E2-H = E1 + Tier A + Tier B at k drawn steps. *Tier A catches these forgers only because their re-solved D<sub>i</sub> do not round to a bit-exact float32 replica; a careful forger can fix that, so the protection to count on is Tier B, which alone caught every attack at k = 8 and 9–10 of 10 at k = 1. The deployed SN30 rule caught none. Running the verifier also exposed two exactness assumptions that fail between ARM and x86 (schedule, Tier A for dpmpp_2m); both were fixed before this run, and no honest job was rejected.</div>
+
+<h2>5. Attack economics and capacity</h2>
+<table>
+<tr><th>Node (fp16, 30 steps, warm)</th><th class="n">SD1.5 s/img</th><th class="n">SDXL s/img</th><th>fp8 UNet</th><th>NVFP4</th><th>SDXL fp32</th></tr>
+<tr><td>DGX Spark (beside production)</td><td class="n">1.94</td><td class="n">12.4</td><td>slower (13.6)</td><td>fallback only</td><td>not allowed (free memory 49 → 5.9 GB)</td></tr>
+<tr><td>RTX 5090</td><td class="n">1.46</td><td class="n">2.71</td><td>slower (2.91)</td><td>fallback only</td><td>fills 32 GB, 14.6 s</td></tr>
+<tr><td>RTX 4090</td><td class="n">1.94</td><td class="n">3.87</td><td>slower (4.18)</td><td>fallback only</td><td>—</td></tr>
+<tr><td>RTX 3090</td><td class="n">1.51</td><td class="n">8.21</td><td>slower (8.65)</td><td>fallback only</td><td>fills 24 GB, 34.0 s</td></tr>
+</table>
+<ul>
+<li><b>Low-precision attacks save nothing</b> at the pinned ComfyUI commit: fp8 is slower than fp16 on every card and NVFP4 runs only through a dequantising fallback (0.1–0.2× speed). The profitable attacks are fewer steps and distilled models: on a Spark, A1b (20 of 30 steps) costs 7.9 s and A3 with SDXL-Turbo 1.0 s against 12.4 s honest, a 92% saving.</li>
+<li><b>Budget.</b> All 25,200 planned honest jobs on rented cards would take 27 (RTX 4090) to 57 (RTX 3090) GPU-hours, US$9–29, within the US$60 line. The pilot pods (RTX 4090, 3090, 5090) cost ≈ US$2.8. <b>Risk:</b> an SDXL trajectory is 16.5 MB and the Sparks' site link gave ≈2 MB/s, i.e. ≈2.3 h of transfer per 1,000 rented jobs.</li>
+</ul>
+
+<h2>6. Decisions needed</h2>
+<ol>
+<li>Accept the RTX 5090 as the L3 (consumer Blackwell) card, and drop SDXL fp32 from the RQ1 grid.</li>
+<li>Transfer plan for rented trajectories: keep only the opened steps plus the commitment, verify on a rented card, or pay ≈US$1 of pod time per 1,000 SDXL jobs.</li>
+<li>Keep or drop RQ1's second software stack, now that the noise and schedule checks are build-agnostic.</li>
+</ol>
+<div class="small">Details and run IDs: <code>docs/07-runbook.md</code> §3 findings 7–17 and <code>docs/11-go-no-go-0.md</code>. Generated 24 Nov 2026.</div>
+</body></html>

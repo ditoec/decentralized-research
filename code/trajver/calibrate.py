@@ -118,6 +118,12 @@ def main(argv=None):
         raise SystemExit(f"P1 shows a cross-build x_0 difference of {max(absd0):.2e}; 2x that exceeds the "
                          f"protocol constant X0_TOL = {X0_TOL:g}. Decide a new constant before freezing.")
     pairs = load_replays(a.replay)
+    samplers = {json.loads((Path(p) / "manifest.json").read_text()).get("sampler") for p in a.replay}
+    if len(samplers) != 1:
+        # Tier A's eps_A and Tier B's tau_i depend on the sampler: dpmpp_2m's step coefficients are
+        # computed on the GPU and cannot be replicated bit-exactly on a CPU, euler's can (finding 17)
+        raise SystemExit(f"replays mix samplers {samplers}: calibrate one sampler per thresholds file")
+    sampler = samplers.pop()
     by_k, notes = tier_b_taus(pairs, a.metric)
     tier_a = [x["rel_l2"] for rows in pairs.values() for r in rows for x in r["tier_a"]]
     exact = all(x.get("replica_exact") for rows in pairs.values() for r in rows for x in r["tier_a"])
@@ -125,6 +131,7 @@ def main(argv=None):
     absd = [v["max_abs"] for p in a.p1 for v in json.loads(Path(p).read_text())["result"].values() if "max_abs" in v]
     th = {
         "version": out.stem,
+        "sampler": sampler,
         "levels_supported": a.levels.split(","),
         "sources": {"replay_runs": sorted(pairs), "e0_files": [Path(p).name for p in a.e0],
                     "p1_files": [Path(p).name for p in a.p1],

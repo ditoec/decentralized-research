@@ -1,5 +1,6 @@
 {
  "version": "thresholds_pilot",
+ "sampler": "euler",
  "levels_supported": [
   "L3",
   "L4"

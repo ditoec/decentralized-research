@@ -773,8 +773,11 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
                      frac(("p", "1"), R(("p", "2"), sub("r", "i"))), sub("D", "i−1")), "[", "]")))
     Para("which reduces to the first-order update at the first and the final step. Tier A recomputes Equation 1 or 2 "
          "for all steps on the verifier’s CPU and compares the result to the committed x{sub|i+1} within a tolerance "
-         "ε{sub|A} ({R|R1.2}). It also checks that the committed schedule equals the schedule implied by the workflow, "
-         "which catches step-count reduction directly. Tier A costs no GPU time and detects copied, interpolated and "
+         "ε{sub|A} ({R|R1.2}), calibrated per sampler: the Euler update replicates bit for bit on a CPU, whereas "
+         "DPM-Solver++(2M) takes step coefficients that ComfyUI computes on the GPU, so its replica differs in the last "
+         "bits. It also checks that the committed schedule equals the schedule implied by the workflow, entry by entry "
+         "within a fixed relative tolerance of 10{sup|−6} (the CPU-computed schedule differs by one unit in the last "
+         "place between ARM and x86 processors), which catches step-count reduction directly. Tier A costs no GPU time and detects copied, interpolated and "
          "truncated trajectories. A forger can still pass it by solving Equation 1 for D{sub|i}, which is why Tier B exists.")
     Para("{b|Tier B: model consistency at random steps.} After the commitment is final, k distinct step indices are drawn "
          "from the sampling seed. For each checked step the verifier recomputes the CFG-combined prediction on its own GPU "

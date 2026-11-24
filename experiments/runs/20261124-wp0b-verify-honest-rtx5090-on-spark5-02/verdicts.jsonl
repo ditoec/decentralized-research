@@ -1,0 +1,160 @@
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7664324828838514e-08, "reasons": []}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.009811772631572558, "tier_b": "pass", "steps": [8]}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0038674006661448385, "tier_b": "pass", "steps": [18, 24]}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.015082359241730884, "tier_b": "pass", "steps": [5, 20, 21]}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.017828031028037608, "tier_b": "pass", "steps": [4, 5, 14, 24, 27]}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.008729925486538486, "tier_b": "pass", "steps": [9, 11, 14, 20, 22, 24, 26, 29]}
+{"job_id": "p00083_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999980330467224}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7638791112751093e-08, "reasons": []}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0244946403179071, "tier_b": "pass", "steps": [1]}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0036943781430849535, "tier_b": "pass", "steps": [21, 29]}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.005900342078299684, "tier_b": "pass", "steps": [16, 22, 24]}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0244946403179071, "tier_b": "pass", "steps": [1, 10, 25, 28, 29]}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.04050533744701075, "tier_b": "pass", "steps": [0, 5, 7, 8, 12, 15, 22, 26]}
+{"job_id": "p00083_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999991059303284}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7891673745437107e-08, "reasons": []}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0035065637297508768, "tier_b": "pass", "steps": [20]}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.018540019178695404, "tier_b": "pass", "steps": [4, 22]}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.021593932250885153, "tier_b": "pass", "steps": [3, 10, 28]}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.014083598918752955, "tier_b": "pass", "steps": [6, 9, 16, 25, 26]}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.018540019178695404, "tier_b": "pass", "steps": [4, 8, 12, 16, 18, 22, 23, 27]}
+{"job_id": "p00186_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999985098838806}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7856539248511755e-08, "reasons": []}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.030272355568426734, "tier_b": "pass", "steps": [2]}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.018401428247866027, "tier_b": "pass", "steps": [5, 7]}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.039183997844841355, "tier_b": "pass", "steps": [0, 6, 12]}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.013176274346075096, "tier_b": "pass", "steps": [8, 9, 13, 17, 22]}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.033567780146275455, "tier_b": "pass", "steps": [1, 10, 12, 14, 15, 19, 22, 28]}
+{"job_id": "p00186_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999985694885254}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7949079992984463e-08, "reasons": []}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.010300077405498273, "tier_b": "pass", "steps": [8]}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.01104678107894113, "tier_b": "pass", "steps": [7, 22]}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.009605638769145957, "tier_b": "pass", "steps": [9, 17, 26]}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.013207158981967879, "tier_b": "pass", "steps": [3, 9, 10, 11, 13]}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.029575200928284247, "tier_b": "pass", "steps": [1, 4, 9, 11, 16, 17, 26, 29]}
+{"job_id": "p00293_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999988079071045}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7630972880688037e-08, "reasons": []}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.014545857253045568, "tier_b": "pass", "steps": [4]}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.017669046647549543, "tier_b": "pass", "steps": [3, 9]}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0055103212861388985, "tier_b": "pass", "steps": [15, 18, 29]}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.004689092451105519, "tier_b": "pass", "steps": [17, 18, 19, 21, 23]}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.00949628640861399, "tier_b": "pass", "steps": [9, 19, 21, 22, 23, 25, 27, 28]}
+{"job_id": "p00293_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999984502792358}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7973818263439126e-08, "reasons": []}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.004639744054285375, "tier_b": "pass", "steps": [18]}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.00510183934380695, "tier_b": "pass", "steps": [17, 29]}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.021010841013961785, "tier_b": "pass", "steps": [3, 24, 28]}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.017014884591256704, "tier_b": "pass", "steps": [6, 18, 20, 25, 29]}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.014825459906852948, "tier_b": "pass", "steps": [7, 13, 15, 16, 17, 22, 24, 26]}
+{"job_id": "p00359_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999987185001373}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.765114538231718e-08, "reasons": []}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0029552876540731047, "tier_b": "pass", "steps": [22]}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.006133992542279366, "tier_b": "pass", "steps": [14, 25]}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.018663851806287973, "tier_b": "pass", "steps": [4, 9, 15]}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.014301433832959842, "tier_b": "pass", "steps": [6, 11, 13, 15, 22]}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.019883037604414712, "tier_b": "pass", "steps": [0, 2, 9, 15, 16, 19, 20, 24]}
+{"job_id": "p00359_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999990463256836}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.788466686238911e-08, "reasons": []}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.006512208219143714, "tier_b": "pass", "steps": [13]}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.002983055721620973, "tier_b": "pass", "steps": [21, 28]}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0072270741769929, "tier_b": "pass", "steps": [12, 27, 29]}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.027193323562525455, "tier_b": "pass", "steps": [2, 6, 18, 22, 25]}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.019026514308736166, "tier_b": "pass", "steps": [0, 10, 13, 14, 17, 18, 20, 23]}
+{"job_id": "p00445_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999986588954926}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7703715567269714e-08, "reasons": []}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.018902684655355405, "tier_b": "pass", "steps": [0]}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.005716199551702085, "tier_b": "pass", "steps": [15, 26]}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.013400418544323665, "tier_b": "pass", "steps": [7, 26, 28]}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.020827619154860425, "tier_b": "pass", "steps": [1, 7, 17, 20, 21]}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.02541716168227825, "tier_b": "pass", "steps": [1, 3, 15, 16, 18, 19, 21, 23]}
+{"job_id": "p00445_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999986886978149}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.791175412751366e-08, "reasons": []}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.003573876883237618, "tier_b": "pass", "steps": [21]}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.02355847962545109, "tier_b": "pass", "steps": [2, 23]}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.02355847962545109, "tier_b": "pass", "steps": [0, 2, 16]}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.01860193314282287, "tier_b": "pass", "steps": [5, 6, 11, 24, 29]}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.02426604133111715, "tier_b": "pass", "steps": [1, 3, 4, 11, 22, 24, 26, 29]}
+{"job_id": "p00563_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999988973140717}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7794871915151565e-08, "reasons": []}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0034795708961364224, "tier_b": "pass", "steps": [21]}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.01837886547981137, "tier_b": "pass", "steps": [5, 6]}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.014957381473987362, "tier_b": "pass", "steps": [7, 12, 15]}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.01568182818282146, "tier_b": "pass", "steps": [6, 10, 20, 22, 28]}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.02321826630809482, "tier_b": "pass", "steps": [0, 1, 5, 7, 19, 26, 28, 29]}
+{"job_id": "p00563_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999984502792358}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7974783626183365e-08, "reasons": []}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.002396774648910668, "tier_b": "pass", "steps": [25]}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.005306224029285624, "tier_b": "pass", "steps": [17, 24]}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.011338443942250642, "tier_b": "pass", "steps": [10, 20, 26]}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0063191259209977564, "tier_b": "pass", "steps": [15, 20, 21, 24, 26]}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.029147125970492523, "tier_b": "pass", "steps": [3, 4, 5, 8, 13, 21, 26, 29]}
+{"job_id": "p00594_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999988079071045}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7792809938904908e-08, "reasons": []}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.011250768915497368, "tier_b": "pass", "steps": [10]}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.03363846809143388, "tier_b": "pass", "steps": [3, 12]}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.030531791818793973, "tier_b": "pass", "steps": [4, 7, 25]}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.019797824341426917, "tier_b": "pass", "steps": [6, 13, 14, 17, 22]}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0328653269177704, "tier_b": "pass", "steps": [2, 6, 8, 13, 16, 18, 24, 26]}
+{"job_id": "p00594_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999993443489075}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7762729893196188e-08, "reasons": []}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.004190555047514504, "tier_b": "pass", "steps": [19]}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.027520122956808692, "tier_b": "pass", "steps": [2, 22]}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.007525425025610252, "tier_b": "pass", "steps": [12, 20, 23]}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.027520122956808692, "tier_b": "pass", "steps": [2, 7, 22, 24, 25]}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.020339629276932353, "tier_b": "pass", "steps": [3, 10, 12, 14, 16, 17, 20, 28]}
+{"job_id": "p00606_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999983906745911}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7856560359860682e-08, "reasons": []}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.001947152514933919, "tier_b": "pass", "steps": [26]}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0129903809925125, "tier_b": "pass", "steps": [7, 21]}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.010151094155625153, "tier_b": "pass", "steps": [9, 10, 13]}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.039965695769407755, "tier_b": "pass", "steps": [0, 3, 7, 9, 10]}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.031917644259771755, "tier_b": "pass", "steps": [1, 3, 8, 9, 14, 22, 23, 25]}
+{"job_id": "p00606_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999988377094269}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7772829277728447e-08, "reasons": []}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.013723481810053879, "tier_b": "pass", "steps": [6]}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.00935456809801178, "tier_b": "pass", "steps": [10, 15]}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.015236105584665108, "tier_b": "pass", "steps": [5, 17, 25]}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.02314706231840403, "tier_b": "pass", "steps": [0, 4, 5, 14, 26]}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.02544911994916825, "tier_b": "pass", "steps": [0, 2, 4, 10, 13, 15, 20, 28]}
+{"job_id": "p00647_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999988675117493}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7747304900759507e-08, "reasons": []}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.006112211397089804, "tier_b": "pass", "steps": [14]}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.02242820975930385, "tier_b": "pass", "steps": [2, 16]}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.015704845328251168, "tier_b": "pass", "steps": [5, 14, 26]}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.020860184356691687, "tier_b": "pass", "steps": [0, 4, 21, 26, 29]}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.021557260178285215, "tier_b": "pass", "steps": [3, 5, 14, 15, 17, 19, 24, 28]}
+{"job_id": "p00647_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999984204769135}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7926949207905275e-08, "reasons": []}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0035366323120741444, "tier_b": "pass", "steps": [21]}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.009592916947395915, "tier_b": "pass", "steps": [10, 29]}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.011858985418019228, "tier_b": "pass", "steps": [8, 13, 28]}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.016447448332271932, "tier_b": "pass", "steps": [6, 12, 17, 18, 25]}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.019633113473079764, "tier_b": "pass", "steps": [3, 6, 7, 8, 18, 23, 27, 28]}
+{"job_id": "p00693_s0", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999984502792358}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7721467462873245e-08, "reasons": []}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.030384717016269804, "tier_b": "pass", "steps": [1]}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.030384717016269804, "tier_b": "pass", "steps": [1, 16]}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.010365266845617583, "tier_b": "pass", "steps": [9, 16, 20]}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.022661847187698755, "tier_b": "pass", "steps": [2, 7, 21, 24, 27]}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.022661847187698755, "tier_b": "pass", "steps": [2, 5, 6, 9, 14, 18, 20, 25]}
+{"job_id": "p00693_s1", "attack": "honest", "s": null, "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999984502792358}

@@ -20,3 +20,5 @@ What the dry run shows already:
 - τ_i (relative L2, k = 3) falls from 0.053 at step 0 to 0.0130 at step 10, 0.0046 at step 20 and 0.00056 at step 29: per-step thresholds are needed.
 - E0 (honest cross-GPU pairs): LPIPS t_pass 0.079, DINOv2 t_pass 0.940; no pair was pixel-equal.
 - x₀: the build-agnostic constant `X0_TOL` = 1e-5 holds with a margin of 4.3× over the largest P1 difference (2.3e-6).
+
+`thresholds_pilot_dpmpp.json` (added later): the same tool on the dpmpp_2m replay `20261124-wp0b-replay-dpmpp-spark4on-spark5-01` (Spark-4 → Spark-5, 40 jobs). Calibration is now one sampler per file. ε_A = 2.0e-7, because ComfyUI computes dpmpp_2m's step coefficients on the GPU and the CPU replica is exact at only 560 of 1,200 steps. Its τ_i are 0 only because both nodes are Sparks; cross-hardware τ_i for dpmpp_2m need an x86 provider run.

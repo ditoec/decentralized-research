@@ -58,6 +58,8 @@ def main(argv=None):
     prompts = dict(read_prompts(a.prompts))
     claimed = pm.get("claimed") or {"steps": pm["steps"], "cfg": pm["cfg"], "sampler": pm["sampler"],
                                      "resolution": pm["resolution"]}
+    if th.get("sampler") and th["sampler"] != claimed["sampler"]:
+        raise SystemExit(f"thresholds are for {th['sampler']}, the run claims {claimed['sampler']}")
     res = int(claimed["resolution"].split("x")[0])
     sha = a.ckpt_sha256 or sha256_file(a.ckpt)
     d, m = manifest.start(a.wp, a.name or f"verify-{src.name.split('-', 2)[-1]}", "evidence levels E1, E2-H, E2-W",

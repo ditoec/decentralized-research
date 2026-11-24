@@ -58,14 +58,29 @@ def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_
     return Verdict("E1.x0", PASS if ok else FAIL, scores, [] if ok else ["x_0 is not noise(seed)"])
 
 
-def check_schedule(traj: Trajectory, expected_sigmas: torch.Tensor, steps: int) -> Verdict:
+# Build-agnostic tolerance for the committed schedule (protocol constant), relative per entry. The
+# canonical CPU schedule differs between ARM and x86 CPUs by one float32 ULP in a few entries
+# (relative 9.7e-8; runbook §3 finding 17), exactly like the noise. 1e-6 is about 8 ULP: above any
+# rounding difference, and far below what a cheaper schedule changes (fewer steps change T, and a
+# relabelled schedule moves sigmas by orders of magnitude more).
+SCHED_TOL_REL = 1e-6
+
+
+def check_schedule(traj: Trajectory, expected_sigmas: torch.Tensor, steps: int,
+                   tol_rel: float = SCHED_TOL_REL) -> Verdict:
     reasons = []
     if traj.T != steps:
         reasons.append(f"trajectory has {traj.T} steps, job requires {steps}")
-    same = traj.sigmas.shape == expected_sigmas.shape and torch.equal(traj.sigmas.float(), expected_sigmas.float())
-    if not same:
+    same_shape = traj.sigmas.shape == expected_sigmas.shape
+    exact = same_shape and torch.equal(traj.sigmas.float(), expected_sigmas.float())
+    rel = float("inf")
+    if same_shape:
+        a, b = traj.sigmas.double(), expected_sigmas.double()
+        rel = float(((a - b).abs() / b.abs().clamp_min(1e-12)).max())
+    if not (exact or rel <= tol_rel):
         reasons.append("committed sigma schedule differs from the job's schedule")
-    return Verdict("E1.schedule", FAIL if reasons else PASS, {"T": traj.T, "schedule_equal": same}, reasons)
+    return Verdict("E1.schedule", FAIL if reasons else PASS,
+                   {"T": traj.T, "schedule_equal": exact, "max_rel_diff": rel}, reasons)
 
 
 def check_image(decoded_uint8: torch.Tensor, delivered_uint8: torch.Tensor, th: dict) -> Verdict:

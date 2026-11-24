@@ -47,3 +47,30 @@ def test_perturbation_above_tolerance_fails():
     x0 = _honest_x0(7)
     x0.view(-1)[0] += 20 * X0_TOL * 14.6
     assert check_x0(_traj(x0), _MS, 7).verdict == "fail"
+
+
+# E1(b): the build-agnostic schedule tolerance (rules.e1.SCHED_TOL_REL)
+from trajver.rules.e1 import SCHED_TOL_REL, check_schedule  # noqa: E402
+
+
+def test_schedule_one_ulp_passes():
+    sig = torch.linspace(14.6, 0.03, 30).tolist() + [0.0]
+    exp = torch.tensor(sig, dtype=torch.float32)
+    got = exp.clone()
+    got[3] = torch.nextafter(got[3], torch.tensor(0.0))  # ARM vs x86 rounding, finding 17
+    assert check_schedule(_traj_sig(got), exp, 30).verdict == "pass"
+
+
+def test_schedule_fewer_steps_or_relabelled_fails():
+    exp = torch.tensor(torch.linspace(14.6, 0.03, 30).tolist() + [0.0])
+    short = torch.tensor(torch.linspace(14.6, 0.03, 20).tolist() + [0.0])
+    assert check_schedule(_traj_sig(short), exp, 30).verdict == "fail"
+    bent = exp.clone()
+    bent[5] *= 1 + 100 * SCHED_TOL_REL
+    assert check_schedule(_traj_sig(bent), exp, 30).verdict == "fail"
+
+
+def _traj_sig(sig: torch.Tensor) -> Trajectory:
+    z = torch.zeros(SHAPE)
+    n = sig.numel() - 1
+    return Trajectory(sigmas=sig, xs=[z] * n, Ds=[z] * n, x_final=z)

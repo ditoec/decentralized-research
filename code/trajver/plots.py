@@ -154,12 +154,18 @@ def tierb(runs: list[Path], out: str):
         T = min(len(x["tier_b"]) for x in rows)
         med = [statistics.median(x["tier_b"][i]["rel_l2"] for x in rows) for i in range(T)]
         hi = [max(x["tier_b"][i]["rel_l2"] for x in rows) for i in range(T)]
-        ax.semilogy(range(T), [max(v, 1e-12) for v in med], color=PALETTE[k % 8], label=r.name.split("-wp")[-1])
+        m = json.loads((r / "manifest.json").read_text())
+        src = m.get("source_run") or m.get("provider_run") or ""
+        prov = next((p for p in Path(str(src)).name.split("-") if p.startswith(("rtx", "spark"))), None)
+        prov = prov or next((p.split("on")[0] for p in r.name.split("-") if "on" in p and p[:1].isdigit()), r.name)
+        prov = prov.upper().replace("RTX", "RTX ") if prov[:1].isdigit() is False else f"RTX {prov}"
+        ax.semilogy(range(T), [max(v, 1e-12) for v in med], color=PALETTE[k % 8], label=f"{prov} → {_label(r).split(chr(10))[0]}")
         ax.semilogy(range(T), [max(v, 1e-12) for v in hi], color=PALETTE[k % 8], ls=":", lw=0.8)
         table += [[r.name, i, med[i], hi[i]] for i in range(T)]
     ax.set_xlabel("step i")
     ax.set_ylabel(r"honest rel. L2($\hat D_i$, $D_i$)")
-    ax.legend(frameon=False, fontsize=6)
+    ax.plot([], [], color="0.4", ls=":", lw=0.8, label="dotted: max over jobs")
+    ax.legend(frameon=False, fontsize=6, title="provider → verifier (median)", title_fontsize=6)
     _save(fig, out, ["run", "step", "median", "max"], table)
 
 

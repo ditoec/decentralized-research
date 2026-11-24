@@ -754,7 +754,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "so that it holds for any processor and PyTorch build without a per-build measurement: it lies well above the "
          "largest cross-processor rounding difference we measured ({R|R1.1}) and far below the per-element differences "
          "of order one that a different seed produces, so it gives an attacker no usable freedom.")
-    Para("{b|Reproducibility requirements.} Two sources of variation inside ComfyUI are fixed by the protocol rather "
+    Para("{b|Reproducibility requirements.} Three sources of variation are fixed by the protocol rather "
          "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
          "parameters and passed to the sampler. ComfyUI otherwise computes it on whichever device holds the model, and "
          "a one-ULP difference in σ changes the whole trajectory. Second, the decisions that ComfyUI takes from the "

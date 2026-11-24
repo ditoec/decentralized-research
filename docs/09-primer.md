@@ -121,7 +121,7 @@ The study asks three research questions, designed so that each produces a useful
 | Level | Compared | Isolates |
 | --- | --- | --- |
 | L0 | Same GPU, run twice | Run-to-run randomness |
-| L1 | Same GPU, different settings | Precision, attention code, library versions |
+| L1 | Same GPU, different settings | Precision, attention code, deterministic mode |
 | L2 | Two cards of the same model | Unit-to-unit differences |
 | L3 | Rented x86 Blackwell card (RTX 5090) vs DGX Spark | Chip, memory system, x86 vs ARM CPU |
 | L4 | Blackwell vs older rented GPUs | GPU generation |

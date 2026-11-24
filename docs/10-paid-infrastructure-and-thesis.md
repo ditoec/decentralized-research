@@ -56,10 +56,9 @@ Prices are Community Cloud on-demand rates from Runpod's catalog read on 2026-11
 - **Stock is the binding constraint, not price.** On 2026-11-23 only the RTX 5080 and RTX 4090 had pod stock. Book each card when a stock read shows it; use the substitutes above, or Secure Cloud at about twice the price, before giving up a generation.
 - Turing and older, and Hopper, are not tested. Make no claim about them.
 - **L2:** the six Sparks. One paid extra: a second RTX 5090 on a different host for a short subset, to see host-to-host spread on rented x86.
-- **L1 (software factors)** is measured in full only on the Spark, because every Spark is the same platform and a full x86 grid is not worth its cost. Two measures narrow that gap:
-  - **Second software stack on a Spark (free).** Spark-4 repeats all 24 configs on 100 prompts under a second PyTorch and CUDA version, in a second research image. This shows whether the factor effects survive a library change.
+- **L1 (software factors)** is measured in full only on the Spark, because every Spark is the same platform and a full x86 grid is not worth its cost. One measure narrows that gap (a second software stack on a Spark was planned but dropped on 2026-11-24: the protocol pins one software image instead):
   - **x86 factor slice on the RTX 4090 (about US$5).** At fp16, deterministic mode {off, on} × attention backend {SDPA, alternative} × both samplers, on the 200-prompt grid subset. That is six configs beyond the reference pair, about a quarter of the full grid. Add xformers as a third backend if it installs. This puts x86 evidence under the one claim that needs it: whether a deterministic configuration exists.
-  - The paper then says: the full grid was measured on one GPU platform under two software stacks, and the deterministic-mode and attention factors also on an x86 Ada card.
+  - The paper then says: the full grid was measured on one GPU platform under one pinned software stack, and the deterministic-mode and attention factors also on an x86 Ada card.
 - RunPod pods are containers and the host sets the driver. Verify the card with `nvidia-smi` and the GPU UUID, and record the driver, host and data-center ID.
 - Community Cloud first. Secure Cloud costs two to three times as much; use it only when a model is unavailable.
 
@@ -97,7 +96,6 @@ Rules for every research run on a Spark:
 | Rest of the 24-config grid | 200 prompts × 3 seeds on nodes 4 and 5 | not run |
 | Precision factor (bf16, fp32) | part of the grid | 100 prompts × 3 seeds |
 | Deterministic-mode and attention factors at fp16 (x86 slice) | part of the grid | RTX 4090 only, 200 prompts × 3 seeds |
-| Second software stack, all 24 configs | 100 prompts × 3 seeds on node 4 | — |
 | L0 repeats | 10% subset on node 4 | — |
 | L2 subset | 50 prompts × 3 seeds on all six | second RTX 5090, same subset |
 | Models | SD1.5, SDXL; FLUX.1-schnell optional (rule 2) | SD1.5, SDXL |

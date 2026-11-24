@@ -119,7 +119,7 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 | Level | Comparison | Hardware | What it isolates |
 |---|---|---|---|
 | L0 | Same card, repeated runs | Spark | Run-to-run nondeterminism |
-| L1 | Same card, different software config (precision, attention backend, `--deterministic`, torch/ComfyUI version) | Spark in full, under two software stacks; RTX 4090 for the deterministic-mode and attention factors; every rented model for precision | Software-stack effects (these are the RQ1 factors) |
+| L1 | Same card, different software config (precision, attention backend, `--deterministic`, torch/ComfyUI version) | Spark in full, under one pinned software stack; RTX 4090 for the deterministic-mode and attention factors; every rented model for precision | Software-stack effects (these are the RQ1 factors) |
 | L2 | Different physical units of the same model | Six Sparks (up to 15 pairs); two rented RTX 5090s | Unit-to-unit variation (expected: none) |
 | L3 | Same generation, different chip, memory system and CPU ISA (RTX 5090 ↔ Spark) | Spark and rented | Kernel selection per compute capability, and x86 vs ARM CPU |
 | L4 | Different generation (Blackwell ↔ Ada ↔ Ampere) | **rented** | The marketplace reality: providers of mixed generations |
@@ -138,7 +138,7 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 - Research jobs run beside live inference services, with a small memory footprint and stop conditions.
 - **No timing result comes from a shared Spark.** The attacker's saving β_A and verifier GPU-seconds are measured on rented pods, which the job has to itself.
 - **Co-tenancy check (new):** repeat a small job set while the co-located model is busy and while it is idle. If the outputs are bit-identical, the paper can state that shared load does not affect verification.
-- The full software-factor grid exists only on the Spark platform. Two measures narrow the gap (doc 10 §2.1): Spark-4 repeats all 24 configs on 100 prompts under a second PyTorch and CUDA version, and the RTX 4090 runs the x86 factor slice. State in the paper that the full grid was measured on one GPU platform under two software stacks.
+- The full software-factor grid exists only on the Spark platform. The RTX 4090 runs the x86 factor slice to narrow the gap (doc 10 §2.1). The second software stack was dropped on 2026-11-24: the protocol pins one software image (by digest), so library versions are fixed by design, and the paper states that its tolerances are not claimed to cover other PyTorch or CUDA versions.
 
 **Exact-reproducibility checks across CPU ISAs:**
 - **x_T across CPU ISAs.** ComfyUI draws the initial noise from the CPU (`torch.randn` on the CPU, doc 06 §1). PyTorch uses vectorized normal-distribution paths for larger tensors, and these may differ between x86 (AVX2) and ARM (NEON). Test whether x_T is **bit-identical on x86 and ARM**. The x86 side runs on any RunPod pod and costs cents. If the bytes differ, the E1 seed binding must name a canonical CPU path, or compare within a tolerance. The result is publishable either way.

@@ -47,7 +47,7 @@ experiments/runs/<run_id>/
 Also commit three fixed subsets, each keeping the 40/20/40 proportions where it spans splits:
 - `prompts_rent500.txt`: 500 prompts (200 calibration, 100 dev, 200 test), for the reference config on RunPod nodes.
 - `prompts_grid200.txt`: 200 prompts from calibration and dev only, for the non-reference configs on the Sparks.
-- `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes, and for the second software stack on Spark-4.
+- `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes.
 - `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5090.
 
 ---
@@ -76,7 +76,7 @@ Addresses and login details are in `docs/local-nodes.md`, which is kept out of g
 
 ### 1.2 Setup steps
 
-**Implemented (2026-11-24).** One locked environment for both architectures: `code/env/setup_env.sh [main|alt]` builds Python 3.12.13 (uv-managed) with `env/lock-<stack>.txt`; the lock files were compiled for aarch64 and x86-64 and are identical. `main` = torch 2.14.1+cu130 (needs driver >= 580, i.e. a CUDA 13 host on RunPod); `alt` = torch 2.13.0+cu129 (the second software stack). On the Sparks, `code/env/Dockerfile` wraps the same script into `esj-research:<stack>` (label `research=esj`). On RunPod we cannot push an image, so `tools/pod_job.sh` runs the same script inside the pod. Models: `experiments/configs/models.json` (sha256 = Hugging Face LFS object id). Prompts: `code/tools/make_prompts.py` wrote `experiments/configs/prompts_*.txt` and `prompts.json` (PartiPrompts, Apache-2.0, seed 20261123), plus `prompts_pilot20.txt` for P2.
+**Implemented (2026-11-24).** One locked environment for both architectures: `code/env/setup_env.sh [main|alt]` builds Python 3.12.13 (uv-managed) with `env/lock-<stack>.txt`; the lock files were compiled for aarch64 and x86-64 and are identical. `main` = torch 2.14.1+cu130 (needs driver >= 580, i.e. a CUDA 13 host on RunPod); `alt` = torch 2.13.0+cu129 (built for the second software stack, which was dropped on 2026-11-24; keep it only as a fallback build). On the Sparks, `code/env/Dockerfile` wraps the same script into `esj-research:<stack>` (label `research=esj`). On RunPod we cannot push an image, so `tools/pod_job.sh` runs the same script inside the pod. Models: `experiments/configs/models.json` (sha256 = Hugging Face LFS object id). Prompts: `code/tools/make_prompts.py` wrote `experiments/configs/prompts_*.txt` and `prompts.json` (PartiPrompts, Apache-2.0, seed 20261123), plus `prompts_pilot20.txt` for P2.
 
 **Network finding (2026-11-24).** The Sparks' internet egress is filtered and slow: Hugging Face's file CDN (`*.cdn.hf.co`, Xet transfer hosts) is unreachable, and other downloads run at about 250 KB/s per connection, so the image build alone takes hours. The RunPod HTTPS proxy (`*.proxy.runpod.net`) is reachable. Models therefore reach the Sparks from the operator's machine or through a RunPod relay pod (`python:3.12-slim`, CPU, US$0.12/h) that downloads from Hugging Face and serves the files under a random token path. Ask the network admin whether `huggingface.co` CDN egress can be opened for the research nodes; until then budget the transfer time.
 
@@ -308,7 +308,7 @@ Rules:
      - every other config runs `prompts_grid200.txt`.
    - If P3 says this is too slow, cut the reference config to 300 prompts. Never cut the configs; ask the paper author first.
    - Run the reference config on Spark-4, Spark-5 and Spark-6, and the other configs on Spark-4 and Spark-5. Repeat a 10% subset on Spark-4 for L0.
-   - **Second software stack:** build a second arm64 research image with a different PyTorch and CUDA version (record both in the manifest). On Spark-4, run all 24 configs on `prompts_prec100.txt` × 3 seeds under it, and compare each config with the same config under the main image.
+   - **Second software stack: dropped (decision of 2026-11-24).** The protocol pins one software image instead; do not build or run a second stack.
    - Run `prompts_l2_50.txt` × 3 seeds, reference config, SDXL, on all six Sparks (L2, up to 15 pairs). On nodes 1 to 3 run it off-peak and keep to fp16.
    - Record the trajectory for every job (§3.1).
 2. **Rentals (L3 and L4), on RunPod through the §3.4 launcher.**

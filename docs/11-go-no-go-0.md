@@ -69,6 +69,8 @@ Within the US$60 line. Spent so far on RunPod in this pilot: balance 8.66 → 6.
 3. The RTX 5090 replaces the RTX 5080 as the L3 card. **Decided 2026-11-24**; doc 05, doc 10, the runbook and the manuscript are updated.
 4. Calibration dry run (`experiments/runs/20261124-wp0b-calib-dryrun-01`): the pipeline works end to end; the real freeze needs at least 300 honest samples per step at k = 3, which WP2 provides.
 
+**Decided 2026-11-24 (from the findings PDF, decision 3):** the second software stack is **dropped**. The protocol pins one software image by digest, and the paper states that its tolerances are not claimed to cover other PyTorch or CUDA versions.
+
 ## Figures (PNG, PDF and CSV under each run's `figures/`)
 
 - Throughput, all nodes: `20261124-wp0b-p3-sd15-rtx5090-01/figures/throughput_all_nodes`

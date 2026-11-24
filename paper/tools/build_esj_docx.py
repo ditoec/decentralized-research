@@ -761,7 +761,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "free memory at each call, namely whether the conditional and unconditional CFG passes share a batch and "
          "whether the VAE decodes in tiles, are pinned to a fixed choice during sampling, replay and decoding. "
          "Otherwise the same job could give a different trajectory depending on other workloads on the node. Both "
-         "settings are recorded in the job metadata, which the Merkle root commits to.")
+         "settings are recorded in the job metadata, which the Merkle root commits to. Third, providers and verifiers "
+         "run one pinned software image, identified by its digest, so the PyTorch, CUDA and ComfyUI versions are fixed "
+         "by the protocol rather than calibrated; the GPU driver, which the host controls, is recorded for every job.")
     Para("{b|Tier A: solver consistency on every step.} Given the committed values, the next state is a deterministic "
          "function of committed quantities only. For the Euler sampler:")
     Eq(omath(sub("x", "i+1"), ("p", "="), sub("x", "i"), ("p", "+"),
@@ -861,7 +863,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Table("Nested heterogeneity levels",
           ["Level", "Comparison", "Isolates"],
           [["L0", "Same unit, repeated runs", "Run-to-run nondeterminism"],
-           ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode, library version"],
+           ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode"],
            ["L2", "Two units of the same model", "Unit-to-unit variation"],
            ["L3", "Rented x86 Blackwell GPU versus DGX Spark", "Chip, compute capability, memory system, processor instruction set"],
            ["L4", "Blackwell versus Ampere and Ada (rented)", "GPU generation"]],
@@ -871,7 +873,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "Prompts are drawn from PartiPrompts {c|yu2022parti} (Apache-2.0 licence), sampled with a fixed random seed. Each prompt is run with three seeds, "
          "and prompts are split into calibration (400 prompts), development (200) and test (400) sets. On the DGX Spark systems the full factor grid "
          "is run: precision (fp16, bf16, and fp32 for SD1.5 only) × attention implementation (two options) × sampler (two) × deterministic "
-         "mode (off, on). SDXL in fp32 is excluded: in the pilot it filled the whole memory of the 24 GB and 32 GB rented cards and could not run beside other workloads on a DGX Spark. One DGX Spark repeats the grid on a smaller prompt set under a second PyTorch and CUDA version. "
+         "mode (off, on). SDXL in fp32 is excluded: in the pilot it filled the whole memory of the 24 GB and 32 GB rented cards and could not run beside other workloads on a DGX Spark. "
          "Rented GPUs run the reference configuration and the precision factor; one rented x86 GPU of the Ada "
          "generation also runs the deterministic-mode and attention factors at fp16. The reference "
          "configuration (fp16, default attention, both samplers, deterministic mode off) is the one for which tolerances "
@@ -1007,8 +1009,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
          "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
          "partial-faking analysis and any check with k > 8 use jobs generated on the DGX Spark systems. "
-         "The full grid of software factors was measured on that one GPU platform, under two software stacks; "
-         "on x86 only the precision, deterministic-mode and attention factors were measured. Finally, re-execution establishes consistency with the committed "
+         "The full grid of software factors was measured on that one GPU platform, and on x86 only the precision, "
+         "deterministic-mode and attention factors were measured. All results hold for the one pinned software stack; "
+         "tolerances calibrated on it are not claimed to cover other PyTorch or CUDA versions, which is why the protocol "
+         "pins the image. Finally, re-execution establishes consistency with the committed "
          "workload, not that a particular GPU performed it.")
 
     # ================================================================== 4 CONCLUSION

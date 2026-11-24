@@ -9,6 +9,7 @@
   `python -P paper/tools/build_esj_docx.py "paper/Article Template.docx" paper/manuscript_ESJ.docx`
   **Once co-authors edit the .docx by hand, the .docx becomes the master. Stop regenerating it from the script.**
 - Checking the output: Word automation exports `build/manuscript_ESJ.pdf`, and the skill validator passes (see the session notes in CLAUDE.md).
+- `manuscript_ESJ.pdf`: a read-only PDF of the current .docx for co-authors, exported from Word. Re-export it whenever the .docx changes (Word COM: `ExportAsFixedFormat(pdf, 17)`); the .docx is the source.
 
 ## Authors (for the submission system and the cover letter)
 

@@ -26,24 +26,28 @@ def max_ulp(a: torch.Tensor, b: torch.Tensor) -> int:
     return int((ia - ib).abs().max())
 
 
-def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_ulp_tol: int = 0) -> Verdict:
-    """x_0 = noise_scaling(noise(seed)). Exact on the same CPU ISA; across ISAs PyTorch's vectorized
-    normal sampler (AVX2 vs NEON) differs in the last bits (runbook §3 finding 6), so the protocol
-    accepts a distance of at most ``max_ulp_tol`` float32 ULPs, calibrated in pilot P1 (decision of
-    2026-11-24: keep ComfyUI's stock noise path, tolerate the ISA difference)."""
+def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_noise: float = 0.0) -> Verdict:
+    """x_0 = noise_scaling(noise(seed)). Exact when provider and verifier share a CPU and PyTorch build.
+    Across builds PyTorch's vectorized normal sampler rounds differently (runbook §3 findings 6-7):
+    ARM vs ARM differed by <= 3 ULP, but x86 vs ARM by up to 2.3e-6 in absolute terms, which near
+    zero is hundreds of thousands of ULP. The tolerance is therefore absolute, in units of the
+    unit-variance noise: max |x0_expected - x0_committed| / sigma_0 <= ``max_abs_noise``, set from
+    pilot P1 and frozen (decision of 2026-11-24, revised after the x86 P1 run)."""
     shape = tuple(traj.xs[0].shape)
     noise = initial_noise(shape, seed)
     latent = torch.zeros(shape, dtype=torch.float32)
+    sigma0 = float(traj.sigmas[0]) if float(traj.sigmas[0]) > 0 else 1.0
     scores = {}
     ok = False
     for dev in dict.fromkeys(["cpu", str(device)]):
         exp = expected_x0(model_sampling, noise, traj.sigmas, latent, dev)
         exact = bool(torch.equal(exp, traj.xs[0].float()))
-        ulp = 0 if exact else max_ulp(exp, traj.xs[0])
+        d = (exp.double() - traj.xs[0].double()).abs().max().item()
         scores[f"exact_{dev}"] = exact
-        scores[f"max_ulp_{dev}"] = ulp
-        scores[f"max_abs_{dev}"] = (exp.double() - traj.xs[0].double()).abs().max().item()
-        ok = ok or exact or ulp <= max_ulp_tol
+        scores[f"max_abs_{dev}"] = d
+        scores[f"max_abs_noise_units_{dev}"] = d / sigma0
+        scores[f"max_ulp_{dev}"] = 0 if exact else max_ulp(exp, traj.xs[0])
+        ok = ok or exact or d / sigma0 <= max_abs_noise
     return Verdict("E1.x0", PASS if ok else FAIL, scores, [] if ok else ["x_0 is not noise(seed)"])
 
 
@@ -85,7 +89,7 @@ def check_conditioning(traj: Trajectory, fresh: dict[str, torch.Tensor], th: dic
 def e1(traj: Trajectory, pipeline, spec, delivered_uint8: torch.Tensor | None, th: dict) -> Verdict:
     """All E1 checks with a loaded verifier Pipeline."""
     parts = [
-        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_ulp", 0)),
+        check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_abs_noise", 0.0)),
         check_schedule(traj, pipeline.schedule(spec), spec.steps),
     ]
     pos, neg = pipeline.encode(spec.prompt), pipeline.encode(spec.negative)

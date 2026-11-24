@@ -1,0 +1,20 @@
+{
+ "a": "20261124-wp0b-p1-noise-spark4-01",
+ "b": "20261124-wp0b-p1-noise-rtx4090-01",
+ "result": {
+  "sd15": {
+   "n_seeds": 100,
+   "n_identical": 0,
+   "max_ulp": 325230,
+   "frac_values_equal": 0.615382080078125,
+   "max_abs": 2.205371856689453e-06
+  },
+  "sdxl": {
+   "n_seeds": 100,
+   "n_identical": 0,
+   "max_ulp": 8574710,
+   "frac_values_equal": 0.6154898071289062,
+   "max_abs": 2.3245811462402344e-06
+  }
+ }
+}

@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # Research image for the DGX Sparks (arm64). The same env/setup_env.sh builds the identical
 # environment on RunPod pods (x86-64), where we cannot push a custom image; see runbook §1.2.
 #
@@ -16,6 +17,7 @@ COPY env ./env
 COPY tools ./tools
 COPY trajver ./trajver
 COPY comfyui_trajectory ./comfyui_trajectory
-RUN env/setup_env.sh ${STACK} && rm -rf /opt/esj/.uv-cache
+# the uv download cache is a BuildKit cache mount, so a failed build keeps what it downloaded
+RUN --mount=type=cache,target=/opt/esj/.uv-cache,id=esj-uv bash env/setup_env.sh ${STACK}
 ENV TRAJVER_COMFYUI=/opt/esj/ComfyUI PATH=/opt/esj/venv-${STACK}/bin:$PATH
 LABEL research=esj

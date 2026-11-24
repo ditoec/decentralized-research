@@ -24,7 +24,7 @@ esac
 mkdir -p "$ESJ_HOME"
 export UV_CACHE_DIR="$ESJ_HOME/.uv-cache" UV_PYTHON_INSTALL_DIR="$ESJ_HOME/python" UV_HTTP_TIMEOUT=600 UV_HTTP_RETRIES=8
 if ! command -v uv >/dev/null 2>&1; then
-  curl -LsSf https://astral.sh/uv/0.11.22/install.sh | env UV_INSTALL_DIR="$ESJ_HOME/bin" sh
+  curl -LsSf https://astral.sh/uv/0.13.9/install.sh | env UV_INSTALL_DIR="$ESJ_HOME/bin" sh
   export PATH="$ESJ_HOME/bin:$PATH"
 fi
 VENV="$ESJ_HOME/venv-$STACK"
@@ -33,7 +33,7 @@ uv python install "$PYVER"
 uv pip install --python "$VENV/bin/python" --index-strategy unsafe-best-match \
   --extra-index-url "https://download.pytorch.org/whl/$CU" -r "$HERE/env/lock-$STACK.txt"
 uv pip install --python "$VENV/bin/python" --no-deps -e "$HERE"
-TRAJVER_COMFYUI="${TRAJVER_COMFYUI:-$ESJ_HOME/ComfyUI}" "$HERE/tools/fetch_comfyui.sh"
+TRAJVER_COMFYUI="${TRAJVER_COMFYUI:-$ESJ_HOME/ComfyUI}" bash "$HERE/tools/fetch_comfyui.sh"
 "$VENV/bin/python" - <<'PY'
 import platform, sys, torch
 print("python", sys.version.split()[0], platform.machine())

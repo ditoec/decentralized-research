@@ -22,7 +22,9 @@ from pathlib import Path
 
 
 def get(url: str) -> str:
-    with urllib.request.urlopen(url, timeout=60) as r:
+    # the RunPod proxy (Cloudflare) answers 403 to urllib's default user agent
+    req = urllib.request.Request(url, headers={"User-Agent": "curl/8 esj-pull"})
+    with urllib.request.urlopen(req, timeout=60) as r:
         return r.read().decode()
 
 
@@ -35,7 +37,7 @@ def main() -> int:
     base = a.base.rstrip("/")
     dest = Path(a.dest).expanduser()
     dest.mkdir(parents=True, exist_ok=True)
-    if "DONE" not in get(f"{base}/out/DONE"):
+    if get(f"{base}/out/DONE").strip() != "ok":
         print("pod job not finished")
         return 2
     names = get(f"{base}/out/INDEX").split()

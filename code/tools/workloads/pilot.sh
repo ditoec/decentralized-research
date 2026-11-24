@@ -39,11 +39,14 @@ if has p5; then  # hypothesis W1 on SDXL, 10 cal prompts
      --prompts $CFG/prompts_pilot20.txt --n 10 --res 1024 --steps 30
 fi
 if has p7; then  # memory footprint per precision (P7): SD1.5 and SDXL, fp16 / bf16 / fp32
+  # P7_SKIP lists model-precision pairs not to run, e.g. "sdxl-fp32" on a Spark beside production:
+  # the 2026-11-24 test took host free memory from ~49 GB to 5.9 GB (runbook §3 finding 10).
   for prec in fp16:--force-fp16 bf16:--bf16-unet fp32:--force-fp32; do
     tag=${prec%%:*}; flag=${prec#*:}
     for m in sd15 sdxl; do
+      [[ " ${P7_SKIP:-} " == *" $m-$tag "* ]] && { echo "skip P7 $m-$tag"; continue; }
       ck=$SD15; sha=$SD15_SHA; res=512; [ $m = sdxl ] && ck=$SDXL && sha=$SDXL_SHA && res=1024
-      $P --flags=$flag gen --name "p7-$m-$tag-$NODE" --run-id "$(rid p7-$m-$tag)" --ckpt "$ck" --ckpt-sha256 $sha \
+      $P --flags=$flag gen --name "p7-$m-$tag-$NODE" --run-id "$(rid p7-$m-$tag "${P7_REP:-01}")" --ckpt "$ck" --ckpt-sha256 $sha \
          --prompts $CFG/prompts_pilot20.txt --seeds 0 --res $res --limit 3 --purpose "P7: memory footprint" \
          || echo "P7 $m $tag FAILED"
     done

@@ -1,0 +1,51 @@
+{
+ "run_id": "20261124-wp0b-p2-sdxl-spark5-01",
+ "wp": "wp0b",
+ "purpose": "P2: first look at L0-L4 (SDXL, fp16 default flags)",
+ "git_commit": "559ad9709bd031998c5ac99beba57983d59b6000-dirty",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "spark5-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "043e8674-8e4b-70a6-fbbb-29b8f40b0484",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-23T20:56:05.381259+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed",
+  "n": 20
+ },
+ "seeds": [
+  0,
+  1
+ ],
+ "save_traj": true,
+ "end_time": "2026-11-23T21:05:10.276881+00:00"
+}

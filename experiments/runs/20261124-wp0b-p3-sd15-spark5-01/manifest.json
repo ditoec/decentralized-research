@@ -1,0 +1,50 @@
+{
+ "run_id": "20261124-wp0b-p3-sd15-spark5-01",
+ "wp": "wp0b",
+ "purpose": "P3: SD1.5 throughput (warm)",
+ "git_commit": "559ad9709bd031998c5ac99beba57983d59b6000-dirty",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "spark5-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "043e8674-8e4b-70a6-fbbb-29b8f40b0484",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-23T19:49:57.339575+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed",
+  "n": 20
+ },
+ "seeds": [
+  0
+ ],
+ "save_traj": false,
+ "end_time": "2026-11-23T19:50:46.017986+00:00"
+}

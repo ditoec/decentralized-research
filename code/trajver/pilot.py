@@ -188,12 +188,14 @@ def cmd_gen(a):
     done = set()
     if rows_path.exists():
         done = {json.loads(l)["job"] for l in rows_path.read_text().splitlines() if l.strip()}
+    mem_before_load = meminfo().get("MemAvailable")
     t_load = time.perf_counter()
     pipe = Pipeline(a.ckpt, ckpt_sha)
     load_s = time.perf_counter() - t_load
     if torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats()
     jobs = [(pid, p, s) for pid, p in prompts for s in seeds]
+    ran = 0
     with MemSampler() as ms, open(rows_path, "a") as rows:
         for n, (pid, prompt, seed) in enumerate(jobs):
             key = _job_key(pid, seed)
@@ -222,6 +224,7 @@ def cmd_gen(a):
                 row["merkle_root"] = traj.save(d / "raw" / "traj" / f"{key}.safetensors")
             rows.write(json.dumps(row) + "\n")
             rows.flush()
+            ran += 1
             print(f"[{n + 1}/{len(jobs)}] {key} {row['t_total_s']:.2f}s", flush=True)
         min_avail = ms.min_avail
     all_rows = [json.loads(l) for l in rows_path.read_text().splitlines() if l.strip()]
@@ -231,12 +234,20 @@ def cmd_gen(a):
         "time_per_image_s": {"median": statistics.median(times), "p95": pctl(times, 0.95), "min": min(times),
                              "max": max(times), "n": len(times), "note": "warm; first job excluded"},
         "memory": {
+            # host-level: the drop in MemAvailable from before the model load to the lowest point of the run.
+            # On a DGX Spark (unified memory) this is what production feels; it includes co-tenant changes.
+            "host_available_before_load_gb": mem_before_load,
+            "host_drop_gb": (mem_before_load - min_avail) if (mem_before_load and min_avail) else None,
             "torch_peak_allocated_gb": torch.cuda.max_memory_allocated() / 1e9 if torch.cuda.is_available() else None,
             "torch_peak_reserved_gb": torch.cuda.max_memory_reserved() / 1e9 if torch.cuda.is_available() else None,
             "process_peak_rss_gb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / (1e6 if sys.platform != "darwin" else 1e9),
             "host_min_available_gb": min_avail, "host_total_gb": meminfo().get("MemTotal"),
         },
     }
+    prev = d / "summary.json"
+    if ran == 0 and prev.exists():  # a resumed process that did no work must not overwrite the measurements
+        summary["memory"] = json.loads(prev.read_text()).get("memory", summary["memory"])
+    summary["memory"]["measured_in_process_with_jobs"] = ran
     manifest.finish(d, m, summary)
     print(json.dumps(summary, indent=1))
     print(d)

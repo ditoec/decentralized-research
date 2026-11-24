@@ -736,7 +736,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           [["E0", "Image digest", "Full re-execution; pixel hash, LPIPS {c|zhang2018lpips} and DINOv2 {c|oquab2023dinov2} with calibrated thresholds", "≈ 1"],
            ["E0-N (deployed)", "Image", "Full re-execution; CLIP cosine > 0.9", "≈ 1"],
            ["E2-W (deployed)", "SHA-256 of per-step latents", "Three random steps, one step each; latent cosine ≥ 0.70", "≈ 3/T"],
-           ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) within u{sub|0} ULP; schedule; conditioning; decoded final latent equals the image", "≈ c₀/T"],
+           ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) within u{sub|0}; schedule; conditioning; decoded final latent equals the image", "≈ c₀/T"],
            ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
           [28, 38, 74, 28])
     Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5080) runs the workflow and commits the trajectory "
@@ -746,10 +746,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            image="fig2_protocol.png")
     Para("{b|Seed binding.} ComfyUI draws the initial noise on the CPU in 32-bit floating point from the job seed "
          "{c|comfyui}. The verifier recomputes it and compares it with x{sub|0}. Providers keep ComfyUI’s stock noise "
-         "path. Because the vectorized normal sampler can round differently on x86 and ARM processors, the check accepts "
-         "a distance of at most u{sub|0} units in the last place (ULP) of 32-bit floating point, where u{sub|0} is set "
-         "from the measured cross-instruction-set difference ({R|R1.1}) and is 0 when provider and verifier share an "
-         "instruction set.")
+         "path. Because PyTorch’s vectorized normal sampler rounds differently on different processors and builds, the "
+         "check accepts a largest absolute difference of at most u{sub|0}, measured in units of the unit-variance noise "
+         "(the difference in x{sub|0} divided by σ{sub|0}). u{sub|0} is set from the measured cross-processor "
+         "difference ({R|R1.1}) and is 0 when provider and verifier share a processor and PyTorch build.")
     Para("{b|Reproducibility requirements.} Two sources of variation inside ComfyUI are fixed by the protocol rather "
          "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
          "parameters and passed to the sampler. ComfyUI otherwise computes it on whichever device holds the model, and "

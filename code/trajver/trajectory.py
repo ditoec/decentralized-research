@@ -88,6 +88,7 @@ class Trajectory:
         tensors = {n: t.detach().cpu().contiguous() for n, t in self.named_tensors()}
         root = self.commitment().hex
         save_file(tensors, str(path), metadata={"job": json.dumps(self.job, sort_keys=True), "root": root})
+        path.chmod(0o644)  # safetensors writes 0600; run data must be readable when pulled off the node
         return root
 
     @classmethod

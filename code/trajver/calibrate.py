@@ -8,7 +8,7 @@ Inputs
   trajectories, one per hardware pair. Rows whose prompt is not in prompts_cal.txt are refused.
 * ``--e0``: JSONL rows ``{"prompt_id", "pixel_equal", "lpips", "dino_cosine"}`` for honest
   cross-node image pairs (``python -m trajver.pilot e0scores``).
-* ``--p1``: outputs of ``pilot noisecmp`` between ISAs; sets ``x0_max_ulp``.
+* ``--p1``: outputs of ``pilot noisecmp`` between CPU/PyTorch builds; sets ``x0_max_abs_noise``.
 
 Rules (as in the runbook)
 * Tier B: for each k in {1,2,3,5,8}, alpha_s = 1 - (1 - 0.01)^(1/k); tau_i = the (1 - alpha_s)
@@ -110,7 +110,7 @@ def main(argv=None):
     tier_a = [x["rel_l2"] for rows in pairs.values() for r in rows for x in r["tier_a"]]
     exact = all(x.get("replica_exact") for rows in pairs.values() for r in rows for x in r["tier_a"])
     e0rows = [json.loads(l) for p in a.e0 for l in Path(p).read_text().splitlines() if l.strip()]
-    ulps = [v["max_ulp"] for p in a.p1 for v in json.loads(Path(p).read_text())["result"].values() if "max_ulp" in v]
+    absd = [v["max_abs"] for p in a.p1 for v in json.loads(Path(p).read_text())["result"].values() if "max_abs" in v]
     th = {
         "version": out.stem,
         "levels_supported": a.levels.split(","),
@@ -119,7 +119,8 @@ def main(argv=None):
                     "prompts_cal_sha256": hashlib.sha256((CONFIGS / "prompts_cal.txt").read_bytes()).hexdigest()},
         "tier_b_metric": a.metric, "k": a.k, "tau": by_k[str(a.k)]["tau"], "tau_by_k": by_k,
         "eps_a_rel_l2": 0.0 if exact else 2 * max(tier_a), "tier_a_bit_exact": exact,
-        "x0_max_ulp": max(ulps) if ulps else 0,
+        # 2x the largest cross-build difference of the unit-variance noise seen in P1
+        "x0_max_abs_noise": 2 * max(absd) if absd else 0.0,
         "e0": e0_thresholds(e0rows) if e0rows else None,
         "notes": notes,
     }

@@ -130,6 +130,8 @@ def main():
     ap.add_argument("--image", default="esj-research:main")
     ap.add_argument("--stack", default="main")
     ap.add_argument("--margin-gb", type=float, default=20.0, help="extra free memory required before (re)start")
+    ap.add_argument("--max-guard-stops", type=int, default=3, help="give up after this many guard stops")
+    ap.add_argument("--backoff-s", type=int, default=600, help="wait after a guard stop before restarting")
     ap.add_argument("--git-commit", default=os.environ.get("TRAJVER_GIT_COMMIT", ""))
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     a = ap.parse_args()
@@ -142,16 +144,17 @@ def main():
     watcher = Cotenants(cot)
     watcher.start()
     docker_run = [
-        "docker", "run", "-d", "--name", name, "--label", "research=esj", "--gpus", "all",
+        "docker", "run", "-d", "--name", name, "--hostname", f"{os.uname().nodename}-esj", "--label", "research=esj", "--gpus", "all",
         "--ipc", "host", "--ulimit", "memlock=-1",
-        "-v", f"{ESJ}/code:/opt/esj/code", "-v", f"{ESJ}/models:/models:ro", "-v", f"{runs}:/runs",
+        "-v", f"{ESJ}/code:/opt/esj/code", "-v", f"{ESJ}/experiments:/opt/esj/experiments:ro",
+        "-v", f"{ESJ}/models:/models:ro", "-v", f"{runs}:/runs",
         "-v", f"{ESJ}/hf:/root/.cache/huggingface",
         "-e", "TRAJVER_RUNS=/runs", "-e", f"TRAJVER_COTENANT_FILE=/runs/{a.run_id}/logs/cotenants.json",
         "-e", f"TRAJVER_GIT_COMMIT={a.git_commit}", "-e", "PYTHONUNBUFFERED=1",
         "-w", "/opt/esj/code", a.image, *cmd,
     ]
     (ESJ / "hf").mkdir(exist_ok=True)
-    attempts = 0
+    attempts = guard_stops = 0
     try:
         while True:
             need = MEM_MIN_GB + a.margin_gb
@@ -181,9 +184,18 @@ def main():
             follower.wait(timeout=30)
             logf.close()
             if stopped_for:
-                log(run_dir, event="stopped_by_guard", **stopped_for)
+                guard_stops += 1
+                log(run_dir, event="stopped_by_guard", stops=guard_stops, **stopped_for)
+                if guard_stops >= a.max_guard_stops:
+                    # the workload itself needs more memory than the node can spare: do not keep retrying
+                    log(run_dir, event="aborted", reason="memory guard tripped repeatedly; workload too large for this node")
+                    return 3
+                time.sleep(a.backoff_s)  # memory recovers as soon as we stop; give production room first
                 continue
             sh("docker", "rm", "-f", name)
+            # files written as root in the container: make the run readable for the pull (no sudo on the host)
+            sh("docker", "run", "--rm", "--label", "research=esj", "-v", f"{runs}:/runs", a.image,
+               "sh", "-c", "chmod -R a+rX /runs", timeout=600)
             ok = exit_code == 0
             log(run_dir, event="finished", ok=ok, exit_code=exit_code, attempts=attempts)
             return 0 if ok else 1

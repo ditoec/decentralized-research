@@ -51,8 +51,8 @@ RQ1 is pure measurement and always produces a result. RQ2 produces a result whet
 
 **Why E2-H is achievable** (confirmed in `06-code-audit.md`):
 - ComfyUI's sampler callback provides `x_i` (before the update) and `denoised_i` (the CFG-applied x0-prediction) at every step. A custom node records them, and also captures the sampler's return value for the final x.
-- Storage is about 7.7 MB per 30-step SDXL job, off-chain.
-- **The initial noise is generated on the CPU in float32 from `torch.manual_seed(seed)`** (`comfy/sample.py`). x_T can therefore be checked *exactly*.
+- Storage is about 16.5 MB per 30-step SDXL job and 3.9 MB per SD1.5 job, off-chain (measured in the WP0b pilot; ComfyUI keeps latents in float32). The earlier estimate of 7.7 MB was too low.
+- **The initial noise is generated on the CPU in float32 from `torch.manual_seed(seed)`** (`comfy/sample.py`). It is not bit-exact across CPU families (ARM vs x86 differ by up to 2.3e-6 in the pilot), so E1 checks it within the fixed tolerance u₀ = 1e-5 (runbook §3, decisions of 2026-11-24).
 
 **Restrictions** (from the code audit):
 - Per-step noise in ancestral and SDE samplers is drawn on the GPU (`default_noise_sampler`), and a CPU run uses seed+1. So the core study uses **deterministic samplers only** (euler, heun, dpmpp_2m, ddim, uni_pc).

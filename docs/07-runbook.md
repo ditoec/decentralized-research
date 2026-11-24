@@ -424,7 +424,7 @@ The paper author draws the five result figures from the data, in the same style 
 | R0.2 | Repository URL and DOI | §9 |
 | R0.3 | Summary of findings | Paper author, after all results |
 | R0.4 | Version table | All manifests |
-| R0.5 | Split sizes | §0 prompt files |
+| R0.5 | Split sizes | **Filled in the manuscript 2026-11-24:** 400 / 200 / 400 PartiPrompts prompts (`experiments/configs/prompts.json`) |
 | R1.1 | Initial noise x₀ bit-exact across x86 and ARM | P1 |
 | R1.2 | Tier A ε_A, and whether it is exact across CPUs | §4.3, §5.3 |
 | R1.3 | Tier B metric | §5.2 |

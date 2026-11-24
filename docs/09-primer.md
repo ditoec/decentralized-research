@@ -83,7 +83,7 @@ The protocol makes the provider record the whole trajectory and lock it in with 
 Most jobs are never checked and cost nothing extra. A checked job runs three kinds of check:
 
 - **Seed and output binding.** The verifier regenerates the starting noise from the seed and requires an exact match, then decodes the final latent and requires it to match the delivered image.
-- **Tier A, solver consistency.** Each step's next latent is a fixed formula of the current latent and the network's prediction. The verifier recomputes that formula for all 30 steps on a CPU, which costs essentially nothing. It catches copied, interpolated or truncated trajectories and a wrong number of steps.
+- **Tier A, solver consistency.** Each step's next latent is a fixed formula of the current latent and the network's prediction. The verifier recomputes that formula for all 30 steps on a CPU, which costs essentially nothing. It catches a wrong number of steps and sloppy forgeries whose recorded predictions do not match their latents. It does not catch a careful forger who back-solves the predictions from faked latents, or a trajectory in which every step is a copy of the previous one (the formula then maps each latent to itself), so the protection to count on is Tier B.
 - **Tier B, model consistency.** A clever forger can fake the network's predictions so that the arithmetic still adds up. To catch that, the verifier re-runs the actual network at k random steps and compares with a tolerance calibrated separately for each step. With k = 3 out of 30 this costs roughly a tenth of re-running the whole job.
 
 The paper compares this design (called E2-H) with full re-execution (E0) and with faithful copies of two rules used by real decentralized networks today (E0-N and E2-W). The blockchain's role is narrow: hold the payment and bond, record the commitment and verdicts, and pay out or refund automatically.
@@ -116,14 +116,14 @@ The study asks three research questions, designed so that each produces a useful
 2. **RQ2, separate:** with false alarms held at 1% or less, which attacks can each kind of check detect, and do the deployed rules catch them?
 3. **RQ3, price:** what verifier GPU time, blockchain fees and latency does a given deterrence target cost?
 
-**Hardware.** The team owns at least two RTX 5080 GPUs (consumer cards, x86 hosts) and at least two NVIDIA DGX Spark systems (ARM processor, 128 GB unified memory). Both are the same GPU generation (Blackwell), so a few older GPUs are rented briefly. Differences are measured at five nested levels, each isolating one cause:
+**Hardware.** The team owns six NVIDIA DGX Spark systems (ARM processor, 128 GB unified memory), which also run a live production platform. Every x86 GPU is a consumer GeForce RTX card rented by the hour (an RTX 5090 for Blackwell, an RTX 4090 for Ada and an RTX 3090 for Ampere), with all paid infrastructure capped at US$200. Differences are measured at five nested levels, each isolating one cause:
 
 | Level | Compared | Isolates |
 | --- | --- | --- |
 | L0 | Same GPU, run twice | Run-to-run randomness |
 | L1 | Same GPU, different settings | Precision, attention code, library versions |
 | L2 | Two cards of the same model | Unit-to-unit differences |
-| L3 | RTX 5080 vs DGX Spark | Chip, memory system, x86 vs ARM CPU |
+| L3 | Rented x86 Blackwell card (RTX 5090) vs DGX Spark | Chip, memory system, x86 vs ARM CPU |
 | L4 | Blackwell vs older rented GPUs | GPU generation |
 
 **Workloads and attacks.** SD1.5 and SDXL workflows in ComfyUI, with prompts split into calibration, development and test sets. All the attacks in the table above are run, plus four ways of forging a trajectory. Tolerances are chosen on calibration data and frozen, with a recorded hash, *before* any attack data is looked at, so the results cannot be tuned after the fact.
@@ -146,7 +146,7 @@ The deployed Bittensor rule matters most for framing. Per-step spot checking is 
 
 ## Status, limitations and glossary
 
-**Status.** The manuscript is written in the journal's Word template with 59 verified references; results are placeholders. An engineer runs the experiments from a step-by-step runbook, starting with a short hardware pilot; submission is targeted for mid-May 2027.
+**Status.** The manuscript is written in the journal's Word template with 60 verified references; results are placeholders. The hardware pilot finished on 24 November 2026 with a "go": no two GPU models produced bit-identical images, and the deployed SN30 rule accepted every forged trajectory. Its design-shaping findings are in the Methods; the full study runs next; submission is targeted for mid-May 2027.
 
 **Limitations the paper states openly:**
 

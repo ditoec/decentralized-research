@@ -1,0 +1,10 @@
+{
+ "run_a": "20261124-wp0b-p6-idle-pin-spark4-01",
+ "run_b": "20261124-wp0b-p6-load-pin-spark4-01",
+ "n_pairs": 60,
+ "frac_image_identical": 1.0,
+ "frac_latent_identical": 1.0,
+ "frac_root_identical": 1.0,
+ "px_absdiff_median_of_means": 0.0,
+ "px_absdiff_max": 0
+}

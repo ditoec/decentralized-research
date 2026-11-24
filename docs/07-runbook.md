@@ -13,7 +13,7 @@ Background reading: `docs/05-revised-design.md` (the design), `docs/06-code-audi
 
 **Who's who.** "The paper author" means the corresponding author, Anjas Risky Maradita. Send results, go/no-go reports and any question that would change a config, threshold or scope there.
 
-**Status.** Last updated 2026-11-24 (pilot tooling implemented; decisions recorded in §3). It matches `paper/manuscript_ESJ.docx` (Emerging Science Journal format): equation numbers, placeholder IDs and notation are as in that file.
+**Status.** Last updated 2026-11-24 (pilot P1–P7 done on Sparks 4–5, RTX 4090 and RTX 3090; the RTX 5080 leg waits for RunPod stock; results in §3 findings 7–13, summary in `docs/11-go-no-go-0.md`). It matches `paper/manuscript_ESJ.docx` (Emerging Science Journal format): equation numbers, placeholder IDs and notation are as in that file.
 
 **Notation (same as the manuscript).** T = number of sampler steps. x₀ = the initial (noise-scaled) latent, x_T = the final latent. D_i = the CFG-combined denoised prediction at step i. σ_i = the noise level at step i. k = number of steps checked by Tier B. p = probability that a job is sampled. In code and file names, x₀ is `x_000`.
 
@@ -117,7 +117,7 @@ Run each item as its own run ID.
 | P3 | `pilot gen` timings (first job excluded) | `plots throughput` |
 | P4 | `pilot --flags=--fp8_e4m3fn-unet gen`, `pilot fp4` | speed-up vs P2/P3 |
 | P5 | `pilot w1` | `plots w1`, `plots e2w` |
-| P6 | `pilot gen --save-traj` with and without `--no-pin`, logged co-tenant load | `pilot compare` |
+| P6 | `tools/workloads/p6_spark.sh` on the host: `pilot gen --save-traj` idle / beside `tools/gpu_load.py`, each with and without `--no-pin`; co-tenant load logged | `pilot compare` vs idle-pin |
 | P7 | `pilot --flags=<precision> gen`, memory peaks in `summary.json` | `plots memory` |
 
 On a Spark every command runs through `tools/spark_run.py` (§3.4). Every run also saves its figures under `<run>/figures/` (PNG, PDF and the CSV behind them) for the paper and the thesis.
@@ -165,6 +165,22 @@ Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Finding
    - P5 on Spark-4: W1 holds (min adjacent cosine 0.977); SN30 accepted all honest jobs and every F1-F3 forgery (10/10 each).
    - P7 on Spark-4 (runs `*-p7-*-spark4-02`): host memory drop SD1.5 fp16/bf16 7.9/7.6 GB, fp32 13.1 GB; SDXL fp16/bf16 22.0/22.2 GB (free memory stayed >= 26 GB). **SDXL fp32 is not allowed on a Spark beside production:** the first P7 attempt took host free memory from about 49 GB to 5.9 GB; the runner's guard stopped it three times and production was unaffected (no restarts, no OOM kill), but the runner now backs off 10 minutes after a guard stop and aborts after three. Run SDXL fp32 only on RunPod or in an admin-agreed window.
    - Spark timing beside production (sizing only): SD1.5 1.94 s, SDXL 12.4 s per image (fp16, 30 steps).
+11. **Pilot results on a rented RTX 3090 (Secure Cloud, EU-CZ-1, 0.50 US$/h, host CPU AMD EPYC 7C13; 2026-11-24, runs `20261124-wp0b-*-rtx3090-01`; same environment).**
+   - P1: the 3090 host and the 4090 host give 100 of 100 identical seeds for both shapes, so the two x86 hosts agree bit for bit; against Spark-4, 0 of 100 (max abs 2.3e-6, as for the 4090). The 4090 host's CPU model was not recorded; `pod_job.sh` now saves `lscpu` with every pod run.
+   - P2 (L4): 0 of 40 identical images against Spark-4 and against the 4090. Spark vs 3090: mean pixel difference median 1.46 levels (max 232), LPIPS median 0.0064 (max 0.054), DINOv2 cosine >= 0.927; 4090 vs 3090: LPIPS median 0.0077 (max 0.048), DINOv2 >= 0.940. **The deployed SN23 rule (E0-N, full reward = CLIP cosine > 0.9) rejected one honest pair:** job `p00083_s1`, Spark-4 vs 3090, CLIP cosine 0.899 (reward 0.998); the same job scored 0.903 for 4090 vs 3090 and 0.98+ for Spark vs 4090. Honest cross-hardware E0-N full-reward rate: Spark–3090 39/40, 4090–3090 40/40, Spark–4090 40/40.
+   - P3: SD1.5 median 1.51 s/image (p95 1.74, n = 19); SDXL (P2 timing) 8.21 s (p95 8.35, n = 39).
+   - P4: fp8 SDXL 8.65 s vs fp16 8.21 s (Ampere has no fp8 units; slower, as on the 4090 and the Spark). NVFP4 only via the dequantize fallback (0.11× bf16 speed).
+   - P5: W1 holds (min adjacent cosine 0.977); SN30 accepted every honest job and every F1-F3 forgery (10/10 each), the same as on the 4090 and the Spark.
+   - P7 (the "alternative way" for SDXL fp32, which may not run beside production on a Spark): torch peak reserved GPU memory SD1.5 fp16/bf16 5.5 GB, fp32 10.3 GB; SDXL fp16/bf16 20.0 GB, **fp32 24.6 GB, i.e. the whole 24 GB card**: ComfyUI offloads part of the model and the job takes 34.0 s/image, 4.1× fp16. SDXL fp32 therefore needs more than 24 GB to run without offload; it is feasible but slow on a 24 GB card and is excluded from the RQ1 grid. (Host-memory numbers on a pod are not meaningful: the host has about 1 TB shared with other tenants.)
+   - Honest Tier B, 3090 provider → Spark-5 verifier (run `20261124-wp0b-replay-3090on-spark5-01`): no step bit-exact; relative L2 median 2.9% (max 5.3%) at step 0, 0.97% at step 10, 0.23% at step 25, 0.04% at step 29, i.e. the same profile as the 4090 provider (figure `tierb_honest_x86_to_spark`). Tier A: 1,200 of 1,200 steps bit-exact, largest float64 residual 2.8e-8.
+   - Spend: balance 7.75 → 6.38 US$ over this rental (pod terminated after a checksum-verified pull).
+12. **P6 co-tenancy on Spark-4 (2026-11-24, runs `20261124-wp0b-p6-*-spark4-01`).** 60 SDXL jobs (pilot20 prompts × seeds 0–2, 30 steps, trajectories kept) in four conditions, each compared with the first:
+   - idle-pin (reference), load-pin, load-nopin, idle-nopin. "Load" is a second research container (`tools/gpu_load.py`) holding 6 GB and running fp16 matmuls at about 46 TFLOP/s; it slowed sampling from a median 11.7 s to 27.4 s (pin on) and 30.2 s (pin off) and lowered host free memory to a minimum of 19.0 GB.
+   - **Result: 60 of 60 jobs bit-identical (images, final latents and Merkle roots) in every condition, with and without the batching pin.** The production chat model was serving requests during 1 (idle-pin), 6 (load-pin), 30 (load-nopin) and 6 (idle-nopin) of the 60 jobs; it was never driven by research code.
+   - Interpretation: on a Spark at these memory levels, neither GPU contention nor ComfyUI's memory-adaptive batching changed a single byte; the batching decision did not flip because free memory never fell low enough (on the 16 GB Mac it did, finding 1). The pin stays a protocol requirement for small-memory providers. R1.9 is answered "bit-identical" for the loads tested; a Spark under memory pressure near the 15 GB guard was not tested, by rule.
+   - Deviation from the §2 wording: the busy condition is load we own and can repeat, not the chat model's own traffic, because production services are never driven by research code. The chat model's actual load is logged per job.
+13. **Models on the Sparks.** SDXL-Turbo (`sd_xl_turbo_1.0_fp16.safetensors`, sha256 e869ac7d…) and the SDXL LCM-LoRA (a764e685…) are on Sparks 4, 5 and 6, hash-checked on each (fetched on a pod, pulled by Spark-4 through the pod's proxy, then copied over the internal link). Attack A3 can run.
+4. **The deployed SN23 black-image filter never fires.**
 4. **The deployed SN23 black-image filter never fires.** It compares 6×6 hashes of the two images with an 8×8 hash of a black image, so the strings never match. `e0n.py` reproduces this as deployed.
 
 **Decisions (approved by the team, 2026-11-24).**

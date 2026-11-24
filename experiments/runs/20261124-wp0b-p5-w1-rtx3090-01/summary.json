@@ -1,0 +1,914 @@
+{
+ "adjacent_cosine": {
+  "min": 0.9766948223114014,
+  "median": 0.9994342029094696,
+  "max": 0.9999573230743408,
+  "per_step": {
+   "0": {
+    "min": 0.9996666312217712,
+    "median": 0.999862790107727,
+    "max": 0.9999573230743408
+   },
+   "1": {
+    "min": 0.9996249675750732,
+    "median": 0.9998781681060791,
+    "max": 0.9999505281448364
+   },
+   "2": {
+    "min": 0.9997054934501648,
+    "median": 0.9998696744441986,
+    "max": 0.9999474287033081
+   },
+   "3": {
+    "min": 0.9998140335083008,
+    "median": 0.9998610317707062,
+    "max": 0.9999327063560486
+   },
+   "4": {
+    "min": 0.9997276067733765,
+    "median": 0.9998488128185272,
+    "max": 0.9999060034751892
+   },
+   "5": {
+    "min": 0.999599277973175,
+    "median": 0.9998267292976379,
+    "max": 0.9998815655708313
+   },
+   "6": {
+    "min": 0.9996713399887085,
+    "median": 0.9998038411140442,
+    "max": 0.9998574256896973
+   },
+   "7": {
+    "min": 0.9996457695960999,
+    "median": 0.9997640252113342,
+    "max": 0.9998185634613037
+   },
+   "8": {
+    "min": 0.9995787143707275,
+    "median": 0.9997234344482422,
+    "max": 0.9997808933258057
+   },
+   "9": {
+    "min": 0.9995032548904419,
+    "median": 0.999672532081604,
+    "max": 0.9997622966766357
+   },
+   "10": {
+    "min": 0.9994269013404846,
+    "median": 0.9996329247951508,
+    "max": 0.999749481678009
+   },
+   "11": {
+    "min": 0.9993615746498108,
+    "median": 0.9995944201946259,
+    "max": 0.9996985197067261
+   },
+   "12": {
+    "min": 0.9992972016334534,
+    "median": 0.9995424151420593,
+    "max": 0.9996379017829895
+   },
+   "13": {
+    "min": 0.9992194771766663,
+    "median": 0.9994872510433197,
+    "max": 0.9996092319488525
+   },
+   "14": {
+    "min": 0.9991453289985657,
+    "median": 0.9994266331195831,
+    "max": 0.9995489120483398
+   },
+   "15": {
+    "min": 0.9990634322166443,
+    "median": 0.9993617534637451,
+    "max": 0.9994829893112183
+   },
+   "16": {
+    "min": 0.9989839196205139,
+    "median": 0.9992952048778534,
+    "max": 0.999420166015625
+   },
+   "17": {
+    "min": 0.9989047050476074,
+    "median": 0.9992216229438782,
+    "max": 0.9993562698364258
+   },
+   "18": {
+    "min": 0.9988278150558472,
+    "median": 0.9991290867328644,
+    "max": 0.9992691278457642
+   },
+   "19": {
+    "min": 0.9987486600875854,
+    "median": 0.9990209937095642,
+    "max": 0.9991637468338013
+   },
+   "20": {
+    "min": 0.9986749887466431,
+    "median": 0.9989274442195892,
+    "max": 0.9990484118461609
+   },
+   "21": {
+    "min": 0.9985936880111694,
+    "median": 0.9988206923007965,
+    "max": 0.9989315867424011
+   },
+   "22": {
+    "min": 0.9983846545219421,
+    "median": 0.9986941516399384,
+    "max": 0.9987987279891968
+   },
+   "23": {
+    "min": 0.9980840086936951,
+    "median": 0.9985181987285614,
+    "max": 0.9986310005187988
+   },
+   "24": {
+    "min": 0.9976739883422852,
+    "median": 0.9982640445232391,
+    "max": 0.9983999729156494
+   },
+   "25": {
+    "min": 0.9970977306365967,
+    "median": 0.9979864060878754,
+    "max": 0.9981370568275452
+   },
+   "26": {
+    "min": 0.9961168766021729,
+    "median": 0.9973931908607483,
+    "max": 0.9976605772972107
+   },
+   "27": {
+    "min": 0.9939563274383545,
+    "median": 0.9960058033466339,
+    "max": 0.996522843837738
+   },
+   "28": {
+    "min": 0.9766948223114014,
+    "median": 0.9846401512622833,
+    "max": 0.9877535700798035
+   },
+   "29": {
+    "min": 0.9993187189102173,
+    "median": 0.9997035264968872,
+    "max": 0.9997689723968506
+   }
+  }
+ },
+ "w1_holds_min_ge_0.70": true,
+ "e2w_acceptance": {
+  "honest": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9999983906745911
+  },
+  "F1@s=0.25": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9935500025749207
+  },
+  "F1@s=0.5": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9887377619743347
+  },
+  "F1@s=1.0": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9999580383300781
+  },
+  "F2@s=0.25": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9996625483036041
+  },
+  "F2@s=0.5": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9887377619743347
+  },
+  "F2@s=1.0": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9999580383300781
+  },
+  "F3@s=0.25": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9996625483036041
+  },
+  "F3@s=0.5": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9887377619743347
+  },
+  "F3@s=1.0": {
+   "n": 10,
+   "accepted": 10,
+   "min_score": 0.9999580383300781
+  }
+ },
+ "rows": [
+  {
+   "prompt_id": 83,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999983906745911,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9989778399467468,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999901652336121,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999901652336121,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9938750267028809,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9938750267028809,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9938750267028809,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.999991774559021,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.999991774559021,
+   "accepted": true
+  },
+  {
+   "prompt_id": 83,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.999991774559021,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "honest",
+   "s": null,
+   "score": 0.999998927116394,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9935500025749207,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9996625483036041,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9996625483036041,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9887377619743347,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9887377619743347,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9887377619743347,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999591112136841,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999591112136841,
+   "accepted": true
+  },
+  {
+   "prompt_id": 186,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999591112136841,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999988079071045,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9999988079071045,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999988079071045,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999988079071045,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9962735772132874,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9996416568756104,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9996416568756104,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999644756317139,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999644756317139,
+   "accepted": true
+  },
+  {
+   "prompt_id": 293,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999644756317139,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999988079071045,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9994382560253143,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999942183494568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999942183494568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9994382560253143,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9999942183494568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9999942183494568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999750852584839,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999750852584839,
+   "accepted": true
+  },
+  {
+   "prompt_id": 359,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999750852584839,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999990165233612,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.999761164188385,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999933838844299,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999933838844299,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9998093545436859,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9999838471412659,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9999838471412659,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999586641788483,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999586641788483,
+   "accepted": true
+  },
+  {
+   "prompt_id": 445,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999586641788483,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999991357326508,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9995062947273254,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999969601631165,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999969601631165,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9995062947273254,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9999792277812958,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9999792277812958,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999799728393555,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999799728393555,
+   "accepted": true
+  },
+  {
+   "prompt_id": 563,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999799728393555,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999990165233612,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9994753301143646,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999947845935822,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999947845935822,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9951857030391693,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.999967634677887,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.999967634677887,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999972283840179,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999972283840179,
+   "accepted": true
+  },
+  {
+   "prompt_id": 594,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999972283840179,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999991059303284,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9998821914196014,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999791979789734,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999791979789734,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9998821914196014,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.999951183795929,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.999951183795929,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999580383300781,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999580383300781,
+   "accepted": true
+  },
+  {
+   "prompt_id": 606,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999580383300781,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999992847442627,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9999992847442627,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.9999992847442627,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.9999992847442627,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9985873103141785,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.9999858438968658,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.9999858438968658,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999746680259705,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999746680259705,
+   "accepted": true
+  },
+  {
+   "prompt_id": 647,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999746680259705,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "honest",
+   "s": null,
+   "score": 0.9999991059303284,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F1",
+   "s": 0.25,
+   "score": 0.9997406303882599,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F2",
+   "s": 0.25,
+   "score": 0.999990314245224,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F3",
+   "s": 0.25,
+   "score": 0.999990314245224,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F1",
+   "s": 0.5,
+   "score": 0.9994480609893799,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F2",
+   "s": 0.5,
+   "score": 0.999990314245224,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F3",
+   "s": 0.5,
+   "score": 0.999990314245224,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F1",
+   "s": 1.0,
+   "score": 0.9999902248382568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F2",
+   "s": 1.0,
+   "score": 0.9999902248382568,
+   "accepted": true
+  },
+  {
+   "prompt_id": 693,
+   "case": "F3",
+   "s": 1.0,
+   "score": 0.9999902248382568,
+   "accepted": true
+  }
+ ]
+}

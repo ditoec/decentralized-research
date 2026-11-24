@@ -1,0 +1,67 @@
+{
+ "run_id": "20261124-wp0b-p4-fp8-sdxl-rtx3090-01",
+ "wp": "wp0b",
+ "purpose": "P4: fp8_e4m3fn UNet (attack A2) on SDXL",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--fp8_e4m3fn-unet"
+ ],
+ "node": {
+  "hostname": "39dabdff6942",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "compute_capability": [
+   8,
+   6
+  ],
+  "gpu_uuid": "ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T01:15:22.780407+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [
+  "--fp8_e4m3fn-unet"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_pilot20.txt",
+  "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed",
+  "n": 11
+ },
+ "seeds": [
+  0
+ ],
+ "save_traj": false,
+ "end_time": "2026-11-24T01:17:12.690781+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "gt7s1asmr9si04",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-ed24ed74-c885-fe3e-3a56-fb61dc687b3c",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.5,
+ "billed_hours": 0.3835936564207077,
+ "cost_usd": 0.19179682821035385,
+ "raw_checksums": {
+  "20261124-wp0b-p4-fp8-sdxl-rtx3090-01.tar": "257b720624093b3b4130698357cccdab9fedcd9dc09df715fa495643a0ca75c0"
+ },
+ "pulled_unix": 1795483889.937165
+}

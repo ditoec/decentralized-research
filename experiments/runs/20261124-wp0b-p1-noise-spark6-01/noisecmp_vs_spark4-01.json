@@ -1,0 +1,14 @@
+{
+ "a": "20261124-wp0b-p1-noise-spark6-01",
+ "b": "20261124-wp0b-p1-noise-spark4-01",
+ "result": {
+  "sd15": {
+   "n_seeds": 100,
+   "n_identical": 100
+  },
+  "sdxl": {
+   "n_seeds": 100,
+   "n_identical": 100
+  }
+ }
+}

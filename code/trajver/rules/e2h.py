@@ -35,7 +35,9 @@ def draw_steps(T: int, k: int, seed: int | bytes | str) -> list[int]:
 
 def tier_a(traj: Trajectory, sampler: str, th: dict) -> Verdict:
     rows = tier_a_residuals(traj, sampler)
-    bad = [r["step"] for r in rows if not r["rel_l2"] <= th["eps_a_rel_l2"]]
+    # pass if the float32 replica of the solver step is bit-exact, or the float64 residual is within
+    # eps_A (calibrated as 0 when every honest step was replica-exact across nodes, runbook §5)
+    bad = [r["step"] for r in rows if not (r["replica_exact"] or r["rel_l2"] <= th["eps_a_rel_l2"])]
     scores = {
         "max_rel_l2": max(r["rel_l2"] for r in rows),
         "max_abs": max(r["max_abs"] for r in rows),

@@ -1,0 +1,38 @@
+{
+ "run_id": "20261124-wp0b-verify-atk-f3-on-spark5-02",
+ "wp": "wp0b",
+ "purpose": "evidence levels E1, E2-H, E2-W",
+ "git_commit": "271c061-fix",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "spark5-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "043e8674-8e4b-70a6-fbbb-29b8f40b0484",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-24T06:04:47.125153+00:00",
+ "source_run": "20261124-wp0b-atk-f3-spark4-01",
+ "attack": "F3",
+ "threshold_file_sha256": "e89b386fea81deef8f43df5c5580d717c96085bea5b9aff11813bdb9cc3e96e6",
+ "thresholds_version": "thresholds_pilot",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "end_time": "2026-11-24T06:07:18.221022+00:00"
+}

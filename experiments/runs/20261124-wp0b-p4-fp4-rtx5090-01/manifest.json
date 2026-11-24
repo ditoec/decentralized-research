@@ -1,0 +1,41 @@
+{
+ "run_id": "20261124-wp0b-p4-fp4-rtx5090-01",
+ "wp": "wp0b",
+ "purpose": "P4: NVFP4 feasibility at the pinned commit",
+ "git_commit": "f5c0215",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "140c20719c52",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-24T04:14:55.699633+00:00",
+ "end_time": "2026-11-24T04:14:57.042804+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "cplqc7vbxvscjd",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-31d011e3-aadb-e46c-69d2-f8b0f84a8b9e",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 0.1773202555709415,
+ "cost_usd": 0.24647515524360866,
+ "raw_checksums": {
+  "20261124-wp0b-p4-fp4-rtx5090-01.tar": "3149fd960345e05f314548172855f10995d1f713e6be717831c0ba3e3509ea1a"
+ },
+ "pulled_unix": 1795494114.352923
+}

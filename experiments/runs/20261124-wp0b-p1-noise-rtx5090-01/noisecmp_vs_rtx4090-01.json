@@ -1,0 +1,20 @@
+{
+ "a": "20261124-wp0b-p1-noise-rtx5090-01",
+ "b": "20261124-wp0b-p1-noise-rtx4090-01",
+ "result": {
+  "sd15": {
+   "n_seeds": 100,
+   "n_identical": 100,
+   "max_ulp": 0,
+   "frac_values_equal": 1.0,
+   "max_abs": 0.0
+  },
+  "sdxl": {
+   "n_seeds": 100,
+   "n_identical": 100,
+   "max_ulp": 0,
+   "frac_values_equal": 1.0,
+   "max_abs": 0.0
+  }
+ }
+}

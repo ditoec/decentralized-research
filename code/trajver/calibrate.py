@@ -8,7 +8,9 @@ Inputs
   trajectories, one per hardware pair. Rows whose prompt is not in prompts_cal.txt are refused.
 * ``--e0``: JSONL rows ``{"prompt_id", "pixel_equal", "lpips", "dino_cosine"}`` for honest
   cross-node image pairs (``python -m trajver.pilot e0scores``).
-* ``--p1``: outputs of ``pilot noisecmp`` between CPU/PyTorch builds; sets ``x0_max_abs_noise``.
+* ``--p1``: outputs of ``pilot noisecmp`` between CPU/PyTorch builds. They do not set the x_0
+  tolerance, which is the build-agnostic protocol constant ``rules.e1.X0_TOL``; they check it: if
+  2x the largest observed difference exceeds the constant, calibration stops for a decision.
 
 Rules (as in the runbook)
 * Tier B: for each k in {1,2,3,5,8}, alpha_s = 1 - (1 - 0.01)^(1/k); tau_i = the (1 - alpha_s)
@@ -27,6 +29,8 @@ import hashlib
 import json
 import math
 from pathlib import Path
+
+from .rules.e1 import X0_TOL
 
 KS = (1, 2, 3, 5, 8)
 CONFIGS = Path(__file__).resolve().parents[2] / "experiments" / "configs"
@@ -64,8 +68,12 @@ def tier_b_taus(pairs: dict[str, list[dict]], metric: str) -> tuple[dict, list[s
     notes = []
     T = min(len(r["tier_b"]) for rows in pairs.values() for r in rows)
     by_k = {}
+    n = sum(len(rows) for rows in pairs.values())
     for k in KS:
         q = 1.0 - alpha_step(k)
+        if n * alpha_step(k) < 1:  # the quantile is then just the sample maximum
+            notes.append(f"k={k}: {n} honest samples per step < 1/alpha_s = {1 / alpha_step(k):.0f}; "
+                         "tau is the sample maximum (underpowered, do not freeze)")
         tau = {}
         for i in range(T):
             pooled = [r["tier_b"][i][metric] for rows in pairs.values() for r in rows]
@@ -105,7 +113,17 @@ def main(argv=None):
     out = Path(a.out)
     if out.exists():
         raise SystemExit(f"{out} exists: frozen thresholds are never overwritten; write thresholds_v2.json")
+    absd0 = [v["max_abs"] for p in a.p1 for v in json.loads(Path(p).read_text())["result"].values() if "max_abs" in v]
+    if absd0 and 2 * max(absd0) > X0_TOL:
+        raise SystemExit(f"P1 shows a cross-build x_0 difference of {max(absd0):.2e}; 2x that exceeds the "
+                         f"protocol constant X0_TOL = {X0_TOL:g}. Decide a new constant before freezing.")
     pairs = load_replays(a.replay)
+    samplers = {json.loads((Path(p) / "manifest.json").read_text()).get("sampler") for p in a.replay}
+    if len(samplers) != 1:
+        # Tier A's eps_A and Tier B's tau_i depend on the sampler: dpmpp_2m's step coefficients are
+        # computed on the GPU and cannot be replicated bit-exactly on a CPU, euler's can (finding 17)
+        raise SystemExit(f"replays mix samplers {samplers}: calibrate one sampler per thresholds file")
+    sampler = samplers.pop()
     by_k, notes = tier_b_taus(pairs, a.metric)
     tier_a = [x["rel_l2"] for rows in pairs.values() for r in rows for x in r["tier_a"]]
     exact = all(x.get("replica_exact") for rows in pairs.values() for r in rows for x in r["tier_a"])
@@ -113,17 +131,21 @@ def main(argv=None):
     absd = [v["max_abs"] for p in a.p1 for v in json.loads(Path(p).read_text())["result"].values() if "max_abs" in v]
     th = {
         "version": out.stem,
+        "sampler": sampler,
         "levels_supported": a.levels.split(","),
         "sources": {"replay_runs": sorted(pairs), "e0_files": [Path(p).name for p in a.e0],
                     "p1_files": [Path(p).name for p in a.p1],
                     "prompts_cal_sha256": hashlib.sha256((CONFIGS / "prompts_cal.txt").read_bytes()).hexdigest()},
         "tier_b_metric": a.metric, "k": a.k, "tau": by_k[str(a.k)]["tau"], "tau_by_k": by_k,
         "eps_a_rel_l2": 0.0 if exact else 2 * max(tier_a), "tier_a_bit_exact": exact,
-        # 2x the largest cross-build difference of the unit-variance noise seen in P1
-        "x0_max_abs_noise": 2 * max(absd) if absd else 0.0,
+        # build-agnostic protocol constant; the P1 maximum is recorded as evidence of the margin
+        "x0_max_abs_noise": X0_TOL,
+        "x0_p1_max_abs_observed": max(absd) if absd else None,
         "e0": e0_thresholds(e0rows) if e0rows else None,
         "notes": notes,
     }
+    if out.stem.startswith("thresholds_v") and any("underpowered" in x for x in notes):
+        raise SystemExit("too few honest samples for the chosen k: not freezing a thresholds_v* file\n" + "\n".join(notes))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(th, indent=1) + "\n")
     digest = hashlib.sha256(out.read_bytes()).hexdigest()

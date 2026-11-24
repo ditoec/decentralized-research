@@ -14,7 +14,7 @@ from pathlib import Path
 DEV_DEFAULTS = {
     "version": "dev",
     # E1
-    "x0_max_abs_noise": 1e-5,     # x_0 across CPU/PyTorch builds, in noise units (findings 6-7); set from P1, then frozen
+    "x0_max_abs_noise": 1e-5,     # x_0 across CPU/PyTorch builds, in noise units: protocol constant rules.e1.X0_TOL
     "cond_rel_l2": 1e-3,          # conditioning re-encode, relative L2
     "image_max_abs": 2,           # decoded image vs delivered image, uint8 levels
     # Tier A

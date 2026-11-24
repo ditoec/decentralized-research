@@ -467,7 +467,7 @@ ABSTRACT = (
  "models}. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
  "eight cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
  "consistency on every step on the CPU and model consistency at k random steps under per-step calibrated tolerances, "
- "binds the initial noise exactly to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
+ "binds the initial noise to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
  "{R|R2.1: deployed-rule headline}. At a false-rejection rate of at most 1%, the proposed check detects "
  "{R|R2.2: n of m} attacks with sensitivity {R|R2.3} at {R|R3.1}% of the GPU cost of full re-execution. "
  "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
@@ -736,7 +736,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           [["E0", "Image digest", "Full re-execution; pixel hash, LPIPS {c|zhang2018lpips} and DINOv2 {c|oquab2023dinov2} with calibrated thresholds", "≈ 1"],
            ["E0-N (deployed)", "Image", "Full re-execution; CLIP cosine > 0.9", "≈ 1"],
            ["E2-W (deployed)", "SHA-256 of per-step latents", "Three random steps, one step each; latent cosine ≥ 0.70", "≈ 3/T"],
-           ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) exactly; conditioning; decoded final latent equals the image", "≈ c₀/T"],
+           ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) within u{sub|0}; schedule; conditioning; decoded final latent equals the image", "≈ c₀/T"],
            ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
           [28, 38, 74, 28])
     Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5080) runs the workflow and commits the trajectory "
@@ -745,8 +745,19 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement",
            image="fig2_protocol.png")
     Para("{b|Seed binding.} ComfyUI draws the initial noise on the CPU in 32-bit floating point from the job seed "
-         "{c|comfyui}. The verifier recomputes it and requires an exact match of x{sub|0}. Whether this holds across "
-         "processor instruction sets is measured in RQ1 ({R|R1.1}).")
+         "{c|comfyui}. The verifier recomputes it and compares it with x{sub|0}. Providers keep ComfyUI’s stock noise "
+         "path. Because PyTorch’s vectorized normal sampler rounds differently on different processors and builds, the "
+         "check accepts a largest absolute difference of at most u{sub|0}, measured in units of the unit-variance noise "
+         "(the difference in x{sub|0} divided by σ{sub|0}). u{sub|0} is set from the measured cross-processor "
+         "difference ({R|R1.1}) and is 0 when provider and verifier share a processor and PyTorch build.")
+    Para("{b|Reproducibility requirements.} Two sources of variation inside ComfyUI are fixed by the protocol rather "
+         "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
+         "parameters and passed to the sampler. ComfyUI otherwise computes it on whichever device holds the model, and "
+         "a one-ULP difference in σ changes the whole trajectory. Second, the decisions that ComfyUI takes from the "
+         "free memory at each call, namely whether the conditional and unconditional CFG passes share a batch and "
+         "whether the VAE decodes in tiles, are pinned to a fixed choice during sampling, replay and decoding. "
+         "Otherwise the same job could give a different trajectory depending on other workloads on the node. Both "
+         "settings are recorded in the job metadata, which the Merkle root commits to.")
     Para("{b|Tier A: solver consistency on every step.} Given the committed values, the next state is a deterministic "
          "function of committed quantities only. For the Euler sampler:")
     Eq(omath(sub("x", "i+1"), ("p", "="), sub("x", "i"), ("p", "+"),

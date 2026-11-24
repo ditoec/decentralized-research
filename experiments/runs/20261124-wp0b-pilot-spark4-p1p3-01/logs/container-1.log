@@ -1,0 +1,44 @@
+fatal: not a git repository (or any of the parent directories): .git
+/runs/20261124-wp0b-p1-noise-spark4-01
+fatal: not a git repository (or any of the parent directories): .git
+[1/20] p00083_s0 6.51s
+[2/20] p00186_s0 2.35s
+[3/20] p00293_s0 2.00s
+[4/20] p00359_s0 1.96s
+[5/20] p00445_s0 1.93s
+[6/20] p00563_s0 1.95s
+[7/20] p00594_s0 1.94s
+[8/20] p00606_s0 1.94s
+[9/20] p00647_s0 2.45s
+[10/20] p00693_s0 2.29s
+[11/20] p00819_s0 2.00s
+[12/20] p00954_s0 1.93s
+[13/20] p01041_s0 1.94s
+[14/20] p01059_s0 1.93s
+[15/20] p01116_s0 1.94s
+[16/20] p01337_s0 1.94s
+[17/20] p01413_s0 1.94s
+[18/20] p01417_s0 1.96s
+[19/20] p01457_s0 1.95s
+[20/20] p01580_s0 1.94s
+{
+ "n_jobs": 20,
+ "model_load_s": 8.311860779300332,
+ "time_per_image_s": {
+  "median": 1.9406094597652555,
+  "p95": 2.354594383854419,
+  "min": 1.926202145870775,
+  "max": 2.4503435431979597,
+  "n": 19,
+  "note": "warm; first job excluded"
+ },
+ "memory": {
+  "torch_peak_allocated_gb": 5.388794368,
+  "torch_peak_reserved_gb": 5.58891008,
+  "process_peak_rss_gb": 7.278416,
+  "host_min_available_gb": 40.778364,
+  "host_total_gb": 127.533228
+ }
+}
+/runs/20261124-wp0b-p3-sd15-spark4-01
+pilot workload done on spark4

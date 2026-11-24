@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import os
 import platform
 import socket
 import subprocess
@@ -13,7 +14,8 @@ import torch
 from . import __version__, comfy_env
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-RUNS = REPO_ROOT / "experiments" / "runs"
+# On the Sparks and pods the code lives outside a git checkout; TRAJVER_RUNS points at the run store.
+RUNS = Path(os.environ.get("TRAJVER_RUNS", REPO_ROOT / "experiments" / "runs"))
 
 
 def run_id(wp: str, name: str, date: _dt.date | None = None) -> str:
@@ -56,14 +58,23 @@ def node_info() -> dict:
     return info
 
 
-def start(wp: str, name: str, purpose: str, **fields) -> tuple[Path, dict]:
-    rid = run_id(wp, name)
+def start(wp: str, name: str, purpose: str, rid: str | None = None, **fields) -> tuple[Path, dict]:
+    given = rid
+    rid = rid or run_id(wp, name)
     d = RUNS / rid
-    (d / "raw").mkdir(parents=True)
-    (d / "logs").mkdir()
+    resume = given is not None and (d / "manifest.json").exists()
+    (d / "raw").mkdir(parents=True, exist_ok=given is not None)
+    (d / "logs").mkdir(exist_ok=True)
+    if resume:  # a restarted run (Spark runner stop condition) keeps its first manifest
+        m = json.loads((d / "manifest.json").read_text())
+        m.setdefault("restarts", []).append(_dt.datetime.now(_dt.timezone.utc).isoformat())
+        (d / "manifest.json").write_text(json.dumps(m, indent=1, default=str))
+        return d, m
     m = {
         "run_id": rid, "wp": wp, "purpose": purpose,
-        "git_commit": _git("rev-parse", "HEAD"), "git_dirty": bool(_git("status", "--porcelain")),
+        # Outside a checkout (Sparks, pods) the runner passes the synced commit in TRAJVER_GIT_COMMIT.
+        "git_commit": os.environ.get("TRAJVER_GIT_COMMIT") or _git("rev-parse", "HEAD"),
+        "git_dirty": os.environ.get("TRAJVER_GIT_DIRTY", "") == "1" or _git("status", "--porcelain") not in ("", "unknown"),
         "trajver_version": __version__,
         "comfyui_commit": comfy_env.comfy_commit(), "cli_flags": list(comfy_env.configured_flags() or ()),
         "node": node_info(),

@@ -1,0 +1,37 @@
+{
+ "note": "sha256 = Hugging Face LFS object id; every node must show the same hash",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "dir": "checkpoints",
+   "repo": "stable-diffusion-v1-5/stable-diffusion-v1-5",
+   "size": 4265146304,
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa",
+   "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"
+  },
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "dir": "checkpoints",
+   "repo": "stabilityai/stable-diffusion-xl-base-1.0",
+   "size": 6938078334,
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b",
+   "url": "https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"
+  },
+  {
+   "filename": "sd_xl_turbo_1.0_fp16.safetensors",
+   "dir": "checkpoints",
+   "repo": "stabilityai/sdxl-turbo",
+   "size": 6938081905,
+   "sha256": "e869ac7d6942cb327d68d5ed83a40447aadf20e0c3358d98b2cc9e270db0da26",
+   "url": "https://huggingface.co/stabilityai/sdxl-turbo/resolve/main/sd_xl_turbo_1.0_fp16.safetensors"
+  },
+  {
+   "filename": "lcm-lora-sdxl.safetensors",
+   "dir": "loras",
+   "repo": "latent-consistency/lcm-lora-sdxl",
+   "size": 393855224,
+   "sha256": "a764e6859b6e04047cd761c08ff0cee96413a8e004c9f07707530cd776b19141",
+   "url": "https://huggingface.co/latent-consistency/lcm-lora-sdxl/resolve/main/pytorch_lora_weights.safetensors"
+  }
+ ]
+}

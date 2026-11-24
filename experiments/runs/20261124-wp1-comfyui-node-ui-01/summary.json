@@ -1,0 +1,20 @@
+{
+ "trajectory_T": 30,
+ "trajectory_bytes": 4482364,
+ "merkle_root_from_file_metadata": "a74d44b87d2eec100cb31ecda36101ca66817648627f9807ef8b4bc2fbbad598",
+ "job_metadata": {
+  "cfg": 7.0,
+  "job_id": "ui-demo-001",
+  "pin_batching": true,
+  "sampler": "euler",
+  "scheduler": "normal",
+  "seed": 7,
+  "steps": 30
+ },
+ "output_image_sha256": "7e2a1fdeed5dbf23eee5b3f6f092650552f8464dff23f6dedd2a506f10f760b3",
+ "figures": [
+  "figures/comfyui_ksampler_trajectory_full.jpg",
+  "figures/comfyui_ksampler_trajectory_graph.png",
+  "figures/output_image.png"
+ ]
+}

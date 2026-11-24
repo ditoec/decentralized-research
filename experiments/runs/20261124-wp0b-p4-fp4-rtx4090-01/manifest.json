@@ -1,0 +1,41 @@
+{
+ "run_id": "20261124-wp0b-p4-fp4-rtx4090-01",
+ "wp": "wp0b",
+ "purpose": "P4: NVFP4 feasibility at the pinned commit",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [],
+ "node": {
+  "hostname": "1e98a7cacc04",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+   8,
+   9
+  ],
+  "gpu_uuid": "b7bcfea3-9801-97e8-5d2b-6442dcee9a97",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-23T20:45:44.435474+00:00",
+ "end_time": "2026-11-23T20:45:46.120002+00:00",
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "j570vjshhyzkgt",
+ "data_center": "",
+ "gpu_uuid": "GPU-b7bcfea3-9801-97e8-5d2b-6442dcee9a97",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.89,
+ "billed_hours": 0.17344678892029655,
+ "cost_usd": 0.15436764213906393,
+ "raw_checksums": {
+  "20261124-wp0b-p4-fp4-rtx4090-01.tar": "46d2da6aa77efe43bb24da96ca3f60cb14ffeea5f029eae85213480d67caae1c"
+ },
+ "pulled_unix": 1795467068.408443
+}

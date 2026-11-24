@@ -87,9 +87,12 @@ def residual(pred: torch.Tensor, actual: torch.Tensor) -> dict:
     a = actual.double()
     diff = pred.double() - a
     denom = a.norm().item()
+    pn = pred.double().norm().item()
     return {
         "max_abs": diff.abs().max().item(),
         "rel_l2": diff.norm().item() / denom if denom > 0 else float("inf"),
+        # 1 - cosine, a third candidate Tier B metric (runbook §5 item 2)
+        "cos_dist": 1.0 - (float((pred.double().flatten() @ a.flatten()) / (pn * denom)) if pn > 0 and denom > 0 else 0.0),
     }
 
 

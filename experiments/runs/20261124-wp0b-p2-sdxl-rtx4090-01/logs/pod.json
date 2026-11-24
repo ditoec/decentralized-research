@@ -1,0 +1,10 @@
+{
+ "provider": "runpod",
+ "pod_id": "j570vjshhyzkgt",
+ "data_center": "",
+ "cloud_type": "SECURE",
+ "hourly_rate_usd": 0.89,
+ "gpu_uuid": "GPU-b7bcfea3-9801-97e8-5d2b-6442dcee9a97",
+ "driver": "595.112.07",
+ "job_start_unix": 1795466444
+}

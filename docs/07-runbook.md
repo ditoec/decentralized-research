@@ -13,7 +13,7 @@ Background reading: `docs/05-revised-design.md` (the design), `docs/06-code-audi
 
 **Who's who.** "The paper author" means the corresponding author, Anjas Risky Maradita. Send results, go/no-go reports and any question that would change a config, threshold or scope there.
 
-**Status.** Last updated 2026-11-23 (paid-infrastructure plan applied). It matches `paper/manuscript_ESJ.docx` (Emerging Science Journal format): equation numbers, placeholder IDs and notation are as in that file.
+**Status.** Last updated 2026-11-24 (pilot tooling implemented; decisions recorded in §3). It matches `paper/manuscript_ESJ.docx` (Emerging Science Journal format): equation numbers, placeholder IDs and notation are as in that file.
 
 **Notation (same as the manuscript).** T = number of sampler steps. x₀ = the initial (noise-scaled) latent, x_T = the final latent. D_i = the CFG-combined denoised prediction at step i. σ_i = the noise level at step i. k = number of steps checked by Tier B. p = probability that a job is sampled. In code and file names, x₀ is `x_000`.
 
@@ -76,6 +76,10 @@ Addresses and login details are in `docs/local-nodes.md`, which is kept out of g
 
 ### 1.2 Setup steps
 
+**Implemented (2026-11-24).** One locked environment for both architectures: `code/env/setup_env.sh [main|alt]` builds Python 3.12.13 (uv-managed) with `env/lock-<stack>.txt`; the lock files were compiled for aarch64 and x86-64 and are identical. `main` = torch 2.14.1+cu130 (needs driver >= 580, i.e. a CUDA 13 host on RunPod); `alt` = torch 2.13.0+cu129 (the second software stack). On the Sparks, `code/env/Dockerfile` wraps the same script into `esj-research:<stack>` (label `research=esj`). On RunPod we cannot push an image, so `tools/pod_job.sh` runs the same script inside the pod. Models: `experiments/configs/models.json` (sha256 = Hugging Face LFS object id). Prompts: `code/tools/make_prompts.py` wrote `experiments/configs/prompts_*.txt` and `prompts.json` (PartiPrompts, Apache-2.0, seed 20261123), plus `prompts_pilot20.txt` for P2.
+
+**Network finding (2026-11-24).** The Sparks' internet egress is filtered and slow: Hugging Face's file CDN (`*.cdn.hf.co`, Xet transfer hosts) is unreachable, and other downloads run at about 250 KB/s per connection, so the image build alone takes hours. The RunPod HTTPS proxy (`*.proxy.runpod.net`) is reachable. Models therefore reach the Sparks from the operator's machine or through a RunPod relay pod (`python:3.12-slim`, CPU, US$0.12/h) that downloads from Hugging Face and serves the files under a random token path. Ask the network admin whether `huggingface.co` CDN egress can be opened for the research nodes; until then budget the transfer time.
+
 1. **Images.** Build two research images from one Dockerfile, `arm64` for the Sparks and `x86-64` for RunPod, each pinned by digest. Use the **same Python minor version and the same torch version** in both if a build exists for both. If not, record the mismatch; it becomes part of level L3.
    - Spark: an aarch64 PyTorch build that supports the GB10 (compute capability 12.1). The PyTorch 2.9.1 found in the production image warns that 12.1 is above its supported maximum, so choose the build here and record it in `docs/pilot-notes.md`.
    - RunPod: the official PyTorch CUDA wheel that supports Blackwell consumer cards (compute capability 12.0). The official Runpod image `runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404` (PyTorch 2.8.0, CUDA 12.8) runs on the RTX 5080.
@@ -104,6 +108,20 @@ Run each item as its own run ID.
 | P6 | **Co-tenancy** | On Spark-4, run 50 SDXL jobs while its chat model is serving requests and again while it is idle (read the load from the existing Prometheus on Spark-5) | Fraction of bit-identical trajectories between the two conditions. **If it is below 1, report it immediately**: shared load would then be a source of honest variation |
 | P7 | **Memory footprint** | Peak memory of the research container for SD1.5 and SDXL in fp16, bf16 and fp32 on Spark-4 | GB per config, and the free memory left on the node. Decides whether fp32 may run in the grid |
 
+**Commands (implemented 2026-11-24).** Every pilot item is one call of `code/tools/workloads/pilot.sh` (`NODE=<tag> ITEMS="p1 p2 p3 p4 p5 p7"`), which drives `python -m trajver.pilot`:
+
+| Item | Command | Compare / plot |
+|---|---|---|
+| P1 | `pilot noise --seeds 100` on each ISA | `pilot noisecmp RUN_A RUN_B` → n_identical, max ULP |
+| P2 | `pilot gen --save-traj` (SDXL, 30 steps, euler, 20 × 2) | `pilot compare A B --steps-detail --e0-out e0.jsonl`; `plots stepdist` |
+| P3 | `pilot gen` timings (first job excluded) | `plots throughput` |
+| P4 | `pilot --flags=--fp8_e4m3fn-unet gen`, `pilot fp4` | speed-up vs P2/P3 |
+| P5 | `pilot w1` | `plots w1`, `plots e2w` |
+| P6 | `pilot gen --save-traj` with and without `--no-pin`, logged co-tenant load | `pilot compare` |
+| P7 | `pilot --flags=<precision> gen`, memory peaks in `summary.json` | `plots memory` |
+
+On a Spark every command runs through `tools/spark_run.py` (§3.4). Every run also saves its figures under `<run>/figures/` (PNG, PDF and the CSV behind them) for the paper and the thesis.
+
 **Go/no-go #0:**
 - If P2 shows the RTX 5080 and the Spark are **pixel-identical** on all pairs, all the variation will come from L4. The pilot rentals show whether it does.
 - Use P3 and the rented timings to re-estimate the RunPod cost of §4 item 2. If it exceeds the planned US$120, tell the paper author before WP2.
@@ -131,7 +149,31 @@ Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Finding
 3. **Storage is larger than estimated.** ComfyUI keeps latents in float32, not fp16: about 3.9 MB per 30-step SD1.5 job and about 15 MB per SDXL job, plus conditioning. R3.3 is measured, so the paper is unaffected, but the "about 7.7 MB" in doc 05 §4.1 is too low.
 5. **The noise schedule depends on where ComfyUI computes it.** `KSampler` computes the sigmas on whatever device the model's sampling object sits on: the CPU before the first job of a process, the GPU after the model loads. On an RTX 5080 the two schedules differed by one float32 ULP (2.4e-7), and that changed the final latent of an otherwise identical job by up to 0.36, so T1 and T2 failed on CUDA. `trajver` now computes a canonical schedule on the CPU (`job.canonical_sigmas`) and passes it to the sampler; with that, T1–T3 pass on the RTX 5080 (Runpod pod, 2026-11-23). Treat the canonical schedule as a protocol requirement.
 6. **The initial noise is not bit-identical across CPU instruction sets (preliminary P1).** With the same seed and PyTorch 2.8.0, an AMD EPYC (x86-64) CPU and an Apple M1 (ARM64) CPU give the same random stream but values that differ in the last one or two ULPs, for every tensor of 16 or more elements. Smaller tensors are identical, which points to PyTorch's vectorized normal sampler (AVX2 vs NEON). On ARM, PyTorch 2.8.0 and 2.15.0 agree exactly. The exact x₀ check of E1 therefore fails between an x86 provider and an ARM verifier. Confirm on a DGX Spark in the pilot, then choose: a canonical noise path (for example drawing in chunks below the vectorized threshold, which also changes the provider's noise) or a tolerance of a few ULPs on x₀. Paper author's decision.
+7. **Pilot P1 on a DGX Spark (2026-11-24, run `20261124-wp0b-p1-noise-spark4-01`): the noise differs even between two ARM machines.** Spark-4 (Cortex-X925, Linux aarch64, torch 2.14.1) and an Apple M1 Pro (macOS arm64, torch 2.14.1 and 2.15.0) give 0 of 100 identical seeds for both latent shapes; 98.5% of values are equal and the rest differ by at most 3 ULP (max abs 4.8e-7). PyTorch dispatches the Spark to its `SVE128` CPU path; forcing `ATEN_CPU_CAPABILITY=default` does not make the bytes match, so the build itself (compiler, libm) matters, not only the vector unit. The difference is therefore "per CPU and PyTorch build", not "x86 vs ARM". This supports the approved ULP tolerance for E1(a); the x86 pod run of P1 still has to be compared with the Spark (Spark vs x86 is the pair that matters).
+8. **Pilot results on a rented RTX 4090 (Secure Cloud, 2026-11-24, runs `20261124-wp0b-*-rtx4090-01`; same environment as the Sparks: Python 3.12.13, torch 2.14.1+cu130, ComfyUI 8b25bbc).**
+   - P1, x86 (RTX 4090 host CPU) vs Spark-4: 0 of 100 seeds identical for both shapes; 61.5% of values equal; largest difference 2.3e-6 (unit-variance noise). Near zero this is up to 8.6 million ULP, so the E1 tolerance is absolute, not in ULP (see Decisions).
+   - P3: SD1.5 512², 30 steps: median 1.94 s/image (n = 19). P2 timing, SDXL 1024², 30 steps: median 3.87 s/image (n = 39).
+   - P4: `--fp8_e4m3fn-unet` on SDXL runs but is slower than fp16 (median 4.18 s vs 3.87 s; peak GPU memory 16.6 vs 19.3 GB). The NVFP4 path of the pinned commit runs only through comfy_kitchen's dequantize fallback on Ada (8× slower than bf16 per linear layer): no fp4 speed-up on this card.
+   - P5 (W1) on SDXL, 10 prompts: adjacent-state cosine min 0.977, median 0.9994. Hypothesis W1 holds: the deployed SN30 rule accepted every honest job and every F1, F2 and F3 forgery at s = 0.25, 0.5 and 1.0 (10/10 each). **Report to the paper author.**
+   - Spend: balance 8.66 → 7.76 US$ for this pod (Secure Cloud at 0.89 US$/h, because no Community 4090 was available at create time). The per-run `cost_usd` in these manifests all measure from job start to the pull, so they overlap and must not be summed.
+9. **Pilot results on the Sparks, SD1.5 (2026-11-24).** L0 (Spark-4 twice) and L2 (Spark-4 vs Spark-5): 40 of 40 jobs with identical images, final latents and Merkle roots, i.e. whole trajectories bit-identical. P1 Spark-4 vs Spark-5: 100 of 100 seeds identical. P3: median 1.94 s/image on each Spark beside production (sizing only, rule 7).
+10. **Pilot results on the Sparks, SDXL (2026-11-24).**
+   - P2, L0 (Spark-4 twice) and L2 (Spark-4 vs Spark-5): 40 of 40 identical images, latents and Merkle roots. Spark vs RTX 4090 (L4): 0 of 40 identical; mean per-image pixel difference median 1.19 levels (max single pixel 247); LPIPS median 0.005 (max 0.057), DINOv2 cosine >= 0.981, CLIP cosine >= 0.982, so the deployed SN23 rule (E0-N) accepts 40 of 40; pHash Hamming <= 1. Free-running D_i differ from step 0 (relative L2 1.4-3% median, up to 10.6%).
+   - Honest Tier B across hardware (run `20261124-wp0b-replay-4090on-spark5-01`: Spark-5 replays every step of the 4090 provider's 40 trajectories): no step bit-exact; relative L2 of D̂_i vs D_i falls with the step, median 2.7% (max 4.8%) at step 0, 0.97% at step 10, 0.22% at step 25, 0.04% at step 29. Per-step tolerances τ_i are needed. Full replay of 30 steps: 19.9 s per job on a Spark.
+   - Tier A across hardware: the Spark's CPU recomputation reproduced the 4090's x_{i+1} bit-exactly at all 1,200 steps (float32 replica); largest float64 residual 2.8e-8. ε_A can be set at the float64 rounding level.
+   - P4 on Spark-4: fp8 SDXL 13.55 s vs fp16 12.45 s (median); NVFP4 only via the dequantize fallback (0.19× bf16 speed). Same picture as the 4090: no cheaper path at the pinned commit on either card.
+   - P5 on Spark-4: W1 holds (min adjacent cosine 0.977); SN30 accepted all honest jobs and every F1-F3 forgery (10/10 each).
+   - P7 on Spark-4 (runs `*-p7-*-spark4-02`): host memory drop SD1.5 fp16/bf16 7.9/7.6 GB, fp32 13.1 GB; SDXL fp16/bf16 22.0/22.2 GB (free memory stayed >= 26 GB). **SDXL fp32 is not allowed on a Spark beside production:** the first P7 attempt took host free memory from about 49 GB to 5.9 GB; the runner's guard stopped it three times and production was unaffected (no restarts, no OOM kill), but the runner now backs off 10 minutes after a guard stop and aborts after three. Run SDXL fp32 only on RunPod or in an admin-agreed window.
+   - Spark timing beside production (sizing only): SD1.5 1.94 s, SDXL 12.4 s per image (fp16, 30 steps).
 4. **The deployed SN23 black-image filter never fires.** It compares 6×6 hashes of the two images with an 8×8 hash of a black image, so the strings never match. `e0n.py` reproduces this as deployed.
+
+**Decisions (approved by the team, 2026-11-24).**
+- Findings 1 and 5 are protocol requirements: the canonical CPU schedule and pinned batching (Methods §3-2, "Reproducibility requirements").
+- Finding 6: providers keep ComfyUI's stock noise path; E1 accepts x₀ within an absolute tolerance `x0_max_abs_noise` in units of the unit-variance noise (|Δx₀|/σ₀; dev default 1e-5), set at calibration as 2 × the largest P1 cross-build difference and frozen (`rules/e1.py: check_x0`). The first version used a ULP limit; the x86 P1 run (finding 8) showed ULP distance is the wrong measure, so it was changed the same day.
+- Rentals are consumer GeForce RTX only.
+- The research containers may run on Sparks 4–6 under §1.1.
+
+**Added 2026-11-24.** `trajver/attacks/run.py` (all of A1a/A1b, A2–A8, F1–F3 and M as runnable injectors with ground-truth sidecars), `trajver/verify.py` (E1, E2-H for k ∈ {1,2,3,5,8} from one all-steps pass, and E2-W; long-format `verdicts.jsonl`), `trajver/calibrate.py` (§5), `trajver/plots.py`, and `pilot replay` (honest all-steps Tier B distances for calibration). The ComfyUI node was run inside a ComfyUI server at the pinned commit (run `20261124-wp1-comfyui-node-ui-01`, with UI screenshots).
 
 ### 3.1 Trajectory-commit node (a ComfyUI custom node)
 
@@ -197,6 +239,11 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 4. **No paid storage.** Raw data lives on Sparks 4 to 6. A rented model produces roughly 40–65 GB of trajectories. Move data between Sparks over the 200 Gb links, not the 1 Gb management network.
 5. **Dry run first.** Run every workload for 20 jobs on a Spark. Then smoke-test the x86-64 image for 20 jobs on an RTX 3090 pod (US$0.22/h) before any dearer pod is started. Nobody debugs on an expensive pod.
 6. Use Community Cloud first. Use Secure Cloud only when a model is unavailable.
+
+**Implemented (2026-11-24).**
+- `code/tools/spark_run.py --run-id ID -- <command>`: research container `esj-<id>` (label `research=esj`, no published ports), stops it when free memory < 15 GB or disk < 200 GB and restarts it when memory is back above 15 GB + a margin, logs to `<run>/logs/runner.jsonl`, and writes co-tenant snapshots (other containers' CPU/memory, vLLM running/waiting requests) every 15 s that each job row copies. Host python3 only.
+- RunPod: create the pod through the Runpod tools with `POD_TOKEN` (random), `POD_HOURLY_USD` and `POD_CLOUD` in its environment and port `8000/http`; start `tools/pod_server.py` (token-protected GET with resume and PUT); PUT `code.tar.gz` (code + experiments/configs); run `tools/pod_job.sh tools/workloads/<w>.sh`; then on a Spark (or the operator's machine) `tools/pull_run.py https://<pod>-8000.proxy.runpod.net/<token>` downloads, verifies checksums, extracts and adds the cost fields. Terminate the pod only after a clean pull.
+- Before committing run folders (the repository is public): `python3 tools/sanitize_runs.py ../experiments/runs/<run> ...` replaces Spark hostnames and production co-tenant container names and images with role labels (`cotenant-llm`, `cotenant-svc`), leaving every measured number unchanged; `--check` must exit 0. The unredacted originals stay on the node under `~/esj/runs`.
 
 ---
 

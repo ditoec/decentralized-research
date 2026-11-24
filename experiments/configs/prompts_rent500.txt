@@ -1,0 +1,500 @@
+6	protein
+7	yin-yang
+8	wood
+12	fire
+16	motion
+19	black hole
+20	gravity
+23	gender
+26	hate
+27	anger
+33	42
+40	parallel lines
+43	congruent triangles
+45	The Starry Night
+50	happiness
+51	hope
+60	The Oriental Pearl
+63	A bowl of Pho
+66	a walnut
+71	A picture of some food in the plate
+72	a chair
+74	the Sydney Opera House
+78	robots
+79	a fall landscape
+80	a sunset
+82	a fox
+84	a panda
+87	a fog
+89	a phone
+91	a store front
+96	a bench
+98	a laptop
+103	a whale
+105	a bowl
+106	a flag
+122	a red circle
+123	a box
+130	a horse
+131	a pumpkin
+139	a hammer
+143	a cocktail
+144	a margarita
+147	an iPhone case
+148	a coffee maker
+152	a mountain
+155	a Christmas tree
+157	the Eiffel Tower
+158	a zebra
+159	the city of London
+161	a pineapple
+167	waterfall
+176	a wood cabin
+180	sneakers
+183	a plate
+186	a Stegasaurus
+199	a volcano
+203	a tree
+206	a crown
+224	a turtle
+226	a book
+230	a rabbit
+234	Times Square
+243	a tennis court
+252	The Alamo
+254	the geyser Old Faithful
+258	the Parthenon
+267	a boy
+268	a boy and a tiger
+269	a family
+272	a portrait of young girl
+273	a scientist
+274	A dignified beaver wearing glasses, a vest, and colorful neck tie. He stands next to a tall stack of books in a library.
+279	A warrior wombat holding a sword and shield in a fighting stance. The wombat stands in front of the Arc de Triomphe on a day shrouded mist with the sun high in the sky.
+286	A portrait of a metal statue of a pharaoh wearing steampunk glasses and a leather jacket over a white t-shirt that has a drawing of a space shuttle on it.
+288	A photograph of the inside of a subway train. There are lobsters sitting on the seats. One of them is reading a newspaper. The window shows the ocean in the background.
+289	A photograph of the inside of a subway train. There are raccoons sitting on the seats. One of them is reading a newspaper. The window shows the city in the background.
+292	A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is holding a garbage bag. Oil painting in the style of Egyptian tomp hieroglyphics.
+293	A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is holding a garbage bag. Oil painting in the style of Hokusai.
+296	A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is holding a garbage bag. Oil painting in the style of pointilism.
+298	A raccoon wearing formal clothes, wearing a tophat and holding a cane. The raccoon is holding a garbage bag. Oil painting in the style of traditional Chinese painting.
+301	a statue of Abraham Lincoln wearing an opaque and shiny astronaut's helmet. The statue sits on the moon, with the planet Earth in the sky.
+311	a portrait of a statue of the Egyptian god Anubis wearing aviator goggles, white t-shirt and leather jacket, flying over the city of Mars.
+324	A high-contrast photo of a panda riding a horse. The panda is wearing a wizard hat and is reading a book. The horse is standing on a street against a gray concrete wall. Colorful flowers and the word "PEACE" are painted on the wall. Green grass grows from cracks in the street.
+335	a blue cow is standing next to a tree with red leaves and yellow fruit. the cow is standing in a field with white flowers. impressionistic painting.
+338	A high resolution photo of a donkey in a clown costume giving a lecture at the front of a lecture hall. The blackboard has mathematical equations on it. There are many students in the lecture hall.
+340	a Saint Bernard standing up with its paws in the air. A young girl is seated on the dog's shoulders.
+344	a blue semi-truck and its trailer jumping over a row of motorcycles. there are metal ramps on either side of the motorcycles.
+347	a photograph of a fiddle next to a basketball on a ping pong table
+353	a cat licking a large felt ball with a drawing of the Eiffel Tower on it
+355	a paranoid android freaking out and jumping into the air because it is surrounded by colorful Easter eggs
+356	a mixed media image with a photograph of a woman with long orange hair over a background that is a sketch of a city skyline
+361	Painting of a panic-stricken creature, simultaneously corpselike and reminiscent of a sperm or fetus, whose contours are echoed in the swirling lines of the blood-red sky
+362	a propaganda poster depicting a cat dressed as french emperor napoleon holding a piece of cheese
+368	a monarch butterfly hatching from its chrysalis
+369	a glass of orange juice to the right of a plate with buttered toast on it
+376	a black dog jumping up to hug a woman wearing a red sweater
+385	a painting of the mona lisa on a white wall
+386	a man eating a glazed donut and a woman eating a chocolate cake
+390	A teddy bear wearing a motorcycle helmet and cape is riding a motorcycle in Rio de Janeiro with Dois Irmãos in the background
+392	A punk rock squirrel in a studded leather jacket shouting into a microphone while standing on a lily pad
+399	A punk rock platypus in a studded leather jacket shouting into a microphone while standing on a boulder
+401	A blue Porsche 356 parked in front of a yellow brick wall
+410	A smiling sloth wearing a bowtie and holding a quarterstaff and a big book.
+411	A smiling sloth wearing a leather jacket, a cowboy hat, a kilt and a bowtie. The sloth is holding a quarterstaff and a big book.
+412	A smiling sloth wearing a leather jacket, a cowboy hat and a kilt.
+416	The Great Pyramid of Giza situated in front of Mount Everest
+422	a photograph of the mona lisa drinking coffee as she has her breakfast. her plate has an omelette and croissant.
+427	purple lego dollhouse with a pool and a swing
+429	brown white and black white guinea pigs eating parsley handed to them
+430	The Rosetta Stone lying on the ground, covered in snow.
+434	Anubis wearing sunglasses and sitting astride a hog motorcyle
+438	panda mad scientist mixing sparkling chemicals
+441	a teddy bear on a skateboard in times square
+443	A Vietnam map showing Ha Long Bay
+448	A bare kitchen has wood cabinets and white appliances
+449	A black and white landscape photograph of a black tree
+453	a corgi wearing a red bowtie and a purple party hat
+454	robots meditating in a vipassana retreat
+455	a white robot passing a soccer ball to a red robot
+456	a fall landscape with a small cottage next to a lake
+458	a white cat with black ears and markings
+459	a white cat and a tabby cat looking at each other
+461	a professional photo of a sunset behind the grand canyon
+466	a long wooden bench in front of a brick wall
+469	a tall horse next to a red car
+474	a steam locomotive speeding through a desert
+475	a submarine floating past a shark
+476	a whale breaching near a mountain
+477	the United States flag next to the flag of Texas
+479	an owl on top of an elephant's back
+482	a giraffe eating the bark of a tree
+485	an owl gripping a squirrel in its talons
+492	a bird and its reflection in a fountain
+493	The Statue of Liberty on a cloudy day
+494	The Statue of Liberty surrounded by helicopters
+496	a sunken ship at the bottom of the ocean
+497	a sunken submarine at the bottom of the ocean
+504	teacups surounding a kettle
+505	a dragon breathing fire
+507	a dragon breathing fire onto a knight
+511	a toy car in front of a teddy bear
+517	a kids' book cover with an illustration of white dog driving a red pickup truck
+518	milk pouring into a large glass
+533	a Diplodocus standing in a lake
+535	a cat's tail showing under a couch
+536	a light shining on a giraffe in a street
+537	a barred owl peeking out from dense tree branches
+540	a stone path leading away from a fountain
+541	a wooden deck overlooking a mountain valley
+544	an F1 race car in a Manhattan street
+545	a chess queen to the right of a chess knight
+546	a white pawn attacking a black bishop
+548	a living room with a large Egyptian statue in the corner
+549	a stone bust next to an egg and an eggplant
+553	a can of Spam on an elegant plate
+555	a pick-up truck rolling over a grassy field
+556	a drop-top sports car coming around a bend in the road
+558	a small garden with an apple tree behind it
+561	a yellow wall with a large framed oil painting of a car
+563	a motorcycle parked in an ornate bank lobby
+565	a wooden toy horse with a mane made of rope
+567	a group of penguins in a snowstorm
+568	a Scottish castle next to a loch
+572	the International Space Station flying in front of the moon
+578	an airplane flying into a cloud that looks like monster
+580	a car with tires that have yellow rims
+585	a kachina doll standing in sand
+586	a doorknocker shaped like a lion's head
+587	a silver doorknocker on a mahoghany door
+589	a glass of orange juice next to an empty pitcher
+590	a glass of orange juice with an orange peel stuck on the rim
+592	a helicopter hovering over Times Square
+594	a prop plane flying low over the Great Wall
+599	a rusty red pickup truck with white wheel rims
+600	a blue pickup truck with a rhinoceros in its flatbed
+601	an orange pickup truck next to a yellow Porsche 911
+608	a plant growing on the side of a brick wall
+609	a plant at the bottom of a shallow stream
+612	a horse chewing a large blue flower
+613	a yellow diamond-shaped sign with a deer silhouette
+615	a yellow diamond-shaped sign with a puma silhouette
+620	a pair of headphones dangling from a tree branch
+621	a car's wheel crushing a pair of headphones
+624	a tennis court with a basketball hoop in one corner
+632	an elephant using its trunk to blow into a tuba
+638	an old red truck parked by the geyser Old Faithful
+643	a painting of black and white with a red flower in the right corner
+647	the sun setting behind the Parthenon
+653	a man standing on a street corner
+654	a crowd of people watching fireworks by a park
+656	a smiling man with wavy brown hair and trimmed beard
+666	a group of skiers are preparing to walk up a sand dune
+667	a child eating a birthday cake near some palm trees
+668	a man with wild hair looking into a crystal ball
+671	a witch riding a broom
+672	a knight holding a long sword
+675	a cricketer standing next to a wicket
+676	an elder politician giving a campaign speech
+677	a young girl playing piano
+678	a girl getting a kite out of a tree
+679	a politician giving a speech at a podium
+681	a child in the air while jumping on a trampoline
+683	a girl riding an ostrich
+685	a selfie of an old man with a white beard
+690	a man riding a camel on the beach
+694	a fairy flying over a girl's shoulder
+697	a library filled with kids reading books
+701	A tornado made of sharks crashing into a skyscraper. painting in the style of watercolor.
+704	A tornado made of tigers crashing into a skyscraper. painting in the style of watercolor.
+706	A tornado made of bees crashing into a skyscraper. painting in the style of abstract cubism.
+710	A shiny robot wearing a race car suit and black visor stands proudly in front of an F1 race car. The sun is setting on a cityscape in the background. comic book illustration.
+712	The collision of two black holes in the center of a galaxy.
+718	A giant cobra snake made from salad
+726	A bowl of soup that looks like a monster with tofu says deep learning
+727	The 1970s logo for a london-area football club called "The Rumbury Wanderers"
+734	a yellow dump truck filled with soccer balls driving in a coral reef. a blue whale looms in the background.
+735	A photo of llama wearing sunglasses standing on the deck of a spaceship with the Earth in the background.
+736	A high resolution photo of a large bowl of ramen. There are several origami boats in the ramen of different colors.
+737	an elf drinking orange juice through a straw of a giant orange next to a squirrel and an owl watching from above
+742	a bike rack with some bike locks attached to it but no bicycles
+751	Dogs playing poker
+753	Dogs sitting around a poker table with beer bottles and chips. Their hands are holding cards.
+757	a snail made of harp
+759	a giraffe imitating a turtle
+763	a spaceship that looks like the Sydney Opera House
+764	a hedgehog using a calculator
+768	corgi pizza
+774	a cat drinking a pint of beer
+777	a cow jumping over the moon
+778	a cat sitting in a car seat
+779	a friendly car
+782	a small kitchen with a white goat in it
+786	a horse standing on an elephant
+787	a cat chasing a horse
+790	a sword slicing through a loaf of bread
+792	a coffee mug floating in the sky
+794	a stork playing a violin
+795	a TV on a horse
+797	The Statue of Liberty with the face of an owl
+800	a yellow tiger with blue stripes
+806	blue apples on a tree with yellow leaves
+807	square blue apples on a tree with circular yellow leaves
+808	square red apples on a tree with circular green leaves
+816	a pony with a shooting star on its flank
+817	a half moon in the day sky
+823	a rabbit wearing a black tophat and monocle
+825	an elephant walking on the Great Wall
+830	a flower with a cat's face in the middle
+836	a spaceship hovering over The Alamo
+842	a child and a penguin sitting on the moon
+845	a person with arms like a tree branch
+850	a summer tree without any leaves
+851	a classroom without any students
+861	The large ball crashed right through the table because it was made of styrofoam
+865	The coach smiled at the player tossed the frisbee
+870	A man sips a latte and a woman a beer.
+872	A boy holds and a girl paints a piece of wood.
+876	supercalifragilisticexpialidocious
+877	Incomprehensibilities
+883	The old man the boat.
+886	Mary gave the child the dog bit a Band-Aid.
+888	One morning I chased an elephant in my pajamas
+890	The dog chased the cat, which ran up a tree. It waited at the top.
+892	An aerial view of Ha Long Bay without any boats
+898	a street without vehicles
+900	a car with no windows
+902	a city intersection without cars
+904	a banana without its peel
+906	a bird landing on a bat
+911	Three-quarters front view of a blue 1977 Corvette coming around a curve in a mountain road and looking over a green valley on a cloudy day.
+920	A photo of a frog reading the newspaper named "Toaday" written on it. There is a frog printed on the newspaper too.
+921	The frog found itself in the newspaper
+925	A close-up of two beetles wearing karate uniforms and fighting, jumping over a waterfall.
+939	view from below of a tall white ladder with just one rung leaning up against a yellow brick wall
+940	a photo of the back of a covered wagon. a polar bear is sticking it's head out of the wagon.
+941	a close up of a handpalm with leaves growing from it
+944	a macro photograph of brain coral
+949	a close-up of a bloody mary cocktail
+954	view of a clock tower from above
+960	a close-up of an ostrich's face
+963	a top down view of a horse running in a field
+965	trees seen through a car window on a rainy day
+967	an image of the moons of the planet Jupiter
+968	the eye of the planet Jupiter
+969	a close-up of the eye of the planet Jupiter
+974	an aerial view of the Great Pyramid
+976	overhead view of three people looking down at the street from the top of a tall building
+977	two people facing each other
+982	A photo of a Japanese Porcelain Imari vase on the ground below a wooden chair.
+986	concentric squares fading from yellow on the outside to deep orange on the inside
+989	a white flag with a red circle next to a solid blue flag
+992	a red box to the right of a green sphere
+999	a black background with a large yellow circle
+1002	a white background with a large blue square
+1007	a green pyramid in front of a blue box
+1008	a large yellow sphere behind a small purple pyramid
+1010	a yellow swirl next to a blue dashed line.
+1012	a green pepper to the left of a red pepper
+1013	a brown trash bin to the left of a blue recycling bin
+1015	ten red apples
+1020	a basketball game between a team of four cats and a team of three dogs
+1024	two beat-up baseballs on either side of a yellow basketball
+1028	300 movie titles
+1030	two chairs
+1033	two wooden chairs and three metal chairs
+1034	three black cats standing next to two orange cats
+1037	an owl family
+1038	a comic about an owl family in the forest
+1039	two cats
+1041	three elephants standing on top of each other
+1042	two red boxes
+1044	two violins standing up with their bows on the ground in front of them
+1045	three violins lying on the floor
+1046	three red lego blocks
+1048	three small yellow boxes
+1049	bottles
+1050	two frosted glass bottles
+1053	four green glass bottles
+1057	ten wine bottles
+1059	a pair of matching socks with cute cats on them
+1065	five red balls on a table
+1070	a full bookshelf with three shelves
+1071	a bookshelf with ten books stacked vertically
+1081	a tennis court with three yellow cones on it
+1082	a tennis court with tennis balls scattered all over it
+1088	two motorcycles facing each other
+1089	children
+1090	one child on a couch
+1092	ten children on a couch
+1093	a crowd of people watching fireworks
+1094	a parade with cars and people waving
+1097	a family of four posing at Mount Rushmore
+1098	a family of four posing on the moon
+1099	a family of four walking at the beach with waves covering their feet
+1101	four people riding in a convertible car
+1106	A van parked on grass
+1108	A shiny VW van parked on grass.
+1112	a teddy bear on a skateboard
+1114	A Google map highlighting Vietnam
+1116	A bowl of Beef Pho
+1119	A green heart
+1121	A red bus is driving on the road
+1122	A picture of a very tall stop sign
+1128	Sunset over the sea
+1134	A heart made of cookie
+1135	a white country home
+1138	a cat looking out of a window
+1139	a cat coming through a cat door
+1141	a cat jumping in the air to catch a bird
+1144	a boat in the canals of venice
+1159	the finale of a fireworks display
+1161	a subway train
+1164	a yellow t-shirt
+1173	an owl family in the forest
+1176	a canal in Venice
+1177	a small house
+1179	the grand canyon on a cloudy day
+1184	a cat reading a newspaper
+1186	a horse reading a book
+1197	a horse in a field
+1198	a squirrel in a field
+1204	a hammer on a table
+1205	a screwdriver on a table
+1207	a power drill on a table
+1211	a tree surrounded by flowers
+1217	a metal treehouse in an oak tree
+1218	a violin next to an apple
+1225	a bottle of red wine
+1226	wine bottles
+1228	a milk container on a table
+1229	a milk container in a refrigerator
+1241	an ostrich standing on a couch
+1244	a road ruined by an earthquake
+1245	a volcano erupting near a small town
+1246	a volcano with lava pouring down its slopes
+1247	a horse running in a field
+1249	a robot cooking in the kitchen
+1251	the silhouette of an elephant
+1253	a butterfly kite stuck high in a tree
+1254	a unicorn with a multicolored mane
+1256	an ornate jewel-encrusted key
+1259	an antique chest
+1262	a squirrell driving a toy car
+1266	a pair of glasses under a computer monitor
+1269	a moose standing over a fox
+1272	a small airplane
+1273	an airplane taking off of a runway
+1276	a golden doorknocker on a red door
+1281	a full pint of IPA
+1284	Times Square at night
+1286	a hot air balloon floating by the Kremlin
+1289	a plant with orange flowers shaped like stars
+1291	a yellow diamond-shaped sign
+1296	a rusty fire hydrant surrounded by dirt
+1297	a fire hydrant with graffiti on it
+1298	a snake curled around a wooden post
+1301	a piano with an open song book above the keys
+1302	an ornate gold harp
+1307	a painting of black and white with a red border
+1308	a team playing baseball
+1309	children on a couch
+1314	an old man
+1319	a father and a son playing tennis
+1322	a woman with sunglasses and red hair
+1326	a man chasing a cat
+1330	a frustrated child
+1337	Downtown Istanbul at sunrise. detailed ink wash.
+1341	Downtown LA at sunrise. detailed ink wash.
+1344	Downtown Singapore at sunrise. detailed ink wash.
+1345	Downtown NYC at sunrise. detailed ink wash.
+1351	A Mesoamerican pyramid surrounded by jungle. detailed charcoal sketch.
+1353	A spaceship made of cardboard.
+1357	A photo of a panda made of water.
+1362	A photo of a palm tree made of water.
+1364	an abstract oil painting in deep red and black with a thick patches of white
+1368	A soft beam of light shines down on an armored granite wombat warrior statue holding a broad sword. The statue stands an ornate pedestal in the cella of a temple. wide-angle lens. anime oil painting.
+1371	A funny Rube Goldberg machine made out of metal
+1372	A funny Rube Goldberg machine made out of paper
+1374	Oil painting of a giant robot made of sushi, holding chopsticks.
+1377	Portrait of a gecko wearing a train conductor’s hat and holding a flag that has a yin-yang symbol on it. Chinese ink.
+1386	A photo of an Athenian vase with a painting of pandas playing soccer in the style of Egyptian hieroglyphics
+1387	A photo of an Athenian vase with a painting of pandas playing tennis in the style of Egyptian hieroglyphics
+1391	A photo of an Athenian vase with a painting of toucans playing basketball in the style of Egyptian hieroglyphics
+1396	Wood engraving of the Greek letter Omega
+1404	a portrait of a man wearing sunglasses and a business suit, painting in pop art style
+1406	a stained glass window depicting a calm tyrannosaurus rex
+1410	panda mad scientist mixing sparkling chemicals, high-contrast painting
+1411	a dolphin in an astronaut suit on saturn, high-contrast painting
+1412	The Oriental Pearl in sketch style
+1415	a capybara made of voxels sitting in a field
+1417	a professional high quality emoji of a lovestruck cup of boba
+1418	a dutch baroque painting of a horse in a field of flowers
+1419	Icon of a red heart
+1420	A cartoon house with red roof
+1423	A vector illustration of a tree
+1427	an oil painting of a cat playing checkers
+1430	a high-quality oil painting of a psychedelic hamster dragon
+1434	a futuristic city in synthwave style
+1440	a drawing of a bust of homer
+1443	a drawing of the skyline of New York City
+1444	a cartoon of a train going to the moon
+1456	a cartoon of a bear birthday party
+1457	a drawing of a house on a mountain
+1462	a drawing of a peaceful lakeside landscape
+1468	an impressionistic painting of tree and a building
+1479	a drawing of a hammer
+1481	a drawing of a handsaw
+1483	a cloud in the shape of a teacup
+1488	The Statue of Liberty in Minecraft
+1489	An oil painting of the Statue of Liberty
+1490	An abstract painting of the Statue of Liberty
+1492	a diagram of the human digestive system
+1493	a diagram of a suburban house
+1496	a painting of a sport car in the style of Dali
+1497	a drawing of a space shuttle in the style of da Vinci
+1498	a coloring book page of a horse next to a stream
+1502	a sketch of a camel next to a stream
+1505	a thumbnail image of a horse and cart
+1510	a cute illustration of a horned owl with a graduation cap and diploma
+1511	a cardboard spaceship
+1512	the flag of the United Kingdom painted in rusty corrugated iron
+1515	an abstract painting of the lights at Times Square
+1516	an abstract drawing of the Great Wall
+1523	a diagram of the inside of the Great Pyramid
+1531	a comic about a girl going to a farm
+1535	a cartoon of a boy playing with a tiger
+1541	a thumbnail image of a gingerbread man
+1543	the saying "BE EXCELLENT TO EACH OTHER" on a rough wall with a graffiti image of a green alien wearing a tuxedo.
+1549	Portrait of a tiger wearing a train conductor's hat and holding a skateboard that has a yin-yang symbol on it. comic book illustration
+1551	Portrait of a tiger wearing a train conductor's hat and holding a skateboard that has a yin-yang symbol on it. oil painting
+1552	Portrait of a tiger wearing a train conductor's hat and holding a skateboard that has a yin-yang symbol on it. photograph
+1555	Two cups of coffee, one with latte art of a lovely princess. The other has latte art of a frog.
+1558	A sign that says Deep Learning
+1560	A glass of red wine tipped over on a couch, with a stain that writes "OOPS" on the couch.
+1569	The saying "BE EXCELLENT TO EACH OTHER" written in faded paint on the hull of an old wooden boat and reflected in the water. Wide-angle lens.
+1570	The saying "BE EXCELLENT TO EACH OTHER" written on a red brick wall with a graffiti image of a green alien wearing a tuxedo. A yellow fire hydrant is on a sidewalk in the foreground.
+1571	The saying "BE EXCELLENT TO EACH OTHER" written with carved letters on driftwood.
+1572	a hot air balloon with chameleon logo. the sun is shining and puffy white clouds are in the background.
+1574	Anime illustration of a kangaroo holding a sign that says "Starry Night", in front of the Sydney Opera House sitting next to the Eiffel Tower under a blue night sky of roiling energy, exploding yellow stars, and radiating swirls of blu
+1580	graffiti spelling BE KIND on white subway tile
+1581	a grumpy porcupine handing a check for $10,000 to a smiling peacock
+1589	a flag with a dinosaur on it
+1591	a flag with three vertical stripes
+1594	a black towel with a cartoon of a dog on it
+1597	the word 'mardefly' on a coffee mug
+1598	a stop sigh with 'ALL WAY' written below it
+1600	world's best brother t-shirt
+1605	a yellow sticky note with 'BUY MILK' written on it
+1607	a yellow wall with 'Hello, world.' written on it
+1608	a motorcycle parked in an ornate bank lobby with "BUZZ" written on its body
+1609	a logo of a wombat on a coffee mug
+1610	a coffee mug with an ankh symbol on it
+1612	a t-shirt with 'Archaelogy Rocks!' written on it
+1617	a laptop screen showing a bunch of photographs
+1620	the words 'KEEP OFF THE GRASS'
+1621	the words 'KEEP OFF THE GRASS' written on a brick wall
+1624	the word 'START'
+1628	the word 'START' written in chalk on a sidewalk
+1632	a series of musical notes on a black t-shirt
+1633	a series of musical notes on a computer screen

@@ -1,0 +1,21 @@
+{
+ "run_id": "20261124-wp1-comfyui-node-ui-01",
+ "wp": "wp1",
+ "purpose": "Acceptance: the KSamplerTrajectory custom node loads and runs inside a ComfyUI server at the pinned commit (UI screenshot for the paper/thesis)",
+ "git_commit": "fe170e8531926ecc5ba8ca85233d87d3f6ffc48d",
+ "git_dirty": true,
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "node": {
+  "hostname": "Ekkis-MacBook-Pro.local",
+  "cpu_isa": "arm64",
+  "gpu_name": "Apple MPS"
+ },
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "workflow": "CheckpointLoaderSimple -> CLIPTextEncode x2 -> EmptyLatentImage 512x512 -> KSamplerTrajectory(euler, normal, 30 steps, cfg 7) -> VAEDecode -> SaveImage; merkle_root -> PreviewAny",
+ "start_time": "2026-11-23T17:33:56.653469+00:00"
+}

@@ -741,7 +741,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["E1", "Merkle root over (x{sub|i}, D{sub|i}, σ{sub|i})", "Initial noise equals noise(seed) within u{sub|0}; schedule; conditioning; decoded final latent equals the image", "≈ c₀/T"],
            ["{b|E2-H (proposed)}", "As E1", "E1, plus Tier A on every step, plus Tier B at k random steps", "≈ (k + c₀)/T"]],
           [28, 38, 74, 28])
-    Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5080) runs the workflow and commits the trajectory "
+    Figure("F2", "Protocol overview: requester escrows P; provider (for example a rented RTX 5090) runs the workflow and commits the trajectory "
            "Merkle root; delayed slot hash decides sampling and the checked steps; verifier (DGX Spark) runs E1 checks, "
            "Tier A on all steps (CPU) and Tier B at k steps (GPU); verdict, two-of-three escalation, release, refund or "
            "slashing of bond B.", "Overview of the two-tier trajectory verification protocol with escrow settlement",

@@ -103,14 +103,14 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 
 ### 4.5 Hardware and statistics (updated 2026-11-23 after the hardware inventory)
 
-**Hardware: six owned DGX Sparks, and rented x86 GPUs from RunPod.** There are no owned RTX 5080s; the rented x86 Blackwell card is a Runpod **RTX 5080** (Community Cloud), with the RTX 5090 as fallback. All rented cards are consumer GeForce RTX (decided 2026-11-23). Budget, node roles and rules: doc 10 §2.
+**Hardware: six owned DGX Sparks, and rented x86 GPUs from RunPod.** There are no owned RTX 5080s; the rented x86 Blackwell card is a Runpod **RTX 5090** (decided 2026-11-24, after the pilot ran on it because the RTX 5080 had no stock). All rented cards are consumer GeForce RTX (decided 2026-11-23). Budget, node roles and rules: doc 10 §2.
 
-| Property | DGX Spark (GB10), owned ×6 | RTX 5080, rented |
+| Property | DGX Spark (GB10), owned ×6 | RTX 5090, rented |
 |---|---|---|
-| GPU | Blackwell GB10, compute capability 12.1 (confirmed), about 121 GB memory **unified** with the CPU | Blackwell, 16 GB (discrete), compute capability 12.0 (read on a Runpod pod, 2026-11-23) |
+| GPU | Blackwell GB10, compute capability 12.1 (confirmed), about 121 GB memory **unified** with the CPU | Blackwell, 32 GB (discrete), compute capability 12.0 (sm_120, confirmed in the pilot, 2026-11-24) |
 | Host CPU / ISA | **ARM64** (Cortex-X925 / A725, 20 cores), DGX OS 7.5 | x86-64, host-controlled driver |
 | Role in the study | Volume, full factor grid, verifier, storage | L3 partner of the Spark; consumer-class provider; timing |
-| Constraint | **Shared with a live production platform** (doc 10 §2.2) | Costs US$0.39/h, Community Cloud only |
+| Constraint | **Shared with a live production platform** (doc 10 §2.2) | US$0.69/h Community Cloud; the pilot paid US$1.39/h on Secure Cloud |
 
 All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.04, CUDA 13.0, kernel 7.0.0-1019-nvidia. Nodes 4 to 6 are the main research nodes.
 
@@ -120,14 +120,14 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 |---|---|---|---|
 | L0 | Same card, repeated runs | Spark | Run-to-run nondeterminism |
 | L1 | Same card, different software config (precision, attention backend, `--deterministic`, torch/ComfyUI version) | Spark in full, under two software stacks; RTX 4090 for the deterministic-mode and attention factors; every rented model for precision | Software-stack effects (these are the RQ1 factors) |
-| L2 | Different physical units of the same model | Six Sparks (up to 15 pairs); two rented RTX 5080s | Unit-to-unit variation (expected: none) |
-| L3 | Same generation, different chip, memory system and CPU ISA (RTX 5080 ↔ Spark) | Spark and rented | Kernel selection per compute capability, and x86 vs ARM CPU |
+| L2 | Different physical units of the same model | Six Sparks (up to 15 pairs); two rented RTX 5090s | Unit-to-unit variation (expected: none) |
+| L3 | Same generation, different chip, memory system and CPU ISA (RTX 5090 ↔ Spark) | Spark and rented | Kernel selection per compute capability, and x86 vs ARM CPU |
 | L4 | Different generation (Blackwell ↔ Ada ↔ Ampere) | **rented** | The marketplace reality: providers of mixed generations |
 
 **Rentals (RunPod only, hard cap US$200 for all paid infrastructure).**
-- Required, all consumer GeForce RTX: RTX 5080 (Blackwell), RTX 4090 (Ada), RTX 3090 (Ampere).
-- If the reserve allows: RTX 5090 (a second Blackwell chip). Substitutes when a required card has no stock: RTX 4080 SUPER (Ada), RTX 3090 Ti (Ampere).
-- A second RTX 5080 on a different host, for a short L2 subset.
+- Required, all consumer GeForce RTX: RTX 5090 (Blackwell), RTX 4090 (Ada), RTX 3090 (Ampere).
+- Substitutes when a required card has no stock: RTX 4080 SUPER (Ada), RTX 3090 Ti (Ampere).
+- A second RTX 5090 on a different host, for a short L2 subset.
 - On rentals, run only the **reference config plus the precision factor** (workload below). The RTX 4090 also runs the x86 factor slice: at fp16, deterministic mode {off, on} × attention backend {SDPA, alternative, and xformers if it installs} × both samplers, on the 200-prompt grid subset.
 - Cross-GPU results then cover **4 or 5 GPU models across 3 generations** (Ampere, Ada, Blackwell), which is 6 to 10 cross-model pairs. The Sparks carry the full factor grid.
 - Turing and older, and Hopper, are not tested. Make no claim about them.
@@ -165,7 +165,7 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 - The old "noise on CPU vs GPU" factor is dropped. ComfyUI always uses CPU noise, and the CPU-ISA test replaces it.
 
 **Marketplace testbed (end-to-end, RQ3):**
-- Providers are rented consumer cards (RTX 3090, 4090, 5080). Verifiers are the Sparks. This is the direction a real marketplace has.
+- Providers are rented consumer cards (RTX 3090, 4090, 5090). Verifiers are the Sparks. This is the direction a real marketplace has.
 - The local validator runs on a rented x86 pod and measures compute units by scripted replay. The end-to-end runs use Devnet.
 - The Sparks sit behind a VPN, so they connect outward to the provider's pod and to Devnet.
 - Mainnet is not used: deploying a program there locks up several SOL of rent, which does not fit the budget. Mainnet fees are calculated from measured signature counts and compute units at a dated SOL price, and labeled as calculated.
@@ -212,7 +212,7 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 |---|---|---|
 | Honest per-step deviation across architectures is as large as fp8 per-step deviation | A2 is undetectable even at E2 | Report it as a finding: quantization is the irreducible gap without operator-level or TEE evidence. This matches TAO's limitation from the other side |
 | Cross-GPU results are bit-exact under some configuration (e.g., fp32 + CPU noise + no xformers) | Tolerance is unnecessary in that configuration | Report a "deterministic profile" that marketplaces could require, with its throughput cost (compare EigenAI). This is a strong practical result |
-| Owned hardware is one model (DGX Spark) | Every other GPU model, including the x86 Blackwell card, is rented | L0–L2 run on the Sparks. Rent the consumer RTX 5080 for L3 and the RTX 4090 and RTX 3090 for L4 on RunPod (doc 10 §2). If a model is unavailable, report L4 for the models tested and narrow the claim |
+| Owned hardware is one model (DGX Spark) | Every other GPU model, including the x86 Blackwell card, is rented | L0–L2 run on the Sparks. Rent the consumer RTX 5090 for L3 and the RTX 4090 and RTX 3090 for L4 on RunPod (doc 10 §2). If a model is unavailable, report L4 for the models tested and narrow the claim |
 | The US$200 cap runs out (reruns, higher prices) | Fewer rented models | Load credit in US$50 steps, dry-run every workload on a Spark and smoke-test the x86 image on the cheapest pod first, review at US$120 spent. Drop the optional RTX 5090 first, then cut prompts on rentals. Never cut the reference config |
 | The Sparks are shared with a live production platform | A research job could disturb production, or be slowed by it | Use nodes 4 to 6, a small memory footprint and automatic stop conditions (doc 10 §2.2). Take all timing on rented pods. If the Sparks become unavailable, cut the Spark grid to the reference config and move it to an RTX 3090 pod (US$0.22/h) |
 | No mainnet measurement | Latency, priority fees and landing rate on mainnet are unknown | State it as a limitation. Report calculated mainnet fees. Mainnet measurement is a thesis extension |

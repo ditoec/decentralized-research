@@ -158,7 +158,7 @@ def fig2():
     LX = 168                      # start of the content area (lane labels to the left)
     LH = 142
     lanes = [("Requester", None, 12), ("Escrow contract", "on-chain (Solana)", 12 + LH),
-             ("Provider", "e.g. RTX 5080", 12 + 2 * LH), ("Verifier", "e.g. DGX Spark", 12 + 3 * LH)]
+             ("Provider", "e.g. RTX 5090", 12 + 2 * LH), ("Verifier", "e.g. DGX Spark", 12 + 3 * LH)]
     body = []
     for i, (name, sub, y) in enumerate(lanes):
         fill = CHAIN if i == 1 else "#ffffff"

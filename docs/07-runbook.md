@@ -48,7 +48,7 @@ Also commit three fixed subsets, each keeping the 40/20/40 proportions where it 
 - `prompts_rent500.txt`: 500 prompts (200 calibration, 100 dev, 200 test), for the reference config on RunPod nodes.
 - `prompts_grid200.txt`: 200 prompts from calibration and dev only, for the non-reference configs on the Sparks.
 - `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes, and for the second software stack on Spark-4.
-- `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5080.
+- `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5090.
 
 ---
 
@@ -60,7 +60,7 @@ Also commit three fixed subsets, each keeping the 40/20/40 proportions where it 
 |---|---|---|
 | Spark-4, Spark-5, Spark-6 (DGX Spark, ARM64) | see `docs/local-nodes.md` | Main research nodes: grid, attacks, verification, storage |
 | Spark-1, Spark-2, Spark-3 (DGX Spark, ARM64) | see `docs/local-nodes.md` | The 50-prompt L2 subset only |
-| RunPod pods (x86-64) | — | Consumer GeForce RTX only: RTX 5080, RTX 4090, RTX 3090; RTX 5090 only if the reserve allows; RTX 4080 SUPER or 3090 Ti as stock substitutes |
+| RunPod pods (x86-64) | — | Consumer GeForce RTX only: RTX 5090 (the L3 card, decided 2026-11-24), RTX 4090, RTX 3090; RTX 4080 SUPER or 3090 Ti as stock substitutes |
 
 Addresses and login details are in `docs/local-nodes.md`, which is kept out of git because this repository is public; ask the paper author for a copy. All six were inventoried on 2026-11-23 and are identical: DGX OS 7.5.0, kernel 7.0.0-1019-nvidia, driver 580.178.04, CUDA 13.0. Re-check these at the start of every work package, because automatic updates are on.
 
@@ -261,7 +261,7 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 | F4 | Commit the complete, consistent trajectory of A2 or A3 |
 | M | Falsify only the metadata (GPU name, timing). Negative control: verdicts must not change |
 
-**Measure β_A** (GPU time saved) for each attack on a RunPod RTX 5080 and RTX 3090, which the job has to itself: `1 − t_attack / t_honest`, median over 20 jobs. Do not measure it on a Spark; the shared GPU makes the timing unreliable.
+**Measure β_A** (GPU time saved) for each attack on a RunPod RTX 5090 and RTX 3090, which the job has to itself: `1 − t_attack / t_honest`, median over 20 jobs. Do not measure it on a Spark; the shared GPU makes the timing unreliable.
 
 ### 3.4 Run scripts: Spark runner and RunPod launcher
 
@@ -293,12 +293,11 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
    - Run `prompts_l2_50.txt` × 3 seeds, reference config, SDXL, on all six Sparks (L2, up to 15 pairs). On nodes 1 to 3 run it off-peak and keep to fp16.
    - Record the trajectory for every job (§3.1).
 2. **Rentals (L3 and L4), on RunPod through the §3.4 launcher.**
-   - Required models, consumer GeForce RTX only: RTX 5080 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
-   - Optional, only if the required three came in on estimate: RTX 5090.
+   - Required models, consumer GeForce RTX only: RTX 5090 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
    - **x86 factor slice, RTX 4090 only:** at fp16, `--deterministic` {off, on} × attention {SDPA, split or quad} × {euler, dpmpp_2m}, on `prompts_grid200.txt` × 3 seeds, for SD1.5 and SDXL. The two reference configs are already run, so this adds six configs, about 7,200 jobs and about US$5. If xformers installs in the x86-64 image, add it as a third attention backend.
-   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, fp32, both samplers) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
+   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, and fp32 for SD1.5 only, both samplers; SDXL fp32 is out of the grid, finding 10) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
    - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.**
-   - L2: a second RTX 5080 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
+   - L2: a second RTX 5090 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
    - If a card is slower than estimated, cut its prompts, never the reference config, and record the cut.
    - Spending: load credit in US$50 steps and stop for a review at US$120 spent.
 3. **Per pair, compute:**
@@ -328,10 +327,10 @@ Use the **calibration split only**.
 
 ## 6. RQ2: attacks (WP3, Feb 1–28)
 
-Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5080 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
+Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
 
 1. For each attack A1–A8, F1–F4 and M, produce **100 attacked jobs per cell** (never under 30). A cell is (attack × model × hardware pair). Produce **1,000 honest jobs per stratum** where the pooled pairs allow it, and never under 299. Zero false rejections in 299 bound the false-rejection rate below 1% at 95% confidence; 1,000 still bound it below 1% with up to 4 false rejections. The Spark-provider cells run on the Sparks.
-   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5080 and RTX 3090, and verify them on a Spark. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
+   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5090 and RTX 3090, and verify them on a Spark. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
    - **Rented verifier:** run E0 and the all-steps Tier B pass over the Spark-generated attacked jobs once on a RunPod RTX 4090.
    - Budget for both, with the β_A timing of §3.3: about US$15.
 2. Run every job through E0, E0-N, E2-W, E1 and E2-H with k ∈ {1, 2, 3, 5, 8} (Tier B outputs for all k can be computed from one pass that checks all steps).
@@ -382,8 +381,8 @@ Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5080 and RT
 2. **Orchestrator.** A minimal service: queue, assignment (rented card = provider, Spark = verifier, a node never verifies itself), transaction relay, and an event log of all on-chain and off-chain events with timestamps. It also keeps a **reputation record** per provider (start 0.5; a verified pass moves it toward 1; a confirmed fail lowers it), updated from the verdicts and used to exclude providers below a minimum. Reputation is recorded for the testbed only; it is not part of the RQ2 detection metrics.
 3. **Measurement.** For each path (accept unsampled, sampled-pass, sampled-fail with dispute, timeout refund), run at least 100 jobs on the **local validator** and at least 100 on **Devnet**. The Anchor build and the local validator run on a RunPod x86 pod (RTX 3090, US$0.22/h, or a CPU pod if cheaper; budget about US$13). The local-validator runs are a scripted replay of each path and need no GPU work, so do them in a few long sessions and terminate the pod in between; keep the program source and build artifact in the repository. Devnet SOL is free from the faucet. Record the signature count, compute units, fee in lamports, and latency to processed, confirmed and finalized. Record the RPC endpoint, its plan and rate limits, the priority-fee policy and the time of day. Interleave the paths. Fill R3.4.
    - **Mainnet is not used.** Deploying there locks up several SOL of rent, which does not fit the budget. Report a **calculated** mainnet fee per path from the measured signature count and compute units, at a dated SOL price, and label it as calculated.
-4. **Verifier cost per job**, timed on the rented RTX 4090 and RTX 5080 (not on a shared Spark): verifier GPU-seconds for E0, E0-N, E2-W, E1 and E2-H at each k. Also record storage in MB per job. Fills R3.1 and R3.3. Convert GPU-seconds to US dollars with the `hourly_rate_usd` recorded for each rented model, per model and with the date of the rate. Fills R3.7.
-5. **Testbed demo.** Run the end-to-end flow on Devnet with rented providers (RTX 3090, 4090 or 5080), including injected attackers, and real Spark verifiers, at p ∈ {0.05, 0.1, 0.25}. The orchestrator runs on the provider's pod; the Spark connects outward to it and to Devnet. Budget: about US$8. These are the points overlaid on Fig. R3.6.
+4. **Verifier cost per job**, timed on the rented RTX 4090 and RTX 5090 (not on a shared Spark): verifier GPU-seconds for E0, E0-N, E2-W, E1 and E2-H at each k. Also record storage in MB per job. Fills R3.1 and R3.3. Convert GPU-seconds to US dollars with the `hourly_rate_usd` recorded for each rented model, per model and with the date of the rate. Fills R3.7.
+5. **Testbed demo.** Run the end-to-end flow on Devnet with rented providers (RTX 3090, 4090 or 5090), including injected attackers, and real Spark verifiers, at p ∈ {0.05, 0.1, 0.25}. The orchestrator runs on the provider's pod; the Spark connects outward to it and to Devnet. Budget: about US$8. These are the points overlaid on Fig. R3.6.
 
 ---
 

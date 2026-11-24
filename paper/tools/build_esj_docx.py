@@ -796,7 +796,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "decided by two-of-three agreement. A confirmed fail refunds the requester, forfeits the bond B and lowers the "
          "provider’s reputation. The verifier commits its recomputed values before the provider’s commitment is opened, "
          "so it cannot copy them. The trajectory, about {R|R3.3} MB per SDXL job, stays off-chain until the job closes; "
-         "only the Merkle root and verdicts are recorded on-chain.")
+         "only the Merkle root and verdicts are recorded on-chain. An unsampled job transfers no trajectory data. Because "
+         "Tier A reads every step, a sampled job sends the whole trajectory to the verifier; Tier B alone needs only the k "
+         "opened steps with their Merkle inclusion proofs ({R|R3.8}).")
 
     H2("3-3- Analytical Model")
     Para("Let 𝒟{sub|H} be the distribution of what an output-only verifier observes under honest execution, including "
@@ -917,6 +919,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
          "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
          "attack, model and hardware pair.")
+    Para("{b|Data retention.} Jobs on DGX Spark systems keep their full trajectories. Jobs on rented GPUs keep full "
+         "trajectories only for calibration and development prompts, which the per-step tolerances need. For test and "
+         "attacked jobs on rented GPUs, eight steps per job are drawn before generation from a committed seed that the "
+         "attack implementations never see, and only those steps, their Merkle inclusion proofs, the job metadata, the "
+         "image and the result of Tier A, computed over all steps on the rented host before the trajectory is "
+         "discarded, are kept. The drawn sets are nested, so one draw serves every k ≤ 8. This is the information a "
+         "deployed verifier receives, and it keeps the transfer from rented hosts within the budget.")
     Para("{b|Testbed.} Rented consumer GPUs act as providers and DGX Spark systems as verifiers. The escrow program runs on a "
          "local validator on a rented x86 host for volume and on the Solana Devnet for fees and latency. For each lifecycle path (accepted, "
          "sampled and passed, sampled and disputed, timeout refund) signature counts, compute units, fees and latency to "
@@ -963,9 +972,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Answer to RQ2.} {R|R2.9}")
     H2("4-3- Cost and Deterrence (RQ3)")
     Table("Verifier cost per job by evidence level",
-          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
-          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}", "{R|R3.7}"]],
-          [48, 40, 22, 26, 32])
+          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Data per sampled job (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
+          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.8}", "{R|R3.1}", "{R|R3.7}"]],
+          [40, 32, 20, 24, 24, 28])
     Table("Escrow cost per lifecycle path",
           ["Path", "Compute units", "Fee on Devnet (SOL, measured)", "Fee on mainnet (SOL, calculated)", "Latency to finalized on Devnet (median, p95)"],
           [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
@@ -996,7 +1005,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
-         "them. The full grid of software factors was measured on that one GPU platform, under two software stacks; "
+         "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
+         "partial-faking analysis and any check with k > 8 use jobs generated on the DGX Spark systems. "
+         "The full grid of software factors was measured on that one GPU platform, under two software stacks; "
          "on x86 only the precision, deterministic-mode and attention factors were measured. Finally, re-execution establishes consistency with the committed "
          "workload, not that a particular GPU performed it.")
 

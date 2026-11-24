@@ -122,6 +122,7 @@ The rented-provider cells matter: a consumer x86 card as provider and a Spark as
 4. **Manifest fields for rented nodes:** `provider`, `cloud_type`, `host_id` or data-center ID, `hourly_rate_usd`, `billed_hours`, `cost_usd`.
 5. **Dollar costs in the paper.** RQ3 states verifier cost and the attacker's saving in dollars at the recorded rental rates.
 6. RunPod's pricing page does not mention data-transfer fees. Confirm this in the pilot with the first large copy.
+7. **Retention by class (decided 2026-11-24).** The pilot measured about 2 MB/s from RunPod to the Sparks, so rented jobs keep full trajectories only for the calibration and dev prompts; test-split and attacked jobs keep the eight pre-drawn steps with Merkle proofs, and the factor runs keep images only. Rules and estimate: runbook §3.5.
 
 ### 2.5 Budget
 

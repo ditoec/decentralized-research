@@ -64,9 +64,9 @@ Within the US$60 line. Spent so far on RunPod in this pilot: balance 8.66 → 6.
 
 ## Open items
 
-1. **Transfer plan** for WP2 (above).
+1. **Transfer plan** for WP2 (above). **Decided 2026-11-24: options (a) and (c) combined by split.** Full trajectories (paid transfer time) for calibration and dev prompts; opened steps plus the commitment for test and attacked jobs; images only for the factor runs. Runbook §3.5.
 2. The E0-N honest failure is worth one line in the paper once RQ1 gives its rate.
-3. The RTX 5090 replaces the RTX 5080 as the L3 card; doc 05 and the Methods name the 5080 and should say so when the grid is fixed.
+3. The RTX 5090 replaces the RTX 5080 as the L3 card. **Decided 2026-11-24**; doc 05, doc 10, the runbook and the manuscript are updated.
 4. Calibration dry run (`experiments/runs/20261124-wp0b-calib-dryrun-01`): the pipeline works end to end; the real freeze needs at least 300 honest samples per step at k = 3, which WP2 provides.
 
 ## Figures (PNG, PDF and CSV under each run's `figures/`)

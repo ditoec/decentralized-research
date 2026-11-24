@@ -268,7 +268,7 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 1. **Spark runner.** Takes a workload file, starts the research container under the §1.1 rules, runs the jobs, and enforces the stop conditions (free memory under 15 GB, free disk under 200 GB). It resumes where it stopped, and writes the manifest including `cotenants`.
 2. **RunPod launcher.** It starts the pod with the x86-64 image, verifies the card (`nvidia-smi`, GPU UUID) and the model hashes, records the driver, host and data-center ID, runs the assigned workload, and writes the manifest with the cost fields of §0.
 3. **Data comes home by pull.** The Sparks are behind a VPN, so a pod cannot connect to them. A Spark pulls the raw data from the pod over SSH and verifies the checksums. Only then does the launcher **terminate** the pod.
-4. **No paid storage.** Raw data lives on Sparks 4 to 6. A rented model produces roughly 40–65 GB of trajectories. Move data between Sparks over the 200 Gb links, not the 1 Gb management network.
+4. **No paid storage.** Raw data lives on Sparks 4 to 6. Rented jobs bring home only what §3.5 allows for their class. Move data between Sparks over the 200 Gb links, not the 1 Gb management network.
 5. **Dry run first.** Run every workload for 20 jobs on a Spark. Then smoke-test the x86-64 image for 20 jobs on an RTX 3090 pod (US$0.22/h) before any dearer pod is started. Nobody debugs on an expensive pod.
 6. Use Community Cloud first. Use Secure Cloud only when a model is unavailable.
 
@@ -276,6 +276,25 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 - `code/tools/spark_run.py --run-id ID -- <command>`: research container `esj-<id>` (label `research=esj`, no published ports), stops it when free memory < 15 GB or disk < 200 GB and restarts it when memory is back above 15 GB + a margin, logs to `<run>/logs/runner.jsonl`, and writes co-tenant snapshots (other containers' CPU/memory, vLLM running/waiting requests) every 15 s that each job row copies. Host python3 only.
 - RunPod: create the pod through the Runpod tools with `POD_TOKEN` (random), `POD_HOURLY_USD` and `POD_CLOUD` in its environment and port `8000/http`; start `tools/pod_server.py` (token-protected GET with resume and PUT); PUT `code.tar.gz` (code + experiments/configs); run `tools/pod_job.sh tools/workloads/<w>.sh`; then on a Spark (or the operator's machine) `tools/pull_run.py https://<pod>-8000.proxy.runpod.net/<token>` downloads, verifies checksums, extracts and adds the cost fields. Terminate the pod only after a clean pull.
 - Before committing run folders (the repository is public): `python3 tools/sanitize_runs.py ../experiments/runs/<run> ...` replaces Spark hostnames and production co-tenant container names and images with role labels (`cotenant-llm`, `cotenant-svc`), leaving every measured number unchanged; `--check` must exit 0. The unredacted originals stay on the node under `~/esj/runs`.
+
+### 3.5 Data retention for rented jobs (decision of 2026-11-24)
+
+The Sparks' site link gives about 2 MB/s from RunPod and an SDXL trajectory is 16.5 MB, so rented trajectories are **not** all brought home. What each rented job keeps depends on what the analysis needs from it. Spark-generated jobs are unaffected: they keep full trajectories as before.
+
+| Class | Rented jobs | What comes home | Why |
+|---|---|---|---|
+| **F (full)** | Reference config on **calibration and dev** prompts (the 300 such prompts in `prompts_rent500.txt`), every rented model; the second RTX 5090's L2 subset (`prompts_l2_50.txt`) | The whole trajectory, as on a Spark | τ_i is an extreme per-step quantile and needs every step (≥ 300 honest samples per step at k = 3); the dev split chooses the Tier B metric; the RQ1 per-step analysis (R1.4) and the x86 ε_A calibration need all steps |
+| **O (opened steps)** | Reference config on **test** prompts (the 200 such prompts in `prompts_rent500.txt`), and every attacked job from a rented provider (§6) | The image; x₀, the schedule, the conditioning hash and the final latent; the Merkle root; the eight pre-drawn steps (x_i, D_i, σ_i, and D_{i−1} for dpmpp_2m) with their inclusion proofs; the pod-side Tier A result | After the freeze, a verifier only opens the k ≤ 8 drawn steps. This is also what a deployed verifier receives |
+| **I (image level)** | The precision factor and the RTX 4090 factor slice | The image, the final latent, the Merkle root, and the pod-side Tier A result | R1.7 is answered at image level and by bit identity of the Merkle roots |
+
+Rules:
+1. **Step draw, fixed before generation.** Before a class-O workload starts, generate a random `draw_seed`, record its sha256 in the manifest and keep the seed itself out of the workload. For each job, the drawn steps are the first 8 entries of a permutation of the T steps seeded by `sha256(draw_seed ‖ job_id)`. The set for k is the first k entries, so the sets are nested and one pull serves k ∈ {1, 2, 3, 5, 8}. E2-W (SN30) uses the first 3 entries as its random steps.
+2. **Attack injectors never see `draw_seed`.** It is passed to the pod only after generation, for the extraction step. Otherwise a forger could fake only the steps that will not be opened.
+3. **Tier A runs on the pod's CPU** over all steps before the full trajectory is discarded. Store the per-step residuals (30 numbers per job) and the verdict. Tier A is bit-exact across CPUs for Euler (pilot, finding 16); for dpmpp_2m, calibrate ε_A from the class-F jobs on both an x86 CPU and a Spark, and use the larger value.
+4. **Extraction then discard.** The pod writes the class-O bundle, verifies the Merkle proofs against the root, and deletes the full trajectory before the pull. Record `retention: F|O|I` and the `draw_seed` hash in every job row.
+5. **Code.** `verify.py` must accept class-O bundles (Tier B and E2-W from the opened steps; E1 from the metadata; Tier A read from the pod's result). `calibrate.py` must refuse anything but class F.
+6. **What this gives up.** On rented test and attack jobs, no analysis with k > 8 or at undrawn steps is possible. The partial-faking sweep (R2.7) therefore uses Spark-generated jobs, which keep full trajectories.
+7. **Estimated volume** (not measured): about 90 GB for class F and 40 GB for class O over all rented models, about 18 hours of pulls at 2 MB/s, roughly US$10–20 of pod time at the planned rates. Measure the real numbers on the first rented workload and record them in its manifest.
 
 ---
 
@@ -296,7 +315,7 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
    - Required models, consumer GeForce RTX only: RTX 5090 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
    - **x86 factor slice, RTX 4090 only:** at fp16, `--deterministic` {off, on} × attention {SDPA, split or quad} × {euler, dpmpp_2m}, on `prompts_grid200.txt` × 3 seeds, for SD1.5 and SDXL. The two reference configs are already run, so this adds six configs, about 7,200 jobs and about US$5. If xformers installs in the x86-64 image, add it as a third attention backend.
    - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, and fp32 for SD1.5 only, both samplers; SDXL fp32 is out of the grid, finding 10) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
-   - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.**
+   - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.** Keep data per the retention classes of §3.5: calibration and dev prompts class F, test prompts class O, the precision factor and the factor slice class I.
    - L2: a second RTX 5090 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
    - If a card is slower than estimated, cut its prompts, never the reference config, and record the cut.
    - Spending: load credit in US$50 steps and stop for a review at US$120 spent.
@@ -330,7 +349,7 @@ Use the **calibration split only**.
 Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
 
 1. For each attack A1–A8, F1–F4 and M, produce **100 attacked jobs per cell** (never under 30). A cell is (attack × model × hardware pair). Produce **1,000 honest jobs per stratum** where the pooled pairs allow it, and never under 299. Zero false rejections in 299 bound the false-rejection rate below 1% at 95% confidence; 1,000 still bound it below 1% with up to 4 false rejections. The Spark-provider cells run on the Sparks.
-   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5090 and RTX 3090, and verify them on a Spark. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
+   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5090 and RTX 3090, and verify them on a Spark. These jobs are class O (§3.5): only the pre-drawn steps come home. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
    - **Rented verifier:** run E0 and the all-steps Tier B pass over the Spark-generated attacked jobs once on a RunPod RTX 4090.
    - Budget for both, with the β_A timing of §3.3: about US$15.
 2. Run every job through E0, E0-N, E2-W, E1 and E2-H with k ∈ {1, 2, 3, 5, 8} (Tier B outputs for all k can be computed from one pass that checks all steps).
@@ -444,6 +463,7 @@ The paper author draws the five result figures from the data, in the same style 
 | R3.1 | Verifier GPU-s, relative to E0 | §7.4 |
 | R3.2 | k*, p*, bond ratio, agreement with theory | §8 |
 | R3.3 | Trajectory storage (MB) | §7.4 |
+| R3.8 | Data sent to the verifier per sampled job (MB): full trajectory, since Tier A needs every step, versus the opened steps alone | §7.4, §3.5 |
 | R3.4 | Escrow CU, fees (Devnet measured, mainnet calculated), latency | §7.3 |
 | R3.7 | Verifier cost in US$ at observed rental rates | §7.4, rented-node manifests |
 | R3.5 | Pareto data | §6 + §7.4 |

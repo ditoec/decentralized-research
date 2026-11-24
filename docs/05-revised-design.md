@@ -103,7 +103,7 @@ RQ3 reports compute units, fees and latency for each lifecycle path, including d
 
 ### 4.5 Hardware and statistics (updated 2026-11-23 after the hardware inventory)
 
-**Hardware: six owned DGX Sparks, and rented x86 GPUs from RunPod.** There are no owned RTX 5080s; the rented x86 Blackwell card is a Runpod **RTX 5080** (Community Cloud), with the RTX 5090 as fallback. All rented cards are consumer GeForce RTX (decided 2026-11-23). Budget, node roles and rules: doc 10 §2.
+**Hardware: six owned DGX Sparks, and rented x86 GPUs from RunPod.** *Update 2026-11-24 (go/no-go #0): the rented consumer Blackwell card is an **RTX 5090**, which replaces the RTX 5080 everywhere below (no 5080 stock during the pilot); SDXL fp32 is dropped from the grid; decisions in `docs/07-runbook.md` §3.* There are no owned RTX 5080s; the rented x86 Blackwell card is a Runpod **RTX 5080** (Community Cloud), with the RTX 5090 as fallback. All rented cards are consumer GeForce RTX (decided 2026-11-23). Budget, node roles and rules: doc 10 §2.
 
 | Property | DGX Spark (GB10), owned ×6 | RTX 5080, rented |
 |---|---|---|

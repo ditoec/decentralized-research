@@ -65,6 +65,7 @@ REFS = {
  "yakovenko2018solana": "Yakovenko, A. (2018). Solana: A new architecture for a high performance blockchain (v0.8.13). Available online: https://solana.com/solana-whitepaper.pdf (accessed on October 16, 2026)." + MANUAL,
  "solana_fees": "Solana Foundation. (n.d.). Fees. Solana documentation. Available online: https://solana.com/docs/core/fees (accessed on October 16, 2026)." + MANUAL,
  "zhang2018lpips": "Zhang, R., Isola, P., Efros, A. A., Shechtman, E., & Wang, O. (2018). The unreasonable effectiveness of deep features as a perceptual metric. 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 586–595. doi:10.1109/CVPR.2018.00068.",
+ "yu2022parti": "Yu, J., Xu, Y., Koh, J. Y., Luong, T., Baid, G., Wang, Z., Vasudevan, V., Ku, A., Yang, Y., Ayan, B. K., Hutchinson, B., Han, W., Parekh, Z., Li, X., Zhang, H., Baldridge, J., & Wu, Y. (2022). Scaling autoregressive models for content-rich text-to-image generation. Transactions on Machine Learning Research. Available online: https://openreview.net/forum?id=AFDcYJKhND (accessed on November 24, 2026).",
  "oquab2023dinov2": "Oquab, M., Darcet, T., Moutakanni, T., Vo, H. V., Szafraniec, M., Khalidov, V., Fernandez, P., Haziza, D., Massa, F., El-Nouby, A., Assran, M., Ballas, N., Galuba, W., Howes, R., Huang, P.-Y., Li, S.-W., Misra, I., Rabbat, M., Sharma, V., Synnaeve, G., Xu, H., Jégou, H., Mairal, J., Labatut, P., Joulin, A., & Bojanowski, P. (2024). DINOv2: Learning robust visual features without supervision. Transactions on Machine Learning Research. Available online: https://openreview.net/forum?id=a68SUt6zFt (accessed on November 23, 2026).",
  "radford2021clip": "Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J., Krueger, G., & Sutskever, I. (2021). Learning transferable visual models from natural language supervision. Proceedings of the 38th International Conference on Machine Learning (ICML 2021), PMLR 139, 8748–8763.",
  "lu2022dpmsolverpp": "Lu, C., Zhou, Y., Bao, F., Chen, J., Li, C., & Zhu, J. (2025). DPM-Solver++: Fast solver for guided sampling of diffusion probabilistic models. Machine Intelligence Research, 22(4), 730–751. doi:10.1007/s11633-025-1562-4.",
@@ -415,7 +416,7 @@ def main(template, out):
         add(fill_para(copy.deepcopy(proto["ref"]), f"[{n}] " + REFS[key], rpr["ref"]))
 
     doc.core_properties.title = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference"
-    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya; Ekki Rinaldi"
+    doc.core_properties.author = "Anjas Risky Maradita; Dito Eka Cahya; Ekki Rinaldi; Pujianto Yugopuspito"
     doc.save(out)
 
     # footnote contact e-mail (template placeholder)
@@ -450,10 +451,11 @@ def main(template, out):
 TITLE = "Calibrated Trajectory Verification for Escrow-Settled Diffusion Inference on Heterogeneous GPUs"
 AUTHORS = [("Anjas Risky Maradita", set(), False), (" 1", set(), True), ("<FN>", set(), True),
            (", ", set(), False), ("Dito Eka Cahya", set(), False), (" 2", set(), True),
-           (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True)]
-AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia.")
-AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia.")
-AFFIL3 = ("3 ", "CEO, Vector International, {T|city, country}.")
+           (", ", set(), False), ("Ekki Rinaldi", set(), False), (" 3", set(), True),
+           (", ", set(), False), ("Pujianto Yugopuspito", set(), False), (" 1", set(), True)]
+AFFIL1 = ("1 ", "Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Jakarta, Indonesia.")
+AFFIL2 = ("2 ", "Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia, Jakarta, Indonesia.")
+AFFIL3 = ("3 ", "Founder, Vektor Labs, Jakarta, Indonesia.")
 KEYWORDS = "Decentralized GPU Marketplace; Verifiable Inference; Diffusion Models; Probabilistic Verification; Smart-Contract Escrow; DePIN."
 
 ABSTRACT = (
@@ -465,7 +467,7 @@ ABSTRACT = (
  "cost-saving cheating on diffusion jobs, and at what cost. {b|Methods:} honest variation of pinned ComfyUI SD1.5 and "
  "SDXL workflows is measured across five nested heterogeneity levels on DGX Spark systems and {R|R0.1: rented GPU "
  "models}. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
- "eight cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
+ "eight candidate cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
  "consistency on every step on the CPU and model consistency at k random steps under per-step calibrated tolerances, "
  "binds the initial noise to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
  "{R|R2.1: deployed-rule headline}. At a false-rejection rate of at most 1%, the proposed check detects "
@@ -500,10 +502,11 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "workflow engines such as ComfyUI {c|comfyui} make it easy to package as a job. A diffusion job is iterative: a "
          "sampler refines a latent over T steps, and each step calls a large denoising network, so the cost of a job grows "
          "with the number of steps, the size of the network and its numerical precision. The cheapest ways to cheat follow "
-         "directly from this structure, and none of them produces garbage. A provider that runs 20 instead of 30 steps, "
-         "stores the network in 8-bit floating point (fp8), or substitutes a distilled “turbo” model returns an image that "
-         "looks plausible and is often semantically close to the honest one, while saving a large share of the job’s GPU "
-         "time. On current consumer GPUs, fp8 execution is a single command-line flag in ComfyUI.")
+         "directly from this structure, and none of them produces garbage. A provider that runs 20 instead of 30 steps "
+         "or substitutes a distilled “turbo” model returns an image that looks plausible and is often semantically close "
+         "to the honest one, while saving a large share of the job’s GPU time. Storing the network in 8-bit floating "
+         "point (fp8), a single command-line flag in ComfyUI, reduces memory and, where fast low-precision kernels exist, "
+         "time.")
     Para("Detecting such cost-saving substitution from outputs alone is already known to be very hard for large "
          "language models (LLMs): classifiers trained to recognise quantized model outputs perform at chance level, and "
          "statistical tests lose power when only part of the traffic is substituted {c|cai2025substitution,gao2025met}. "
@@ -544,7 +547,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Bullets(["A measurement of honest variation for SD1.5 and SDXL workflows across five nested heterogeneity levels, "
              "from repeated runs on one GPU to different GPU generations, including an exact-reproducibility test of the "
              "initial noise across x86 and ARM processors.",
-             "An attack study of faithful reproductions of two deployed validation rules against eight cost-saving attacks "
+             "An attack study of faithful reproductions of two deployed validation rules against eight candidate cost-saving attacks "
              "and four trajectory forgeries, with calibrated error rates.",
              "A hardened two-tier trajectory check that needs only a sampler hook, not operator-level access or trusted "
              "hardware, integrated with a Solana escrow that holds a provider bond.",
@@ -752,14 +755,16 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "so that it holds for any processor and PyTorch build without a per-build measurement: it lies well above the "
          "largest cross-processor rounding difference we measured ({R|R1.1}) and far below the per-element differences "
          "of order one that a different seed produces, so it gives an attacker no usable freedom.")
-    Para("{b|Reproducibility requirements.} Two sources of variation inside ComfyUI are fixed by the protocol rather "
+    Para("{b|Reproducibility requirements.} Three sources of variation are fixed by the protocol rather "
          "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
          "parameters and passed to the sampler. ComfyUI otherwise computes it on whichever device holds the model, and "
          "a one-ULP difference in σ changes the whole trajectory. Second, the decisions that ComfyUI takes from the "
          "free memory at each call, namely whether the conditional and unconditional CFG passes share a batch and "
          "whether the VAE decodes in tiles, are pinned to a fixed choice during sampling, replay and decoding. "
          "Otherwise the same job could give a different trajectory depending on other workloads on the node. Both "
-         "settings are recorded in the job metadata, which the Merkle root commits to.")
+         "settings are recorded in the job metadata, which the Merkle root commits to. Third, providers and verifiers "
+         "run one pinned software image, identified by its digest, so the PyTorch, CUDA and ComfyUI versions are fixed "
+         "by the protocol rather than calibrated; the GPU driver, which the host controls, is recorded for every job.")
     Para("{b|Tier A: solver consistency on every step.} Given the committed values, the next state is a deterministic "
          "function of committed quantities only. For the Euler sampler:")
     Eq(omath(sub("x", "i+1"), ("p", "="), sub("x", "i"), ("p", "+"),
@@ -777,8 +782,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "DPM-Solver++(2M) takes step coefficients that ComfyUI computes on the GPU, so its replica differs in the last "
          "bits. It also checks that the committed schedule equals the schedule implied by the workflow, entry by entry "
          "within a fixed relative tolerance of 10{sup|−6} (the CPU-computed schedule differs by one unit in the last "
-         "place between ARM and x86 processors), which catches step-count reduction directly. Tier A costs no GPU time and detects copied, interpolated and "
-         "truncated trajectories. A forger can still pass it by solving Equation 1 for D{sub|i}, which is why Tier B exists.")
+         "place between ARM and x86 processors), which catches step-count reduction directly. Tier A costs no GPU time. "
+         "It rejects trajectories whose committed predictions do not match their states, such as a partial copy or "
+         "interpolation whose D{sub|i} were left unchanged, at the boundary between computed and faked steps. It cannot "
+         "reject a forger who derives D{sub|i} from the faked states by solving Equation 1, and it accepts a trajectory in "
+         "which every step is copied, because D{sub|i} = x{sub|i} makes Equation 1 an identity. Detection of forgeries is "
+         "therefore credited to Tier B; Tier A is a cheap filter.")
     Para("{b|Tier B: model consistency at random steps.} After the commitment is final, k distinct step indices are drawn "
          "from the sampling seed. For each checked step the verifier recomputes the CFG-combined prediction on its own GPU "
          "and accepts the step if the distance to the committed D{sub|i} is at most a per-step tolerance τ{sub|i} "
@@ -790,7 +799,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "decided by two-of-three agreement. A confirmed fail refunds the requester, forfeits the bond B and lowers the "
          "provider’s reputation. The verifier commits its recomputed values before the provider’s commitment is opened, "
          "so it cannot copy them. The trajectory, about {R|R3.3} MB per SDXL job, stays off-chain until the job closes; "
-         "only the Merkle root and verdicts are recorded on-chain.")
+         "only the Merkle root and verdicts are recorded on-chain. An unsampled job transfers no trajectory data. Because "
+         "Tier A reads every step, a sampled job sends the whole trajectory to the verifier; Tier B alone needs only the k "
+         "opened steps with their Merkle inclusion proofs ({R|R3.8}).")
 
     H2("3-3- Analytical Model")
     Para("Let 𝒟{sub|H} be the distribution of what an output-only verifier observes under honest execution, including "
@@ -853,29 +864,44 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Table("Nested heterogeneity levels",
           ["Level", "Comparison", "Isolates"],
           [["L0", "Same unit, repeated runs", "Run-to-run nondeterminism"],
-           ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode, library version"],
+           ["L1", "Same unit, different software configuration", "Precision, attention implementation, deterministic mode"],
            ["L2", "Two units of the same model", "Unit-to-unit variation"],
            ["L3", "Rented x86 Blackwell GPU versus DGX Spark", "Chip, compute capability, memory system, processor instruction set"],
            ["L4", "Blackwell versus Ampere and Ada (rented)", "GPU generation"]],
           [18, 70, 80])
     Para("{b|Workloads.} SD1.5 {c|rombach2022ldm} at 512 × 512 and SDXL {c|podell2023sdxl} at 1024 × 1024 pixels are run "
          "with 30 steps, the Euler and DPM-Solver++(2M) samplers and a fixed CFG scale, in ComfyUI at a pinned commit. "
-         "Prompts come from {T|PartiPrompts or COCO captions; record source and licence}, with three seeds per prompt, "
-         "split by prompt into calibration, development and test sets ({R|R0.5}). On the DGX Spark systems the full factor grid "
-         "is run: precision (fp16, bf16, fp32) × attention implementation (two options) × sampler (two) × deterministic "
-         "mode (off, on). One DGX Spark repeats the grid on a smaller prompt set under a second PyTorch and CUDA version. "
+         "Prompts are drawn from PartiPrompts {c|yu2022parti} (Apache-2.0 licence), sampled with a fixed random seed. Each prompt is run with three seeds, "
+         "and prompts are split into calibration (400 prompts), development (200) and test (400) sets. On the DGX Spark systems the full factor grid "
+         "is run: precision (fp16, bf16, and fp32 for SD1.5 only) × attention implementation (two options) × sampler (two) × deterministic "
+         "mode (off, on). SDXL in fp32 is excluded: in the pilot it filled the whole memory of the 24 GB and 32 GB rented cards and could not run beside other workloads on a DGX Spark. "
          "Rented GPUs run the reference configuration and the precision factor; one rented x86 GPU of the Ada "
          "generation also runs the deterministic-mode and attention factors at fp16. The reference "
          "configuration (fp16, default attention, both samplers, deterministic mode off) is the one for which tolerances "
          "are frozen. It is run on a larger prompt set than the other configurations, because the per-step tolerances "
          "of Equation 6 are extreme quantiles of the honest distribution.")
+    Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
+         "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
+         "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
+         "bit-identical between two DGX Spark units (40 of 40 SDXL jobs with either sampler) and under co-located GPU "
+         "load (60 of 60 jobs in each of four load and batching conditions), whereas no pair of different GPU models "
+         "produced a single bit-identical image (0 of 40 SDXL jobs for each of the six pairs). The initial noise fell "
+         "into an ARM and an x86 family, identical within each family and at most 2.3 × 10{sup|−6} apart between them, "
+         "which sets the scale for u{sub|0}. When a DGX Spark replayed the steps of the three x86 providers (40 jobs "
+         "each), Tier A reproduced all 3,600 Euler steps bit for bit, whereas for DPM-Solver++(2M) its CPU replica "
+         "matched only 560 of 1,200 steps even between two DGX Spark units with identical trajectories; hence ε{sub|A} "
+         "is set per sampler. The median relative L2 distance between recomputed and committed D{sub|i} fell from "
+         "2.7–2.9% at the first step to 0.04% at the last, for all three providers; hence τ{sub|i} is set per step. On "
+         "every rented card, the fp8 and NVFP4 paths of the pinned ComfyUI commit were slower than fp16 (NVFP4 runs "
+         "only through a dequantizing fallback). Attacks A2 and A2b therefore save the provider no GPU time at this "
+         "commit (β{sub|A} ≤ 0, so Equation 8 holds for them trivially) and are kept as detection cases.")
     Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed, on rented "
          "GPUs that the job has to itself.")
     Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
           [["A1", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30", "{R|R2.4}"],
            ["A2", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", "{R|R2.4}"],
-           ["A2b", "4-bit (NVFP4) model", "{T|only if supported at the pinned version}", "{R|R2.4}"],
+           ["A2b", "4-bit (NVFP4) model", "NVFP4 checkpoint; at the pinned commit it runs only through a dequantizing fallback", "{R|R2.4}"],
            ["A3", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning", "{R|R2.4}"],
            ["A4", "Sampler swap", "Cheaper sampler committed as the required one", "{R|R2.4}"],
            ["A5", "Low resolution + upscale", "Generation at half resolution, then upscaling", "{R|R2.4}"],
@@ -896,6 +922,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
          "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
          "attack, model and hardware pair.")
+    Para("{b|Data retention.} Jobs on DGX Spark systems keep their full trajectories. Jobs on rented GPUs keep full "
+         "trajectories only for calibration and development prompts, which the per-step tolerances need. For test and "
+         "attacked jobs on rented GPUs, eight steps per job are drawn before generation from a committed seed that the "
+         "attack implementations never see, and only those steps, their Merkle inclusion proofs, the job metadata, the "
+         "image and the result of Tier A, computed over all steps on the rented host before the trajectory is "
+         "discarded, are kept. The drawn sets are nested, so one draw serves every k ≤ 8. This is the information a "
+         "deployed verifier receives, and it keeps the transfer from rented hosts within the budget.")
     Para("{b|Testbed.} Rented consumer GPUs act as providers and DGX Spark systems as verifiers. The escrow program runs on a "
          "local validator on a rented x86 host for volume and on the Solana Devnet for fees and latency. For each lifecycle path (accepted, "
          "sampled and passed, sampled and disputed, timeout refund) signature counts, compute units, fees and latency to "
@@ -942,9 +975,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Answer to RQ2.} {R|R2.9}")
     H2("4-3- Cost and Deterrence (RQ3)")
     Table("Verifier cost per job by evidence level",
-          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
-          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.1}", "{R|R3.7}"]],
-          [48, 40, 22, 26, 32])
+          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Data per sampled job (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
+          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.8}", "{R|R3.1}", "{R|R3.7}"]],
+          [40, 32, 20, 24, 24, 28])
     Table("Escrow cost per lifecycle path",
           ["Path", "Compute units", "Fee on Devnet (SOL, measured)", "Fee on mainnet (SOL, calculated)", "Latency to finalized on Devnet (median, p95)"],
           [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
@@ -975,8 +1008,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
-         "them. The full grid of software factors was measured on that one GPU platform, under two software stacks; "
-         "on x86 only the precision, deterministic-mode and attention factors were measured. Finally, re-execution establishes consistency with the committed "
+         "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
+         "partial-faking analysis and any check with k > 8 use jobs generated on the DGX Spark systems. "
+         "The full grid of software factors was measured on that one GPU platform, and on x86 only the precision, "
+         "deterministic-mode and attention factors were measured. All results hold for the one pinned software stack; "
+         "tolerances calibrated on it are not claimed to cover other PyTorch or CUDA versions, which is why the protocol "
+         "pins the image. Finally, re-execution establishes consistency with the committed "
          "workload, not that a particular GPU performed it.")
 
     # ================================================================== 4 CONCLUSION
@@ -988,10 +1025,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     # ================================================================== 5 DECLARATIONS
     H1("6- Declarations")
     H2("6-1- Author Contributions")
-    Para("{T|confirm roles — Conceptualization, A.R.M. and D.E.C.; methodology, A.R.M.; software, D.E.C.; validation, "
-         "D.E.C.; formal analysis, A.R.M.; investigation, D.E.C.; resources, D.E.C.; data curation, D.E.C.; "
-         "writing—original draft preparation, A.R.M.; writing—review and editing, D.E.C.; visualization, A.R.M.; "
-         "supervision, D.E.C.; project administration, A.R.M.; add roles for E.R.} All "
+    Para("Conceptualization, A.R.M.; methodology, A.R.M. and D.E.C.; software, E.R.; validation, E.R.; formal "
+         "analysis, D.E.C.; investigation, E.R.; resources, E.R.; data curation, E.R.; writing—original draft "
+         "preparation, D.E.C.; writing—review and editing, A.R.M., E.R. and P.Y.; visualization, D.E.C.; supervision, "
+         "P.Y.; project administration, A.R.M. All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("6-2- Data Availability Statement")
     Para("The data presented in this study are openly available in {R|R0.2: repository name} at {R|R0.2: DOI}. They "
@@ -1007,7 +1044,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H2("6-6- Informed Consent Statement")
     Para("Not applicable.", "decl")
     H2("6-7- Conflicts of Interest")
-    Para("{T|E.R. is CEO of Vector International: declare any commercial interest in GPU marketplaces or verification, "
+    Para("{T|E.R. is the founder of Vektor Labs: declare any commercial interest in GPU marketplaces or verification, "
          "or confirm none} The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
          "falsification, double publication and/or submission, and redundancies have been completely observed by the "

@@ -9,13 +9,15 @@
   `python -P paper/tools/build_esj_docx.py "paper/Article Template.docx" paper/manuscript_ESJ.docx`
   **Once co-authors edit the .docx by hand, the .docx becomes the master. Stop regenerating it from the script.**
 - Checking the output: Word automation exports `build/manuscript_ESJ.pdf`, and the skill validator passes (see the session notes in CLAUDE.md).
+- `manuscript_ESJ.pdf`: a read-only PDF of the current .docx for co-authors, exported from Word. Re-export it whenever the .docx changes (Word COM: `ExportAsFixedFormat(pdf, 17)`); the .docx is the source.
 
 ## Authors (for the submission system and the cover letter)
 
 | Order | Author | Affiliation | Email | Role |
 |---|---|---|---|---|
-| 1 | Anjas Risky Maradita | Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Tangerang, Indonesia | TODO (also goes in the manuscript's CONTACT footnote) | Corresponding author |
-| 2 | Dito Eka Cahya | Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia | dito.eka.cahya@brin.go.id | Co-author |
-| 3 | Ekki Rinaldi | CEO, Vector International (city and country TODO) | — | Co-author |
+| 1 | Anjas Risky Maradita | Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Jakarta, Indonesia | TODO (also goes in the manuscript's CONTACT footnote) | Corresponding author |
+| 2 | Dito Eka Cahya | Research Center for AI and Cybersecurity, National Research and Innovation Agency of Indonesia, Jakarta, Indonesia | dito.eka.cahya@brin.go.id | Co-author |
+| 3 | Ekki Rinaldi | Founder, Vektor Labs, Jakarta, Indonesia | — | Co-author |
+| 4 | Pujianto Yugopuspito (Dr. Eng., Ir., M.Sc.) | Faculty of Artificial Intelligence and Data Science, Universitas Pelita Harapan, Jakarta, Indonesia | TODO | Co-author |
 
 The ESJ template shows only the corresponding author's email in the manuscript. Co-author emails are entered in the online submission system.

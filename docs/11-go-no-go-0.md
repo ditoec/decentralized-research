@@ -64,10 +64,12 @@ Within the US$60 line. Spent so far on RunPod in this pilot: balance 8.66 → 6.
 
 ## Open items
 
-1. **Transfer plan** for WP2 (above).
+1. **Transfer plan** for WP2 (above). **Decided 2026-11-24: options (a) and (c) combined by split.** Full trajectories (paid transfer time) for calibration and dev prompts; opened steps plus the commitment for test and attacked jobs; images only for the factor runs. Runbook §3.5.
 2. The E0-N honest failure is worth one line in the paper once RQ1 gives its rate.
-3. The RTX 5090 replaces the RTX 5080 as the L3 card; doc 05 and the Methods name the 5080 and should say so when the grid is fixed.
+3. The RTX 5090 replaces the RTX 5080 as the L3 card. **Decided 2026-11-24**; doc 05, doc 10, the runbook and the manuscript are updated.
 4. Calibration dry run (`experiments/runs/20261124-wp0b-calib-dryrun-01`): the pipeline works end to end; the real freeze needs at least 300 honest samples per step at k = 3, which WP2 provides.
+
+**Decided 2026-11-24 (from the findings PDF, decision 3):** the second software stack is **dropped**. The protocol pins one software image by digest, and the paper states that its tolerances are not claimed to cover other PyTorch or CUDA versions.
 
 ## Figures (PNG, PDF and CSV under each run's `figures/`)
 
@@ -80,5 +82,5 @@ Within the US$60 line. Spent so far on RunPod in this pilot: balance 8.66 → 6.
 ## Decisions (2026-11-24, accepted for the paper author)
 
 1. The RTX 5090 is the L3 (consumer Blackwell) card; SDXL fp32 is dropped from the RQ1 grid.
-2. Rented trajectories are pulled while the pod keeps generating (streaming pull); honest runs keep every step, attacked runs may keep only the opened steps plus the commitment.
-3. The second software stack stays in RQ1 (Spark-4, no RunPod cost).
+2. Transfer plan: options (a) and (c) combined by split (runbook §3.5), as decided above.
+3. The second software stack is dropped, as decided above.

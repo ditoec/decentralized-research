@@ -69,3 +69,5 @@ The reference list went from 47 to **57**, with arXiv preprints cut from 18 to *
 - **Blockchain payment for computation:** Kumaresan & Bentov, CCS 2014; FairSwap, CCS 2018.
 
 **Added on a second check (59 references in total):** Tramèr & Boneh, *Slalom*, ICLR 2019. Confirmed on the official ICLR 2019 oral schedule (iclr.cc) and by its arXiv record (1806.03287). It is cited as the trusted-hardware route in the related work and the discussion. Yuan et al., *Decentralized training of foundation models in heterogeneous environments*, NeurIPS 2022, 25464–25477. Confirmed on the proceedings.neurips.cc page, with 9 authors. It is cited in the introduction next to Borzunov et al.
+
+**Added 2026-11-24 (60 references in total):** Yu et al., *Scaling autoregressive models for content-rich text-to-image generation* (PartiPrompts), TMLR 2022. Confirmed on the official TMLR paper list (jmlr.org/tmlr/papers, November 2022) with all 17 authors, cross-checked against the arXiv record 2206.10789. It is cited for the prompt source in Section 3-4.

@@ -16,7 +16,7 @@ RunPod prices below were read from runpod.io/pricing on 2026-11-23 (page dated 2
 | Fact | Consequence |
 |---|---|
 | No owned RTX 5080 | Every x86 GPU is rented. The Sparks carry the volume |
-| Rented cards are consumer GeForce RTX only (decided 2026-11-23) | The x86 Blackwell card is the **RTX 5080** (Community Cloud, US$0.39/h, the card the paper first described); the RTX 5090 is its fallback. Workstation and datacenter cards (A5000, L4, A100) are not used |
+| Rented cards are consumer GeForce RTX only (decided 2026-11-23) | The x86 Blackwell card is the **RTX 5090** (decided 2026-11-24; the pilot ran on it because the RTX 5080 had no stock all day). Workstation and datacenter cards (A5000, L4, A100) are not used |
 | Six Sparks, not two | Unit-to-unit variation (L2) rests on up to 15 same-model pairs |
 | The Sparks are shared with production | Research runs beside live services: small memory footprint, no timing claims from shared nodes, strict rules (§2.2) |
 | The Solana validator runs on RunPod | A rented x86 pod builds the program and runs the local validator |
@@ -45,10 +45,9 @@ The submission target stays **mid-May 2027**.
 | Group | Model | Generation, host | Role | Price (Community) |
 |---|---|---|---|---|
 | Owned | DGX Spark ×6 (Spark-1 … Spark-6) | Blackwell GB10, ARM64 | Volume, verifier, storage | — |
-| RunPod, required | RTX 5080 | Blackwell, consumer, 16 GB | L3; provider; timing | US$0.39/h (Community only) |
+| RunPod, required | RTX 5090 | Blackwell, consumer, 32 GB | L3; provider; timing | US$0.69/h (pilot paid US$1.39/h on Secure Cloud) |
 | RunPod, required | RTX 4090 | Ada, consumer, 24 GB | L4; verifier; timing | US$0.34/h |
 | RunPod, required | RTX 3090 | Ampere, consumer, 24 GB | L4; provider; also the cheap x86 host for Solana and smoke tests | US$0.22/h |
-| RunPod, if the reserve allows | RTX 5090 | Blackwell, consumer, 32 GB | a second Blackwell chip; fallback for the 5080 | US$0.69/h |
 | RunPod, substitutes when a required card has no stock | RTX 4080 SUPER (Ada), RTX 3090 Ti (Ampere) | consumer | same role as the card they replace | US$0.28/h, US$0.27/h |
 
 Prices are Community Cloud on-demand rates from Runpod's catalog read on 2026-11-23.
@@ -56,11 +55,10 @@ Prices are Community Cloud on-demand rates from Runpod's catalog read on 2026-11
 - This gives **4 or 5 GPU models across 3 generations** (Ampere, Ada, Blackwell), all consumer RTX apart from the Spark: 6 to 10 cross-model pairs.
 - **Stock is the binding constraint, not price.** On 2026-11-23 only the RTX 5080 and RTX 4090 had pod stock. Book each card when a stock read shows it; use the substitutes above, or Secure Cloud at about twice the price, before giving up a generation.
 - Turing and older, and Hopper, are not tested. Make no claim about them.
-- **L2:** the six Sparks. One paid extra: a second RTX 5080 on a different host for a short subset, to see host-to-host spread on rented x86.
-- **L1 (software factors)** is measured in full only on the Spark, because every Spark is the same platform and a full x86 grid is not worth its cost. Two measures narrow that gap:
-  - **Second software stack on a Spark (free).** Spark-4 repeats all 24 configs on 100 prompts under a second PyTorch and CUDA version, in a second research image. This shows whether the factor effects survive a library change.
+- **L2:** the six Sparks. One paid extra: a second RTX 5090 on a different host for a short subset, to see host-to-host spread on rented x86.
+- **L1 (software factors)** is measured in full only on the Spark, because every Spark is the same platform and a full x86 grid is not worth its cost. One measure narrows that gap (a second software stack on a Spark was planned but dropped on 2026-11-24: the protocol pins one software image instead):
   - **x86 factor slice on the RTX 4090 (about US$5).** At fp16, deterministic mode {off, on} × attention backend {SDPA, alternative} × both samplers, on the 200-prompt grid subset. That is six configs beyond the reference pair, about a quarter of the full grid. Add xformers as a third backend if it installs. This puts x86 evidence under the one claim that needs it: whether a deterministic configuration exists.
-  - The paper then says: the full grid was measured on one GPU platform under two software stacks, and the deterministic-mode and attention factors also on an x86 Ada card.
+  - The paper then says: the full grid was measured on one GPU platform under one pinned software stack, and the deterministic-mode and attention factors also on an x86 Ada card.
 - RunPod pods are containers and the host sets the driver. Verify the card with `nvidia-smi` and the GPU UUID, and record the driver, host and data-center ID.
 - Community Cloud first. Secure Cloud costs two to three times as much; use it only when a model is unavailable.
 
@@ -98,9 +96,8 @@ Rules for every research run on a Spark:
 | Rest of the 24-config grid | 200 prompts × 3 seeds on nodes 4 and 5 | not run |
 | Precision factor (bf16, fp32) | part of the grid | 100 prompts × 3 seeds |
 | Deterministic-mode and attention factors at fp16 (x86 slice) | part of the grid | RTX 4090 only, 200 prompts × 3 seeds |
-| Second software stack, all 24 configs | 100 prompts × 3 seeds on node 4 | — |
 | L0 repeats | 10% subset on node 4 | — |
-| L2 subset | 50 prompts × 3 seeds on all six | second RTX 5080, same subset |
+| L2 subset | 50 prompts × 3 seeds on all six | second RTX 5090, same subset |
 | Models | SD1.5, SDXL; FLUX.1-schnell optional (rule 2) | SD1.5, SDXL |
 
 Sample sizes for the attack study (RQ2):
@@ -109,9 +106,9 @@ Sample sizes for the attack study (RQ2):
 |---|---|---|
 | Honest test jobs per stratum | 1,000 where the pooled pairs allow it, never under 299 | Sparks, plus the rented honest runs |
 | Attacked jobs per cell, Spark provider | 100 | Sparks |
-| Attacked jobs per cell, rented provider | 100, on the RTX 5080 and RTX 3090 | RunPod |
-| Timing of each attack (β_A) | 20 jobs per attack | RunPod RTX 5080 and RTX 3090 |
-| Verifier GPU-seconds per evidence level | one pass | RunPod RTX 4090 and RTX 5080 |
+| Attacked jobs per cell, rented provider | 100, on the RTX 5090 and RTX 3090 | RunPod |
+| Timing of each attack (β_A) | 20 jobs per attack | RunPod RTX 5090 and RTX 3090 |
+| Verifier GPU-seconds per evidence level | one pass | RunPod RTX 4090 and RTX 5090 |
 
 The rented-provider cells matter: a consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
 
@@ -123,6 +120,7 @@ The rented-provider cells matter: a consumer x86 card as provider and a Spark as
 4. **Manifest fields for rented nodes:** `provider`, `cloud_type`, `host_id` or data-center ID, `hourly_rate_usd`, `billed_hours`, `cost_usd`.
 5. **Dollar costs in the paper.** RQ3 states verifier cost and the attacker's saving in dollars at the recorded rental rates.
 6. RunPod's pricing page does not mention data-transfer fees. Confirm this in the pilot with the first large copy.
+7. **Retention by class (decided 2026-11-24).** The pilot measured about 2 MB/s from RunPod to the Sparks, so rented jobs keep full trajectories only for the calibration and dev prompts; test-split and attacked jobs keep the eight pre-drawn steps with Merkle proofs, and the factor runs keep images only. Rules and estimate: runbook §3.5.
 
 ### 2.5 Budget
 
@@ -130,7 +128,7 @@ The rented-provider cells matter: a consumer x86 card as provider and a Spark as
 |---|---|---|
 | Pilot (RTX 5080, 4090, 3090, a few hours each; x86 noise check) | about 10 GPU-hours | US$8 |
 | Honest runs, three required models | about 8,400 jobs per model; about 100 GPU-hours in total, doubled for uncertainty | US$60 |
-| Second RTX 5080 (L2 subset) | 3–4 hours | US$3 |
+| Second RTX 5090 (L2 subset) | 3–4 hours | US$3 |
 | x86 factor slice on the RTX 4090 | about 7,200 jobs, about 12 hours | US$5 |
 | Attack study on RunPod: rented providers, rented verifier, timing | about 30 GPU-hours | US$15 |
 | Testbed demo with rented providers | about 15 GPU-hours | US$8 |
@@ -156,7 +154,7 @@ Spending rules:
 - **Paths:** unsampled accept, sampled pass, sampled fail with dispute, timeout refund.
 - **Build:** the Anchor program is built on the same x86 pod. Keep the program source and the built artifact in the repository so a terminated pod loses nothing.
 - **Run S1 in few, long sessions**, not many short ones. The pod is only up while S1 runs.
-- **S2 topology:** a rented card (RTX 3090, 4090 or 5080) is the provider, a Spark is the verifier, and the orchestrator runs on the provider's pod. The Spark connects outward to the pod and to Devnet (§2.2 rule 9). Record the RPC endpoint and its rate limits.
+- **S2 topology:** a rented card (RTX 3090, 4090 or 5090) is the provider, a Spark is the verifier, and the orchestrator runs on the provider's pod. The Spark connects outward to the pod and to Devnet (§2.2 rule 9). Record the RPC endpoint and its rate limits.
 - **Mainnet is out of the paper.** Deploying a program there locks up several SOL of rent, which does not fit the cap. Mainnet fees are calculated from the measured signature counts and compute units at a dated SOL price, and labeled as calculated.
 - **What is lost:** measured mainnet latency, priority-fee behaviour and landing rate. The paper states this as a limitation.
 

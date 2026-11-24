@@ -47,8 +47,8 @@ experiments/runs/<run_id>/
 Also commit three fixed subsets, each keeping the 40/20/40 proportions where it spans splits:
 - `prompts_rent500.txt`: 500 prompts (200 calibration, 100 dev, 200 test), for the reference config on RunPod nodes.
 - `prompts_grid200.txt`: 200 prompts from calibration and dev only, for the non-reference configs on the Sparks.
-- `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes, and for the second software stack on Spark-4.
-- `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5080.
+- `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes.
+- `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5090.
 
 ---
 
@@ -60,7 +60,7 @@ Also commit three fixed subsets, each keeping the 40/20/40 proportions where it 
 |---|---|---|
 | Spark-4, Spark-5, Spark-6 (DGX Spark, ARM64) | see `docs/local-nodes.md` | Main research nodes: grid, attacks, verification, storage |
 | Spark-1, Spark-2, Spark-3 (DGX Spark, ARM64) | see `docs/local-nodes.md` | The 50-prompt L2 subset only |
-| RunPod pods (x86-64) | — | Consumer GeForce RTX only: RTX 5080, RTX 4090, RTX 3090; RTX 5090 only if the reserve allows; RTX 4080 SUPER or 3090 Ti as stock substitutes |
+| RunPod pods (x86-64) | — | Consumer GeForce RTX only: RTX 5090 (the L3 card, decided 2026-11-24), RTX 4090, RTX 3090; RTX 4080 SUPER or 3090 Ti as stock substitutes |
 
 Addresses and login details are in `docs/local-nodes.md`, which is kept out of git because this repository is public; ask the paper author for a copy. All six were inventoried on 2026-11-23 and are identical: DGX OS 7.5.0, kernel 7.0.0-1019-nvidia, driver 580.178.04, CUDA 13.0. Re-check these at the start of every work package, because automatic updates are on.
 
@@ -76,7 +76,7 @@ Addresses and login details are in `docs/local-nodes.md`, which is kept out of g
 
 ### 1.2 Setup steps
 
-**Implemented (2026-11-24).** One locked environment for both architectures: `code/env/setup_env.sh [main|alt]` builds Python 3.12.13 (uv-managed) with `env/lock-<stack>.txt`; the lock files were compiled for aarch64 and x86-64 and are identical. `main` = torch 2.14.1+cu130 (needs driver >= 580, i.e. a CUDA 13 host on RunPod); `alt` = torch 2.13.0+cu129 (the second software stack). On the Sparks, `code/env/Dockerfile` wraps the same script into `esj-research:<stack>` (label `research=esj`). On RunPod we cannot push an image, so `tools/pod_job.sh` runs the same script inside the pod. Models: `experiments/configs/models.json` (sha256 = Hugging Face LFS object id). Prompts: `code/tools/make_prompts.py` wrote `experiments/configs/prompts_*.txt` and `prompts.json` (PartiPrompts, Apache-2.0, seed 20261123), plus `prompts_pilot20.txt` for P2.
+**Implemented (2026-11-24).** One locked environment for both architectures: `code/env/setup_env.sh [main|alt]` builds Python 3.12.13 (uv-managed) with `env/lock-<stack>.txt`; the lock files were compiled for aarch64 and x86-64 and are identical. `main` = torch 2.14.1+cu130 (needs driver >= 580, i.e. a CUDA 13 host on RunPod); `alt` = torch 2.13.0+cu129 (built for the second software stack, which was dropped on 2026-11-24; keep it only as a fallback build). On the Sparks, `code/env/Dockerfile` wraps the same script into `esj-research:<stack>` (label `research=esj`). On RunPod we cannot push an image, so `tools/pod_job.sh` runs the same script inside the pod. Models: `experiments/configs/models.json` (sha256 = Hugging Face LFS object id). Prompts: `code/tools/make_prompts.py` wrote `experiments/configs/prompts_*.txt` and `prompts.json` (PartiPrompts, Apache-2.0, seed 20261123), plus `prompts_pilot20.txt` for P2.
 
 **Network finding (2026-11-24).** The Sparks' internet egress is filtered and slow: Hugging Face's file CDN (`*.cdn.hf.co`, Xet transfer hosts) is unreachable, and other downloads run at about 250 KB/s per connection, so the image build alone takes hours. The RunPod HTTPS proxy (`*.proxy.runpod.net`) is reachable. Models therefore reach the Sparks from the operator's machine or through a RunPod relay pod (`python:3.12-slim`, CPU, US$0.12/h) that downloads from Hugging Face and serves the files under a random token path. Ask the network admin whether `huggingface.co` CDN egress can be opened for the research nodes; until then budget the transfer time.
 
@@ -207,8 +207,8 @@ Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Finding
 **Decisions at go/no-go #0 (2026-11-24, accepted for the paper author by the team).**
 - **L3 card: RTX 5090** (consumer Blackwell, sm_120) replaces the RTX 5080 wherever this runbook and doc 05 name a 5080 (L3 rentals, rented providers in §6, the second same-model card for L2). The 5080 had no RunPod stock during the pilot.
 - **SDXL fp32 is dropped from the RQ1 grid** (§4 item 1): not allowed beside production on a Spark, and it fills a 24 or 32 GB card and offloads. fp32 stays in the grid for SD1.5.
-- **Transfer of rented trajectories: pull while generating.** A Spark pulls each finished job's trajectory from the pod while the pod keeps generating, so the pod does not idle-bill for transfer (on an RTX 3090, generation and transfer take about the same time per job). Honest runs keep every step (calibration replays all of them); attacked runs may keep only the opened steps plus the full commitment. Tooling to build before WP2: a streaming mode of `tools/pull_run.py` (per-job files with checksums, resumable), and the per-job mark in `tools/pod_job.sh`.
-- **Second software stack: kept** (§4 item 1). The x₀ and schedule checks are build-agnostic, but Tier B's τ_i depend on how much a different PyTorch/CUDA build moves the model's predictions; the second arm64 image (alt stack, torch 2.13 + cu129) measures that on Spark-4, at no RunPod cost.
+- **Transfer of rented trajectories:** retention classes by split (decided later the same day; §3.5). An earlier record here (pull while generating for all jobs) is superseded.
+- **Second software stack: dropped** (decided later the same day; §4 item 1). The protocol pins one software image; an earlier record here (keep it) is superseded.
 - The research containers may run on Sparks 4–6 under §1.1.
 
 **Added 2026-11-24.** `trajver/attacks/run.py` (all of A1a/A1b, A2–A8, F1–F3 and M as runnable injectors with ground-truth sidecars), `trajver/verify.py` (E1, E2-H for k ∈ {1,2,3,5,8} from one all-steps pass, and E2-W; long-format `verdicts.jsonl`), `trajver/calibrate.py` (§5), `trajver/plots.py`, and `pilot replay` (honest all-steps Tier B distances for calibration). The ComfyUI node was run inside a ComfyUI server at the pinned commit (run `20261124-wp1-comfyui-node-ui-01`, with UI screenshots).
@@ -267,14 +267,14 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 | F4 | Commit the complete, consistent trajectory of A2 or A3 |
 | M | Falsify only the metadata (GPU name, timing). Negative control: verdicts must not change |
 
-**Measure β_A** (GPU time saved) for each attack on a RunPod RTX 5080 and RTX 3090, which the job has to itself: `1 − t_attack / t_honest`, median over 20 jobs. Do not measure it on a Spark; the shared GPU makes the timing unreliable.
+**Measure β_A** (GPU time saved) for each attack on a RunPod RTX 5090 and RTX 3090, which the job has to itself: `1 − t_attack / t_honest`, median over 20 jobs. Do not measure it on a Spark; the shared GPU makes the timing unreliable.
 
 ### 3.4 Run scripts: Spark runner and RunPod launcher
 
 1. **Spark runner.** Takes a workload file, starts the research container under the §1.1 rules, runs the jobs, and enforces the stop conditions (free memory under 15 GB, free disk under 200 GB). It resumes where it stopped, and writes the manifest including `cotenants`.
 2. **RunPod launcher.** It starts the pod with the x86-64 image, verifies the card (`nvidia-smi`, GPU UUID) and the model hashes, records the driver, host and data-center ID, runs the assigned workload, and writes the manifest with the cost fields of §0.
 3. **Data comes home by pull.** The Sparks are behind a VPN, so a pod cannot connect to them. A Spark pulls the raw data from the pod over SSH and verifies the checksums. Only then does the launcher **terminate** the pod.
-4. **No paid storage.** Raw data lives on Sparks 4 to 6. A rented model produces roughly 40–65 GB of trajectories. Move data between Sparks over the 200 Gb links, not the 1 Gb management network.
+4. **No paid storage.** Raw data lives on Sparks 4 to 6. Rented jobs bring home only what §3.5 allows for their class. Move data between Sparks over the 200 Gb links, not the 1 Gb management network.
 5. **Dry run first.** Run every workload for 20 jobs on a Spark. Then smoke-test the x86-64 image for 20 jobs on an RTX 3090 pod (US$0.22/h) before any dearer pod is started. Nobody debugs on an expensive pod.
 6. Use Community Cloud first. Use Secure Cloud only when a model is unavailable.
 
@@ -282,6 +282,25 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
 - `code/tools/spark_run.py --run-id ID -- <command>`: research container `esj-<id>` (label `research=esj`, no published ports), stops it when free memory < 15 GB or disk < 200 GB and restarts it when memory is back above 15 GB + a margin, logs to `<run>/logs/runner.jsonl`, and writes co-tenant snapshots (other containers' CPU/memory, vLLM running/waiting requests) every 15 s that each job row copies. Host python3 only.
 - RunPod: create the pod through the Runpod tools with `POD_TOKEN` (random), `POD_HOURLY_USD` and `POD_CLOUD` in its environment and port `8000/http`; start `tools/pod_server.py` (token-protected GET with resume and PUT); PUT `code.tar.gz` (code + experiments/configs); run `tools/pod_job.sh tools/workloads/<w>.sh`; then on a Spark (or the operator's machine) `tools/pull_run.py https://<pod>-8000.proxy.runpod.net/<token>` downloads, verifies checksums, extracts and adds the cost fields. Terminate the pod only after a clean pull.
 - Before committing run folders (the repository is public): `python3 tools/sanitize_runs.py ../experiments/runs/<run> ...` replaces Spark hostnames and production co-tenant container names and images with role labels (`cotenant-llm`, `cotenant-svc`), leaving every measured number unchanged; `--check` must exit 0. The unredacted originals stay on the node under `~/esj/runs`.
+
+### 3.5 Data retention for rented jobs (decision of 2026-11-24)
+
+The Sparks' site link gives about 2 MB/s from RunPod and an SDXL trajectory is 16.5 MB, so rented trajectories are **not** all brought home. What each rented job keeps depends on what the analysis needs from it. Spark-generated jobs are unaffected: they keep full trajectories as before.
+
+| Class | Rented jobs | What comes home | Why |
+|---|---|---|---|
+| **F (full)** | Reference config on **calibration and dev** prompts (the 300 such prompts in `prompts_rent500.txt`), every rented model; the second RTX 5090's L2 subset (`prompts_l2_50.txt`) | The whole trajectory, as on a Spark | τ_i is an extreme per-step quantile and needs every step (≥ 300 honest samples per step at k = 3); the dev split chooses the Tier B metric; the RQ1 per-step analysis (R1.4) and the x86 ε_A calibration need all steps |
+| **O (opened steps)** | Reference config on **test** prompts (the 200 such prompts in `prompts_rent500.txt`), and every attacked job from a rented provider (§6) | The image; x₀, the schedule, the conditioning hash and the final latent; the Merkle root; the eight pre-drawn steps (x_i, D_i, σ_i, and D_{i−1} for dpmpp_2m) with their inclusion proofs; the pod-side Tier A result | After the freeze, a verifier only opens the k ≤ 8 drawn steps. This is also what a deployed verifier receives |
+| **I (image level)** | The precision factor and the RTX 4090 factor slice | The image, the final latent, the Merkle root, and the pod-side Tier A result | R1.7 is answered at image level and by bit identity of the Merkle roots |
+
+Rules:
+1. **Step draw, fixed before generation.** Before a class-O workload starts, generate a random `draw_seed`, record its sha256 in the manifest and keep the seed itself out of the workload. For each job, the drawn steps are the first 8 entries of a permutation of the T steps seeded by `sha256(draw_seed ‖ job_id)`. The set for k is the first k entries, so the sets are nested and one pull serves k ∈ {1, 2, 3, 5, 8}. E2-W (SN30) uses the first 3 entries as its random steps.
+2. **Attack injectors never see `draw_seed`.** It is passed to the pod only after generation, for the extraction step. Otherwise a forger could fake only the steps that will not be opened.
+3. **Tier A runs on the pod's CPU** over all steps before the full trajectory is discarded. Store the per-step residuals (30 numbers per job) and the verdict. Tier A is bit-exact across CPUs for Euler (pilot, finding 16); for dpmpp_2m, calibrate ε_A from the class-F jobs on both an x86 CPU and a Spark, and use the larger value.
+4. **Extraction then discard.** The pod writes the class-O bundle, verifies the Merkle proofs against the root, and deletes the full trajectory before the pull. Record `retention: F|O|I` and the `draw_seed` hash in every job row.
+5. **Code.** `verify.py` must accept class-O bundles (Tier B and E2-W from the opened steps; E1 from the metadata; Tier A read from the pod's result). `calibrate.py` must refuse anything but class F.
+6. **What this gives up.** On rented test and attack jobs, no analysis with k > 8 or at undrawn steps is possible. The partial-faking sweep (R2.7) therefore uses Spark-generated jobs, which keep full trajectories.
+7. **Estimated volume** (not measured): about 90 GB for class F and 40 GB for class O over all rented models, about 18 hours of pulls at 2 MB/s, roughly US$10–20 of pod time at the planned rates. Measure the real numbers on the first rented workload and record them in its manifest.
 
 ---
 
@@ -295,16 +314,15 @@ All attacks are controlled by an experiment flag. Ground-truth labels are writte
      - every other config runs `prompts_grid200.txt`.
    - If P3 says this is too slow, cut the reference config to 300 prompts. Never cut the configs; ask the paper author first.
    - Run the reference config on Spark-4, Spark-5 and Spark-6, and the other configs on Spark-4 and Spark-5. Repeat a 10% subset on Spark-4 for L0.
-   - **Second software stack:** build a second arm64 research image with a different PyTorch and CUDA version (record both in the manifest). On Spark-4, run all 24 configs on `prompts_prec100.txt` × 3 seeds under it, and compare each config with the same config under the main image.
+   - **Second software stack: dropped (decision of 2026-11-24).** The protocol pins one software image instead; do not build or run a second stack.
    - Run `prompts_l2_50.txt` × 3 seeds, reference config, SDXL, on all six Sparks (L2, up to 15 pairs). On nodes 1 to 3 run it off-peak and keep to fp16.
    - Record the trajectory for every job (§3.1).
 2. **Rentals (L3 and L4), on RunPod through the §3.4 launcher.**
-   - Required models, consumer GeForce RTX only: RTX 5080 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
-   - Optional, only if the required three came in on estimate: RTX 5090.
+   - Required models, consumer GeForce RTX only: RTX 5090 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
    - **x86 factor slice, RTX 4090 only:** at fp16, `--deterministic` {off, on} × attention {SDPA, split or quad} × {euler, dpmpp_2m}, on `prompts_grid200.txt` × 3 seeds, for SD1.5 and SDXL. The two reference configs are already run, so this adds six configs, about 7,200 jobs and about US$5. If xformers installs in the x86-64 image, add it as a third attention backend.
-   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, fp32, both samplers) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
-   - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.**
-   - L2: a second RTX 5080 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
+   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, and fp32 for SD1.5 only, both samplers; SDXL fp32 is out of the grid, finding 10) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
+   - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.** Keep data per the retention classes of §3.5: calibration and dev prompts class F, test prompts class O, the precision factor and the factor slice class I.
+   - L2: a second RTX 5090 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
    - If a card is slower than estimated, cut its prompts, never the reference config, and record the cut.
    - Spending: load credit in US$50 steps and stop for a review at US$120 spent.
 3. **Per pair, compute:**
@@ -334,10 +352,10 @@ Use the **calibration split only**.
 
 ## 6. RQ2: attacks (WP3, Feb 1–28)
 
-Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5080 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
+Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
 
 1. For each attack A1–A8, F1–F4 and M, produce **100 attacked jobs per cell** (never under 30). A cell is (attack × model × hardware pair). Produce **1,000 honest jobs per stratum** where the pooled pairs allow it, and never under 299. Zero false rejections in 299 bound the false-rejection rate below 1% at 95% confidence; 1,000 still bound it below 1% with up to 4 false rejections. The Spark-provider cells run on the Sparks.
-   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5080 and RTX 3090, and verify them on a Spark. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
+   - **Rented providers:** generate the same 100 attacked jobs per attack on a RunPod RTX 5090 and RTX 3090, and verify them on a Spark. These jobs are class O (§3.5): only the pre-drawn steps come home. A consumer x86 card as provider and a Spark as verifier is the direction a real marketplace has.
    - **Rented verifier:** run E0 and the all-steps Tier B pass over the Spark-generated attacked jobs once on a RunPod RTX 4090.
    - Budget for both, with the β_A timing of §3.3: about US$15.
 2. Run every job through E0, E0-N, E2-W, E1 and E2-H with k ∈ {1, 2, 3, 5, 8} (Tier B outputs for all k can be computed from one pass that checks all steps).
@@ -388,8 +406,8 @@ Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5080 and RT
 2. **Orchestrator.** A minimal service: queue, assignment (rented card = provider, Spark = verifier, a node never verifies itself), transaction relay, and an event log of all on-chain and off-chain events with timestamps. It also keeps a **reputation record** per provider (start 0.5; a verified pass moves it toward 1; a confirmed fail lowers it), updated from the verdicts and used to exclude providers below a minimum. Reputation is recorded for the testbed only; it is not part of the RQ2 detection metrics.
 3. **Measurement.** For each path (accept unsampled, sampled-pass, sampled-fail with dispute, timeout refund), run at least 100 jobs on the **local validator** and at least 100 on **Devnet**. The Anchor build and the local validator run on a RunPod x86 pod (RTX 3090, US$0.22/h, or a CPU pod if cheaper; budget about US$13). The local-validator runs are a scripted replay of each path and need no GPU work, so do them in a few long sessions and terminate the pod in between; keep the program source and build artifact in the repository. Devnet SOL is free from the faucet. Record the signature count, compute units, fee in lamports, and latency to processed, confirmed and finalized. Record the RPC endpoint, its plan and rate limits, the priority-fee policy and the time of day. Interleave the paths. Fill R3.4.
    - **Mainnet is not used.** Deploying there locks up several SOL of rent, which does not fit the budget. Report a **calculated** mainnet fee per path from the measured signature count and compute units, at a dated SOL price, and label it as calculated.
-4. **Verifier cost per job**, timed on the rented RTX 4090 and RTX 5080 (not on a shared Spark): verifier GPU-seconds for E0, E0-N, E2-W, E1 and E2-H at each k. Also record storage in MB per job. Fills R3.1 and R3.3. Convert GPU-seconds to US dollars with the `hourly_rate_usd` recorded for each rented model, per model and with the date of the rate. Fills R3.7.
-5. **Testbed demo.** Run the end-to-end flow on Devnet with rented providers (RTX 3090, 4090 or 5080), including injected attackers, and real Spark verifiers, at p ∈ {0.05, 0.1, 0.25}. The orchestrator runs on the provider's pod; the Spark connects outward to it and to Devnet. Budget: about US$8. These are the points overlaid on Fig. R3.6.
+4. **Verifier cost per job**, timed on the rented RTX 4090 and RTX 5090 (not on a shared Spark): verifier GPU-seconds for E0, E0-N, E2-W, E1 and E2-H at each k. Also record storage in MB per job. Fills R3.1 and R3.3. Convert GPU-seconds to US dollars with the `hourly_rate_usd` recorded for each rented model, per model and with the date of the rate. Fills R3.7.
+5. **Testbed demo.** Run the end-to-end flow on Devnet with rented providers (RTX 3090, 4090 or 5090), including injected attackers, and real Spark verifiers, at p ∈ {0.05, 0.1, 0.25}. The orchestrator runs on the provider's pod; the Spark connects outward to it and to Devnet. Budget: about US$8. These are the points overlaid on Fig. R3.6.
 
 ---
 
@@ -430,7 +448,7 @@ The paper author draws the five result figures from the data, in the same style 
 | R0.2 | Repository URL and DOI | §9 |
 | R0.3 | Summary of findings | Paper author, after all results |
 | R0.4 | Version table | All manifests |
-| R0.5 | Split sizes | §0 prompt files |
+| R0.5 | Split sizes | **Filled in the manuscript 2026-11-24:** 400 / 200 / 400 PartiPrompts prompts (`experiments/configs/prompts.json`) |
 | R1.1 | Initial noise x₀ bit-exact across x86 and ARM | P1 |
 | R1.2 | Tier A ε_A, and whether it is exact across CPUs | §4.3, §5.3 |
 | R1.3 | Tier B metric | §5.2 |
@@ -451,6 +469,7 @@ The paper author draws the five result figures from the data, in the same style 
 | R3.1 | Verifier GPU-s, relative to E0 | §7.4 |
 | R3.2 | k*, p*, bond ratio, agreement with theory | §8 |
 | R3.3 | Trajectory storage (MB) | §7.4 |
+| R3.8 | Data sent to the verifier per sampled job (MB): full trajectory, since Tier A needs every step, versus the opened steps alone | §7.4, §3.5 |
 | R3.4 | Escrow CU, fees (Devnet measured, mainnet calculated), latency | §7.3 |
 | R3.7 | Verifier cost in US$ at observed rental rates | §7.4, rented-node manifests |
 | R3.5 | Pareto data | §6 + §7.4 |

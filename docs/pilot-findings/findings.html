@@ -95,8 +95,8 @@ code { font-family: Menlo, Consolas, monospace; font-size: 7.4pt; }
 <h2>6. Decisions (accepted 24 Nov 2026)</h2>
 <ol>
 <li>The RTX 5090 is the L3 (consumer Blackwell) card; SDXL fp32 is dropped from the RQ1 grid.</li>
-<li>Rented trajectories are pulled while the pod keeps generating, so transfer adds almost no pod time; honest runs keep every step, attacked runs may keep only the opened steps plus the commitment.</li>
-<li>RQ1 keeps its second software stack: the noise and schedule checks are build-agnostic, but Tier B's per-step thresholds must be shown to hold across PyTorch builds.</li>
+<li>Rented trajectories come home by split: full trajectories for calibration and dev prompts, opened steps plus the commitment for test and attacked jobs, images only for the factor runs.</li>
+<li>The second software stack is dropped: the protocol pins one software image, and the paper does not claim its tolerances for other PyTorch or CUDA versions.</li>
 </ol>
 <div class="small">Details and run IDs: <code>docs/07-runbook.md</code> §3 findings 7–17 and <code>docs/11-go-no-go-0.md</code>. Generated 24 Nov 2026.</div>
 </body></html>

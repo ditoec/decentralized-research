@@ -7,7 +7,7 @@
 // signature, signature count, compute units, fee and time to "confirmed". Setup transactions
 // (config updates that force p = 0 or 1 for the next job, bonds, token accounts) are not counted.
 //
-//   npx ts-node scripts/replay.ts --n 100 [--url http://127.0.0.1:8899] [--run-id ID]
+//   npx ts-node scripts/replay.ts --n 100 [--url http://127.0.0.1:8899] [--run-id ID] [--admin KEYPAIR]
 //
 // Only a local validator is accepted; Devnet runs are a separate step (runbook section 7 item 3)
 // and Mainnet is never used.
@@ -80,9 +80,12 @@ async function main() {
   const dir = path.join(REPO, "experiments/runs", rid);
   fs.mkdirSync(path.join(dir, "logs"), { recursive: true });
   const start = new Date().toISOString();
+  const git = { commit: sh("git rev-parse HEAD"), dirty: sh("git status --porcelain -- code/program") !== "" };
 
   const conn = new Connection(URL, "confirmed");
-  const admin = Keypair.generate();
+  // admin: a local dev keypair (default ~/.config/solana/id.json), so reruns on one validator can update Config
+  const adminFile = arg("admin", path.join(os.homedir(), ".config/solana/id.json"))!;
+  const admin = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(fs.readFileSync(adminFile, "utf8"))));
   const esc = new Escrow(conn, admin);
   await esc.airdrop(admin.publicKey, 100);
   const [requester, prov, v1, v2, orch] = [0, 1, 2, 3, 4].map(() => Keypair.generate());
@@ -180,8 +183,8 @@ async function main() {
     purpose:
       "Scripted replay of the four escrow lifecycle paths (runbook section 7 item 3) on a local solana-test-validator. " +
       "Signature counts, compute units and fees are properties of the program and transactions; latencies on a local validator are not reported in the paper.",
-    git_commit: sh("git rev-parse HEAD"),
-    git_dirty: sh("git status --porcelain") !== "",
+    git_commit: git.commit,
+    program_tree_dirty: git.dirty,
     cluster: "localnet (solana-test-validator)",
     rpc_endpoint: "local",
     solana_core: version["solana-core"],

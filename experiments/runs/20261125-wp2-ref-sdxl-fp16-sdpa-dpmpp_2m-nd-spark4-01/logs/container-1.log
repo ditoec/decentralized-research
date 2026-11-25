@@ -1,0 +1,45 @@
+fatal: not a git repository (or any of the parent directories): .git
+[1/21] p00003_s0 13.72s
+[2/21] p00003_s1 12.32s
+[3/21] p00003_s2 12.33s
+[4/21] p00006_s0 12.32s
+[5/21] p00006_s1 14.77s
+[6/21] p00006_s2 12.39s
+[7/21] p00007_s0 12.32s
+[8/21] p00007_s1 12.47s
+[9/21] p00007_s2 12.37s
+[10/21] p00008_s0 12.37s
+[11/21] p00008_s1 12.39s
+[12/21] p00008_s2 12.48s
+[13/21] p00009_s0 12.32s
+[14/21] p00009_s1 13.83s
+[15/21] p00009_s2 12.88s
+[16/21] p00012_s0 12.33s
+[17/21] p00012_s1 12.39s
+[18/21] p00012_s2 12.61s
+[19/21] p00013_s0 12.87s
+[20/21] p00013_s1 12.45s
+[21/21] p00013_s2 12.38s
+{
+ "n_jobs": 21,
+ "model_load_s": 15.408538002055138,
+ "time_per_image_s": {
+  "median": 12.388824625406414,
+  "p95": 13.832342037931085,
+  "min": 12.315582395996898,
+  "max": 14.773427415639162,
+  "n": 20,
+  "note": "warm; first job excluded"
+ },
+ "memory": {
+  "host_available_before_load_gb": 48.780256,
+  "host_drop_gb": 22.224728000000002,
+  "torch_peak_allocated_gb": 19.291291648,
+  "torch_peak_reserved_gb": 20.0278016,
+  "process_peak_rss_gb": 13.484956,
+  "host_min_available_gb": 26.555528,
+  "host_total_gb": 127.533228,
+  "measured_in_process_with_jobs": 21
+ }
+}
+/runs/20261125-wp2-ref-sdxl-fp16-sdpa-dpmpp_2m-nd-spark4-01

@@ -28,6 +28,10 @@ cd /work/code || fail "no code"
 command -v git >/dev/null || (apt-get update -qq && apt-get install -y -qq git curl >/dev/null) || fail "apt"
 env/setup_env.sh "$STACK" || fail "setup_env"
 PY=/work/esj/venv-$STACK/bin/python
+# some RunPod hosts expose the card to nvidia-smi but not to CUDA ("CUDA unknown error", seen
+# 2026-11-25 on an RTX 4090 host); without this check the workload would run on the CPU
+"$PY" -c "import torch, sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null \
+  || fail "CUDA not usable on this host: terminate the pod and rent another"
 # no image on a pod: the environment is pinned by its lock file, recorded in the same manifest field
 export TRAJVER_IMAGE_DIGEST="lock-$STACK:sha256:$(sha256sum "env/lock-$STACK.txt" | cut -d' ' -f1)"
 "$PY" - <<'PY' || fail "models"
@@ -58,25 +62,50 @@ cat > /work/out/pod.json <<EOF
  "draw_seed_sha256": "${TRAJVER_DRAW_SEED_SHA256}", "retention": "${POD_RETENTION}",
  "job_start_unix": $(date +%s)}
 EOF
-PATH="/work/esj/venv-$STACK/bin:$PATH" bash "$WORKLOAD" || fail "workload"
+pack_run() {  # $1 run name: tar it with its checksum, atomically, and list it for the puller
+  local r="$1"
+  cp /work/out/pod.json /work/out/nvidia-smi-q.txt /work/out/lscpu.txt "/work/runs/$r/logs/" 2>/dev/null
+  (cd /work/runs && tar -cf "/work/out/$r.tar.part" "$r") || return 1
+  sha256sum "/work/out/$r.tar.part" | cut -d' ' -f1 > "/work/out/$r.tar.sha256.part"
+  mv "/work/out/$r.tar.part" "/work/out/$r.tar" && mv "/work/out/$r.tar.sha256.part" "/work/out/$r.tar.sha256"
+  echo "$r.tar" >> /work/out/READY
+}
+class_of() { (cd /work/code && "$PY" -c "import sys; from trajver.retention import class_for; print(class_for(sys.argv[1], sys.argv[2]))" "$1" "$POD_RETENTION"); }
+# Class-F runs need no seed: pack each as soon as its manifest has an end_time, so the pull
+# (tools/pull_run.py --wait) overlaps generation instead of billing pod time afterwards.
+early_packer() {
+  while [ ! -f /work/out/.workload_done ]; do
+    for d in /work/runs/*/; do
+      [ -d "$d" ] || continue; r=$(basename "$d")
+      [ -f "/work/out/$r.tar" ] && continue
+      grep -q '"end_time"' "$d/manifest.json" 2>/dev/null || continue
+      [ "$(class_of "$r")" = F ] || continue
+      (cd /work/code && "$PY" -m trajver.retention extract "$d" --cls F >/dev/null) && pack_run "$r" && echo "packed early $r"
+    done
+    sleep 30
+  done
+}
+early_packer & PACKER=$!
+PATH="/work/esj/venv-$STACK/bin:$PATH" bash "$WORKLOAD" || { touch /work/out/.workload_done; fail "workload"; }
+touch /work/out/.workload_done; wait $PACKER
 # retention: extract the class-O/I bundles and discard full trajectories before anything is packed
 cd /work/code
-CLASSES=$("$PY" -c "import sys,pathlib; from trajver.retention import class_for; print(' '.join(class_for(p.name, sys.argv[1]) for p in sorted(pathlib.Path('/work/runs').iterdir()) if p.is_dir()))" "$POD_RETENTION") || fail "retention map"
-SEEDARG=()
-if [[ " $CLASSES " == *" O "* ]]; then
-  [ -n "$TRAJVER_DRAW_SEED_SHA256" ] || fail "class O runs need POD_DRAW_SEED_SHA256 set at pod creation"
-  echo generated > /work/out/GENERATED
-  echo "waiting for the draw seed (PUT secret/draw_seed.hex)"
-  for _ in $(seq 1 8640); do [ -s /work/secret/draw_seed.hex ] && break; sleep 10; done
-  [ -s /work/secret/draw_seed.hex ] || fail "no draw seed within 24 h"
-  SEEDARG=(--seed-file /work/secret/draw_seed.hex)
+LEFT=(); for d in /work/runs/*/; do r=$(basename "$d"); [ -f "/work/out/$r.tar" ] || LEFT+=("$d"); done
+if [ ${#LEFT[@]} -gt 0 ]; then
+  CLASSES=$(for d in "${LEFT[@]}"; do class_of "$(basename "$d")"; done | tr '\n' ' ') || fail "retention map"
+  SEEDARG=()
+  if [[ " $CLASSES " == *" O "* ]]; then
+    [ -n "$TRAJVER_DRAW_SEED_SHA256" ] || fail "class O runs need POD_DRAW_SEED_SHA256 set at pod creation"
+    echo generated > /work/out/GENERATED
+    echo "waiting for the draw seed (PUT secret/draw_seed.hex)"
+    for _ in $(seq 1 8640); do [ -s /work/secret/draw_seed.hex ] && break; sleep 10; done
+    [ -s /work/secret/draw_seed.hex ] || fail "no draw seed within 24 h"
+    SEEDARG=(--seed-file /work/secret/draw_seed.hex)
+  fi
+  "$PY" -m trajver.retention extract "${LEFT[@]}" --map "$POD_RETENTION" "${SEEDARG[@]}" || fail "retention extract"
+  "$PY" -m trajver.retention check "${LEFT[@]}" || fail "retention check"
+  for d in "${LEFT[@]}"; do pack_run "$(basename "$d")" || fail "pack $d"; done
 fi
-"$PY" -m trajver.retention extract /work/runs/*/ --map "$POD_RETENTION" "${SEEDARG[@]}" || fail "retention extract"
-"$PY" -m trajver.retention check /work/runs/*/ || fail "retention check"
-cd /work/runs && for r in */; do
-  r="${r%/}"; cp /work/out/pod.json /work/out/nvidia-smi-q.txt /work/out/lscpu.txt "$r/logs/" 2>/dev/null
-  tar -cf "/work/out/$r.tar" "$r" && sha256sum "/work/out/$r.tar" | cut -d' ' -f1 > "/work/out/$r.tar.sha256"
-done
 ls /work/out/*.tar | xargs -n1 basename > /work/out/INDEX
 echo ok > /work/out/DONE
 rm -f /work/out/GENERATED

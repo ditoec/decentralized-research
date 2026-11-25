@@ -1,0 +1,12 @@
+{
+ "provider": "runpod",
+ "pod_id": "l64f5e4pq8piu1",
+ "data_center": "EU-RO-1",
+ "cloud_type": "SECURE",
+ "hourly_rate_usd": 0.89,
+ "gpu_uuid": "GPU-35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+ "driver": "595.112.07",
+ "draw_seed_sha256": "f63642c2353bba96dcc55f2a20d6eeb90f2573cd97d36bdb9266e85d3e051e2f",
+ "retention": "*-test-*=O,*-prec-*=I,*-slice-*=I,*=F",
+ "job_start_unix": 1795571899
+}

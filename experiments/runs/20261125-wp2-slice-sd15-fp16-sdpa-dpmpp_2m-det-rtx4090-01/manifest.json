@@ -1,0 +1,81 @@
+{
+ "run_id": "20261125-wp2-slice-sd15-fp16-sdpa-dpmpp_2m-det-rtx4090-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (slice, fp16-sdpa-dpmpp_2m-det)",
+ "git_commit": "4025dfa",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention",
+  "--deterministic"
+ ],
+ "node": {
+  "hostname": "16fa1b03ea27",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+   8,
+   9
+  ],
+  "gpu_uuid": "35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-25T02:05:55.849466+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "dpmpp_2m",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention",
+  "--deterministic"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_grid200.txt",
+  "sha256": "c88e8052e03ff8756d2c780857a76230ca05a89b26c90e9d0f868ec9a40dad85",
+  "n": 7
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "f63642c2353bba96dcc55f2a20d6eeb90f2573cd97d36bdb9266e85d3e051e2f",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-25T02:06:29.753662+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 21,
+  "full_bytes": 94139196,
+  "kept_bytes": 1487356
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "l64f5e4pq8piu1",
+ "data_center": "EU-RO-1",
+ "gpu_uuid": "GPU-35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.89,
+ "billed_hours": 0.7612885270516078,
+ "cost_usd": 0.6775467890759309,
+ "raw_checksums": {
+  "20261125-wp2-slice-sd15-fp16-sdpa-dpmpp_2m-det-rtx4090-01.tar": "ea28561e3068bae95540494a1053955dddb2e0c74c2a2daf34002830d1645011"
+ },
+ "pulled_unix": 1795574639.6387
+}

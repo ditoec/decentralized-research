@@ -34,6 +34,18 @@
   "prompts_pilot20.txt": {
    "n": 20,
    "sha256": "d39d3e2d6b5c5fc5490e99941cf0a719bc01f6fc3a52246c5e40b472e77367ed"
+  },
+  "prompts_rent_caldev300.txt": {
+   "n": 300,
+   "sha256": "c3579a8101dd3fcd4837c6c3cde6f01d54c8a85e1a1875cb3c6c93b9f84211f6"
+  },
+  "prompts_rent_test200.txt": {
+   "n": 200,
+   "sha256": "40e456312da0cbb7ab3bc8f63723ecd1f96a0e940932073f2c12cef6e31016d0"
+  },
+  "prompts_caldev600.txt": {
+   "n": 600,
+   "sha256": "1a10147cf4753cdf58eec8f4a533f1264a310ae694bc3bac2aebdd609e62798d"
   }
  }
 }

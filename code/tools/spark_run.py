@@ -133,6 +133,8 @@ def main():
     ap.add_argument("--max-guard-stops", type=int, default=3, help="give up after this many guard stops")
     ap.add_argument("--backoff-s", type=int, default=600, help="wait after a guard stop before restarting")
     ap.add_argument("--git-commit", default=os.environ.get("TRAJVER_GIT_COMMIT", ""))
+    ap.add_argument("--secret", default=None,
+                    help="draw-seed file mounted read-only at /secret/draw_seed.hex (extraction only, runbook §3.5)")
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     a = ap.parse_args()
     cmd = a.cmd[1:] if a.cmd and a.cmd[0] == "--" else a.cmd
@@ -156,6 +158,9 @@ def main():
         "-e", "TRAJVER_RUNS=/runs", "-e", f"TRAJVER_COTENANT_FILE=/runs/{a.run_id}/logs/cotenants.json",
         "-e", f"TRAJVER_GIT_COMMIT={a.git_commit}", "-e", "PYTHONUNBUFFERED=1",
         "-e", f"TRAJVER_IMAGE_DIGEST={digest}",
+        *(["-e", f"TRAJVER_DRAW_SEED_SHA256={os.environ['TRAJVER_DRAW_SEED_SHA256']}"]
+          if os.environ.get("TRAJVER_DRAW_SEED_SHA256") else []),
+        *(["-v", f"{Path(a.secret).expanduser().resolve()}:/secret/draw_seed.hex:ro"] if a.secret else []),
         "-w", "/opt/esj/code", a.image, *cmd,
     ]
     (ESJ / "hf").mkdir(exist_ok=True)

@@ -4,6 +4,7 @@
   python3 pull_run.py https://<podId>-8000.proxy.runpod.net/<token> [--dest ~/esj/runs] [--wait]
                       [--reveal-seed SECRET_FILE]
 
+With --wait, class-F runs the pod packs early (out/READY) are pulled while it keeps generating.
 With class-O runs (runbook §3.5) the pod stops after generation (out/GENERATED) and waits for the
 draw seed. --reveal-seed checks the file against the hash fixed before generation (in pod.json),
 PUTs it to the pod, and then waits for the pod to extract, verify and pack. --wait polls until
@@ -65,9 +66,49 @@ def main() -> int:
     dest = Path(a.dest).expanduser()
     dest.mkdir(parents=True, exist_ok=True)
     revealed = False
+    pulled: set[str] = set()
+    bad: list[str] = []
+
+    def pull(tname: str) -> None:
+        run = dest / tname[:-4]
+        if tname in pulled or (run / "manifest.json").exists() and \
+                "pulled_unix" in json.loads((run / "manifest.json").read_text()):
+            pulled.add(tname)
+            return
+        local = dest / tname
+        subprocess.run(["curl", "-sSf", "-A", "curl/8 esj-pull", "--retry", "8", "-C", "-", "-o", str(local),
+                        f"{base}/out/{tname}"], check=True)
+        want = get(f"{base}/out/{tname}.sha256").strip()
+        h = hashlib.sha256()
+        with open(local, "rb") as f:
+            for b in iter(lambda: f.read(1 << 24), b""):
+                h.update(b)
+        if h.hexdigest() != want:
+            print("CHECKSUM MISMATCH", tname, flush=True)
+            bad.append(tname)
+            local.unlink()
+            return
+        with tarfile.open(local) as t:
+            t.extractall(dest, filter="data")
+        pod = json.loads((run / "logs" / "pod.json").read_text())
+        m = json.loads((run / "manifest.json").read_text())
+        start = a.pod_created_unix or pod.get("job_start_unix")
+        hours = (time.time() - start) / 3600 if start else None
+        rate = pod.get("hourly_rate_usd")
+        # billed_hours: pod time from the job start to this pull, an upper bound per run; the RunPod
+        # balance is the source for totals (runbook §3 finding 18)
+        m.update(provider="runpod", cloud_type=pod.get("cloud_type"), host_id=pod.get("pod_id"),
+                 data_center=pod.get("data_center"), gpu_uuid=pod.get("gpu_uuid"), driver=pod.get("driver"),
+                 hourly_rate_usd=rate, billed_hours=hours, cost_usd=(hours * rate if hours and rate else None),
+                 raw_checksums={tname: want}, pulled_unix=time.time())
+        (run / "manifest.json").write_text(json.dumps(m, indent=1))
+        local.unlink()
+        pulled.add(tname)
+        print("pulled", run.name, flush=True)
+
     while True:
         if exists(f"{base}/out/FAILED"):
-            print("pod job FAILED:", get(f"{base}/out/FAILED").strip())
+            print("pod job FAILED:", get(f"{base}/out/FAILED").strip(), flush=True)
             return 3
         if exists(f"{base}/out/DONE"):
             break
@@ -81,36 +122,14 @@ def main() -> int:
         if not (a.wait or revealed):
             print("pod job not finished")
             return 2
+        # runs the pod packed early (class F, runbook §3 finding 18) come home while it generates
+        if exists(f"{base}/out/READY"):
+            for tname in get(f"{base}/out/READY").split():
+                pull(tname)
         time.sleep(30)
-    names = get(f"{base}/out/INDEX").split()
-    ok = True
-    for tname in names:
-        local = dest / tname
-        subprocess.run(["curl", "-sSf", "--retry", "8", "-C", "-", "-o", str(local), f"{base}/out/{tname}"], check=True)
-        want = get(f"{base}/out/{tname}.sha256").strip()
-        h = hashlib.sha256()
-        with open(local, "rb") as f:
-            for b in iter(lambda: f.read(1 << 24), b""):
-                h.update(b)
-        if h.hexdigest() != want:
-            print("CHECKSUM MISMATCH", tname)
-            ok = False
-            continue
-        with tarfile.open(local) as t:
-            t.extractall(dest, filter="data")
-        run = dest / tname[:-4]
-        pod = json.loads((run / "logs" / "pod.json").read_text())
-        m = json.loads((run / "manifest.json").read_text())
-        start = a.pod_created_unix or pod.get("job_start_unix")
-        hours = (time.time() - start) / 3600 if start else None
-        rate = pod.get("hourly_rate_usd")
-        m.update(provider="runpod", cloud_type=pod.get("cloud_type"), host_id=pod.get("pod_id"),
-                 data_center=pod.get("data_center"), gpu_uuid=pod.get("gpu_uuid"), driver=pod.get("driver"),
-                 hourly_rate_usd=rate, billed_hours=hours, cost_usd=(hours * rate if hours and rate else None),
-                 raw_checksums={tname: want}, pulled_unix=time.time())
-        (run / "manifest.json").write_text(json.dumps(m, indent=1))
-        local.unlink()
-        print("pulled", run.name)
+    for tname in get(f"{base}/out/INDEX").split():
+        pull(tname)
+    ok = not bad
     return 0 if ok else 1
 
 

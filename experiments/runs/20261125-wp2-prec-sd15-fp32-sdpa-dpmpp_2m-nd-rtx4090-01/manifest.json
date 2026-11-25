@@ -1,0 +1,79 @@
+{
+ "run_id": "20261125-wp2-prec-sd15-fp32-sdpa-dpmpp_2m-nd-rtx4090-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (prec, fp32-sdpa-dpmpp_2m-nd)",
+ "git_commit": "4025dfa",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp32",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "16fa1b03ea27",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+   8,
+   9
+  ],
+  "gpu_uuid": "35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-25T02:04:59.624910+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "dpmpp_2m",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [
+  "--force-fp32",
+  "--use-pytorch-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_prec100.txt",
+  "sha256": "c71ae9b8e002a3afc946df40fbde5b7745efc0a9c79183bc596bdf70d480b75c",
+  "n": 7
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "f63642c2353bba96dcc55f2a20d6eeb90f2573cd97d36bdb9266e85d3e051e2f",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-25T02:05:52.907051+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 21,
+  "full_bytes": 94138716,
+  "kept_bytes": 1486884
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "l64f5e4pq8piu1",
+ "data_center": "EU-RO-1",
+ "gpu_uuid": "GPU-35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.89,
+ "billed_hours": 0.5650960418250826,
+ "cost_usd": 0.5029354772243235,
+ "raw_checksums": {
+  "20261125-wp2-prec-sd15-fp32-sdpa-dpmpp_2m-nd-rtx4090-01.tar": "20403c2ef13c8035f9191bd0c5b548a14f2f7b43b794a6e91624c407dc606627"
+ },
+ "pulled_unix": 1795573933.3457532
+}

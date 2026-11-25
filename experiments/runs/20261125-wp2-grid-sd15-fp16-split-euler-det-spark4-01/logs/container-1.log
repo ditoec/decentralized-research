@@ -1,0 +1,45 @@
+fatal: not a git repository (or any of the parent directories): .git
+[1/21] p00003_s0 5.79s
+[2/21] p00003_s1 4.55s
+[3/21] p00003_s2 4.55s
+[4/21] p00019_s0 4.56s
+[5/21] p00019_s1 4.59s
+[6/21] p00019_s2 4.55s
+[7/21] p00036_s0 4.57s
+[8/21] p00036_s1 4.59s
+[9/21] p00036_s2 7.23s
+[10/21] p00041_s0 4.86s
+[11/21] p00041_s1 4.59s
+[12/21] p00041_s2 4.55s
+[13/21] p00045_s0 4.57s
+[14/21] p00045_s1 4.58s
+[15/21] p00045_s2 4.56s
+[16/21] p00048_s0 4.58s
+[17/21] p00048_s1 4.60s
+[18/21] p00048_s2 4.56s
+[19/21] p00051_s0 4.57s
+[20/21] p00051_s1 5.64s
+[21/21] p00051_s2 7.14s
+{
+ "n_jobs": 21,
+ "model_load_s": 5.383901618886739,
+ "time_per_image_s": {
+  "median": 4.573596245609224,
+  "p95": 7.144393214024603,
+  "min": 4.546720137819648,
+  "max": 7.227082493714988,
+  "n": 20,
+  "note": "warm; first job excluded"
+ },
+ "memory": {
+  "host_available_before_load_gb": 48.743312,
+  "host_drop_gb": 7.455960000000005,
+  "torch_peak_allocated_gb": 5.2838016,
+  "torch_peak_reserved_gb": 5.44210944,
+  "process_peak_rss_gb": 7.427112,
+  "host_min_available_gb": 41.287352,
+  "host_total_gb": 127.533228,
+  "measured_in_process_with_jobs": 21
+ }
+}
+/runs/20261125-wp2-grid-sd15-fp16-split-euler-det-spark4-01

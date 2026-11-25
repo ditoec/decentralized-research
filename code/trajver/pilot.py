@@ -258,12 +258,28 @@ def _load_rows(run: Path) -> dict[str, dict]:
     return {r["job"]: r for r in (json.loads(l) for l in (run / "jobs.jsonl").read_text().splitlines() if l.strip())}
 
 
+def _load_traj_any(run: Path, row: dict):
+    """The full trajectory (class F) or the verified class-O bundle of a job, or None."""
+    from . import retention
+    from .trajectory import Trajectory
+
+    full, opened = run / "raw" / "traj" / f"{row['job']}.safetensors", run / "raw" / "opened" / f"{row['job']}.safetensors"
+    if full.exists():
+        return Trajectory.load(full)
+    if opened.exists():
+        return retention.load_bundle(opened, row.get("merkle_root"))
+    return None
+
+
+def _d_steps(t) -> list[int]:
+    return sorted(t.Ds) if isinstance(t.Ds, dict) else list(range(len(t.Ds)))
+
+
 def cmd_compare(a):
     import numpy as np
     from PIL import Image
 
     from .solvers import residual
-    from .trajectory import Trajectory
 
     ra, rb = Path(a.run_a), Path(a.run_b)
     A, B = _load_rows(ra), _load_rows(rb)
@@ -282,15 +298,18 @@ def cmd_compare(a):
             r.update(px_max=int(diff.max()), px_mean=float(diff.mean()), px_frac_equal=float((diff == 0).mean()))
         else:
             r.update(px_max=0, px_mean=0.0, px_frac_equal=1.0)
-        ta, tb = ra / "raw" / "traj" / f"{k}.safetensors", rb / "raw" / "traj" / f"{k}.safetensors"
-        if a.steps_detail and ta.exists() and tb.exists() and not r.get("root_equal", False):
-            Ta, Tb = Trajectory.load(ta), Trajectory.load(tb)
-            for i in range(min(Ta.T, Tb.T)):
+        Ta, Tb = (_load_traj_any(ra, A[k]), _load_traj_any(rb, B[k])) if a.steps_detail else (None, None)
+        if Ta is not None and Tb is not None and not r.get("root_equal", False):
+            # class-O runs (runbook §3.5) open only their drawn steps: compare the steps both opened.
+            # With one draw seed per study arm, the same job opens the same steps in every config and node.
+            steps = sorted(set(range(Ta.T)) & set(range(Tb.T)) & set(_d_steps(Ta)) & set(_d_steps(Tb)))
+            for i in steps:
                 res = residual(Ta.Ds[i], Tb.Ds[i])
                 step_rel.setdefault(i, []).append(res["rel_l2"])
                 step_max.setdefault(i, []).append(res["max_abs"])
+            r["steps_compared"] = steps if len(steps) < min(Ta.T, Tb.T) else "all"
             r["x0_equal"] = bool(torch.equal(Ta.xs[0], Tb.xs[0]))
-            r["first_D_diff_step"] = next((i for i in range(min(Ta.T, Tb.T)) if not torch.equal(Ta.Ds[i], Tb.Ds[i])), None)
+            r["first_D_diff_step"] = next((i for i in steps if not torch.equal(Ta.Ds[i], Tb.Ds[i])), None)
         if a.e0_out:
             from .rules import e0 as E0
             from .rules import e0n as E0N

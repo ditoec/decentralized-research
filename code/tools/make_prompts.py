@@ -9,7 +9,10 @@ fixed seed, stratified by category so every split has the same category mix. Pro
 1-based line numbers in the source file. Writes, under experiments/configs/:
 
   prompts_{cal,dev,test}.txt   40/20/40 split (400/200/400)
+  prompts_caldev600.txt        cal + dev (reference config on the Sparks)
   prompts_rent500.txt          200 cal + 100 dev + 200 test (reference config on RunPod)
+  prompts_rent_caldev300.txt   the cal + dev part of rent500 (retention class F)
+  prompts_rent_test200.txt     the test part of rent500 (retention class O; not scored until §6)
   prompts_grid200.txt          120 cal + 80 dev (non-reference configs on the Sparks)
   prompts_prec100.txt          100 taken from grid200 (precision factor; second software stack)
   prompts_l2_50.txt            50 cal (unit-to-unit subset)
@@ -73,6 +76,11 @@ def main(src: str) -> None:
     files = {f"prompts_{k}.txt": v for k, v in split.items()}
     files["prompts_rent500.txt"] = sorted(take(rng2, split["cal"], 200) + take(rng2, split["dev"], 100)
                                           + take(rng2, split["test"], 200))
+    # the same 500 split by retention class (runbook §3.5): cal+dev class F, test class O; no rng draws
+    test_ids = {r[0] for r in split["test"]}
+    files["prompts_rent_caldev300.txt"] = [r for r in files["prompts_rent500.txt"] if r[0] not in test_ids]
+    files["prompts_rent_test200.txt"] = [r for r in files["prompts_rent500.txt"] if r[0] in test_ids]
+    files["prompts_caldev600.txt"] = sorted(split["cal"] + split["dev"])  # Spark reference config
     grid = sorted(take(rng2, split["cal"], 120) + take(rng2, split["dev"], 80))
     files["prompts_grid200.txt"] = grid
     files["prompts_prec100.txt"] = take(rng2, grid, 100)

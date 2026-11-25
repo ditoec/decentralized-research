@@ -342,6 +342,12 @@ Rules:
    Use pairs within each level L0–L4.
 4. **Outputs:** fill R1.1–R1.8. Save the figure data for R1.4 and R1.5 as CSV in `summary.json` or alongside it.
 
+**Workload scripts (2026-11-25).** `code/tools/workloads/wp2_spark.sh` (items `ref`, `grid`, `l0`, `l2`) and `wp2_rent.sh` (items `ref`, `prec`, `slice`, `l2`), sharing `wp2_lib.sh`.
+- A config is `<prec>-<attn>-<sampler>-<det>`: fp16 = `--force-fp16`, bf16 = `--bf16-unet`, fp32 = `--force-fp32` (as in P7); sdpa = `--use-pytorch-cross-attention`, split = `--use-split-cross-attention` (the "split or quad" level is **split**); det = `--deterministic`. The reference config is `fp16-sdpa-{euler,dpmpp_2m}-nd`. All runs are 30 steps, 512² for SD1.5 and 1024² for SDXL, seeds 0, 1, 2, trajectories kept.
+- New prompt files (subsets, no new draws; hashes in `prompts.json`): `prompts_caldev600.txt` (cal + dev, the Spark reference config), and `prompts_rent500.txt` split by retention class into `prompts_rent_caldev300.txt` (class F) and `prompts_rent_test200.txt` (class O).
+- Run names carry the retention class: `-test-` runs are class O, `-prec-` and `-slice-` runs class I, the rest class F. Create every rented pod with `POD_RETENTION='*-test-*=O,*-prec-*=I,*-slice-*=I,*=F'` and, for `ref`, `POD_DRAW_SEED_SHA256`.
+- `LIMIT=n` caps each run at n prompts (× 3 seeds) for dry runs; `GRID_GLOB` splits the Spark grid across days (e.g. `GRID_GLOB='bf16-*'`). Runs resume by run id.
+
 ---
 
 ## 5. Calibration and freezing (end of WP2): no attack data before this step

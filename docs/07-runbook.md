@@ -371,6 +371,7 @@ Rules:
 - The pull runs on Spark-5 with `--wait --reveal-seed`.
 - **`REP=02`.** The 4090 dry run (finding 18) used `20261125-…-rtx4090-01` on the same UTC date, and `pull_run.py` skips folders already pulled. The date is not overridden; this pod's runs are `20261125-wp2-…-rtx4090-02`. REP has no other meaning on the rentals.
 - RTX 5090 (L3), second RTX 5090 (L2) and RTX 3090: start when stock appears, each with its own draw seed.
+- **RTX 3090 started 2026-11-25 22:34 UTC.** Community Cloud had none; Secure Cloud, EU-CZ-1, US$0.50/h, 200 GB disk, driver 595.112, code identical to main `70b6308`, items `ref prec`. Its own draw seed (on Spark-5; sha256 `40c56a37…`). `REP=01`: the only earlier 3090 run is the WP0b pilot of 2026-11-24, so no id collides. Pull on Spark-5 with `--wait --reveal-seed`. (An hour earlier a Community 3090 at US$0.22/h sold out between the stock read and the create; nothing was billed.)
 
 ---
 

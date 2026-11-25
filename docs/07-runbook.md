@@ -360,6 +360,12 @@ Rules:
 - Run names carry the retention class: `-test-` runs are class O, `-prec-` and `-slice-` runs class I, the rest class F. Create every rented pod with `POD_RETENTION='*-test-*=O,*-prec-*=I,*-slice-*=I,*=F'` and, for `ref`, `POD_DRAW_SEED_SHA256`.
 - `LIMIT=n` caps each run at n prompts (× 3 seeds) for dry runs; `GRID_GLOB` splits the Spark grid across days (e.g. `GRID_GLOB='bf16-*'`). Runs resume by run id.
 
+**Spark grid launched (2026-11-26, code at commit `58f57c6`, the same files on all three nodes).** Items `ref grid l2` on Spark-5 and Spark-6, `ref l0 grid l2` on Spark-4; grid on `prompts_grid50.txt`, the one grid draw seed on all three nodes (sha256 `c4295abf…`). Expected about 29 h per node (reference 13.5 h, grid about 15 h, L2 0.5 h; Spark-4 also L0 1.4 h). Run ids take the node's own UTC date (`DATE` is not overridden):
+- Spark-5 and Spark-6 started at 17:30 UTC on 2026-11-25, so their run ids begin `20261125-`.
+- **Spark-4 incident.** It started at the same time, but its WP2 dry-run runs of 2026-11-25 (finding 18) have the same ids, and runs resume by id. It was stopped after about 2 minutes. By then it had appended 69 reference-config jobs to the dry-run folder `20261125-wp2-ref-sd15-fp16-sdpa-euler-nd-spark4-01` (21 → 90 jobs). That folder stays dry-run data, not paper data; its committed metadata (21 jobs) is unchanged.
+- Spark-4 then started a waiter that reads the node's clock and launches the workload once the UTC date is 2026-11-26, so its run ids begin `20261126-`.
+- Pairs are matched by config, not by date.
+
 ---
 
 ## 5. Calibration and freezing (end of WP2): no attack data before this step

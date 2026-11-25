@@ -396,6 +396,12 @@ Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RT
 
 ## 7. RQ3: escrow and testbed (WP5, Jan 4 – Mar 14, parallel second person)
 
+**Status 2026-11-25 (items 1–3, local validator only).**
+- **Item 1 is done.** The Anchor program is in `code/program/` (`trajescrow`). It implements the table below one to one, with one test per row on `solana-test-validator`. Choices the table leaves open, such as the fee split and the rule that inconclusive plus inconclusive is unresolved, are listed in `code/program/README.md`. Its 16 mocha tests and 2 Rust unit tests pass.
+- **Item 2 is done in minimal form.** The orchestrator is in `code/orchestrator/` (queue, assignment, JSON-lines relay, event log, reputation). It calls `python -m trajver.verify` and drops the label fields before it reads a verdict. Its unit tests pass, and its local-validator test passes with a stand-in verifier.
+- **Item 3, local part.** `code/program/scripts/replay.ts` replays the four paths, interleaved, and records signatures, compute units and fees per transaction. Run: REPLAY_RUN. Still open: the ≥100-per-path run on the x86 pod, Devnet, latency to finalized, the RPC details and the calculated mainnet fee.
+- **Build workaround** (Anchor 1.2.2 + platform-tools v1.57; `code/program/scripts/build.sh`). Run `anchor build --no-idl -- --no-rustup-override` with `~/.cache/solana/v1.57/platform-tools/rust/bin` first on `PATH`, then `anchor idl build`, then `anchor test --skip-build --validator legacy`. Anchor 1.x starts surfpool unless told `legacy`.
+
 1. **Anchor program** (`code/program/`). Accounts: `Job` (a PDA per job id), escrow token vault (OCC SPL), `ProviderBond`, `Config`.
 
    | Instruction | Purpose |

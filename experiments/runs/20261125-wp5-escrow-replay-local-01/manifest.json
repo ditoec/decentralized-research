@@ -1,0 +1,31 @@
+{
+ "run_id": "20261125-wp5-escrow-replay-local-01",
+ "wp": "wp5",
+ "purpose": "Scripted replay of the four escrow lifecycle paths (runbook section 7 item 3) on a local solana-test-validator. Signature counts, compute units and fees are properties of the program and transactions; latencies on a local validator are not reported in the paper.",
+ "git_commit": "0077db384ab5039f9c37484c85733542b6779931",
+ "program_tree_dirty": true,
+ "cluster": "localnet (solana-test-validator)",
+ "rpc_endpoint": "local",
+ "solana_core": "4.1.2",
+ "feature_set": 3345198602,
+ "program_id": "HmMX8b7GLwUeJv4dw42xHAryRVfQm319ArWNbfj9ePpf",
+ "program_so_sha256": "d4837478c1399ed8f0f8047256fa450b4956a6ceebf251aa7887f55c0d38ea70",
+ "anchor_cli": "anchor-cli 1.2.2",
+ "solana_cli": "unknown",
+ "node": "v24.12.0",
+ "os": "darwin 25.6.0",
+ "cpu_isa": "arm64",
+ "cpu_model": "Apple M1 Pro",
+ "params": {
+  "n_per_path": 100,
+  "interleave_seed": 1,
+  "payment": 1000000,
+  "verifier_fee": 100000,
+  "bond": 500000,
+  "draw_delay_slots": 2,
+  "exec_timeout_slots_timeout_path": 2,
+  "priority_fee": "none (no compute-budget instruction)"
+ },
+ "start_time": "2026-11-25T07:14:53.726Z",
+ "end_time": "2026-11-25T07:51:35.525Z"
+}

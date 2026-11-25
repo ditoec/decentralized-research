@@ -19,10 +19,11 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["trajver*"]
+include = ["trajver*", "orchestrator*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
     "integration: needs the pinned ComfyUI checkout and the SD1.5 checkpoint",
+    "localnet: needs solana-test-validator with the trajescrow program (code/program/scripts/local-validator.sh)",
 ]

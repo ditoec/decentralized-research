@@ -59,4 +59,4 @@ Every model call made by `trajver` runs inside `comfy_env.pinned_batching()`: se
 | `comfyui_trajectory/` | ComfyUI custom node `KSamplerTrajectory`; symlink into `ComfyUI/custom_nodes/` |
 | `tools/` | `fetch_comfyui.sh`; `dev_w1.py` (early look at hypothesis W1) |
 | `tests/` | `unit/` (no model), `integration/` (SD1.5) |
-| `program/`, `orchestrator/` | Later milestones: Anchor escrow, orchestrator |
+| `program/`, `orchestrator/` | WP5 escrow: Anchor program `trajescrow` with tests and path replay; minimal orchestrator that calls `trajver.verify` (see their READMEs) |

@@ -397,6 +397,15 @@ Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RT
 
 ## 7. RQ3: escrow and testbed (WP5, Jan 4 – Mar 14, parallel second person)
 
+**Toolchain on the operator's Mac (installed 2026-11-25).** Solana CLI 4.4.1 (Anza installer; `solana-test-validator`, `cargo-build-sbf`) and Anchor 1.2.2 via `avm` 1.2.2, with platform-tools v1.57. A local build and test on the local validator therefore cost nothing; the RunPod pod §7 item 3 budgets for the Anchor build is not needed for local-validator work. Known issue: rustup 1.28.2 reads the platform-tools toolchain name `1.95.0-sbpf-solana-v1.57` as an official channel and fails ("target 'sbpf-solana-v1.57' not found in channel"). Workaround, which builds, tests and deploys an Anchor 1.2 template:
+
+```
+export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
+PATH="$HOME/.cache/solana/v1.57/platform-tools/rust/bin:$PATH" anchor build --no-idl -- --no-rustup-override
+anchor idl build -o target/idl/<program>.json
+anchor test --skip-build
+```
+
 1. **Anchor program** (`code/program/`). Accounts: `Job` (a PDA per job id), escrow token vault (OCC SPL), `ProviderBond`, `Config`.
 
    | Instruction | Purpose |

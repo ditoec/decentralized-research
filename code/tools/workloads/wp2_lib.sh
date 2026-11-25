@@ -35,9 +35,11 @@ gen() {
   local m=$1 cfg=$2 prompts=$3 seeds=$4 part=$5 purpose=${6:-"WP2 RQ1 honest variation"}
   local ck=$SD15 sha=$SD15_SHA res=512
   [ "$m" = sdxl ] && ck=$SDXL && sha=$SDXL_SHA && res=1024
-  local name="$part-$m-$cfg-$NODE"
-  python -m trajver.pilot --flags="$(flags_of "$cfg")" gen --wp wp2 --name "$name" \
-    --run-id "$DATE-wp2-$name-$REP" --ckpt "$ck" --ckpt-sha256 "$sha" --prompts "$CFG/$prompts" \
+  local name="$part-$m-$cfg-$NODE" id="$DATE-wp2-$part-$m-$cfg-$NODE-$REP"
+  # on a Spark (SPARK=1) the host script starts each run in a research container via spark_run.py
+  local launch=(); [ "${SPARK:-0}" = 1 ] && launch=(python3 tools/spark_run.py --run-id "$id" --)
+  "${launch[@]}" python -m trajver.pilot --flags="$(flags_of "$cfg")" gen --wp wp2 --name "$name" \
+    --run-id "$id" --ckpt "$ck" --ckpt-sha256 "$sha" --prompts "$CFG/$prompts" \
     --seeds "$seeds" --res $res --steps 30 --sampler "$(sampler_of "$cfg")" --save-traj --limit "$LIMIT" \
-    --purpose "$purpose ($part, $cfg)"
+    --purpose "$purpose ($part, $cfg)" || { echo "FAILED $id"; [ "${SPARK:-0}" = 1 ] || return 1; }
 }

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# WP2 Spark grid (runbook §4 item 1), run inside the research container by tools/spark_run.py.
+# WP2 Spark grid (runbook §4 item 1). Runs on the HOST from ~/esj/code; every run is a research
+# container started by tools/spark_run.py (runbook §1.1 rules, co-tenant log), one at a time.
 #
-#   NODE=spark4 MODELS=/models ITEMS="ref grid" bash tools/workloads/wp2_spark.sh
+#   NODE=spark4 ITEMS="ref grid" nohup bash tools/workloads/wp2_spark.sh > ~/esj/logs/wp2.log 2>&1 &
 #
 # ITEMS  ref    reference config (fp16-sdpa-{euler,dpmpp_2m}-nd), SD1.5 and SDXL, cal + dev (600) x 3 seeds
 #               (Sparks 4, 5 and 6)
@@ -13,6 +14,7 @@
 # Everything keeps full trajectories (Spark jobs are class F). GRID_GLOB filters grid configs by glob
 # (e.g. GRID_GLOB='bf16-*') to split the grid across days.
 set -euo pipefail
+export SPARK=1 MODELS=/models  # paths as the container sees them
 source "$(dirname "$0")/wp2_lib.sh"
 ITEMS="${ITEMS:-ref}"; MODELS_LIST="${MODELS_LIST:-sd15 sdxl}"; GRID_GLOB="${GRID_GLOB:-*}"
 CALDEV=prompts_caldev600.txt
@@ -21,7 +23,7 @@ for m in $MODELS_LIST; do
   for s in euler dpmpp_2m; do
     has ref && gen "$m" "fp16-sdpa-$s-nd" $CALDEV 0,1,2 ref
     if has l0; then
-      LIMIT=60 REP=02 gen "$m" "fp16-sdpa-$s-nd" $CALDEV 0,1,2 ref "WP2 L0 repeat, 10 %"
+      LIMIT=${L0_LIMIT:-60} REP=02 gen "$m" "fp16-sdpa-$s-nd" $CALDEV 0,1,2 ref "WP2 L0 repeat, 10 %"
     fi
     if has grid; then
       for prec in fp16 bf16 fp32; do

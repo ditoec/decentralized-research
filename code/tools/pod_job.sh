@@ -28,6 +28,10 @@ cd /work/code || fail "no code"
 command -v git >/dev/null || (apt-get update -qq && apt-get install -y -qq git curl >/dev/null) || fail "apt"
 env/setup_env.sh "$STACK" || fail "setup_env"
 PY=/work/esj/venv-$STACK/bin/python
+# some RunPod hosts expose the card to nvidia-smi but not to CUDA ("CUDA unknown error", seen
+# 2026-11-25 on an RTX 4090 host); without this check the workload would run on the CPU
+"$PY" -c "import torch, sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null \
+  || fail "CUDA not usable on this host: terminate the pod and rent another"
 # no image on a pod: the environment is pinned by its lock file, recorded in the same manifest field
 export TRAJVER_IMAGE_DIGEST="lock-$STACK:sha256:$(sha256sum "env/lock-$STACK.txt" | cut -d' ' -f1)"
 "$PY" - <<'PY' || fail "models"

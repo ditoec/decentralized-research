@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """Pull finished runs from a RunPod pod to a Spark (runbook §3.4 item 3). Host python3 only.
 
-  python3 pull_run.py https://<podId>-8000.proxy.runpod.net/<token> [--dest ~/esj/runs] [--hourly 0.39]
+  python3 pull_run.py https://<podId>-8000.proxy.runpod.net/<token> [--dest ~/esj/runs] [--wait]
+                      [--reveal-seed SECRET_FILE]
+
+With class-O runs (runbook §3.5) the pod stops after generation (out/GENERATED) and waits for the
+draw seed. --reveal-seed checks the file against the hash fixed before generation (in pod.json),
+PUTs it to the pod, and then waits for the pod to extract, verify and pack. --wait polls until
+the pod is DONE instead of exiting.
 
 Reads out/INDEX, downloads each <run>.tar with resume (curl -C -), checks it against
 <run>.tar.sha256, extracts it under --dest, and adds the cost fields to the run manifest
@@ -28,18 +34,54 @@ def get(url: str) -> str:
         return r.read().decode()
 
 
+def exists(url: str) -> bool:
+    try:
+        get(url)
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def reveal(base: str, secret: Path) -> None:
+    seed_hex = secret.read_text().strip()
+    pod = json.loads(get(f"{base}/out/pod.json"))
+    want = pod.get("draw_seed_sha256")
+    if not want or hashlib.sha256(bytes.fromhex(seed_hex)).hexdigest() != want:
+        raise SystemExit("this seed does not match the hash the pod was given at creation; not revealing")
+    subprocess.run(["curl", "-sSf", "-A", "curl/8 esj-pull", "-T", str(secret), f"{base}/secret/draw_seed.hex"],
+                   check=True, stdout=subprocess.DEVNULL)
+    print("draw seed revealed to the pod")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("base")
     ap.add_argument("--dest", default=str(Path.home() / "esj" / "runs"))
     ap.add_argument("--pod-created-unix", type=float, default=None, help="for billed hours; default pod.json")
+    ap.add_argument("--wait", action="store_true", help="poll until the pod job is DONE")
+    ap.add_argument("--reveal-seed", default=None, help="draw seed file for class-O runs (after generation)")
     a = ap.parse_args()
     base = a.base.rstrip("/")
     dest = Path(a.dest).expanduser()
     dest.mkdir(parents=True, exist_ok=True)
-    if get(f"{base}/out/DONE").strip() != "ok":
-        print("pod job not finished")
-        return 2
+    revealed = False
+    while True:
+        if exists(f"{base}/out/FAILED"):
+            print("pod job FAILED:", get(f"{base}/out/FAILED").strip())
+            return 3
+        if exists(f"{base}/out/DONE"):
+            break
+        if exists(f"{base}/out/GENERATED") and not revealed:
+            if not a.reveal_seed:
+                print("pod is waiting for the draw seed: rerun with --reveal-seed")
+                return 2
+            reveal(base, Path(a.reveal_seed).expanduser())
+            revealed = True
+            continue
+        if not (a.wait or revealed):
+            print("pod job not finished")
+            return 2
+        time.sleep(30)
     names = get(f"{base}/out/INDEX").split()
     ok = True
     for tname in names:

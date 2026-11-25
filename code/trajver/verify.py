@@ -10,6 +10,12 @@ delivered image, rebuilds the claimed JobSpec from the run manifest, and compute
   E2-W  the deployed SN30 rule (3 random steps)
 and writes long-format rows ``job_id, attack, s, evidence, k, verdict, score`` to <new run>/verdicts.jsonl.
 Ground-truth labels are NOT read here; the paper author joins them afterwards by job_id.
+
+Retention classes (runbook §3.5). A class-F job has its full trajectory (raw/traj). A class-O job has
+only a bundle (raw/opened) whose tensors are checked against the committed root; its steps come from
+the revealed draw seed (logs/draw_seed.hex): E2-H at k uses the first k entries of the job's order,
+E2-W its first three steps >= 1, and Tier A is read from the pod's residuals over all steps. A class-I
+job is scored with E1's image check and Tier A only (factor runs; no step is opened).
 """
 from __future__ import annotations
 
@@ -47,7 +53,9 @@ def main(argv=None):
     from .job import JobSpec, Pipeline, sha256_file
     from .pilot import read_prompts
     from .rules.e1 import e1
-    from .rules.e2h import draw_steps, tier_a, tier_b
+    from . import retention as R
+    from .rules.e1 import check_image
+    from .rules.e2h import draw_steps, tier_a, tier_a_from_rows, tier_b
     from .rules.e2w import e2w
     from .thresholds import load, tau_for
     from .trajectory import Trajectory
@@ -70,25 +78,60 @@ def main(argv=None):
     jobs = [json.loads(l) for l in (src / "jobs.jsonl").read_text().splitlines() if l.strip()][: a.limit or None]
     out = open(d / "verdicts.jsonl", "a")
     log: list = []
+    seed = None
+    if pm.get("retention") == "O":
+        seed = R.read_seed(src / "logs" / "draw_seed.hex")
+        if R.seed_sha256(seed) != pm.get("draw_seed_sha256"):
+            raise SystemExit("revealed draw seed does not match the hash fixed before generation")
     for r in jobs:
-        traj = Trajectory.load(src / "raw" / "traj" / f"{r['job']}.safetensors")
+        cls = r.get("retention", "F")
+        full = src / "raw" / "traj" / f"{r['job']}.safetensors"
+        if cls == "F" or full.exists():
+            cls, traj, order = "F", Trajectory.load(full), None
+        else:
+            try:
+                traj = R.load_bundle(src / "raw" / "opened" / f"{r['job']}.safetensors", r.get("merkle_root"))
+                order = R.step_order(seed, r["job"], traj.T) if (cls == "O" and seed is not None) else []
+                if cls == "O" and order[: R.N_OPEN] != traj.meta["order"]:
+                    raise ValueError("opened steps do not follow from the revealed seed")
+            except (ValueError, KeyError, FileNotFoundError) as e:
+                base = {"job_id": r["job"], "attack": pm.get("attack", "honest"), "s": pm.get("actual", {}).get("s")}
+                for ev, k in [("E1", None), ("E2-H.tierA", None)] + [("E2-H", k) for k in KS] + [("E2-W", 3)]:
+                    out.write(json.dumps({**base, "evidence": ev, "k": k, "verdict": "fail", "score": None,
+                                          "retention": cls, "reasons": [f"bundle rejected: {e}"]}) + "\n")
+                print(r["job"], "bundle rejected:", e, flush=True)
+                continue
         spec = JobSpec(prompt=prompts[r["prompt_id"]], negative=a.negative, seed=r["seed"], steps=claimed["steps"],
                        cfg=claimed["cfg"], sampler=claimed["sampler"], width=res, height=res)
         img = torch.from_numpy(np.asarray(Image.open(src / "raw" / "images" / f"{r['job']}.png")).copy())[None]
-        base = {"job_id": r["job"], "attack": pm.get("attack", "honest"), "s": pm.get("actual", {}).get("s")}
+        base = {"job_id": r["job"], "attack": pm.get("attack", "honest"), "s": pm.get("actual", {}).get("s"),
+                "retention": cls}
+        if cls == "I":  # image level: decoded x_final vs the delivered image, and the pod's Tier A
+            decoded = pipe.to_uint8(pipe.decode(pipe.latent_out(traj.x_final)))
+            vi = check_image(decoded, img, th)
+            va = tier_a_from_rows(traj.meta["tier_a"], th)
+            out.write(json.dumps({**base, "evidence": "E1.image", "k": None, "verdict": vi.verdict,
+                                  "score": None, "reasons": vi.reasons}) + "\n")
+            out.write(json.dumps({**base, "evidence": "E2-H.tierA", "k": None, "verdict": va.verdict,
+                                  "score": va.scores.get("max_rel_l2"), "reasons": va.reasons}) + "\n")
+            out.flush()
+            print(r["job"], "I image", vi.verdict, "A", va.verdict, flush=True)
+            continue
         v1 = e1(traj, pipe, spec, img, th)
         out.write(json.dumps({**base, "evidence": "E1", "k": None, "verdict": v1.verdict,
                               "score": None, "reasons": v1.reasons}) + "\n")
-        va = tier_a(traj, claimed["sampler"], th)
+        va = tier_a(traj, claimed["sampler"], th) if cls == "F" else tier_a_from_rows(traj.meta["tier_a"], th)
         out.write(json.dumps({**base, "evidence": "E2-H.tierA", "k": None, "verdict": va.verdict,
                               "score": va.scores.get("max_rel_l2"), "reasons": va.reasons}) + "\n")
         T = traj.T
         if T == claimed["steps"]:
-            vb = tier_b(traj, lambda st, sg: pipe.replay_denoised(spec, st, sg), list(range(T)), th, log)
+            # class F replays every step once and derives each k from it; class O only its 8 opened steps
+            pool = list(range(T)) if cls == "F" else R.drawn(order, R.N_OPEN)
+            vb = tier_b(traj, lambda st, sg: pipe.replay_denoised(spec, st, sg), pool, th, log)
             per = vb.scores["per_step"]
             metric = th["tier_b_metric"]
             for k in KS:
-                steps = draw_steps(T, k, f"{r['job']}|k{k}")
+                steps = draw_steps(T, k, f"{r['job']}|k{k}") if cls == "F" else R.drawn(order, k)
                 bad = [i for i in steps if not per[str(i)][metric] <= tau_for(th, i)]
                 tb = "fail" if bad else "pass"
                 both = "fail" if ("fail" in (v1.verdict, va.verdict, tb)) else "pass"
@@ -100,7 +143,8 @@ def main(argv=None):
                 out.write(json.dumps({**base, "evidence": "E2-H", "k": k, "verdict": "fail", "score": None,
                                       "reasons": ["step count differs from the claim"]}) + "\n")
         vw = e2w(traj, claimed["steps"], claimed["sampler"], lambda st, sg: pipe.replay_denoised(spec, st, sg), th,
-                 seed=int(r["seed"]) + r["prompt_id"], frames_dtype=pipe.model_dtype())
+                 seed=int(r["seed"]) + r["prompt_id"], frames_dtype=pipe.model_dtype(),
+                 idx=None if cls == "F" else [j - 1 for j in R.e2w_steps(order)])
         out.write(json.dumps({**base, "evidence": "E2-W", "k": 3, "verdict": vw.verdict,
                               "score": vw.scores.get("score")}) + "\n")
         out.flush()

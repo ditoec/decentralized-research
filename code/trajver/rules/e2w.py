@@ -34,6 +34,8 @@ Adaptations, recorded here and in the paper:
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import random
 
 import torch
@@ -42,6 +44,9 @@ from ..solvers import dpmpp_2m_replica, euler_replica
 from ..trajectory import Trajectory
 from . import FAIL, PASS, Verdict
 from .e2h import Replay
+
+if TYPE_CHECKING:
+    from ..retention import Opened
 
 
 def similarity(a: torch.Tensor, b: torch.Tensor) -> float:
@@ -52,38 +57,45 @@ def frames_of(traj: Trajectory) -> list[torch.Tensor]:
     return [traj.state(j + 1) for j in range(traj.T)]
 
 
-def score_similarity(traj: Trajectory, num_inference_steps: int, sampler: str, replay: Replay,
-                     rng: random.Random, frames_dtype: torch.dtype | None = None) -> tuple[float, dict]:
-    frames = frames_of(traj)
-    if len(frames) != num_inference_steps:
+def score_similarity(traj: Trajectory | Opened, num_inference_steps: int, sampler: str, replay: Replay,
+                     rng: random.Random, frames_dtype: torch.dtype | None = None,
+                     idx: list[int] | None = None) -> tuple[float, dict]:
+    """``idx`` (frame indices i, step j = i + 1) overrides the seeded draw: class-O bundles open
+    only the pre-drawn steps (runbook §3.5 rule 1). Only the frames the check uses are read."""
+    if traj.T != num_inference_steps:
         return 0.0, {"reason": "frame count != num_inference_steps"}
     k = min(3, num_inference_steps)
-    if len(frames) - 1 < k:
+    if traj.T - 1 < k:
         return 0.0, {"reason": "too few frames"}
-    idx = sorted(rng.sample(range(len(frames) - 1), k))
-    if frames_dtype is not None:  # frames_tensor.to(unet.device, unet.dtype)
-        frames = [f.to(frames_dtype).to(torch.float32) for f in frames]
+    if idx is None:
+        idx = sorted(rng.sample(range(traj.T - 1), k))
+    idx = sorted(idx)
+
+    def frame(i):  # frames[i] = x_{i+1}; frames_tensor.to(unet.device, unet.dtype)
+        f = traj.state(i + 1)
+        return f.to(frames_dtype).to(torch.float32) if frames_dtype is not None else f
+
     # Re-running step index i+1 from frames[i] = x_{i+1} uses sigma_{i+1}.
-    D_hat = replay({i + 1: frames[i] for i in idx}, traj.sigmas)
+    D_hat = replay({i + 1: frame(i) for i in idx}, traj.sigmas)
     sig = traj.sigmas.float().cpu()
     sims = []
     for i in idx:
         j = i + 1
-        x = frames[i].float().cpu()
+        x = frame(i).float().cpu()
         if sampler == "euler":
             nxt = euler_replica(x, D_hat[j].float().cpu(), sig, j)
         elif sampler == "dpmpp_2m":
             nxt = dpmpp_2m_replica(x, D_hat[j].float().cpu(), sig, j, D_prev=None)
         else:
             raise ValueError(sampler)
-        sims.append(similarity(nxt, frames[i + 1].float().cpu()))
+        sims.append(similarity(nxt, frame(i + 1).float().cpu()))
     score = max(min(sims) * 0.5 + 0.5, 0.0)
     return score, {"indices": idx, "similarities": sims}
 
 
-def e2w(traj: Trajectory, num_inference_steps: int, sampler: str, replay: Replay, th: dict,
-        seed: int, frames_dtype: torch.dtype | None = None) -> Verdict:
-    score, info = score_similarity(traj, num_inference_steps, sampler, replay, random.Random(seed), frames_dtype)
+def e2w(traj: Trajectory | Opened, num_inference_steps: int, sampler: str, replay: Replay, th: dict,
+        seed: int, frames_dtype: torch.dtype | None = None, idx: list[int] | None = None) -> Verdict:
+    score, info = score_similarity(traj, num_inference_steps, sampler, replay, random.Random(seed), frames_dtype, idx)
     ok = score >= th["e2w_score_min"]
     return Verdict("E2-W", PASS if ok else FAIL, {"score": score, **info},
                    [] if ok else [f"similarity score {score:.3f} < {th['e2w_score_min']}"])

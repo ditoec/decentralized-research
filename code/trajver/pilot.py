@@ -339,11 +339,15 @@ def cmd_replay(a):
     ckpt_sha = a.ckpt_sha256 or sha256_file(a.ckpt)
     if ckpt_sha != pm["models"][0]["sha256"]:
         raise SystemExit("verifier model differs from the provider's")
+    if pm.get("retention", "F") != "F":
+        raise SystemExit(f"provider run is class {pm['retention']}: a full replay needs class F trajectories "
+                         "(runbook §3.5); score class O/I runs with trajver.verify")
     w, h = (int(x) for x in pm["resolution"].split("x"))
     d, m = manifest.start(a.wp, a.name, "verifier replay of every step (Tier B distances, Tier A residuals)",
                           rid=a.run_id, provider_run=src.name, provider_node=pm.get("node"),
                           models=pm["models"], sampler=pm["sampler"], steps=pm["steps"], cfg=pm["cfg"],
-                          resolution=pm["resolution"], pin_batching=comfy_env.PIN_BATCHING)
+                          resolution=pm["resolution"], pin_batching=comfy_env.PIN_BATCHING,
+                          provider_retention=pm.get("retention", "F"))
     out_path = d / "jobs.jsonl"
     done = {json.loads(l)["job"] for l in out_path.read_text().splitlines() if l.strip()} if out_path.exists() else set()
     pipe = Pipeline(a.ckpt, ckpt_sha)

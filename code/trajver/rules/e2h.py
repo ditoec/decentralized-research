@@ -6,6 +6,8 @@ before it has hashed its own recomputations (commit-before-reveal, manuscript §
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import hashlib
 import random
 import time
@@ -18,6 +20,9 @@ from ..solvers import residual, tier_a_residuals
 from ..thresholds import tau_for
 from ..trajectory import Trajectory, dkey
 from . import FAIL, PASS, Verdict, combine
+
+if TYPE_CHECKING:
+    from ..retention import Opened
 
 Replay = Callable[[dict[int, torch.Tensor], torch.Tensor], dict[int, torch.Tensor]]
 
@@ -34,7 +39,13 @@ def draw_steps(T: int, k: int, seed: int | bytes | str) -> list[int]:
 
 
 def tier_a(traj: Trajectory, sampler: str, th: dict) -> Verdict:
-    rows = tier_a_residuals(traj, sampler)
+    return tier_a_from_rows(tier_a_residuals(traj, sampler), th)
+
+
+def tier_a_from_rows(rows: list[dict], th: dict) -> Verdict:
+    """Tier A verdict from per-step residual rows; for class-O/I jobs the rows were computed on the
+    pod over the full trajectory before it was discarded (runbook §3.5 rule 3)."""
+    rows = [{**r, "step": r.get("step", i)} for i, r in enumerate(rows)]
     # pass if the float32 replica of the solver step is bit-exact, or the float64 residual is within
     # eps_A (calibrated as 0 when every honest step was replica-exact across nodes, runbook §5)
     bad = [r["step"] for r in rows if not (r["replica_exact"] or r["rel_l2"] <= th["eps_a_rel_l2"])]
@@ -48,7 +59,7 @@ def tier_a(traj: Trajectory, sampler: str, th: dict) -> Verdict:
                    [f"solver inconsistency at steps {bad}"] if bad else [])
 
 
-def tier_b(traj: Trajectory, replay: Replay, steps: list[int], th: dict, log: list | None = None) -> Verdict:
+def tier_b(traj: Trajectory | Opened, replay: Replay, steps: list[int], th: dict, log: list | None = None) -> Verdict:
     states = {i: traj.xs[i] for i in steps}
     D_hat = replay(states, traj.sigmas)
     # Commit before reveal: hash our own recomputations before touching the provider's D_i.
@@ -73,7 +84,7 @@ def tier_b(traj: Trajectory, replay: Replay, steps: list[int], th: dict, log: li
                    [f"model inconsistency at steps {bad}"] if bad else [])
 
 
-def e2h(traj: Trajectory, sampler: str, replay: Replay, steps: list[int], th: dict,
+def e2h(traj: Trajectory | Opened, sampler: str, replay: Replay, steps: list[int], th: dict,
         e1_verdict: Verdict | None = None, log: list | None = None) -> Verdict:
     parts = [] if e1_verdict is None else [e1_verdict]
     parts += [tier_a(traj, sampler, th), tier_b(traj, replay, steps, th, log)]

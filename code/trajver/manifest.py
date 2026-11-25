@@ -81,6 +81,12 @@ def start(wp: str, name: str, purpose: str, rid: str | None = None, **fields) ->
         "start_time": _dt.datetime.now(_dt.timezone.utc).isoformat(),
         **fields,
     }
+    # runbook §3.5 rule 1: the step draw is fixed before generation; only the seed's hash is known here
+    if os.environ.get("TRAJVER_DRAW_SEED_SHA256"):
+        m["draw_seed_sha256"] = os.environ["TRAJVER_DRAW_SEED_SHA256"]
+    # the research image is pinned by digest (single software stack, decision of 2026-11-24)
+    if os.environ.get("TRAJVER_IMAGE_DIGEST"):
+        m["image_digest"] = os.environ["TRAJVER_IMAGE_DIGEST"]
     (d / "manifest.json").write_text(json.dumps(m, indent=1, default=str))
     return d, m
 

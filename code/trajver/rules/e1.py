@@ -8,12 +8,17 @@
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import torch
 
 from ..noise import expected_x0, initial_noise
 from ..solvers import residual
 from ..trajectory import Trajectory
 from . import FAIL, PASS, Verdict, combine
+
+if TYPE_CHECKING:
+    from ..retention import Opened
 
 
 def max_ulp(a: torch.Tensor, b: torch.Tensor) -> int:
@@ -35,7 +40,7 @@ def max_ulp(a: torch.Tensor, b: torch.Tensor) -> int:
 X0_TOL = 1e-5
 
 
-def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_noise: float = X0_TOL) -> Verdict:
+def check_x0(traj: Trajectory | Opened, model_sampling, seed: int, device="cpu", max_abs_noise: float = X0_TOL) -> Verdict:
     """x_0 = noise_scaling(noise(seed)). Exact when provider and verifier share a CPU and PyTorch
     build; otherwise accepted if max |x0_expected - x0_committed| / sigma_0 <= ``max_abs_noise``
     (default the protocol constant X0_TOL; ULP distance is not used: near zero a 2e-6 rounding
@@ -66,7 +71,7 @@ def check_x0(traj: Trajectory, model_sampling, seed: int, device="cpu", max_abs_
 SCHED_TOL_REL = 1e-6
 
 
-def check_schedule(traj: Trajectory, expected_sigmas: torch.Tensor, steps: int,
+def check_schedule(traj: Trajectory | Opened, expected_sigmas: torch.Tensor, steps: int,
                    tol_rel: float = SCHED_TOL_REL) -> Verdict:
     reasons = []
     if traj.T != steps:
@@ -92,7 +97,7 @@ def check_image(decoded_uint8: torch.Tensor, delivered_uint8: torch.Tensor, th: 
     return Verdict("E1.image", PASS if ok else FAIL, scores, [] if ok else ["decoded x_final does not match image"])
 
 
-def check_conditioning(traj: Trajectory, fresh: dict[str, torch.Tensor], th: dict) -> Verdict:
+def check_conditioning(traj: Trajectory | Opened, fresh: dict[str, torch.Tensor], th: dict) -> Verdict:
     scores, reasons = {}, []
     for k, v in fresh.items():
         if k not in traj.conds:
@@ -108,7 +113,7 @@ def check_conditioning(traj: Trajectory, fresh: dict[str, torch.Tensor], th: dic
     return Verdict("E1.cond", FAIL if reasons else PASS, scores, reasons)
 
 
-def e1(traj: Trajectory, pipeline, spec, delivered_uint8: torch.Tensor | None, th: dict) -> Verdict:
+def e1(traj: Trajectory | Opened, pipeline, spec, delivered_uint8: torch.Tensor | None, th: dict) -> Verdict:
     """All E1 checks with a loaded verifier Pipeline."""
     parts = [
         check_x0(traj, pipeline.model_sampling(), spec.seed, pipeline.model.load_device, th.get("x0_max_abs_noise", X0_TOL)),

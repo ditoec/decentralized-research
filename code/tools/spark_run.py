@@ -143,6 +143,10 @@ def main():
     cot = run_dir / "logs" / "cotenants.json"
     watcher = Cotenants(cot)
     watcher.start()
+    # the single software image is pinned by digest and recorded in every manifest (decision of 2026-11-24)
+    digest = sh("docker", "image", "inspect", "-f", "{{.Id}}", a.image).strip()
+    if not digest.startswith("sha256:"):
+        raise SystemExit(f"image {a.image} not found")
     docker_run = [
         "docker", "run", "-d", "--name", name, "--hostname", f"{os.uname().nodename}-esj", "--label", "research=esj", "--gpus", "all",
         "--ipc", "host", "--ulimit", "memlock=-1",
@@ -151,6 +155,7 @@ def main():
         "-v", f"{ESJ}/hf:/root/.cache/huggingface",
         "-e", "TRAJVER_RUNS=/runs", "-e", f"TRAJVER_COTENANT_FILE=/runs/{a.run_id}/logs/cotenants.json",
         "-e", f"TRAJVER_GIT_COMMIT={a.git_commit}", "-e", "PYTHONUNBUFFERED=1",
+        "-e", f"TRAJVER_IMAGE_DIGEST={digest}",
         "-w", "/opt/esj/code", a.image, *cmd,
     ]
     (ESJ / "hf").mkdir(exist_ok=True)

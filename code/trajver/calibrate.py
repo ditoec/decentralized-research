@@ -60,6 +60,12 @@ def load_replays(paths: list[str]) -> dict[str, list[dict]]:
         bad = [r["prompt_id"] for r in rows if r["prompt_id"] not in cal]
         if bad:
             raise SystemExit(f"{p}: {len(bad)} rows are not calibration prompts (e.g. {bad[:3]}); refusing")
+        # runbook §3.5 rule 5: thresholds come from full trajectories only (class F); class O keeps
+        # 8 steps per job, which would bias the per-step quantiles towards the drawn steps
+        rm = json.loads((Path(p) / "manifest.json").read_text())
+        ret = {rm.get("provider_retention", "F")} | {r.get("retention", "F") for r in rows}
+        if ret != {"F"}:
+            raise SystemExit(f"{p}: retention {sorted(ret)}; calibration takes class F data only")
         out[Path(p).name] = rows
     return out
 

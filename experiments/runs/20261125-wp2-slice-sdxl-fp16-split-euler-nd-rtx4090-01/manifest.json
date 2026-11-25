@@ -1,0 +1,79 @@
+{
+ "run_id": "20261125-wp2-slice-sdxl-fp16-split-euler-nd-rtx4090-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (slice, fp16-split-euler-nd)",
+ "git_commit": "4025dfa",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-split-cross-attention"
+ ],
+ "node": {
+  "hostname": "16fa1b03ea27",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+   8,
+   9
+  ],
+  "gpu_uuid": "35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-25T02:14:34.356388+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [
+  "--force-fp16",
+  "--use-split-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_grid200.txt",
+  "sha256": "c88e8052e03ff8756d2c780857a76230ca05a89b26c90e9d0f868ec9a40dad85",
+  "n": 7
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "f63642c2353bba96dcc55f2a20d6eeb90f2573cd97d36bdb9266e85d3e051e2f",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-25T02:16:55.049556+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 21,
+  "full_bytes": 362641908,
+  "kept_bytes": 5616308
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "l64f5e4pq8piu1",
+ "data_center": "EU-RO-1",
+ "gpu_uuid": "GPU-35c1f4f1-c546-9184-b711-5ebc9dbbc490",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.89,
+ "billed_hours": 0.8011468958854675,
+ "cost_usd": 0.713020737338066,
+ "raw_checksums": {
+  "20261125-wp2-slice-sdxl-fp16-split-euler-nd-rtx4090-01.tar": "dd3920ddf551f261dcd51f33e2a3961e0dab90cb646cbad6fcf9ed66251dce66"
+ },
+ "pulled_unix": 1795574783.1288276
+}

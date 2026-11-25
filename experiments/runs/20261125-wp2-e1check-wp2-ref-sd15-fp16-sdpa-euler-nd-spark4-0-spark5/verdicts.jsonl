@@ -1,0 +1,72 @@
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7961016506352726e-08, "reasons": []}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [26]}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [4, 28]}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [4, 6, 29]}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [8, 10, 12, 17, 22]}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [3, 6, 11, 18, 22, 24, 26, 27]}
+{"job_id": "p00003_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999995529651642}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.784892303520972e-08, "reasons": []}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [17]}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [15, 19]}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [5, 10, 25]}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [0, 2, 17, 22, 23]}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [4, 6, 8, 14, 21, 22, 25, 27]}
+{"job_id": "p00003_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999992847442627}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7807584205070303e-08, "reasons": []}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [21]}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [5, 15]}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [0, 15, 19]}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [6, 19, 25, 28, 29]}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [0, 2, 3, 4, 16, 17, 19, 24]}
+{"job_id": "p00003_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999993145465851}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7693704147828926e-08, "reasons": []}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [10]}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [5, 17]}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [12, 20, 22]}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [3, 11, 12, 18, 24]}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [8, 15, 17, 23, 25, 27, 28, 29]}
+{"job_id": "p00006_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.999998927116394}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7786605135397326e-08, "reasons": []}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [14]}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [25, 27]}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [6, 16, 24]}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [2, 4, 17, 25, 26]}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [3, 9, 11, 22, 24, 26, 27, 28]}
+{"job_id": "p00006_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.999999463558197}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7764519203945565e-08, "reasons": []}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [18]}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [6, 27]}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [15, 19, 20]}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [6, 14, 16, 24, 29]}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [0, 2, 5, 13, 17, 23, 24, 25]}
+{"job_id": "p00006_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999992847442627}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7696084206294463e-08, "reasons": []}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [8]}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [2, 4]}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [7, 27, 28]}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [4, 19, 22, 23, 29]}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [3, 12, 16, 18, 20, 22, 23, 26]}
+{"job_id": "p00007_s0", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999992847442627}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.7877063264870464e-08, "reasons": []}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [18]}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [6, 15]}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [2, 8, 14]}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [2, 6, 10, 26, 29]}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [3, 6, 8, 13, 14, 19, 22, 26]}
+{"job_id": "p00007_s1", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999994039535522}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E1", "k": null, "verdict": "pass", "score": null, "reasons": []}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H.tierA", "k": null, "verdict": "pass", "score": 2.780244883770723e-08, "reasons": []}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 1, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [2]}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 2, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [0, 23]}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 3, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [16, 17, 21]}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 5, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [11, 12, 16, 20, 24]}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-H", "k": 8, "verdict": "pass", "score": 0.0, "tier_b": "pass", "steps": [4, 9, 11, 19, 20, 22, 24, 28]}
+{"job_id": "p00007_s2", "attack": "honest", "s": null, "retention": "F", "evidence": "E2-W", "k": 3, "verdict": "pass", "score": 0.9999991655349731}

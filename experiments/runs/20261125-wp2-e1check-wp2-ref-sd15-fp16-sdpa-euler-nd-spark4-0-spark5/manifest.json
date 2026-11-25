@@ -1,0 +1,42 @@
+{
+ "run_id": "20261125-wp2-e1check-wp2-ref-sd15-fp16-sdpa-euler-nd-spark4-0-spark5",
+ "wp": "wp2",
+ "purpose": "evidence levels E1, E2-H, E2-W",
+ "git_commit": "4025dfa",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "spark5-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "043e8674-8e4b-70a6-fbbb-29b8f40b0484",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-25T02:15:44.869458+00:00",
+ "source_run": "20261125-wp2-ref-sd15-fp16-sdpa-euler-nd-spark4-01",
+ "attack": "honest",
+ "threshold_file_sha256": null,
+ "thresholds_version": "dev",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "image_digest": "sha256:5a4781c0b6041dedc2ebf42c75c4ce91899b9e3c5aca968ada3a8e28e3814c7f",
+ "end_time": "2026-11-25T02:16:10.978790+00:00"
+}

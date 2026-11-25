@@ -406,6 +406,12 @@ anchor idl build -o target/idl/<program>.json
 anchor test --skip-build
 ```
 
+**Status 2026-11-25 (items 1–3, local validator only).**
+- **Item 1 is done.** The Anchor program is in `code/program/` (`trajescrow`). It implements the table below one to one, with one test per row on `solana-test-validator`. Choices the table leaves open, such as the fee split and the rule that inconclusive plus inconclusive is unresolved, are listed in `code/program/README.md`. Its 16 mocha tests and 2 Rust unit tests pass.
+- **Item 2 is done in minimal form.** The orchestrator is in `code/orchestrator/` (queue, assignment, JSON-lines relay, event log, reputation). It calls `python -m trajver.verify` and drops the label fields before it reads a verdict. Its unit tests pass, and its local-validator test passes with a stand-in verifier.
+- **Item 3, local part.** `code/program/scripts/replay.ts` replays the four paths, interleaved, and records signatures, compute units and fees per transaction. Run `experiments/runs/20261125-wp5-escrow-replay-local-01` (100 jobs per path, 400 of 400 closed in the expected state, on the operator's Mac). Its signature counts and compute units are properties of the program and do not depend on the machine. Its latencies are local and are not for the paper. `program_tree_dirty` is true only because of the then-untracked `scripts/relay.ts`; the binary is identified by `program_so_sha256`. Still open: the ≥100-per-path run on the x86 pod, Devnet, latency to finalized, the RPC details and the calculated mainnet fee.
+- **Build with this repo:** `code/program/scripts/build.sh` runs the workaround above and copies the IDL to `code/program/idl/`. Run the tests with `anchor test --skip-build --validator legacy`, because Anchor 1.x starts surfpool unless told `legacy`.
+
 1. **Anchor program** (`code/program/`). Accounts: `Job` (a PDA per job id), escrow token vault (OCC SPL), `ProviderBond`, `Config`.
 
    | Instruction | Purpose |

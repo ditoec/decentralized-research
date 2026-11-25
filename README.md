@@ -17,8 +17,8 @@ New to blockchain or trajectory verification? Start with the plain-language prim
 | `paper/` | ESJ Word manuscript, journal template and guideline, generator script (`tools/`) |
 | `code/trajver/` | Python package: trajectory recording and commitment, verifiers (E0, E0-N, E1, E2-W, E2-H), forgeries and attacks, manifests, theory. See [code/README.md](code/README.md) |
 | `code/comfyui_trajectory/` | ComfyUI custom node that records and commits the trajectory |
-| `code/program/` | Solana Anchor escrow program (later milestone) |
-| `code/orchestrator/` | Scheduling, state machine, adjudication, reputation (later milestone) |
+| `code/program/` | Solana Anchor escrow program `trajescrow`, tests, path replay (WP5) |
+| `code/orchestrator/` | Minimal orchestrator: queue, assignment, relay, event log, reputation (WP5) |
 | `experiments/configs/` | Factor-grid configs and frozen thresholds (stored with their hash) |
 | `experiments/runs/` | One folder per run ID, each with a manifest. Large raw data is git-ignored |
 | `analysis/` | Statistics and figure scripts. Every figure cites a run ID |

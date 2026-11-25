@@ -48,6 +48,7 @@ Also commit three fixed subsets, each keeping the 40/20/40 proportions where it 
 - `prompts_rent500.txt`: 500 prompts (200 calibration, 100 dev, 200 test), for the reference config on RunPod nodes.
 - `prompts_grid200.txt`: 200 prompts from calibration and dev only, for the non-reference configs on the Sparks.
 - `prompts_prec100.txt`: 100 prompts taken from `prompts_grid200.txt`, for the precision factor on RunPod nodes.
+- `prompts_grid50.txt`: 50 prompts taken from `prompts_prec100.txt`, for every non-reference factor config, on the Sparks and on RunPod (decision of 2026-11-26).
 - `prompts_l2_50.txt`: 50 calibration prompts, for the unit-to-unit subset on all six Sparks and on the second RTX 5090.
 
 ---
@@ -331,16 +332,16 @@ Rules:
    - Models: SD1.5 and SDXL.
    - Prompts, × 3 seeds:
      - the **reference config** (fp16, SDPA, euler and dpmpp_2m, `--deterministic` off) runs all calibration plus dev prompts (600);
-     - every other config runs `prompts_grid200.txt`.
+     - every other config runs `prompts_grid50.txt` (**decision of 2026-11-26**: 50 prompts instead of 200, and the same 50 for every factor config on every node and on RunPod; was `prompts_grid200.txt`).
    - If P3 says this is too slow, cut the reference config to 300 prompts. Never cut the configs; ask the paper author first.
-   - Run the reference config on Spark-4, Spark-5 and Spark-6, and the other configs on Spark-4 and Spark-5. Repeat a 10% subset on Spark-4 for L0.
+   - Run the reference config, the other configs and L2 on all three of Spark-4, Spark-5 and Spark-6 (decision of 2026-11-26: with 50 grid prompts the grid fits on Spark-6 too, so every config has three Spark-to-Spark pairs and every node runs the same items). Repeat a 10% subset on Spark-4 for L0.
    - **Second software stack: dropped (decision of 2026-11-24).** The protocol pins one software image instead; do not build or run a second stack.
    - Run `prompts_l2_50.txt` × 3 seeds, reference config, SDXL, on all six Sparks (L2, up to 15 pairs). On nodes 1 to 3 run it off-peak and keep to fp16.
-   - Record the trajectory for every job (§3.1). The reference config, L0 and L2 keep full trajectories (class F). **The non-reference grid configs are class O** (decision of 2026-11-25, finding 18: the disks cannot hold full trajectories for all of WP2): one grid draw seed for the whole study arm, the same file on Spark-4 and Spark-5, so a job opens the same 8 steps in every config and on both nodes and `pilot compare --steps-detail` compares those steps. Each step is then opened in about 160 of a pair's 600 jobs. Each grid run is extracted right after it finishes, in a separate container that alone gets the seed (`wp2_spark.sh`, `GRID_SEED_FILE`).
+   - Record the trajectory for every job (§3.1). The reference config, L0 and L2 keep full trajectories (class F). **The non-reference grid configs are class O** (decision of 2026-11-25, finding 18: the disks cannot hold full trajectories for all of WP2): one grid draw seed for the whole study arm, the same file on Sparks 4–6, so a job opens the same 8 steps in every config and on every node and `pilot compare --steps-detail` compares those steps. Each step is then opened in about 40 of a pair's 150 jobs. Each grid run is extracted right after it finishes, in a separate container that alone gets the seed (`wp2_spark.sh`, `GRID_SEED_FILE`).
 2. **Rentals (L3 and L4), on RunPod through the §3.4 launcher.**
    - Required models, consumer GeForce RTX only: RTX 5090 (L3), RTX 4090, RTX 3090. Substitutes when out of stock: RTX 4080 SUPER, RTX 3090 Ti.
-   - **x86 factor slice, RTX 4090 only:** at fp16, `--deterministic` {off, on} × attention {SDPA, split or quad} × {euler, dpmpp_2m}, on `prompts_grid200.txt` × 3 seeds, for SD1.5 and SDXL. The two reference configs are already run, so this adds six configs, about 7,200 jobs and about US$5. If xformers installs in the x86-64 image, add it as a third attention backend.
-   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, and fp32 for SD1.5 only, both samplers; SDXL fp32 is out of the grid, finding 10) on `prompts_prec100.txt`. That is about 8,400 jobs per rented model.
+   - **x86 factor slice, RTX 4090 only:** at fp16, `--deterministic` {off, on} × attention {SDPA, split or quad} × {euler, dpmpp_2m}, on `prompts_grid50.txt` × 3 seeds (was `prompts_grid200.txt`; decision of 2026-11-26), for SD1.5 and SDXL. The two reference configs are already run, so this adds six configs per model, 1,800 jobs. If xformers installs in the x86-64 image, add it as a third attention backend.
+   - Workload per model, for SD1.5 and SDXL, × 3 seeds: the reference config on `prompts_rent500.txt`, and the precision factor (bf16, and fp32 for SD1.5 only, both samplers; SDXL fp32 is out of the grid, finding 10) on `prompts_grid50.txt` (was `prompts_prec100.txt`; decision of 2026-11-26). That is 6,900 jobs per rented model.
    - `prompts_rent500.txt` includes test-split prompts, so that each model is rented only once. **Store those outputs but do not score them until §6.** Keep data per the retention classes of §3.5: calibration and dev prompts class F, test prompts class O, the precision factor and the factor slice class I.
    - L2: a second RTX 5090 on a different host, reference config, `prompts_l2_50.txt` × 3 seeds.
    - If a card is slower than estimated, cut its prompts, never the reference config, and record the cut.
@@ -354,9 +355,16 @@ Rules:
 
 **Workload scripts (2026-11-25).** `code/tools/workloads/wp2_spark.sh` (items `ref`, `grid`, `l0`, `l2`) and `wp2_rent.sh` (items `ref`, `prec`, `slice`, `l2`), sharing `wp2_lib.sh`.
 - A config is `<prec>-<attn>-<sampler>-<det>`: fp16 = `--force-fp16`, bf16 = `--bf16-unet`, fp32 = `--force-fp32` (as in P7); sdpa = `--use-pytorch-cross-attention`, split = `--use-split-cross-attention` (the "split or quad" level is **split**); det = `--deterministic`. The reference config is `fp16-sdpa-{euler,dpmpp_2m}-nd`. All runs are 30 steps, 512² for SD1.5 and 1024² for SDXL, seeds 0, 1, 2, trajectories kept.
+- `prompts_grid50.txt` (2026-11-26): 50 prompts (32 cal, 18 dev) drawn from `prompts_prec100.txt` by `make_prompts.py` after all its other draws, so the earlier files are unchanged and grid50 ⊂ prec100 ⊂ grid200. It is the prompt set of every non-reference factor config: the Spark grid, the rented precision factor and the x86 slice, so every factor level is compared on the same 150 jobs.
 - New prompt files (subsets, no new draws; hashes in `prompts.json`): `prompts_caldev600.txt` (cal + dev, the Spark reference config), and `prompts_rent500.txt` split by retention class into `prompts_rent_caldev300.txt` (class F) and `prompts_rent_test200.txt` (class O).
 - Run names carry the retention class: `-test-` runs are class O, `-prec-` and `-slice-` runs class I, the rest class F. Create every rented pod with `POD_RETENTION='*-test-*=O,*-prec-*=I,*-slice-*=I,*=F'` and, for `ref`, `POD_DRAW_SEED_SHA256`.
 - `LIMIT=n` caps each run at n prompts (× 3 seeds) for dry runs; `GRID_GLOB` splits the Spark grid across days (e.g. `GRID_GLOB='bf16-*'`). Runs resume by run id.
+
+**Spark grid launched (2026-11-26, code at commit `58f57c6`, the same files on all three nodes).** Items `ref grid l2` on Spark-5 and Spark-6, `ref l0 grid l2` on Spark-4; grid on `prompts_grid50.txt`, the one grid draw seed on all three nodes (sha256 `c4295abf…`). Expected about 29 h per node (reference 13.5 h, grid about 15 h, L2 0.5 h; Spark-4 also L0 1.4 h). Run ids take the node's own UTC date (`DATE` is not overridden):
+- Spark-5 and Spark-6 started at 17:30 UTC on 2026-11-25, so their run ids begin `20261125-`.
+- **Spark-4 incident.** It started at the same time, but its WP2 dry-run runs of 2026-11-25 (finding 18) have the same ids, and runs resume by id. It was stopped after about 2 minutes. By then it had appended 69 reference-config jobs to the dry-run folder `20261125-wp2-ref-sd15-fp16-sdpa-euler-nd-spark4-01` (21 → 90 jobs). That folder stays dry-run data, not paper data; its committed metadata (21 jobs) is unchanged.
+- Spark-4 then started a waiter that reads the node's clock and launches the workload once the UTC date is 2026-11-26, so its run ids begin `20261126-`.
+- Pairs are matched by config, not by date.
 
 ---
 

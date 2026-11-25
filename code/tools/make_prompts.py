@@ -17,6 +17,8 @@ fixed seed, stratified by category so every split has the same category mix. Pro
   prompts_prec100.txt          100 taken from grid200 (precision factor; second software stack)
   prompts_l2_50.txt            50 cal (unit-to-unit subset)
   prompts_pilot20.txt          20 cal (pilot P2)
+  prompts_grid50.txt           50 taken from prec100 (so grid50 < prec100 < grid200): every
+                               non-reference factor config, on the Sparks and on RunPod (2026-11-26)
   prompts.json                 sha256 of every file and of the source
 
 Each line is "<id>\t<prompt>". The test split is not used until runbook §6.
@@ -86,6 +88,8 @@ def main(src: str) -> None:
     files["prompts_prec100.txt"] = take(rng2, grid, 100)
     files["prompts_l2_50.txt"] = take(rng2, split["cal"], 50)
     files["prompts_pilot20.txt"] = take(rng2, split["cal"], 20)
+    # drawn last so the files above keep their draws (decision of 2026-11-26)
+    files["prompts_grid50.txt"] = take(rng2, files["prompts_prec100.txt"], 50)
 
     OUT.mkdir(parents=True, exist_ok=True)
     meta = {"source": "PartiPrompts.tsv (google-research/parti, Apache-2.0)",

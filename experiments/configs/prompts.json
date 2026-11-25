@@ -46,6 +46,10 @@
   "prompts_caldev600.txt": {
    "n": 600,
    "sha256": "1a10147cf4753cdf58eec8f4a533f1264a310ae694bc3bac2aebdd609e62798d"
+  },
+  "prompts_grid50.txt": {
+   "n": 50,
+   "sha256": "6cff9d9f6110eb849c3e52b250a13fed10e1a9c0b262be62774a65ff8097de73"
   }
  }
 }

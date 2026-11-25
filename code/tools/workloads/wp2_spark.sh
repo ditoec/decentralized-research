@@ -6,11 +6,11 @@
 #
 # ITEMS  ref    reference config (fp16-sdpa-{euler,dpmpp_2m}-nd), SD1.5 and SDXL, cal + dev (600) x 3 seeds
 #               (Sparks 4, 5 and 6)
-#        grid   the other configs of precision x attention x sampler x deterministic on prompts_grid200
-#               x 3 seeds; SDXL without fp32 (finding 10) (Sparks 4 and 5). Class O (decision of
+#        grid   the other configs of precision x attention x sampler x deterministic on prompts_grid50
+#               x 3 seeds; SDXL without fp32 (finding 10) (Sparks 4, 5 and 6). Class O (decision of
 #               2026-11-25, finding 18: storage): needs GRID_SEED_FILE, the study's grid draw seed
-#               (trajver.retention newseed, mode 600, the SAME file on Spark-4 and Spark-5, so a job opens
-#               the same steps in every config and on both nodes). Its hash goes into each run's manifest
+#               (trajver.retention newseed, mode 600, the SAME file on Sparks 4-6, so a job opens
+#               the same steps in every config and on every node). Its hash goes into each run's manifest
 #               before generation; the seed is mounted only into the extraction container, after the run.
 #        l0     a 10 % repeat of the reference config on the same node (REP=02; Spark-4)
 #        l2     reference config, SDXL euler, prompts_l2_50 x 3 seeds (all six Sparks; nodes 1-3
@@ -46,7 +46,7 @@ for m in $MODELS_LIST; do
           cfg="$prec-$attn-$s-$det"
           [ "$cfg" = "fp16-sdpa-$s-nd" ] && continue
           [[ $cfg == $GRID_GLOB ]] || continue
-          TRAJVER_DRAW_SEED_SHA256="$GRID_SEED_SHA256" gen "$m" "$cfg" prompts_grid200.txt 0,1,2 grid
+          TRAJVER_DRAW_SEED_SHA256="$GRID_SEED_SHA256" gen "$m" "$cfg" prompts_grid50.txt 0,1,2 grid
           extract_o "$DATE-wp2-grid-$m-$cfg-$NODE-$REP"
         done; done
       done

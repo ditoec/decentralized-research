@@ -366,6 +366,12 @@ Rules:
 - Spark-4 then started a waiter that reads the node's clock and launches the workload once the UTC date is 2026-11-26, so its run ids begin `20261126-`.
 - Pairs are matched by config, not by date.
 
+**Rentals started (2026-11-25 17:55 UTC).** Stock at launch, from the RunPod catalog: RTX 5090 and RTX 3090 none in Community or Secure Cloud; RTX 4090 Community none, Secure low.
+- RTX 4090 on Secure Cloud, EU-RO-1, US$0.89/h, 200 GB disk, code identical to main `70b6308`, items `ref prec slice`. It has its own draw seed (on Spark-5; sha256 `c51a7b35…` in `pod.json`).
+- The pull runs on Spark-5 with `--wait --reveal-seed`.
+- **`REP=02`.** The 4090 dry run (finding 18) used `20261125-…-rtx4090-01` on the same UTC date, and `pull_run.py` skips folders already pulled. The date is not overridden; this pod's runs are `20261125-wp2-…-rtx4090-02`. REP has no other meaning on the rentals.
+- RTX 5090 (L3), second RTX 5090 (L2) and RTX 3090: start when stock appears, each with its own draw seed.
+
 ---
 
 ## 5. Calibration and freezing (end of WP2): no attack data before this step

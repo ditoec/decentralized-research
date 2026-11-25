@@ -158,8 +158,8 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 **RQ1 factor grid on the Sparks:**
 - Factors: {fp16, bf16, fp32} × {SDPA, alternative attention backend} × {euler, dpmpp_2m} × {`--deterministic` off, on}, which is 24 configs.
 - Prompt set: 1,000 prompts, split 40/20/40 into calibration, dev and test.
-- Workload on the Sparks: the **reference config** (fp16, SDPA, both samplers, `--deterministic` off) runs all 1,000 prompts × 3 seeds on nodes 4, 5 and 6. Every other config runs a fixed 200-prompt subset × 3 seeds on nodes 4 and 5. A 50-prompt L2 subset runs on all six.
-- Workload on RunPod nodes: the reference config on a fixed 500-prompt subset × 3 seeds, and the precision factor (bf16, fp32) on a 100-prompt subset × 3 seeds. That is about 8,400 jobs per rented model for SD1.5 plus SDXL.
+- Workload on the Sparks: the **reference config** (fp16, SDPA, both samplers, `--deterministic` off) runs all 1,000 prompts × 3 seeds on nodes 4, 5 and 6. Every other config runs a fixed 50-prompt subset (`prompts_grid50.txt`) × 3 seeds on nodes 4, 5 and 6 (**decision of 2026-11-26**; was 200 prompts on nodes 4 and 5). A 50-prompt L2 subset runs on all six. (As run, the Spark reference config uses the 600 calibration and dev prompts, runbook §4 item 1.)
+- Workload on RunPod nodes: the reference config on a fixed 500-prompt subset × 3 seeds, and the precision factor (bf16, fp32) on the same 50-prompt subset as the Spark grid × 3 seeds (decision of 2026-11-26; was 100 prompts). That is 6,900 jobs per rented model for SD1.5 plus SDXL (was about 8,400).
 - Why the reference config gets more prompts: per-step tolerances are extreme quantiles. For k = 8, α_s ≈ 0.13%, and estimating that quantile needs about 2,400 or more honest samples per step. Only configs with a frozen threshold need that many.
 - The Sparks cost nothing per hour, so the volume goes there. Their throughput beside production is unknown until the pilot. If the Spark workload does not fit in January, cut the reference config to 500 prompts.
 - The old "noise on CPU vs GPU" factor is dropped. ComfyUI always uses CPU noise, and the CPU-ISA test replaces it.

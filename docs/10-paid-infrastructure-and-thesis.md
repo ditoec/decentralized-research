@@ -93,9 +93,9 @@ Rules for every research run on a Spark:
 | Workload | Sparks | RunPod models |
 |---|---|---|
 | Reference config (fp16, SDPA, euler and dpmpp_2m, `--deterministic` off) | 1,000 prompts × 3 seeds on nodes 4, 5 and 6 | 500 prompts × 3 seeds |
-| Rest of the 24-config grid | 200 prompts × 3 seeds on nodes 4 and 5 | not run |
-| Precision factor (bf16, fp32) | part of the grid | 100 prompts × 3 seeds |
-| Deterministic-mode and attention factors at fp16 (x86 slice) | part of the grid | RTX 4090 only, 200 prompts × 3 seeds |
+| Rest of the 24-config grid | 50 prompts × 3 seeds on nodes 4, 5 and 6 (decision of 2026-11-26; was 200 prompts on nodes 4 and 5) | not run |
+| Precision factor (bf16, fp32) | part of the grid | 50 prompts × 3 seeds, the grid's 50 (was 100) |
+| Deterministic-mode and attention factors at fp16 (x86 slice) | part of the grid | RTX 4090 only, the grid's 50 prompts × 3 seeds (was 200) |
 | L0 repeats | 10% subset on node 4 | — |
 | L2 subset | 50 prompts × 3 seeds on all six | second RTX 5090, same subset |
 | Models | SD1.5, SDXL; FLUX.1-schnell optional (rule 2) | SD1.5, SDXL |
@@ -127,9 +127,9 @@ The rented-provider cells matter: a consumer x86 card as provider and a Spark as
 | Item | Basis | Estimate |
 |---|---|---|
 | Pilot (RTX 5080, 4090, 3090, a few hours each; x86 noise check) | about 10 GPU-hours | US$8 |
-| Honest runs, three required models | about 8,400 jobs per model; about 100 GPU-hours in total, doubled for uncertainty | US$60 |
+| Honest runs, three required models | about 8,400 jobs per model; about 100 GPU-hours in total, doubled for uncertainty (6,900 jobs per model since the decision of 2026-11-26) | US$60 |
 | Second RTX 5090 (L2 subset) | 3–4 hours | US$3 |
-| x86 factor slice on the RTX 4090 | about 7,200 jobs, about 12 hours | US$5 |
+| x86 factor slice on the RTX 4090 | about 7,200 jobs, about 12 hours (1,800 jobs since the decision of 2026-11-26) | US$5 |
 | Attack study on RunPod: rented providers, rented verifier, timing | about 30 GPU-hours | US$15 |
 | Testbed demo with rented providers | about 15 GPU-hours | US$8 |
 | Solana build and local validator on an RTX 3090 pod (or a CPU pod if cheaper) | about 60 hours | US$13 |

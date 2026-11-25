@@ -372,6 +372,7 @@ Rules:
 - **`REP=02`.** The 4090 dry run (finding 18) used `20261125-…-rtx4090-01` on the same UTC date, and `pull_run.py` skips folders already pulled. The date is not overridden; this pod's runs are `20261125-wp2-…-rtx4090-02`. REP has no other meaning on the rentals.
 - RTX 5090 (L3), second RTX 5090 (L2) and RTX 3090: start when stock appears, each with its own draw seed.
 - **RTX 3090 started 2026-11-25 22:34 UTC.** Community Cloud had none; Secure Cloud, EU-CZ-1, US$0.50/h, 200 GB disk, driver 595.112, code identical to main `70b6308`, items `ref prec`. Its own draw seed (on Spark-5; sha256 `40c56a37…`). `REP=01`: the only earlier 3090 run is the WP0b pilot of 2026-11-24, so no id collides. Pull on Spark-5 with `--wait --reveal-seed`. (An hour earlier a Community 3090 at US$0.22/h sold out between the stock read and the create; nothing was billed.)
+- **RTX 5090, first try 2026-11-25 23:34 UTC: faulty host, terminated.** Community Cloud, US$0.69/h (AMD Threadripper 3960X, driver 580.178). `nvidia-smi` showed the card but PyTorch reported "CUDA unknown error", as on the first 4090 dry-run host. Terminated after about 2 minutes, before any job; the pod's own draw seed (sha256 `f3240700…`) stays on Spark-5 for the next try. Community stock still listed only that host's CUDA version (13.0), so the next try waits for other stock rather than landing on it again.
 
 ---
 

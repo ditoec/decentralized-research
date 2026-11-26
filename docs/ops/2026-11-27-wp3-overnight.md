@@ -34,7 +34,7 @@ When every WP2 tag is released, the staging pod `twazk132j21s05` deletes itself.
 1. **Balance:** read `get-balance`. Need at least US$5. If it is lower, stop and log; the operator tops up.
 2. **New draw seed on Spark-5:** `python3 -m trajver.retention newseed ~/esj/secret/wp3-rtx5090.hex` (mode 600). Record only its sha256.
 3. **Create the pod** as in WP2:
-   - image `runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404`, GPU `NVIDIA GeForce RTX 5090`, `minCudaVersion` 12.8, disk 100, ports `8000/http`;
+   - image `runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404`, GPU `NVIDIA GeForce RTX 5090`, **`minCudaVersion` 13.0** (the locked env is torch 2.14.1+cu130; a CUDA 12.8 host fails, incident 22:02 UTC), disk 100, ports `8000/http`;
    - env: `POD_TOKEN` (random, kept on Spark-5 only), `POD_HOURLY_USD`, `POD_CLOUD`, `POD_RETENTION='*-wp3-base-*=O,*-wp3-atk-*=O,*=F'`, `POD_DRAW_SEED_SHA256`;
    - Community first (about US$0.69/h), then Secure (about US$1.39/h); log the price before creating;
    - read the stock first, and retry on a 400.

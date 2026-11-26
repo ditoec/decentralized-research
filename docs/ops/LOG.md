@@ -67,3 +67,6 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 08:22 UTC · spark · Grid: no failed jobs; Spark-4 72 runs, Spark-5 32, Spark-6 26; free memory 29–37 GB, free disk 361–457 GB
 - 08:48 UTC · measure · RTX 3090 on its last run (14/14, 130/150); staging holds the RTX 4090 and 5090 copies (12.2 and 45.7 GB). Spark-5: RTX 4090 13/26, RTX 5090 L3 8/14, RTX 3090 2/14 runs; pulls 0.4–0.9 MB/s each, no checksum errors; balance US$14.18; grid no failed jobs, free memory 35–37 GB, free disk 358–455 GB
 - 08:55 UTC · repo · Pushed the branch (staging tools, pull retry fix, L2/4090/5090 ends, ops log through 08:48 UTC); estimate: pulls to Spark-5 finish about 18:00–01:00 UTC, RTX 3090 ends about 09:15 UTC
+- 08:52 UTC · runpod · RTX 3090 finished generating (14/14 runs) and received its draw seed (revealed by the threaded `pull_run.py` on Spark-5)
+- 09:25 UTC · runpod · RTX 3090 still extracting retention bundles (precision runs class I 2.59 GB → 40 MB each; SD1.5 test runs class O 2.69 GB → 1.08–1.31 GB; SDXL test runs in progress), so not yet DONE or staged; later than the 09:15 estimate. Balance US$13.79. Spark-5: RTX 4090 13/26, RTX 5090 L3 8/14, RTX 3090 2/14 runs, no checksum errors
+- 09:25 UTC · spark · Grid: no failed jobs; Spark-4 72 runs, Spark-5 33, Spark-6 27; free memory 26–36 GB (Spark-4 lowest), free disk 353–455 GB

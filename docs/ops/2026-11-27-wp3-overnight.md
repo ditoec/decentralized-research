@@ -21,7 +21,7 @@ Nodes: Spark-N is `aign-dgx@10.41.3.(N+1)`; host details live in `docs/local-nod
 When every WP2 tag is released, the staging pod `twazk132j21s05` deletes itself. Then delete the network volume `xgzm7eis58` (created by this work; about 120 GB) and confirm with `list-network-volumes`. The WP3 pull goes straight to Spark-5.
 
 ## S3. Freeze (gate for S4)
-- **When:** the three SDXL euler replays have `summary.json`: `20261126-wp2-replay-cal-sdxl-euler-rtx4090-02on-spark1-01`, `...-rtx3090-01on-spark3-01` and `...-rtx5090-01on-spark3-01`, together with the three E0 files.
+- **When:** the three SDXL euler replays have `summary.json`: `20261126-wp2-replay-cal-sdxl-euler-rtx4090-02on-spark1-01`, `...-rtx3090-01on-spark3-01` and `20261126-wp2-replay-cal-sdxl-euler-rtx5090-01on-spark1-01` (moved to Spark-1 at 17:17 UTC, which is faster), together with the three E0 files.
 - **Steps:**
   1. Fetch their metadata (`jobs.jsonl`, `manifest.json`, `summary.json`, E0 files) into `experiments/runs/`, then `sanitize_runs.py` and `--check`.
   2. Filter the E0 rows to calibration prompt ids (`trajver.calibrate.calibration_ids()`).
@@ -48,7 +48,7 @@ When every WP2 tag is released, the staging pod `twazk132j21s05` deletes itself.
 5. **On Spark-5:** `pull_run.py <base> --wait --reveal-seed ~/esj/secret/wp3-rtx5090.hex` and `release_pod.py`, as in WP2. The pod deletes itself after a verified pull. Watch out for a faulty host (CUDA unknown error): terminate it at once and retry elsewhere.
 
 ## S5. Spark honest re-run (E0 reference)
-- `ITEMS=rerun NODE=spark3 bash tools/workloads/wp3_spark.sh` on Spark-3 as soon as its SDXL euler 5090 replay is done. Stop Spark-3's sweeper first; its remaining SD1.5/dpmpp_2m replays resume afterwards.
+- Chained on Spark-3 after its SDXL euler 3090 replay (17:18 UTC): `ITEMS=rerun NODE=spark3 bash tools/workloads/wp3_spark.sh` (log `~/esj/logs/wp3-rerun-spark3.log`), then the SD1.5/dpmpp_2m replays resume.
 - 600 jobs, about 2.2 h. The run is `<date>-wp3-rerun-sdxl-euler-spark3-01`.
 
 ## S6. F3 sweep

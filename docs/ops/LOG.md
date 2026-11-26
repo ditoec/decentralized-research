@@ -70,3 +70,9 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 08:52 UTC · runpod · RTX 3090 finished generating (14/14 runs) and received its draw seed (revealed by the threaded `pull_run.py` on Spark-5)
 - 09:25 UTC · runpod · RTX 3090 still extracting retention bundles (precision runs class I 2.59 GB → 40 MB each; SD1.5 test runs class O 2.69 GB → 1.08–1.31 GB; SDXL test runs in progress), so not yet DONE or staged; later than the 09:15 estimate. Balance US$13.79. Spark-5: RTX 4090 13/26, RTX 5090 L3 8/14, RTX 3090 2/14 runs, no checksum errors
 - 09:25 UTC · spark · Grid: no failed jobs; Spark-4 72 runs, Spark-5 33, Spark-6 27; free memory 26–36 GB (Spark-4 lowest), free disk 353–455 GB
+- 09:56 UTC · decision · Operator: put the L2 subset on Sparks 1–3 and P3 "to go with the plan in the next"
+- 09:56 UTC · spark · Sparks 1–3 checked read-only: no research setup; free memory 51 / 25 / 42 GB, free disk 608 / 716 / 444 GB, GPU idle
+- 10:00 UTC · spark · Setup copy to Sparks 1–3 started from Spark-4 over the LAN at low priority (image 4.2 GB, code at `58f57c6`, configs, SDXL 6.5 GB), via ssh agent forwarding, so no keys are added to production nodes · runbook §4 item 1
+- 10:04 UTC · spark · Setup on Sparks 1–3 done (about 140 s each) and verified against Spark-4: same image ID, same code and configs checksum, SDXL sha256 matches `models.json`
+- 10:05 UTC · spark · L2 timers started on Sparks 1–3: at 18:00 UTC (01:00 local) each runs `ITEMS=l2` (150 SDXL jobs, class F) with `TRAJVER_GIT_COMMIT=58f57c6`; `spark_run.py` holds a run until 35 GB is free (Spark-2 had 25 GB at 17:00 local) · `~/esj/logs/wp2-l2-spark{1,2,3}.log`
+- 10:05 UTC · decision-needed · P3 scheduled on Spark-1 after its L2 run, at a busy hour and in a quiet window; the quiet window (chat model stopped) and the platform's off-peak hours must come from the admin

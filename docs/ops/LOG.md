@@ -47,3 +47,7 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 05:40 UTC · measure · About 100 GB still to pull (4090 ≈12 GB, L2 ≈2.7 GB, 3090 and 5090 ≈45 GB each including runs not yet generated) at about 2 MB/s ≈ 14 h; four pods bill US$4.17/h; balance US$22.56 would run out in about 6–8 h, and RunPod stops every pod at zero
 - 05:42 UTC · decision-needed · Options put to the operator: top up about US$30 more, or a CPU staging pod (2 vCPU US$0.06/h) that takes each finished pod's tars at in-cloud speed so the GPU pod can be deleted, with Spark-5 pulling from the staging pod
 - 05:42 UTC · spark · Grid: no failed jobs; Spark-4 64 runs, Spark-5 31, Spark-6 25; free memory 35–39 GB, free disk 390–469 GB
+- 06:02 UTC · runpod · Second RTX 5090 (L2) `0u5abh48txmasr` ended by itself: pull verified 06:02:05, retention check 150/150, released 06:02:07, gone 06:02:38. First real use of the self-stop, with the operator's laptop not involved. About 1.8 h × US$1.39 ≈ US$2.50, of which 7 min was generation · runbook §4
+- 06:36 UTC · runpod · Balance US$19.06; RTX 4090 pull still 12/26 (a 1.3 GB class-O tar at about 0.35 MB/s); RTX 3090 2 runs pulled, RTX 5090 L3 2; six pull and release processes alive
+- 06:36 UTC · spark · Grid: no failed jobs; free memory 35–37 GB, free disk 379–464 GB
+- 06:40 UTC · repo · Catalog row and contact sheet for `20261126-wp2-l2-sdxl-fp16-sdpa-euler-nd-rtx5090b-01` added · `docs/ops/catalog/wp2/`

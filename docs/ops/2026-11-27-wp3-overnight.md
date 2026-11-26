@@ -45,6 +45,10 @@ When every WP2 tag is released, the staging pod `twazk132j21s05` deletes itself.
    - PUT `code.tar.gz` (code + experiments/configs, with the frozen thresholds);
    - `nohup bash /work/code/tools/pod_job.sh tools/workloads/wp3_rent.sh` with `NODE=rtx5090 MODELS=/work/models`;
    - install `pod_selfstop.sh`.
+4b. **No RTX 5090 stock (fallback rule, decided 20:40 UTC 2026-11-26 while the operator sleeps):**
+   - retry the RTX 5090 at every check until **22:30 UTC**, Community first, then Secure;
+   - then rent an **RTX 3090** instead, with the same workload and `NODE=rtx3090`. The RTX 3090 is the runbook §6 design's other rented provider, its honest test runs are home, and the frozen thresholds cover its calibration pair (L4);
+   - doc 05 §4.2, runbook §6 and Methods then name the provider actually used.
 5. **On Spark-5:** `pull_run.py <base> --wait --reveal-seed ~/esj/secret/wp3-rtx5090.hex` and `release_pod.py`, as in WP2. The pod deletes itself after a verified pull. Watch out for a faulty host (CUDA unknown error): terminate it at once and retry elsewhere.
 
 ## S5. Spark honest re-run (E0 reference)

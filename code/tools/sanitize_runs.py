@@ -21,7 +21,7 @@ import re
 import sys
 from pathlib import Path
 
-TEXT = {".json", ".jsonl", ".log", ".txt", ".csv"}
+TEXT = {".json", ".jsonl", ".log", ".txt", ".csv", ".xml"}
 HOST = re.compile(r"\b[a-z]+-dgx-(\d+)-esj\b")
 LEAK = re.compile(r"[a-z]+-dgx-\d|[a-z]+-soc-|10\.\d+\.\d+\.\d+")
 

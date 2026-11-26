@@ -547,8 +547,8 @@ The paper author draws the five result figures from the data, in the same style 
 
 - [ ] All runs have complete manifests, and raw data is archived with checksums
 - [ ] `thresholds_v1.json` was committed before the first RQ2 run (check the git log dates)
-- [ ] Acceptance tests T1, T2 and T3 passed and are logged
-- [ ] The doc 06 facts were re-confirmed at the pinned ComfyUI commit (noise on CPU, callback semantics, solver formulas)
+- [x] Acceptance tests T1, T2 and T3 passed and are logged: 2026-11-26 on Spark-3 (CUDA, GB10), the pinned image `esj-research:main`, run `20261126-wp1-acceptance-t1t3-spark3-01` (`pytest tests/integration/test_sd15.py`: 9 passed in 41.6 s, JUnit report `pytest.xml`). Earlier on MPS (§3)
+- [x] The doc 06 facts were re-confirmed at the pinned ComfyUI commit (noise on CPU, callback semantics, solver formulas): 2026-11-26 at `8b25bbc`. `comfy/sample.py` `prepare_noise_inner` draws `torch.randn(..., dtype=float32, device="cpu")` from `torch.manual_seed(seed)`; `Noise_RandomNoise` calls `prepare_noise`; `default_noise_sampler` adds 1 to the seed on the CPU and draws on `x.device`; `KSAMPLER.sample`'s `k_callback` forwards `callback(x["i"], x["denoised"], x["x"], total_steps)`; `sample_euler` and `sample_dpmpp_2m` call back with `x` before the update and `denoised` after CFG, and the dpmpp_2m update is `(σ(t_next)/σ(t))·x − expm1(−h)·denoised_d`; the fp8, precision, attention and `--deterministic` flags are in `comfy/cli_args.py`
 - [ ] The offline-only attack policy was followed, and any deployed-network contact went through the paper author
 - [ ] The artifact is ready for Zenodo (R0.2)
 

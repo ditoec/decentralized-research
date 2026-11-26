@@ -1,0 +1,2 @@
+{"event": "started", "container": "1b965f23dc1e", "attempt": 1, "mem_available_gb": 39.2, "time": "2026-11-26T21:52:48+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-26T21:53:33+0700"}

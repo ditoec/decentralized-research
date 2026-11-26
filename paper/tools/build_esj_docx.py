@@ -900,27 +900,35 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "every rented card, the fp8 and NVFP4 paths of the pinned ComfyUI commit were slower than fp16 (NVFP4 runs "
          "only through a dequantizing fallback). Attacks A2 and A2b therefore save the provider no GPU time at this "
          "commit (β{sub|A} ≤ 0, so Equation 8 holds for them trivially) and are kept as detection cases.")
-    Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed, on rented "
-         "GPUs that the job has to itself.")
-    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved)",
+    Para("{b|Attacks and forgeries.} Table 5 lists the attack set of the design. The attack study reported here "
+         "evaluates the subset marked in the table, for SDXL with the Euler sampler in the reference configuration, "
+         "with a rented RTX 5090 as provider and DGX Spark systems as verifiers, which is the direction of a "
+         "marketplace where consumer cards serve jobs: 100 attacked jobs per attack on the test split, the same jobs "
+         "for every attack. Partial faking is evaluated with F3 at five faked fractions s. The saving β{sub|A} is "
+         "measured, not assumed, on the rented GPU, which the job has to itself, against an honest run of the same "
+         "jobs.")
+    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved; * evaluated in this study)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
-          [["A1", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30", "{R|R2.4}"],
-           ["A2", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", "{R|R2.4}"],
+          [["A1*", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30 (evaluated: 20 steps)", "{R|R2.4}"],
+           ["A2*", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", "{R|R2.4}"],
            ["A2b", "4-bit (NVFP4) model", "NVFP4 checkpoint; at the pinned commit it runs only through a dequantizing fallback", "{R|R2.4}"],
-           ["A3", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning", "{R|R2.4}"],
+           ["A3*", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning (evaluated: Turbo, 4 steps; LCM-LoRA, 6 steps)", "{R|R2.4}"],
            ["A4", "Sampler swap", "Cheaper sampler committed as the required one", "{R|R2.4}"],
            ["A5", "Low resolution + upscale", "Generation at half resolution, then upscaling", "{R|R2.4}"],
            ["A6", "Early exit", "Truncation, then extrapolation", "{R|R2.4}"],
            ["A7", "Replay", "Output of a near-duplicate prompt", "{R|R2.4}"],
-           ["A8", "Unrelated output", "Sanity control", "1.0"],
-           ["F1", "Frame copy", "Each faked state copies the previous one", "{R|R2.4}"],
-           ["F2", "Interpolation", "Linear interpolation between computed anchor steps", "{R|R2.4}"],
-           ["F3", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", "{R|R2.4}"],
+           ["A8*", "Unrelated output", "Sanity control", "1.0"],
+           ["F1*", "Frame copy", "Each faked state copies the previous one", "{R|R2.4}"],
+           ["F2*", "Interpolation", "Linear interpolation between computed anchor steps", "{R|R2.4}"],
+           ["F3*", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", "{R|R2.4}"],
            ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "{R|R2.4}"],
-           ["M", "Falsified metadata", "Negative control", "–"]],
+           ["M*", "Falsified metadata", "Negative control", "–"]],
           [14, 40, 90, 24])
     Para("{b|Calibration and statistics.} All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 "
-         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%. The honest "
+         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%, separately "
+         "for each model and sampler. The Tier B distance is the relative L2 distance between recomputed and committed "
+         "D{sub|i}, fixed from the pilot before any attack data was generated; the maximum absolute difference and the "
+         "cosine distance are reported as secondary measures. The honest "
          "per-step distances for τ{sub|i} come from cross-hardware replays: a DGX Spark acting as verifier recomputes "
          "D{sub|i} at every step of each rented provider’s calibration jobs, so every step and every provider–verifier "
          "pair contributes; τ{sub|i} pools the pairs and falls back to the largest pair quantile when one pair deviates "

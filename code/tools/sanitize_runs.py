@@ -15,6 +15,7 @@ The unredacted originals stay on the node under ~/esj/runs.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import sys
@@ -67,6 +68,17 @@ def scrub_text(s: str, suffix: str) -> str:
     return HOST.sub(r"spark\1-esj", s)
 
 
+def changed(s: str, suffix: str) -> bool:
+    """True if scrubbing would change the content (not just the JSON whitespace)."""
+    if suffix in (".json", ".jsonl"):
+        try:
+            objs = [json.loads(s)] if suffix == ".json" else [json.loads(l) for l in s.splitlines() if l.strip()]
+            return any(scrub_obj(copy.deepcopy(o)) != o for o in objs)
+        except json.JSONDecodeError:
+            pass
+    return HOST.sub(r"spark\1-esj", s) != s
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("runs", nargs="+")
@@ -80,7 +92,7 @@ def main() -> int:
             s = p.read_text(errors="replace")
             if a.check:
                 hits = set(LEAK.findall(s))
-                if scrub_text(s, p.suffix) != s:
+                if changed(s, p.suffix):
                     hits.add("unscrubbed co-tenant or host names")
                 if hits:
                     print(p, sorted(hits))

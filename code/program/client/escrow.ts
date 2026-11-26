@@ -94,7 +94,8 @@ export class Escrow {
     });
     const rec: TxRecord = { name, sig, nsig: 1, cu: null, fee: null, slot: null, ms_confirmed: Date.now() - t0 };
     if (this.measure) {
-      for (let i = 0; i < 20; i++) {
+      // on a public RPC the transaction can take a few seconds to be served after confirmation
+      for (let i = 0; i < 60; i++) {
         const tx = await this.connection.getTransaction(sig, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
         if (tx) {
           rec.nsig = tx.transaction.signatures.length;
@@ -103,7 +104,7 @@ export class Escrow {
           rec.slot = tx.slot;
           break;
         }
-        await sleep(100);
+        await sleep(i < 20 ? 100 : 500);
       }
     }
     this.records.push(rec);

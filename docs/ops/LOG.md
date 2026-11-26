@@ -145,3 +145,4 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 20:53 UTC · S4 · RTX 5090 stock still NONE (Community and Secure); no pod created. S5 re-run continuing on Spark-3
 - 21:14 UTC · S6 · RTX 5090 stock still NONE. F3 partial-faking sweep (s = 0.1, 0.25, 0.5, 0.75, 1.0; 100 test-split jobs each, Spark-generated, full trajectories) moved forward to Spark-1, queued to start after its SDXL dpmpp_2m 4090 replay (443/600) ends instead of waiting for the grid on Sparks 5/6. Log `~/esj/logs/wp3-sweep-spark1.log`
 - 21:33 UTC · S4 · RTX 5090 stock still NONE; fallback to RTX 3090 at 22:30 UTC
+- 21:34 UTC · S5 DONE · Spark honest re-run `20261126-wp3-rerun-sdxl-euler-spark3-01` complete (600 jobs; prompts_rent_test200 × seeds 0–2, SDXL euler reference config): the E0 / E0-N reference for verification. Spark-3 continues with the SD1.5/dpmpp_2m replays

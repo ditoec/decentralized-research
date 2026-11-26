@@ -208,7 +208,7 @@ Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Finding
        | Quiet (`vllm-chat` stopped 11:07:16–11:12:36 UTC) | 1.84, p95 1.88 | 12.04, p95 12.32 |
 
        - **What the numbers show:** SD1.5 does not change; SDXL's median barely moves but its tail does (p95 15.15 → 12.32 s). Co-tenancy costs SDXL variance more than throughput.
-       - **Spark-3 is slower on SDXL than earlier pilot readings on other Sparks:** 3.87 s (finding 7) and 8.21 s (finding 9). Read this as a per-node difference to check, not a contradiction.
+       - **Consistent with the pilot's Spark sizing on Spark-4** (finding 10: SD1.5 1.94 s, SDXL 12.4 s per image beside production). Spark SDXL is about 3× slower per image than the RTX 4090 (3.6–3.87 s) and 4.5× slower than the RTX 5090 (2.71 s).
        - **Restore:** `vllm-chat` was started at 11:12:36 and was healthy at 11:16:26, so it was out of service for about 9 min.
        - **Data:** runs `20261126-wp0b-p3-{sd15,sdxl}-{busy,quiet}-spark3-01`.
 18. **WP2 dry run (2026-11-25, runbook §3.4 step 5; not paper data).** `wp2_rent.sh` (items `ref prec slice`, `LIMIT=7`: 7 prompts × 3 seeds = 21 jobs per run) on a rented RTX 4090, and `wp2_spark.sh` (items `ref grid l0 l2`, same limit) on Spark-4.

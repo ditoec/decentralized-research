@@ -384,6 +384,22 @@ Rules:
 - **Second RTX 5090 (L2) started 2026-11-26 04:14 UTC.** No Community stock; Secure, EU-RO-1, US$1.39/h, 200 GB disk, AMD Ryzen 9 7950X (the L3 host is an EPYC 9554 in EUR-IS-2, so a different machine), CUDA usable. Item `l2`: one SDXL run of `prompts_l2_50.txt` × 3 seeds, class F, so no draw seed. Code as main `70b6308`, `REP=01`. Pull and release on Spark-5; the pod's self-stop is running.
   - **Ended by itself 2026-11-26 06:02 UTC, the first real use of the self-stop.** Generation took 7 minutes (04:16:57 to 04:24:01, 150 jobs). The 2.7 GB class-F tar then took about 1.6 h to reach Spark-5. `release_pod.py` saw it verified at 06:02:05, `trajver.retention check` passed (150/150), the release went out at 06:02:07, and the pod stopped answering at 06:02:38 and is gone from the pod list. Pod time about 1.8 h at US$1.39/h ≈ US$2.50 (the manifest's `cost_usd` 2.39 counts from the job start, not from pod creation).
 - **Pulls died in a link outage (about 07:00 UTC) and now survive one.** All three `pull_run.py` processes crashed when curl's 8 retries ran out. `pull_run.py` now resumes every 60 s for as long as it takes (tested); it was restarted on the three pods, and the downloads resumed from the partial tars.
+- **Staging pod (operator's choice, 2026-11-26 07:57 UTC).** The pulls to the Spark take hours and each GPU pod billed until its own pull was verified; the remaining ~88 GB would have cost ~US$28 of idle GPU time against a balance of US$15.49.
+  - **Setup:**
+    - a CPU pod `twazk132j21s05` (cpu3c, 4 vCPU, Secure, EU-RO-1, US$0.12/h);
+    - a 120 GB network volume `xgzm7eis58` in EU-RO-1 (about US$0.01/h; CPU pods allow at most 40 GB of container disk) mounted at `/work`;
+    - `pod_server.py` serving it.
+  - **On the staging pod, `tools/stage_copy.py`:**
+    - waits for each GPU pod's `out/DONE`;
+    - downloads every tar not yet on Spark-5 (skip lists taken from `pulled_unix`) and checks it against the pod's sha256;
+    - copies `pod.json`, `nvidia-smi-q.txt`, `lscpu.txt`, `INDEX` and `DONE`, then writes `STAGED`;
+    - only then releases the GPU pod, whose `pod_selfstop.sh` deletes it.
+  - **On Spark-5, `tools/stage_switch.sh`:** for each pod, waits for `STAGED`, stops the old pull and release, and restarts both against `https://<staging>-8000.proxy.runpod.net/<token>/stage/<tag>`. Partial tars resume because the bytes are the same.
+  - **`tools/stage_selfstop.sh`** deletes the staging pod once Spark-5 has released every tag. The network volume must be deleted by the operator afterwards, because the pod-scoped key cannot delete volumes.
+  - **Tested** end to end on fake pods and a fake API: one run was already on the Spark and skipped; the GPU pod finished late; staged, released and deleted; the Spark pulled from staging; then the staging pod was deleted.
+  - **Speed:** in-cloud copy about 75 MB/s, against 0.3–2 MB/s to the Spark.
+  - **The trade-off:** between a GPU pod's deletion and the Spark's pull, staged runs exist only on the network volume.
+  - **Effect on run manifests:** `release_pod.py`'s retention-check container is now named per process, since three can run at once. `billed_hours` and `cost_usd` in manifests pulled from staging overstate the GPU time, because they count to the pull. Use the pod deletion times recorded in `docs/ops/LOG.md`.
 
 ---
 

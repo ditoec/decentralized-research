@@ -400,6 +400,7 @@ Rules:
   - **Speed:** in-cloud copy about 75 MB/s, against 0.3–2 MB/s to the Spark.
   - **The trade-off:** between a GPU pod's deletion and the Spark's pull, staged runs exist only on the network volume.
   - **RTX 4090 ended through staging, 2026-11-26 08:02 UTC.** 14 tars were staged and verified in about 5 min. The GPU pod was released at 08:02:14 and was gone by 08:02:40. Lifetime 17:55:13–08:02:36, about 14.1 h at US$0.89/h ≈ US$12.60; generation finished at 01:05, so about 7 h of that was waiting on the Spark link. Spark-5 switched to the staging copy at 08:03:54.
+  - **RTX 5090 (L3) ended through staging, 2026-11-26 08:13 UTC.** 7 tars (about 38 GB) were staged in about 13 min and the pod was released at 08:12:56. Lifetime 01:41:19 to about 08:13, about 6.5 h at US$1.39/h ≈ US$9.10. Spark-5 switched at 08:13:57.
   - **Effect on run manifests:** `release_pod.py`'s retention-check container is now named per process, since three can run at once. `billed_hours` and `cost_usd` in manifests pulled from staging overstate the GPU time, because they count to the pull. Use the pod deletion times recorded in `docs/ops/LOG.md`.
 
 ---

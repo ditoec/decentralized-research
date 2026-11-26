@@ -95,3 +95,4 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 12:53 UTC · repo · PR #11 merged into main as `343ba86` (staging pod, pull retry, L2 on Sparks 1–3, P3 busy vs quiet, ops log through 12:49 UTC)
 - 12:53 UTC · decision · Operator: on Spark-2, and on other Sparks when necessary, pause production processes to free memory and resume them afterwards. Done as `docker stop` / `docker start` (`docker pause` keeps memory) · runbook §1 rule 1 exception
 - 12:54 UTC · spark · Spark-2: production `vllm-asr` (about 14 GB) stopped 12:54:14 (free memory 25 → 43 GB); the waiting L2 run started 12:54:22. A node-side script restarts `vllm-asr` when L2 finishes and checks it is healthy (trap on any exit) · `~/esj/logs/free-mem-spark2.log`
+- 12:57 UTC · repo · `docs/12-progress-for-paper.md`: progress summary for the paper (settled results by placeholder, protocol requirements, WP2 data status, infrastructure material, figures, open items, caveats)

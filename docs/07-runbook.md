@@ -68,6 +68,14 @@ Addresses and login details are in `docs/local-nodes.md`, which is kept out of g
 ### 1.1 Rules on the Sparks (production is running)
 
 1. **Never stop, restart or change a container you did not start.** That includes the ComfyUI already on Spark-1; it is a production service on a different version. Do not use it.
+   - **Exception (operator's standing permission, 2026-11-26):** to free memory for a research run, a production container may be **stopped and started again** (`docker stop` / `docker start`; `docker pause` keeps the memory, so it does not help). Conditions:
+     - stop the fewest containers that free enough;
+     - leave security monitoring (Wazuh) alone;
+     - restart from a trap on any exit;
+     - confirm the container healthy;
+     - log the stop and start times in `docs/ops/LOG.md`.
+
+     First uses: `vllm-chat` on Spark-3 for the P3 quiet window, and `vllm-asr` on Spark-2 for its L2 run.
 2. Start research containers with the label `research=esj`, a name starting with `esj-`, and a port bound to `127.0.0.1` only. Clean up only containers that carry that label.
 3. **Memory is one pool for the CPU and the GPU.** A research job that runs out of memory can take a production model down. Run SDXL in fp16 as the normal load. Test fp32 on one node, off-peak, before using it in the grid. Do not run FLUX without a window agreed with the platform admin.
 4. The run script must **pause when free memory is below 15 GB or free disk is below 200 GB**, and resume by itself.

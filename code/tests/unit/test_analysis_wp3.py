@@ -254,3 +254,29 @@ def test_no_host_names_in_outputs(tmp_path):
     out = tmp_path / "o"
     A.main(["--honest", str(hv), "--thresholds", str(tp), "--out", str(out)])
     assert not any("not-used" in p.read_text() for p in out.iterdir())
+
+
+# ------------------------------------------------------------------------------------- per-k tau
+def test_tau_for_per_k(tmp_path):
+    from trajver.thresholds import DEV_DEFAULTS, tau_for
+    tp, _ = thresholds(tmp_path, tau8=0.05)
+    th = A.load_thresholds(tp)
+    assert tau_for(th, 2) == 0.5 and tau_for(th, 2, 3) == 0.5 and tau_for(th, 2, 8) == 0.05
+    assert tau_for(dict(DEV_DEFAULTS), 2, 8) == DEV_DEFAULTS["tau_default"]  # no tau_by_k: the single tau
+
+
+def test_e2h_recomputed_with_tau_of_k(tmp_path):
+    """Rows in verify.py's format (per_step as floats): a step at 0.1 passes tau = 0.5 (k <= 5)
+    and fails tau = 0.05 (k = 8), whatever the row's own verdict says."""
+    tp, sha = thresholds(tmp_path, tau8=0.05)
+    js = jobs(4)
+    gen_run(tmp_path, "g", "honest", js)
+    v = verify_run(tmp_path, "v", "g", "honest", sha, js)
+    rows = [json.loads(l) for l in (v / "verdicts.jsonl").read_text().splitlines()]
+    for r in rows:
+        if r["evidence"] == "E2-H":
+            r["per_step"], r["tau_k"] = {str(i): 0.1 for i in range(T)}, r["k"]
+    (v / "verdicts.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    jv, note = A.job_verdicts(A.load_run(v), A.load_thresholds(tp))
+    assert set(jv[("E2-H", 5)].values()) == {"pass"} and set(jv[("E2-H", 8)].values()) == {"fail"}
+    assert note[("E2-H", 8)] == "tau_by_k[8]"

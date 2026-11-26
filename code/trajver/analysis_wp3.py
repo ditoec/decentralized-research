@@ -25,11 +25,12 @@ Conventions
 * Rejected = any verdict other than "pass" (E0 also has "inconclusive", counted separately).
 * q is read from the frozen verdicts; thresholds are never re-fitted on test data. The thresholds file must
   be the one every verify run recorded (``threshold_file_sha256``), or the script stops.
-* E2-H at k: when a row carries per-step distances (``per_step``), its Tier B part is recomputed with the
-  frozen tau of that k (``tau_by_k``); otherwise the row's verdict is used as written, and verify.py writes
-  it with the single ``tau`` of the frozen k for every k. The ``tau_k`` column says which.
-* r_A and alpha_s: from per-step distances when the rows have them; otherwise from the k = 1 rows only,
-  whose one checked step is drawn independently of the faking pattern. Steps of one job are correlated,
+* E2-H at k: when a row carries per-step distances (``per_step``, written by verify.py since 2026-11-26),
+  its Tier B part is recomputed with the frozen tau of that k (``tau_by_k``), which is what verify.py now
+  does itself. Older rows have no ``per_step`` and were judged with the single ``tau`` of the frozen k at
+  every k; their verdict is used as written. The ``tau_k`` column says which.
+* r_A and alpha_s: from per-step distances when the rows have them (every replayed step of a job, once);
+  for older rows from the k = 1 rows only, whose one checked step is drawn independently of the faking pattern. Steps of one job are correlated,
   so their Wilson CI is optimistic.
 * Faked steps: the label's ``faked`` list for F1-F3 and A6; every step for attacks that replace the whole
   computation; for M (honest compute, false metadata) also every step, so its r_A is a control that
@@ -55,6 +56,7 @@ from pathlib import Path
 from . import theory
 from .stats import cluster_bootstrap_median, cp_upper, wilson
 from .thresholds import load as load_thresholds
+from .thresholds import tau_for
 
 KS = (1, 2, 3, 5, 8)
 S_ATTACKS = {"F1", "F2", "F3", "A6"}
@@ -172,9 +174,7 @@ def attach_e0(runs: list[Run], compare: str | None) -> None:
 
 # ------------------------------------------------------------------------------------------- verdicts
 def tau_k(th: dict, k: int | None, i: int) -> float:
-    tb = (th.get("tau_by_k") or {}).get(str(k)) if k is not None else None
-    tau = tb["tau"] if tb else th.get("tau", {})
-    return float(tau.get(str(i), th["tau_default"]))
+    return tau_for(th, i, k)
 
 
 def alpha_nominal(th: dict, k: int) -> float:

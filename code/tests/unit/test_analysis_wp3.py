@@ -280,3 +280,37 @@ def test_e2h_recomputed_with_tau_of_k(tmp_path):
     jv, note = A.job_verdicts(A.load_run(v), A.load_thresholds(tp))
     assert set(jv[("E2-H", 5)].values()) == {"pass"} and set(jv[("E2-H", 8)].values()) == {"fail"}
     assert note[("E2-H", 8)] == "tau_by_k[8]"
+
+
+def test_beta_compute_over_sample_with_baseline(tmp_path):
+    """The WP3 rule: beta_A = 1 - t_compute_s(attack) / t_sample_s(honest pilot gen baseline), by job key,
+    first job of each run dropped. t_total_s (sample + decode) must not be used."""
+    tp, sha = thresholds(tmp_path)
+    js = jobs(12)
+    base = tmp_path / "20261127-wp3-base-sdxl-euler-rtx5090-01"
+    (base / "raw").mkdir(parents=True)
+    (base / "manifest.json").write_text(json.dumps({"node": {"gpu_name": "NVIDIA GeForce RTX 5090"}, "sampler": "euler",
+                                                    "models": [{"filename": "sd_xl_base_1.0.safetensors"}]}))
+    # the base run's warm-up is job 12, the attack run's is job 1; the rest come in another order
+    order = [js[-1]] + js[-2::-1]
+    (base / "jobs.jsonl").write_text("".join(json.dumps(
+        {"job": j, "prompt_id": int(j[1:6]), "seed": 0, "t_sample_s": 100.0 if n == 0 else 10.0 + int(j[1:6]),
+         "t_decode_s": 5.0, "t_total_s": (100.0 if n == 0 else 10.0 + int(j[1:6])) + 5.0}) + "\n"
+        for n, j in enumerate(order)))
+    atk = "20261127-wp3-atk-a1b-sdxl-euler-rtx5090-01"
+    # attack time = 0.25 x the honest sampling time of the same job: beta = 0.75 for every matched job
+    gen_run(tmp_path, atk, "A1b", js, time_field="t_compute_s",
+            times={j: (0.01 if n == 0 else 0.25 * (10.0 + int(j[1:6]))) for n, j in enumerate(js)})
+    av = verify_run(tmp_path, "20261127-wp3-verify-atk-a1b-sdxl-euler-rtx5090-01-on-spark3", atk, "A1b", sha, js)
+    hv = honest_pair(tmp_path, sha, 5)  # verified honest runs on other jobs: not used once --baseline is given
+    out = tmp_path / "out"
+    A.main(["--honest", str(hv), "--attacked", str(av), "--baseline", str(base), "--thresholds", str(tp),
+            "--out", str(out), "--n-boot", "200"])
+    (row,) = read(out / "r2_4_beta.csv")
+    assert row["time_fields"] == "t_compute_s/t_sample_s" and row["provider"] == "rtx5090"
+    assert row["n_matched"] == "10"  # 12 jobs minus each run's own warm-up (job 1 attacked, job 12 in the base)
+    assert float(row["beta_median"]) == pytest.approx(0.75)
+    assert float(row["beta_ci_lo"]) == pytest.approx(0.75) and float(row["beta_ci_hi"]) == pytest.approx(0.75)
+    assert row["run_ids"] == atk and row["honest_run_ids"] == base.name
+    with pytest.raises(SystemExit, match="cannot be the honest baseline"):
+        A.load_gen(tmp_path / atk)

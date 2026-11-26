@@ -381,6 +381,7 @@ Rules:
   - Tested against a fake pod and a fake API: released and deleted when the check passes; not released (exit 4) when it fails. The real check command ran on Spark-5 in 2 s on a pulled 4090 run.
   - Installed on the 4090, 3090 and 5090 pods and their Spark-5 release processes. Starting new pods still needs the account key, so it happens only while the operator's session is on.
 - **Spark site link is the bottleneck.** Measured 2026-11-26 03:55 UTC: about 1.8 MB/s in total for three pulls (0.35, 0.6, 0.86 MB/s); a fresh download from Spark-5 to a public speed test got 0.6 MB/s; the same pod served 5.9 MB/s to a laptop elsewhere. A class-F SDXL reference run is about 17 GB, so a pod can sit finished for hours while its pull completes (the 4090: about 11 h for its last 14 GB). The operator chose to keep pulling to the Spark.
+- **Second RTX 5090 (L2) started 2026-11-26 04:14 UTC.** No Community stock; Secure, EU-RO-1, US$1.39/h, 200 GB disk, AMD Ryzen 9 7950X (the L3 host is an EPYC 9554 in EUR-IS-2, so a different machine), CUDA usable. Item `l2`: one SDXL run of `prompts_l2_50.txt` × 3 seeds, class F, so no draw seed. Code as main `70b6308`, `REP=01`. Pull and release on Spark-5; the pod's self-stop is running.
 
 ---
 

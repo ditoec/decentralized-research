@@ -100,9 +100,22 @@ def main() -> int:
             pulled.add(tname)
             return
         local = dest / tname
-        subprocess.run(["curl", "-sSf", "-A", "curl/8 esj-pull", "--retry", "8", "-C", "-", "-o", str(local),
-                        f"{base}/out/{tname}"], check=True)
-        want = get(f"{base}/out/{tname}.sha256").strip()
+        # A network outage outlasts curl's own retries (seen 2026-11-26: all three pulls died at once).
+        # With nobody watching, a dead pull leaves a finished pod billing, so keep resuming (-C -).
+        for attempt in range(1, 10_000):
+            r = subprocess.run(["curl", "-sSf", "-A", "curl/8 esj-pull", "--retry", "8", "-C", "-", "-o",
+                                str(local), f"{base}/out/{tname}"])
+            if r.returncode == 0:
+                break
+            print(f"curl exit {r.returncode} on {tname} (attempt {attempt}); resuming in 60 s", flush=True)
+            time.sleep(60)
+        while True:
+            try:
+                want = get(f"{base}/out/{tname}.sha256").strip()
+                break
+            except Exception as e:  # noqa: BLE001
+                print("sha256 fetch failed, retrying in 60 s:", e, flush=True)
+                time.sleep(60)
         h = hashlib.sha256()
         with open(local, "rb") as f:
             for b in iter(lambda: f.read(1 << 24), b""):
@@ -148,11 +161,21 @@ def main() -> int:
             print("pod job not finished")
             return 2
         # runs the pod packed early (class F, runbook §3 finding 18) come home while it generates
-        if exists(f"{base}/out/READY"):
-            for tname in get(f"{base}/out/READY").split():
-                pull(tname)
+        try:
+            if exists(f"{base}/out/READY"):
+                for tname in get(f"{base}/out/READY").split():
+                    pull(tname)
+        except Exception as e:  # noqa: BLE001  (the READY list could not be read: try next round)
+            print("READY read failed, retrying:", e, flush=True)
         time.sleep(30)
-    for tname in get(f"{base}/out/INDEX").split():
+    while True:
+        try:
+            index = get(f"{base}/out/INDEX").split()
+            break
+        except Exception as e:  # noqa: BLE001
+            print("INDEX read failed, retrying in 60 s:", e, flush=True)
+            time.sleep(60)
+    for tname in index:
         pull(tname)
     ok = not bad
     return 0 if ok else 1

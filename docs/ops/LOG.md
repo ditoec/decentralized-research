@@ -51,3 +51,7 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 06:36 UTC · runpod · Balance US$19.06; RTX 4090 pull still 12/26 (a 1.3 GB class-O tar at about 0.35 MB/s); RTX 3090 2 runs pulled, RTX 5090 L3 2; six pull and release processes alive
 - 06:36 UTC · spark · Grid: no failed jobs; free memory 35–37 GB, free disk 379–464 GB
 - 06:40 UTC · repo · Catalog row and contact sheet for `20261126-wp2-l2-sdxl-fp16-sdpa-euler-nd-rtx5090b-01` added · `docs/ops/catalog/wp2/`
+- ~07:00 UTC · incident · All three pull processes (RTX 4090, 3090, 5090) died with curl errors after curl's own 8 retries, most likely a link outage on the Spark side (an SSH connection to Spark-5 had timed out earlier). Partial tars kept; release processes unaffected · `~/esj/logs/pull-wp2-*.log`
+- 07:36 UTC · runpod · RTX 5090 L3 finished generating (14 runs, DONE); RTX 3090 on run 13 (SDXL dpmpp_2m test, 227/600); balance US$16.20 at US$2.78/h
+- 07:45 UTC · code · `pull_run.py` now keeps resuming a download after curl gives up (every 60 s) and retries reading READY, INDEX and checksums instead of crashing; tested on a fake pod whose first tar request fails (resumed and verified), reveal test still passes; installed on Spark-5 and the three pulls restarted (downloads resumed from the partial tars)
+- 07:47 UTC · spark · Grid: no failed jobs; free memory 35–38 GB, free disk 369–461 GB

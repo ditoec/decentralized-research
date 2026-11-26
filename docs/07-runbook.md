@@ -451,6 +451,15 @@ Use the **calibration split only**.
 
 ## 6. RQ2: attacks (WP3, Feb 1–28)
 
+**Reduced study for the paper (decision of 2026-11-26; doc 05 §4.2).** What actually runs:
+- **Workloads:** `tools/workloads/wp3_rent.sh` on a rented RTX 5090 and `tools/workloads/wp3_spark.sh` on the Sparks.
+- **Scope:** SDXL euler, reference config, the first 100 prompts of `prompts_rent_test200.txt` × seed 0 for every attack, so that attacked and honest jobs pair one to one.
+- **Pod runs:** an honest baseline (β_A timing); A1b, A2, A3 Turbo, A3 LCM-LoRA, F1, F2, F3 (s = 0.5), A8 and M; a verifier-cost replay of 50 baseline jobs (R3.1). Retention: `POD_RETENTION='*-wp3-base-*=O,*-wp3-atk-*=O,*=F'`.
+- **Spark runs:** the verifier's honest re-run of the test job set (600 jobs, the E0 reference); the F3 sweep at s ∈ {0.1, 0.25, 0.5, 0.75, 1.0}; then `trajver.verify` and `pilot compare --e0-out` for every attacked run and for the rented honest test runs.
+- **Thresholds:** `experiments/configs/thresholds_v1_sdxl_euler.json` with `--metric rel_l2` pre-declared, committed before the pod starts.
+
+Items 1 to 4 below are the full design, kept for a later extension.
+
 Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
 
 1. For each attack A1–A8, F1–F4 and M, produce **100 attacked jobs per cell** (never under 30). A cell is (attack × model × hardware pair). Produce **1,000 honest jobs per stratum** where the pooled pairs allow it, and never under 299. Zero false rejections in 299 bound the false-rejection rate below 1% at 95% confidence; 1,000 still bound it below 1% with up to 4 false rejections. The Spark-provider cells run on the Sparks.

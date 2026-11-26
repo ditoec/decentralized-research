@@ -1,7 +1,7 @@
 """WP3 aggregation: verify outputs -> the RQ2 tables and the WP4 inputs (runbook §6 items 3-4, §8b).
 
   python -m trajver.analysis_wp3 --honest RUN... --attacked RUN... --thresholds TH.json --out DIR \
-      [--sweep RUN...] [--compare DIR] [--th-sha256 H] [--partial]
+      [--sweep RUN...] [--baseline GENRUN...] [--compare DIR] [--th-sha256 H] [--partial]
 
 Every RUN is a ``python -m trajver.verify`` run folder (manifest.json, verdicts.jsonl). Its manifest names
 the generation run it scored (``source_run``), looked up next to it or under $TRAJVER_RUNS; that run gives
@@ -36,10 +36,13 @@ Conventions
   computation; for M (honest compute, false metadata) also every step, so its r_A is a control that
   should match honest alpha_s.
 * s is reported only for attacks that use it (F1-F3, A6).
-* beta_A: the first warm-up job of each generation run is dropped. Time fields, in order of preference:
-  t_total_s on both sides; t_compute_s on both; attack t_compute_s against honest t_sample_s (both exclude
-  the VAE decode). The honest time of a job is the median over honest runs of the same model on the same
-  provider card. The ``time_fields`` column says which pair was used.
+* beta_A = 1 - t_compute_s(attack) / t_sample_s(honest), matched by job key: attacks.run times sampling plus
+  forging without the decode, pilot gen times sampling (t_sample_s) and decode (t_decode_s) apart. The honest
+  times come from ``--baseline`` (the ``*-wp3-base-*`` pilot gen run on the attack card), else from the
+  --honest runs' generation runs; a job's honest time is the median over those runs of the same model on the
+  same card. The first job of every run is a warm-up and is dropped. Fallbacks, only when a field is absent:
+  t_compute_s on both sides (an attacks.run M-style baseline), then t_total_s on both. The ``time_fields``
+  column says which pair was used.
 """
 from __future__ import annotations
 
@@ -60,7 +63,9 @@ from .thresholds import tau_for
 
 KS = (1, 2, 3, 5, 8)
 S_ATTACKS = {"F1", "F2", "F3", "A6"}
-TIME_FIELDS = (("t_total_s", "t_total_s"), ("t_compute_s", "t_compute_s"), ("t_compute_s", "t_sample_s"))
+# (attack field, honest field). attacks.run records t_compute_s (sampling + forging, no decode); pilot gen records
+# t_sample_s, t_decode_s and t_total_s (= both). The first pair is the WP3 rule (beta_A = 1 - t_compute/t_sample).
+TIME_FIELDS = (("t_compute_s", "t_sample_s"), ("t_compute_s", "t_compute_s"), ("t_total_s", "t_total_s"))
 WARN: list[str] = []
 
 
@@ -387,6 +392,18 @@ def timing(run: Run) -> dict:
     return {r["job"]: r for r in rows[1:]}  # the first job of a run is the warm-up
 
 
+def load_gen(path) -> Run:
+    """A generation run used only for its timings (the honest baseline ``*-wp3-base-*``, a ``pilot gen`` run)."""
+    path = Path(path)
+    if not (path / "jobs.jsonl").exists():
+        raise SystemExit(f"{path}: no jobs.jsonl (--baseline takes generation runs)")
+    m = json.loads((path / "manifest.json").read_text())
+    if m.get("attack") not in (None, "honest"):
+        raise SystemExit(f"{path}: an attack run ({m['attack']}) cannot be the honest baseline")
+    sampler = (m.get("claimed") or {}).get("sampler") or m.get("sampler") or "unknown"
+    return Run(path.name, path, "honest", None, model_label(m), sampler, gpu_label(m), "", None, path.name, path)
+
+
 def table_beta(attacked: list[Run], honest: list[Run], n_boot: int) -> list[list]:
     out = []
     ht: dict = defaultdict(lambda: defaultdict(list))  # (model, provider) -> job -> [(row, run_id)]
@@ -451,6 +468,8 @@ def main(argv=None):
     ap.add_argument("--honest", nargs="+", required=True)
     ap.add_argument("--attacked", nargs="*", default=[])
     ap.add_argument("--sweep", nargs="*", default=[])
+    ap.add_argument("--baseline", nargs="*", default=[],
+                    help="honest generation runs timed on the attacked job set (beta_A); default: the --honest runs' sources")
     ap.add_argument("--thresholds", required=True)
     ap.add_argument("--th-sha256", default=None)
     ap.add_argument("--compare", default=None, help="folder of pilot compare --e0-out files <run_a>__<run_b>.e0.jsonl")
@@ -489,7 +508,7 @@ def main(argv=None):
     write(out / "r2_4_beta.csv", ["attack", "s", "model", "provider", "n_matched", "beta_median", "beta_ci_lo",
                                   "beta_ci_hi", "t_attack_median_s", "t_honest_median_s", "time_fields", "n_boot",
                                   "run_ids", "honest_run_ids"],
-          table_beta(attacked, honest, a.n_boot), a.partial)
+          table_beta(attacked, [load_gen(p) for p in a.baseline] or honest, a.n_boot), a.partial)
     write(out / "fig_r2_7_partial.csv", ["attack", "s", "k", "n_jobs", "n_detected", "alpha_s", "r_measured",
                                          "alpha_s_source", "model", "sampler", "run_ids"],
           table_partial(sweep, honest, th), a.partial)

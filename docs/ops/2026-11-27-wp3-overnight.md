@@ -55,7 +55,7 @@ When every WP2 tag is released, the staging pod `twazk132j21s05` deletes itself.
 - Chained on Spark-3 after its SDXL euler 3090 replay (17:18 UTC): `ITEMS=rerun NODE=spark3 bash tools/workloads/wp3_spark.sh` (log `~/esj/logs/wp3-rerun-spark3.log`), then the SD1.5/dpmpp_2m replays resume.
 - 600 jobs, about 2.2 h. The run is `<date>-wp3-rerun-sdxl-euler-spark3-01`.
 
-## S6. F3 sweep
+## S6. F3 sweep (moved to Spark-1 at 21:14 UTC; started after its dpmpp_2m 4090 replay)
 After the grid finishes on Spark-5/6 (no `research=esj` container left):
 - deploy `trajver/` and `wp3_spark.sh`;
 - `ITEMS=sweep NODE=spark5 SWEEP_S="0.1 0.25 0.5"` and `NODE=spark6 SWEEP_S="0.75 1.0"`.

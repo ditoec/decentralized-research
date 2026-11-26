@@ -84,3 +84,8 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 10:25 UTC · measure · Balance US$13.17; only the staging pod and volume bill (about US$0.13/h). Spark-5: RTX 4090 15/26, RTX 5090 L3 8/14, RTX 3090 7/14 runs, no checksum errors. Grid: no failed jobs, free memory 26–37 GB, free disk 345–454 GB
 - 10:50 UTC · spark · L2: Spark-1 done (150/150 jobs); Spark-3 at 101/150 (slower beside `vllm-chat`), P3 follows it; Spark-2 still waiting for memory (25 GB free, needs 35 GB). No failed jobs on any Spark
 - 10:50 UTC · pull · Spark-5 from staging: RTX 4090 22/26, RTX 5090 L3 8/14, RTX 3090 9/14 runs, no checksum errors; balance US$13.12. Grid: Spark-4 72 runs, Spark-5 34, Spark-6 28; free memory 33–37 GB, free disk 341–454 GB
+- 10:57 UTC · spark · L2 on Spark-3 done (150/150 jobs)
+- 11:05 UTC · measure · P3 busy on Spark-3 (`vllm-chat` serving): SD1.5 median 1.84 s/image (p95 1.86), SDXL 12.32 (p95 15.15), n = 19 each · runs `20261126-wp0b-p3-*-busy-spark3-01`
+- 11:07 UTC · spark · Production `vllm-chat` on Spark-3 stopped 11:07:16 for the P3 quiet window (operator's approval), with a trap to restart it on any exit
+- 11:12 UTC · measure · P3 quiet on Spark-3: SD1.5 median 1.84 (p95 1.88), SDXL 12.04 (p95 12.32), n = 19 each. Co-tenancy moves the SDXL tail, not the median · runs `20261126-wp0b-p3-*-quiet-spark3-01`, runbook §3 finding 17
+- 11:16 UTC · spark · `vllm-chat` started 11:12:36, healthy 11:16:26 (about 9 min out of service), serving again (64 GB on the GPU); no research container left on Spark-3

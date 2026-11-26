@@ -200,6 +200,17 @@ Acceptance tests T1, T2 and T3 pass on MPS (`pytest tests/integration`). Finding
        - **Where:** P3 runs on Spark-1, which is free of research load once its L2 run is done.
        - **What:** SD1.5 and SDXL, reference config, n = 20 warm plus 1 warm-up, median and p95 s/image. Co-tenants are recorded in the manifest.
        - **When:** once at a busy hour (local working hours, chat model serving) and once in a quiet window with the chat model stopped. **Only the admin can stop the chat model**: the quiet run waits for a window the operator agrees with the admin. Busy-hour numbers size the work; they are not timing claims (doc 10 §2.2 rule 4).
+     - **Done 2026-11-26 on Spark-3** (moved from Spark-1, whose GPU is shared by four production services; Spark-3's GPU serves only `vllm-chat`), after its L2 run. Operator approved stopping `vllm-chat` for the quiet window. n = 19 timed jobs per model (21 requested, prompts_pilot20 × seed 0 gives 20, first excluded), s/image median and p95:
+
+       | Condition | SD1.5 512², 30 steps | SDXL 1024², 30 steps |
+       |---|---|---|
+       | Busy (chat model serving, 10:58–11:05 UTC) | 1.84, p95 1.86 | 12.32, p95 15.15 |
+       | Quiet (`vllm-chat` stopped 11:07:16–11:12:36 UTC) | 1.84, p95 1.88 | 12.04, p95 12.32 |
+
+       - **What the numbers show:** SD1.5 does not change; SDXL's median barely moves but its tail does (p95 15.15 → 12.32 s). Co-tenancy costs SDXL variance more than throughput.
+       - **Spark-3 is slower on SDXL than earlier pilot readings on other Sparks:** 3.87 s (finding 7) and 8.21 s (finding 9). Read this as a per-node difference to check, not a contradiction.
+       - **Restore:** `vllm-chat` was started at 11:12:36 and was healthy at 11:16:26, so it was out of service for about 9 min.
+       - **Data:** runs `20261126-wp0b-p3-{sd15,sdxl}-{busy,quiet}-spark3-01`.
 18. **WP2 dry run (2026-11-25, runbook §3.4 step 5; not paper data).** `wp2_rent.sh` (items `ref prec slice`, `LIMIT=7`: 7 prompts × 3 seeds = 21 jobs per run) on a rented RTX 4090, and `wp2_spark.sh` (items `ref grid l0 l2`, same limit) on Spark-4.
    - **A faulty RunPod host.** The first RTX 4090 pod (Community, US$0.34/h, Intel Xeon 8352V, driver 580.173) showed the card in `nvidia-smi` but no PyTorch build could use CUDA ("CUDA unknown error"), not even the image's own. It was terminated after about 10 minutes, before any job. `pod_job.sh` now stops at once when CUDA is unusable, so a workload cannot silently run on the CPU. Community 4090 capacity was then gone; the dry run used a Secure Cloud RTX 4090 (EU-RO-1, US$0.89/h, AMD EPYC 7352, driver 595.112).
    - **Rented side, runs `20261125-wp2-*-rtx4090-01` (26 runs, 546 jobs, all complete).** The seed handshake worked as designed: the pod stopped after generation (`out/GENERATED`), `pull_run.py --reveal-seed --wait` on Spark-5 checked the seed against `pod.json` and sent it, the pod extracted, re-verified and packed. Spark-5 pulled 1.97 GB at about 2.3 MB/s; `trajver.retention check` passed 26/26 runs (21/21 jobs each), and every manifest carries the class, the seed hash and the software pin (`lock-main:sha256:8865f8b0…`). Kept bytes per job: class O 41 % (SD1.5 euler), 50 % (SD1.5 dpmpp_2m), 38 % (SDXL euler, 6.6 MB) and 47 % (SDXL dpmpp_2m, 8.2 MB) of the full trajectory; class I 1.5 % (0.29 MB for SDXL). Spend: US$1.41 in total (both pods; balance 25.90 → 24.49). The manifests' `cost_usd` (US$0.50) counts only the job from `pod.json`'s start, not pod setup or the pull: use the RunPod balance for totals.

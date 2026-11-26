@@ -4,6 +4,11 @@
 On the GB10 unified memory, CUDA context creation can fail with out of memory while page cache is
 high even though MemAvailable is fine (2026-11-26). Usage: evict_cache.py "<glob>" ...
 """
+import glob
+import os
+import sys
+if not hasattr(os, "posix_fadvise"):
+    sys.exit("posix_fadvise not available on this OS")
 n = 0
 for pat in sys.argv[1:]:
     for d in glob.glob(os.path.expanduser(pat)):

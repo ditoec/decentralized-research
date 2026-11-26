@@ -44,7 +44,7 @@ if has verify; then
       --prompts $P --thresholds "$TH" --wp wp3 --name "verify-$short-on-$NODE" --run-id "$id"
     id="$DATE-wp3-e0-$short-on-$NODE"
     mkdir -p ~/esj/runs/"$id"
-    run "$id" sh -c "export TORCH_HOME=/root/.cache/huggingface/torch; python -m trajver.pilot compare /runs/$src \
+    run "$id" sh -c "export TORCH_HOME=/root/.cache/huggingface/torch HF_HUB_OFFLINE=1; python -m trajver.pilot compare /runs/$src \
       /runs/$RERUN --out /runs/$id/compare.json --e0-out /runs/$id/e0.jsonl"
   done
 fi

@@ -12,7 +12,8 @@ if not hasattr(os, "posix_fadvise"):
 n = 0
 for pat in sys.argv[1:]:
     for d in glob.glob(os.path.expanduser(pat)):
-        for root, _, files in os.walk(d):
+        walk = [(os.path.dirname(d), [], [os.path.basename(d)])] if os.path.isfile(d) else os.walk(d)
+        for root, _, files in walk:
             for f in files:
                 try:
                     fd = os.open(os.path.join(root, f), os.O_RDONLY)

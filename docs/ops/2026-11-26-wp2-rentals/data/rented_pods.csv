@@ -1,0 +1,6 @@
+node_tag,pod_id,card,cloud,data_center,usd_per_hour,created_utc,state_2026-11-26T0412Z,runs_generated,runs_pulled_verified,note
+rtx4090,sd06bsvyyfmec5,RTX 4090,SECURE,EU-RO-1,0.89,2026-11-25T17:55:13Z,finished; pulling,26,11,items ref prec slice; REP=02 (dry-run ids on the same date)
+rtx3090,r55nf5uam01yew,RTX 3090,SECURE,EU-CZ-1,0.50,2026-11-25T22:34:21Z,generating run 10,9,2,items ref prec; Community 3090 sold out between stock read and create an hour earlier
+rtx5090,o6vqa6r4x5pds1,RTX 5090,COMMUNITY,,0.69,2026-11-25T23:34:34Z,terminated after ~2 min,0,0,host with unusable CUDA (CUDA unknown error; Threadripper 3960X; driver 580.178)
+rtx5090,ovdiegthi61b8w,RTX 5090,SECURE,EUR-IS-2,1.39,2026-11-26T01:41:19Z,generating run 9,8,1,items ref prec (L3); AMD EPYC 9554; driver 595.112
+rtx5090b,,RTX 5090,,,,,not created,0,0,L2; Secure create refused for capacity 2026-11-26T04:0x

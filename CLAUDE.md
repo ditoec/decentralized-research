@@ -11,6 +11,10 @@ This is a research-paper repo targeting a Q1 journal: **Emerging Science Journal
 - Never invent experimental numbers. Results must come from logged runs in `experiments/runs/`.
 - Do not edit files in `drafts/`. They are the original sources.
 - Citations: verify every reference against its primary source. References live in `REFS` in `paper/tools/build_esj_docx.py` (or in the .docx once it is the master). Unverified entries carry a red `[verify]` marker.
+- Log every process for future writing (decision of 2026-11-26), following `docs/ops/README.md`:
+  - one line per action in `docs/ops/LOG.md`, covering runs, rentals, terminations, incidents, decisions, measurements, costs and merges;
+  - every run's inputs and outputs, including the generated images, in the catalog (`docs/ops/catalog/`, built by `code/tools/run_catalog.py`);
+  - screenshots, data and charts in a dated report folder under `docs/ops/`.
 - Keep the novelty claims consistent with `docs/05-revised-design.md` §2 and `docs/06-code-audit.md` §4. Per-step spot-checking itself is NOT new (WOMBO SN30, 2024). Never write "first" or "no prior work" without a fresh literature check.
 
 ## Hardware

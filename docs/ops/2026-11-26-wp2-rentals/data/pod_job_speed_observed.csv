@@ -1,0 +1,8 @@
+card,model,run,seconds_per_job,time_utc,note
+RTX 5090,SD1.5,ref-caldev euler,1.60,2026-11-26T01:45Z,progress line of pod_job.log; paper timings come from run manifests
+RTX 5090,SDXL,ref-caldev euler,2.79-2.95,2026-11-26T03:53Z,progress line
+RTX 4090,SDXL,ref-test dpmpp_2m,3.86,2026-11-25T23:34Z,progress line
+RTX 4090,SDXL,slice split dpmpp_2m (nd and det),6.31-6.40,2026-11-26T00:34-00:53Z,progress line
+RTX 3090,SD1.5,ref-test dpmpp_2m,1.95,2026-11-26T00:34Z,progress line
+RTX 3090,SD1.5,prec fp32 dpmpp_2m,4.84,2026-11-26T00:53Z,progress line
+RTX 3090,SDXL,ref-caldev / ref-test euler,8.12-8.36,2026-11-26T04:12Z,progress line

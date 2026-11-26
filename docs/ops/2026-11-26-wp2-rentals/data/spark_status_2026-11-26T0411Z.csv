@@ -1,0 +1,4 @@
+node,time_utc,cpu_util_pct,gpu_util_pct,gpu_temp_c,gpu_power_w,mem_total_mib,mem_available_mib,gpu_apps_mem_mib,disk_total_gb,disk_free_gb,grid_runs_so_far,current_run,current_run_jobs,failed_jobs
+spark-4,2026-11-26T04:11:34Z,6,90,83,78.10,124544,40425,69445,917,416,13,20261126-wp2-ref-sd15-fp16-sdpa-dpmpp_2m-nd,592,0
+spark-5,2026-11-26T04:11:40Z,6,96,81,88.70,124544,38479,71507,917,406,29,20261125-wp2-ref-sdxl-fp16-sdpa-euler-nd,850,0
+spark-6,2026-11-26T04:11:44Z,5,91,81,90.22,124544,36027,71851,917,476,25,20261125-wp2-ref-sdxl-fp16-sdpa-euler-nd,776,0

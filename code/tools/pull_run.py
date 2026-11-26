@@ -23,6 +23,7 @@ import json
 import subprocess
 import sys
 import tarfile
+import threading
 import time
 import urllib.request
 from pathlib import Path
@@ -65,8 +66,31 @@ def main() -> int:
     base = a.base.rstrip("/")
     dest = Path(a.dest).expanduser()
     dest.mkdir(parents=True, exist_ok=True)
-    revealed = False
     pulled: set[str] = set()
+    # The seed is revealed from its own thread: a class-F tar can take hours to download, and a
+    # reveal that waits for it leaves the pod idle and billing (runbook §4, 2026-11-26).
+    revealed = threading.Event()
+    reveal_error: list[str] = []
+
+    def revealer() -> None:
+        secret = Path(a.reveal_seed).expanduser()
+        while True:
+            try:
+                if exists(f"{base}/out/DONE") or exists(f"{base}/out/FAILED"):
+                    return
+                if exists(f"{base}/out/GENERATED"):
+                    reveal(base, secret)
+                    revealed.set()
+                    return
+            except SystemExit as e:  # wrong seed: never retry
+                reveal_error.append(str(e))
+                return
+            except Exception as e:  # noqa: BLE001  (a network blip: try again next round)
+                print("reveal attempt failed, retrying:", e, flush=True)
+            time.sleep(30)
+
+    if a.reveal_seed:
+        threading.Thread(target=revealer, daemon=True).start()
     bad: list[str] = []
 
     def pull(tname: str) -> None:
@@ -112,14 +136,15 @@ def main() -> int:
             return 3
         if exists(f"{base}/out/DONE"):
             break
-        if exists(f"{base}/out/GENERATED") and not revealed:
+        generated = exists(f"{base}/out/GENERATED")
+        if generated and not revealed.is_set():
             if not a.reveal_seed:
                 print("pod is waiting for the draw seed: rerun with --reveal-seed")
                 return 2
-            reveal(base, Path(a.reveal_seed).expanduser())
-            revealed = True
-            continue
-        if not (a.wait or revealed):
+            if reveal_error:
+                print(reveal_error[0], flush=True)
+                return 4
+        if not (a.wait or generated or revealed.is_set()):
             print("pod job not finished")
             return 2
         # runs the pod packed early (class F, runbook §3 finding 18) come home while it generates

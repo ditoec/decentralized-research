@@ -1,0 +1,11 @@
+time_utc,path,mb_per_s,note
+2026-11-26T03:55:00Z,pod RTX 4090 -> Spark-5 (pull),0.35,three pulls sharing the site link
+2026-11-26T03:55:00Z,pod RTX 3090 -> Spark-5 (pull),0.86,three pulls sharing the site link
+2026-11-26T03:55:00Z,pod RTX 5090 -> Spark-5 (pull),0.60,three pulls sharing the site link
+2026-11-26T03:58:00Z,pod RTX 4090 -> Spark-6 (single test download),0.5,while the three pulls ran
+2026-11-26T03:58:00Z,pod RTX 4090 -> Spark-5 (single test download),0.4,while the three pulls ran
+2026-11-26T03:59:00Z,public speed test -> Spark-5,0.6,while the three pulls ran
+2026-11-26T03:59:00Z,pod RTX 4090 -> operator laptop (single test download),5.9,different site
+2026-11-26T04:12:00Z,pod RTX 4090 -> Spark-5 (pull),0.62,
+2026-11-26T04:12:00Z,pod RTX 3090 -> Spark-5 (pull),0.69,
+2026-11-26T04:12:00Z,pod RTX 5090 -> Spark-5 (pull),0.69,

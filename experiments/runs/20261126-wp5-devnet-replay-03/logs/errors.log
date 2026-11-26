@@ -1,0 +1,21 @@
+2026-11-26T17:21:49.630Z job 1795707751286 dispute: fetch failed
+2026-11-26T17:22:10.534Z job 1795707751287 timeout: fetch failed
+2026-11-26T17:23:36.626Z job 1795707751292 unsampled: fetch failed
+2026-11-26T17:26:02.649Z job 1795707751299 dispute: fetch failed
+2026-11-26T17:26:13.168Z job 1795707751299 unsampled: failed to get recent blockhash: TypeError: fetch failed
+2026-11-26T17:26:57.955Z job 1795707751302 dispute: fetch failed
+2026-11-26T17:29:11.639Z job 1795707751310 dispute: fetch failed
+2026-11-26T17:33:39.656Z job 1795707751323 dispute: fetch failed
+2026-11-26T17:36:23.221Z job 1795707751331 pass: fetch failed
+2026-11-26T17:39:14.878Z job 1795707751338 pass: fetch failed
+2026-11-26T17:39:44.874Z job 1795707751339 dispute: fetch failed
+2026-11-26T17:39:55.386Z job 1795707751339 timeout: failed to get recent blockhash: TypeError: fetch failed
+2026-11-26T17:40:33.774Z job 1795707751341 dispute: fetch failed
+2026-11-26T17:41:16.056Z job 1795707751343 unsampled: fetch failed
+2026-11-26T17:42:49.900Z job 1795707751348 timeout: fetch failed
+2026-11-26T17:43:32.919Z job 1795707751350 dispute: fetch failed
+2026-11-26T17:44:29.823Z job 1795707751353 pass: fetch failed
+2026-11-26T17:49:18.534Z job 1795707751367 dispute: fetch failed
+2026-11-26T17:49:42.843Z job 1795707751368 unsampled: fetch failed
+2026-11-26T17:57:23.376Z job 1795707751390 pass: fetch failed
+2026-11-26T17:58:57.078Z job 1795707751395 dispute: fetch failed

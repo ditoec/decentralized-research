@@ -56,10 +56,70 @@ export interface TxRecord {
   name: string;
   sig: string;
   nsig: number;
+  /** HTTP 429 answers the client got (and retried) between send and confirmation; only with throttledConnection */
+  rpc_429?: number;
+  /** dropped-connection retries between send and confirmation */
+  net_retries?: number;
   cu: number | null;
   fee: number | null;
   slot: number | null;
   ms_confirmed: number;
+}
+
+/**
+ * A Connection that stays under a public RPC's rate limits (Solana's public Devnet RPC: 100 requests
+ * per 10 s per IP and 40 per 10 s per method). All requests are spaced at least `minGapMs` apart, and
+ * requests of the same method at least `perMethodGapMs` apart. A 429 is retried here, with backoff,
+ * up to 12 times. Used by the Devnet replay. Waiting in this queue counts in the measured time to confirmed.
+ */
+export function throttledConnection(url: string, minGapMs = 200, perMethodGapMs = 450): Connection {
+  const counter = { n429: 0, nNet: 0, byMethod: {} as Record<string, number> };
+  let last = 0;
+  const lastByMethod = new Map<string, number>();
+  let chain: Promise<void> = Promise.resolve();
+  const slotFor = (method: string) => {
+    const p = chain.then(async () => {
+      const now = Date.now();
+      const wait = Math.max(0, last + minGapMs - now, (lastByMethod.get(method) ?? 0) + perMethodGapMs - now);
+      if (wait) await sleep(wait);
+      last = Date.now();
+      lastByMethod.set(method, last);
+    });
+    chain = p;
+    return p;
+  };
+  const throttled = async (input: any, init?: any): Promise<any> => {
+    let method = "?";
+    try {
+      const b = JSON.parse(String(init?.body ?? ""));
+      method = Array.isArray(b) ? "batch" : b.method;
+    } catch {}
+    for (let i = 0; ; i++) {
+      await slotFor(method);
+      let res: Response;
+      try {
+        res = await fetch(input, init);
+      } catch (e) {
+        // dropped connection ("fetch failed"): retry; a re-sent signed transaction keeps its signature
+        counter.nNet++;
+        if (i >= 6) throw e;
+        await sleep(Math.min(8_000, 500 * 2 ** i));
+        continue;
+      }
+      if (res.status === 429) {
+        counter.n429++;
+        counter.byMethod[method] = (counter.byMethod[method] ?? 0) + 1;
+      }
+      if (res.status !== 429 || i >= 12) {
+        if (res.status === 429) console.error(`rpc ${method}: still 429 after ${i} retries`);
+        return res;
+      }
+      await sleep(Math.min(16_000, 500 * 2 ** i));
+    }
+  };
+  const conn = new Connection(url, { commitment: "confirmed", fetch: throttled as any, disableRetryOnRateLimit: true });
+  (conn as any).rpcCounter = counter;
+  return conn;
 }
 
 export function stateName(s: any): StateName {
@@ -71,12 +131,14 @@ export class Escrow {
   mint!: PublicKey;
   records: TxRecord[] = [];
   measure = true;
+  /** Confirm by polling getSignatureStatuses instead of the websocket subscription (public RPCs rate-limit the websocket). */
+  pollConfirm = false;
 
   readonly connection: Connection;
 
   constructor(connection: Connection, readonly payer: Keypair) {
-    // all reads, simulations and confirmations at "confirmed"
-    this.connection = new Connection(connection.rpcEndpoint, "confirmed");
+    // all reads, simulations and confirmations at "confirmed" (a given "confirmed" connection, e.g. a throttled one, is kept)
+    this.connection = connection.commitment === "confirmed" ? connection : new Connection(connection.rpcEndpoint, "confirmed");
     const wallet = new anchor.Wallet(payer);
     const provider = new anchor.AnchorProvider(this.connection, wallet, {
       commitment: "confirmed",
@@ -87,12 +149,21 @@ export class Escrow {
 
   // ---------- plumbing ----------
   async send(name: string, ix: TransactionInstruction, signer: Keypair): Promise<TxRecord> {
+    const counter = (this.connection as any).rpcCounter as { n429: number; nNet: number } | undefined;
+    const c0 = counter?.n429 ?? 0;
+    const n0net = counter?.nNet ?? 0;
     const t0 = Date.now();
-    const sig = await sendAndConfirmTransaction(this.connection, new Transaction().add(ix), [signer], {
-      commitment: "confirmed",
-      preflightCommitment: "confirmed",
-    });
+    const sig = this.pollConfirm
+      ? await this.sendAndPoll(new Transaction().add(ix), signer)
+      : await sendAndConfirmTransaction(this.connection, new Transaction().add(ix), [signer], {
+          commitment: "confirmed",
+          preflightCommitment: "confirmed",
+        });
     const rec: TxRecord = { name, sig, nsig: 1, cu: null, fee: null, slot: null, ms_confirmed: Date.now() - t0 };
+    if (counter) {
+      rec.rpc_429 = counter.n429 - c0;
+      rec.net_retries = counter.nNet - n0net;
+    }
     if (this.measure) {
       // on a public RPC the transaction can take a few seconds to be served after confirmation
       for (let i = 0; i < 60; i++) {
@@ -104,11 +175,28 @@ export class Escrow {
           rec.slot = tx.slot;
           break;
         }
-        await sleep(i < 20 ? 100 : 500);
+        await sleep(500);
       }
     }
     this.records.push(rec);
     return rec;
+  }
+
+  /** Sends with preflight, then polls the signature status (spaced by the throttle, about every 0.45 s) until "confirmed" or the blockhash expires. */
+  private async sendAndPoll(tx: Transaction, signer: Keypair): Promise<string> {
+    const bh = await this.connection.getLatestBlockhash("confirmed");
+    tx.recentBlockhash = bh.blockhash;
+    tx.feePayer = signer.publicKey;
+    tx.sign(signer);
+    const sig = await this.connection.sendRawTransaction(tx.serialize(), { preflightCommitment: "confirmed", maxRetries: 5 });
+    for (let i = 0; ; i++) {
+      await sleep(i === 0 ? 400 : 300);
+      const st = (await this.connection.getSignatureStatuses([sig])).value[0];
+      if (st?.err) throw new Error(`transaction ${sig} failed: ${JSON.stringify(st.err)}`);
+      if (st && (st.confirmationStatus === "confirmed" || st.confirmationStatus === "finalized")) return sig;
+      if (i % 20 === 19 && (await this.connection.getBlockHeight("confirmed")) > bh.lastValidBlockHeight)
+        throw new Error(`transaction ${sig} expired before confirmation`);
+    }
   }
 
   async airdrop(to: PublicKey, sol = 10) {
@@ -123,7 +211,7 @@ export class Escrow {
 
   /** Wait until the confirmed slot is strictly greater than `s`. */
   async waitSlotAfter(s: number) {
-    while ((await this.slot()) <= s) await sleep(150);
+    while ((await this.slot()) <= s) await sleep(300);
   }
 
   ata(owner: PublicKey) {

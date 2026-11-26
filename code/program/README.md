@@ -149,6 +149,17 @@ solana program deploy -u devnet -k .anchor/devnet/keypair-payer.json \
 npx ts-node -P tsconfig.json scripts/replay.ts --cluster devnet --admin .anchor/devnet/keypair-payer.json --n 100
 ```
 
+On the public RPC the replay spaces its requests, confirms by polling `getSignatureStatuses` (the websocket is
+rate-limited), counts 429s per transaction (`rpc_429`), retries dropped connections, keeps failed jobs in
+`jobs.jsonl` with their error, and starts job ids at a time-based base (Job PDAs persist on Devnet). If some
+paths end short of their target, run a top-up and combine:
+
+```bash
+npx ts-node -P tsconfig.json scripts/replay.ts --cluster devnet --admin .anchor/devnet/keypair-payer.json \
+  --only dispute=10,timeout=3 --topup-of <main-run-id> --seed 2   # counts = successful jobs still needed
+python3 scripts/combine_replay.py ../../experiments/runs/<main-run> ../../experiments/runs/<top-up-run>
+```
+
 Funding: since 2026-11-26 the Devnet RPC faucet (`solana airdrop`) answers
 `410 The RPC faucet is closed on this cluster`. Devnet SOL now comes only from the web faucet
 (faucet.solana.com, which needs a sign-in and a CAPTCHA, so a person must request it). A run needs about

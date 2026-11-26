@@ -20,7 +20,7 @@ import { execSync } from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { ConfigParams, Escrow, PROGRAM_ID, TxRecord, stateName } from "../client/escrow";
+import { ConfigParams, Escrow, PROGRAM_ID, TxRecord, stateName, throttledConnection } from "../client/escrow";
 
 type PathName = "unsampled" | "pass" | "dispute" | "timeout";
 const PATHS: PathName[] = ["unsampled", "pass", "dispute", "timeout"];
@@ -99,7 +99,7 @@ async function main() {
   const start = new Date().toISOString();
   const git = { commit: sh("git rev-parse HEAD"), dirty: sh("git status --porcelain -- code/program") !== "" };
 
-  const conn = new Connection(URL, "confirmed");
+  const conn = DEVNET ? throttledConnection(URL) : new Connection(URL, "confirmed");
   const genesis = await conn.getGenesisHash();
   if (genesis === MAINNET_GENESIS) refuse(`${URL} reports the Mainnet genesis hash`);
   if (DEVNET && genesis !== DEVNET_GENESIS) refuse(`${URL} genesis ${genesis} is not Devnet`);
@@ -107,6 +107,13 @@ async function main() {
   const adminFile = arg("admin", path.join(os.homedir(), ".config/solana/id.json"))!;
   const admin = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(fs.readFileSync(adminFile, "utf8"))));
   const esc = new Escrow(conn, admin);
+  esc.pollConfirm = DEVNET;
+  if (DEVNET)
+    // web3.js can leave a rejected promise behind (e.g. a rate-limited websocket); log it, do not exit
+    process.on("unhandledRejection", (e) => {
+      console.error(`unhandled rejection: ${String((e as any)?.message ?? e).slice(0, 300)}`);
+      fs.appendFileSync(path.join(dir, "logs", "errors.log"), `${new Date().toISOString()} unhandled rejection: ${String((e as any)?.message ?? e)}\n`);
+    });
   const [requester, prov, v1, v2, orch] = [0, 1, 2, 3, 4].map(() => Keypair.generate());
   const balance0 = await conn.getBalance(admin.publicKey, "confirmed");
   if (DEVNET) {
@@ -149,14 +156,24 @@ async function main() {
   await esc.depositBond(prov, 5_000_000_000);
 
   const h32 = (s: string) => createHash("sha256").update(s).digest();
-  let nextId = 1;
+  // Job PDAs persist on Devnet, so each Devnet run starts its job ids at a fresh base (unix seconds × 1000)
+  const FIRST_ID = Number(arg("first-id", DEVNET ? String(Math.floor(Date.now() / 1000) * 1000) : "1"));
+  let nextId = FIRST_ID;
+  let started: number | null = null;
   const out = fs.createWriteStream(path.join(dir, "txs.jsonl"));
-  const perJob: { path: PathName; job_id: number; recs: TxRecord[]; final_state: string; ok: boolean }[] = [];
+  const perJob: { path: PathName; job_id: number; recs: TxRecord[]; final_state: string; ok: boolean; error?: string }[] = [];
+  const jobsOut = fs.createWriteStream(path.join(dir, "jobs.jsonl"));
+  const logJob = (j: (typeof perJob)[number]) => {
+    perJob.push(j);
+    jobsOut.write(JSON.stringify({ path: j.path, job_id: j.job_id, ok: j.ok, final_state: j.final_state, n_tx: j.recs.length,
+      ...(j.error ? { error: j.error, time: new Date().toISOString() } : {}) }) + "\n");
+  };
 
   async function runPath(p: PathName) {
     // force the draw outcome for the next job (p snapshotted at create_job); not counted
     await esc.updateConfig({ ...base, sampleProb: p === "unsampled" ? 0 : 1, execTimeout: p === "timeout" ? TIMEOUT_PATH_EXEC : EXEC_TIMEOUT });
     const id = nextId++;
+    started = id;
     const n0 = esc.records.length;
     await esc.createJob(requester, id, P, FEE, B);
     await esc.acceptJob(prov, id);
@@ -185,35 +202,78 @@ async function main() {
     const want = { unsampled: "closedPaid", pass: "closedPaid", dispute: "closedRefunded", timeout: "closedRefunded" }[p];
     const st = stateName(j.state);
     const ok = st === want && j.settled && j.sampled === (p === "pass" || p === "dispute");
-    perJob.push({ path: p, job_id: id, recs, final_state: st, ok });
+    logJob({ path: p, job_id: id, recs, final_state: st, ok });
     for (const r of recs) out.write(JSON.stringify({ path: p, job_id: id, ...r }) + "\n");
   }
 
+  // --only unsampled=0,pass=0,dispute=1,timeout=1 runs just those jobs (a top-up run; see --topup-of)
+  const only: Partial<Record<PathName, number>> | null = arg("only")
+    ? Object.fromEntries(arg("only")!.split(",").map((kv) => kv.split("=")).map(([k, v]) => {
+        if (!PATHS.includes(k as PathName)) refuse(`--only: unknown path ${k}`);
+        return [k, Number(v)];
+      }))
+    : null;
+  // with --only, the counts are targets of SUCCESSFUL jobs: rounds continue until each path reaches its
+  // target (at most 3 × the largest target rounds); without it, N rounds of all four paths
+  const okCount = (p: PathName) => perJob.filter((j) => j.path === p && j.ok).length;
+  const ROUNDS = only ? 3 * Math.max(...Object.values(only).map(Number)) : N;
   const rand = rng(SEED);
-  for (let round = 0; round < N; round++) {
-    const order = [...PATHS].sort(() => rand() - 0.5);
+  for (let round = 0; round < ROUNDS; round++) {
+    const order = [...PATHS].filter((p) => !only || okCount(p) < (only[p] ?? 0)).sort(() => rand() - 0.5);
+    if (only && order.length === 0) break;
     for (const p of order) {
+      const n0 = esc.records.length;
+      started = null;
       try {
         await runPath(p);
       } catch (e) {
-        // record a failed job (e.g. an RPC error on Devnet) and continue; it counts against n_ok
-        console.error(`job ${nextId - 1} (${p}) failed: ${String((e as any)?.message ?? e).slice(0, 300)}`);
-        perJob.push({ path: p, job_id: nextId - 1, recs: [], final_state: "error", ok: false });
-        fs.appendFileSync(path.join(dir, "logs", "errors.log"), `${new Date().toISOString()} job ${nextId - 1} ${p}: ${String((e as any)?.message ?? e)}\n`);
+        // keep a failed job (e.g. an RPC error on Devnet) with its error and any transactions it did send;
+        // it counts against n_ok and in the failure figures, and its transactions are flagged failed_job
+        // started is null when the failure came before create_job (the uncounted config update), so no job id exists
+        const msg = (started === null ? "before create_job: " : "") + String((e as any)?.message ?? e);
+        const jid = started ?? -1;
+        console.error(`job ${jid} (${p}) failed: ${msg.slice(0, 300)}`);
+        const recs = esc.records.slice(n0);
+        for (const r of recs) out.write(JSON.stringify({ path: p, job_id: jid, ...r, failed_job: true }) + "\n");
+        logJob({ path: p, job_id: jid, recs, final_state: "error", ok: false, error: msg.split("\n")[0].slice(0, 200) });
+        fs.appendFileSync(path.join(dir, "logs", "errors.log"), `${new Date().toISOString()} job ${jid} ${p}: ${msg}\n`);
       }
     }
-    if ((round + 1) % 10 === 0 || round === N - 1) console.log(`round ${round + 1}/${N}`);
+    if ((round + 1) % 10 === 0 || round === ROUNDS - 1) console.log(`round ${round + 1}/${ROUNDS}`);
   }
+  jobsOut.end();
   out.end();
+  let swept = 0;
+  if (DEVNET) {
+    // return the actors' leftover SOL to the admin (not counted); a failure here is logged, not fatal
+    for (const k of [requester, prov, v1, v2, orch]) {
+      try {
+        const bal = await conn.getBalance(k.publicKey, "confirmed");
+        if (bal > 5000) {
+          await sendAndConfirmTransaction(conn, new Transaction().add(SystemProgram.transfer({
+            fromPubkey: k.publicKey, toPubkey: admin.publicKey, lamports: bal - 5000 })), [k], { commitment: "confirmed" });
+          swept += bal - 5000;
+        }
+      } catch (e) {
+        console.error(`sweep ${k.publicKey.toBase58()} failed: ${String((e as any)?.message ?? e).slice(0, 200)}`);
+      }
+    }
+  }
 
   const summary: any = { cluster: CLUSTER, paths: {} };
   for (const p of PATHS) {
-    const jobs = perJob.filter((j) => j.path === p);
+    // per-job and per-transaction statistics over the successful jobs; failures are counted separately
+    const all = perJob.filter((j) => j.path === p);
+    const jobs = all.filter((j) => j.ok);
+    const failures: Record<string, number> = {};
+    for (const j of all) if (!j.ok) failures[j.error ?? j.final_state] = (failures[j.error ?? j.final_state] ?? 0) + 1;
     const ixs: Record<string, number[]> = {};
     for (const j of jobs) for (const r of j.recs) (ixs[r.name] ??= []).push(r.cu ?? NaN);
     summary.paths[p] = {
-      n_jobs: jobs.length,
-      n_ok: jobs.filter((j) => j.ok).length,
+      n_jobs: all.length,
+      n_ok: jobs.length,
+      n_failed: all.length - jobs.length,
+      failures_by_error: failures,
       instructions: [...new Set(jobs[0]?.recs.map((r) => r.name))],
       tx_per_job: stats(jobs.map((j) => j.recs.length)),
       signatures_per_job: stats(jobs.map((j) => j.recs.reduce((a, r) => a + r.nsig, 0))),
@@ -223,6 +283,8 @@ async function main() {
       [DEVNET ? "ms_to_confirmed_per_tx" : "ms_to_confirmed_per_tx_local"]: stats(jobs.flatMap((j) => j.recs.map((r) => r.ms_confirmed))),
       compute_units_per_tx_mean: +(jobs.flatMap((j) => j.recs.map((r) => r.cu ?? 0)).reduce((a, b) => a + b, 0) /
         Math.max(1, jobs.reduce((a, j) => a + j.recs.length, 0))).toFixed(1),
+      [DEVNET ? "ms_to_confirmed_per_tx_no_429" : "ms_to_confirmed_per_tx_no_429_local"]: stats(jobs.flatMap((j) => j.recs.filter((r) => !r.rpc_429).map((r) => r.ms_confirmed))),
+      n_tx_with_rpc_429: jobs.reduce((a, j) => a + j.recs.filter((r) => (r.rpc_429 ?? 0) > 0).length, 0),
       n_tx_missing_meta: jobs.reduce((a, j) => a + j.recs.filter((r) => r.cu === null || r.fee === null).length, 0),
       compute_units_by_instruction: Object.fromEntries(Object.entries(ixs).map(([k, v]) => [k, stats(v)])),
     };
@@ -258,9 +320,15 @@ async function main() {
     os: `${os.platform()} ${os.release()}`,
     cpu_isa: os.arch(),
     cpu_model: os.cpus()[0]?.model ?? "unknown",
-    params: { n_per_path: N, interleave_seed: SEED, payment: P, verifier_fee: FEE, bond: B, draw_delay_slots: base.drawDelay,
+    actor_lamports_swept_back: swept,
+    rpc_429_total_by_method: (conn as any).rpcCounter?.byMethod ?? null,
+    rpc_net_retries_total: (conn as any).rpcCounter?.nNet ?? null,
+    topup_of: arg("topup-of") ?? null,
+    params: { n_per_path: only ?? N, first_job_id: FIRST_ID, interleave_seed: SEED, payment: P, verifier_fee: FEE, bond: B, draw_delay_slots: base.drawDelay,
               exec_timeout_slots: EXEC_TIMEOUT, dispute_timeout_slots: DISPUTE_TIMEOUT,
-              exec_timeout_slots_timeout_path: TIMEOUT_PATH_EXEC, commitment: "confirmed", priority_fee: "none (no compute-budget instruction)" },
+              exec_timeout_slots_timeout_path: TIMEOUT_PATH_EXEC, commitment: "confirmed",
+              rpc_client_throttle: DEVNET ? "requests >= 200 ms apart, same method >= 450 ms apart, 429 retried with backoff and counted per transaction (rpc_429 in txs.jsonl); dropped connections retried up to 6 times (net_retries); confirmation by polling getSignatureStatuses about every 0.45 s (no websocket), so ms_confirmed has a polling resolution of about 0.5 s and includes client-side queueing" : "none",
+              priority_fee: "none (no compute-budget instruction)" },
     start_time: start,
     end_time: new Date().toISOString(),
   };

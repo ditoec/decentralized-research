@@ -6,7 +6,8 @@ For each job in RUN (a ``pilot gen`` or ``attacks.run`` folder) it loads the com
 delivered image, rebuilds the claimed JobSpec from the run manifest, and computes on THIS node:
   E1    x_0, schedule, conditioning, decoded image
   E2-H  Tier A (all steps) + Tier B on ONE pass over all steps, from which the verdict for every
-        k in {1,2,3,5,8} is derived with the step draw of ``draw_steps`` (commit-before-reveal logged)
+        k in {1,2,3,5,8} is derived with the step draw of ``draw_steps`` (commit-before-reveal logged);
+        each k uses its own frozen tau (``tau_by_k``), and every row keeps the per-step distances
   E2-W  the deployed SN30 rule (3 random steps)
 and writes long-format rows ``job_id, attack, s, evidence, k, verdict, score`` to <new run>/verdicts.jsonl.
 Ground-truth labels are NOT read here; the paper author joins them afterwards by job_id.
@@ -132,12 +133,16 @@ def main(argv=None):
             metric = th["tier_b_metric"]
             for k in KS:
                 steps = draw_steps(T, k, f"{r['job']}|k{k}") if cls == "F" else R.drawn(order, k)
-                bad = [i for i in steps if not per[str(i)][metric] <= tau_for(th, i)]
+                # each k is checked against its own tau (alpha_s of that k), not the frozen k's
+                bad = [i for i in steps if not per[str(i)][metric] <= tau_for(th, i, k)]
                 tb = "fail" if bad else "pass"
                 both = "fail" if ("fail" in (v1.verdict, va.verdict, tb)) else "pass"
+                # per_step: the metric on every step replayed for this job (all T for class F, the 8 opened
+                # for class O), so the per-step rates r_A and alpha_s (R2.6) can be computed afterwards
                 out.write(json.dumps({**base, "evidence": "E2-H", "k": k, "verdict": both,
                                       "score": max(per[str(i)][metric] for i in steps), "tier_b": tb,
-                                      "steps": steps}) + "\n")
+                                      "steps": steps, "tau_k": k,
+                                      "per_step": {i: per[i][metric] for i in sorted(per, key=int)}}) + "\n")
         else:
             for k in KS:
                 out.write(json.dumps({**base, "evidence": "E2-H", "k": k, "verdict": "fail", "score": None,

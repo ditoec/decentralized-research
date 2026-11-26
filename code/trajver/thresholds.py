@@ -47,5 +47,10 @@ def load(path: str | Path | None = None, expected_sha256: str | None = None) -> 
     return th
 
 
-def tau_for(th: dict, step: int) -> float:
-    return float(th.get("tau", {}).get(str(step), th["tau_default"]))
+def tau_for(th: dict, step: int, k: int | None = None) -> float:
+    """tau_i for a k-step check. Calibration fits one tau per k (alpha_s = 1 - 0.99^(1/k), runbook §5), in
+    ``tau_by_k``; ``tau`` is the one of the frozen k. Without k, or for a file with no ``tau_by_k`` (the dev
+    defaults), ``tau`` is used."""
+    tb = (th.get("tau_by_k") or {}).get(str(k)) if k is not None else None
+    tau = tb["tau"] if tb else th.get("tau", {})
+    return float(tau.get(str(step), th["tau_default"]))

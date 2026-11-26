@@ -879,7 +879,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "generation also runs the deterministic-mode and attention factors at fp16. The reference "
          "configuration (fp16, default attention, both samplers, deterministic mode off) is the one for which tolerances "
          "are frozen. It is run on a larger prompt set than the other configurations, because the per-step tolerances "
-         "of Equation 6 are extreme quantiles of the honest distribution.")
+         "of Equation 6 are extreme quantiles of the honest distribution: on the DGX Spark systems it runs all 600 "
+         "calibration and development prompts, and on each rented card 300 of them plus 200 test prompts, so that each "
+         "card is rented once. Every other configuration runs the same 50 prompts (32 calibration, 18 development) on "
+         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the reference "
+         "jobs on one DGX Spark; level L2 runs 50 prompts in the reference configuration on all six DGX Spark systems "
+         "and on two RTX 5090 cards on different hosts.")
     Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
          "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
          "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
@@ -915,16 +920,24 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["M", "Falsified metadata", "Negative control", "–"]],
           [14, 40, 90, 24])
     Para("{b|Calibration and statistics.} All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 "
-         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%. They are frozen "
+         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%. The honest "
+         "per-step distances for τ{sub|i} come from cross-hardware replays: a DGX Spark acting as verifier recomputes "
+         "D{sub|i} at every step of each rented provider’s calibration jobs, so every step and every provider–verifier "
+         "pair contributes; τ{sub|i} pools the pairs and falls back to the largest pair quantile when one pair deviates "
+         "by more than a factor of two. Tolerances are set separately for each sampler. They are frozen "
          "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split with "
          "Wilson 95% confidence intervals {c|wilson1927}; medians and costs use cluster-bootstrap intervals over prompt and "
          "hardware pair. Zero false rejections in 299 independent honest audits bound the false-rejection rate below 1% at "
          "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
          "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
          "attack, model and hardware pair.")
-    Para("{b|Data retention.} Jobs on DGX Spark systems keep their full trajectories. Jobs on rented GPUs keep full "
-         "trajectories only for calibration and development prompts, which the per-step tolerances need. For test and "
-         "attacked jobs on rented GPUs, eight steps per job are drawn before generation from a committed seed that the "
+    Para("{b|Data retention.} Full trajectories are kept where an analysis needs every step: the reference "
+         "configuration and levels L0 and L2 on the DGX Spark systems, the calibration and development prompts of the "
+         "reference configuration on every rented card, and the jobs of the partial-faking sweep. The other "
+         "configurations of the DGX Spark grid, the test prompts and the attacked jobs on rented GPUs keep opened "
+         "steps only, and the precision and factor-slice runs on rented GPUs keep the image, the final latent, the "
+         "Merkle root and the result of Tier A. For opened steps, eight steps per job are drawn before generation from "
+         "a committed seed that the "
          "attack implementations never see, and only those steps, their Merkle inclusion proofs, the job metadata, the "
          "image and the result of Tier A, computed over all steps on the rented host before the trajectory is "
          "discarded, are kept. The drawn sets are nested, so one draw serves every k ≤ 8. This is the information a "
@@ -936,7 +949,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "not used. Mainnet fees are calculated from the measured signature counts and compute units at a dated SOL "
          "price, and are labelled as calculated. Verifier GPU time is also converted to US dollars at the recorded "
          "rental prices. Scale-out beyond the physical nodes is "
-         "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}.")
+         "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}. "
+         "For each attack and each combination of sampling rate p, checked steps k, bond ratio B/P and faked fraction s, "
+         "simulated providers fake sT steps, the checked steps are drawn without replacement, and each checked step "
+         "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
+         "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
+         "interval, from a recorded random seed. Testbed jobs with injected attackers give an independent "
+         "check of the deterrence region at three sampling rates.")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
     H1("4- Results and Discussion")

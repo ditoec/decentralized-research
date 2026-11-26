@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -23,7 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pull_run import exists, get  # noqa: E402
 
-CHECK = ("docker run --rm --name esj-retcheck-{pod} --label research=esj "
+CHECK = ("docker run --rm --name esj-retcheck-{pod}-{uid} --label research=esj "
          "-v {dest}:/runs -v {code}:/opt/esj/code -w /opt/esj/code esj-research:main "
          "python -m trajver.retention check {runs}")
 
@@ -61,7 +62,7 @@ def main() -> int:
             log("poll failed, retrying:", e)
         time.sleep(a.poll)
     runs = " ".join(f"/runs/{n}" for n in names)
-    cmd = a.check_cmd.format(dest=dest, code=Path(a.code).expanduser(), runs=runs, pod=pod)
+    cmd = a.check_cmd.format(dest=dest, code=Path(a.code).expanduser(), runs=runs, pod=pod, uid=os.getpid())
     log("all", len(names), "runs pulled and verified; retention check")
     r = subprocess.run(cmd, shell=True)
     if r.returncode != 0:

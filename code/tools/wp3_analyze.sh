@@ -35,6 +35,7 @@ if [ $FETCH = 1 ]; then
   fetch 5 "$D-wp3-cost-replay-$X"
   for s in s010 s025 s050 s075 s100; do fetch 1 "$D-wp3-sweep-f3-$s-sdxl-euler-spark1-01" "$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark1"; done
   for s in s050 s075 s100; do fetch 3 "$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark3"; done  # moved to Spark-3 at 05:20 UTC
+  fetch 6 "$V-wp3-verify-wp3-sweep-f3-s075-sdxl-euler-spark1-01-on-spark6"  # s075 also on Spark-6 (05:51 UTC)
   (cd code && .venv/bin/python tools/sanitize_runs.py ../$RUNS >/dev/null && .venv/bin/python tools/sanitize_runs.py --check ../$RUNS) || exit 1
 fi
 
@@ -53,14 +54,12 @@ done
 HON=(); for c in rtx3090-01 rtx4090-02 rtx5090-01; do HON+=("$RUNS/20261126-wp3-verify-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-$c-on-spark3"); done
 ATT=(); for a in "${ATK[@]}"; do v=$RUNS/$V-wp3-verify-wp3-atk-$a-$X-on-spark$(node_of $a)
   [ -s "$v/verdicts.jsonl" ] && [ -f "$v/summary.json" ] && ATT+=("$v") || echo "not verified yet: $a"; done
-SWP=(); for s in s010 s025 s050 s075 s100; do v=$RUNS/$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark3
-  [ -f "$v/summary.json" ] || v=$RUNS/$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark1
+SWP=(); for s in s010 s025 s050 s075 s100; do v=
+  for nd in spark3 spark6 spark1; do c=$RUNS/$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-$nd; [ -z "$v" ] && [ -f "$c/summary.json" ] && v=$c; done
   [ -f "$v/summary.json" ] && SWP+=("$v") || echo "sweep not verified yet: $s"; done
 BASEV=$RUNS/$V-wp3-verify-wp3-base-$X-on-spark6
-# beta_A baseline: M (honest compute, false metadata) runs through the same attacks.run instrument as every attack,
-# so t_compute_s is compared with t_compute_s; the pilot-gen base run times t_sample_s without that instrument's
-# trajectory overhead (A8, a full honest generation through attacks.run, took about 4x the base t_sample_s)
-BASEGEN=$RUNS/$D-wp3-atk-m-$X
+# beta_A baseline: the honest pilot-gen run on the same card and jobs (runbook §6; analysis_wp3 refuses an attack run)
+BASEGEN=$RUNS/$D-wp3-base-$X
 
 an() {  # out thresholds honest... -- attacked... -- sweep...
   local o=$1 th=$2; shift 2; local h=() t=() w=() z=h

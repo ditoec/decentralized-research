@@ -909,7 +909,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "for every attack. Partial faking is evaluated with F3 at five faked fractions s. The saving β{sub|A} is "
          "measured, not assumed, on the rented GPU, which the job has to itself, against an honest run of the same "
          "jobs.")
-    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved, median, relative to M on the same jobs; * evaluated in this study)",
+    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved, median over the same jobs generated honestly on the same card; * evaluated in this study)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
           [["A1*", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30 (evaluated: 20 steps)", RW.table5_beta("A1b")],
            ["A2*", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", RW.table5_beta("A2")],
@@ -924,7 +924,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["F2*", "Interpolation", "Linear interpolation between computed anchor steps", RW.table5_beta("F2")],
            ["F3*", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", RW.table5_beta("F3")],
            ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "not evaluated"],
-           ["M*", "Falsified metadata", "Negative control; β{sub|A} baseline", "0 (baseline)"]],
+           ["M*", "Falsified metadata", "Negative control", RW.table5_beta("M")]],
           [14, 40, 90, 24])
     Para("{b|Calibration and statistics.} All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 "
          "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%, separately "
@@ -1043,9 +1043,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            image="fig_r2_7_partial.png" if part else None)
     Para("{b|Per-step separability and cost share.} Table 9 gives, for each attack, the per-step separability r{sub|A} "
          "(the share of faked checked steps whose distance exceeds τ{sub|i}), the share of GPU time the attack saves "
-         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} compares each attack with the "
-         "control M on the same jobs, because both run through the same instrumented attack harness; the honest "
-         "generation run is timed without that harness and is used only for the verifier cost (Table 10). " + RW.narr_r28())
+         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} compares each attacked job "
+         "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
+         "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
+         "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
+         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), so it "
+         "saves nothing here. " + RW.narr_r28())
     Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
           "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
           ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],
@@ -1073,6 +1076,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           ["Path", "Compute units per job (median)", "Fee on Devnet (SOL per job)", "Fee on mainnet (SOL, calculated)",
            "Time to confirmed per transaction (median, p95)"],
           RW.escrow(), [40, 32, 28, 34, 34])
+    Para("{b|Monte Carlo.} " + RW.narr_mc())
     Para("{b|Answer to RQ3.} " + RW.narr_r32() + " The escrow adds a fixed on-chain cost per job (Table 11) that does not "
          "depend on the evidence level.")
 
@@ -1088,7 +1092,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "unrelated work. Third, calibrate per step against a job-level false-rejection target on held-out honest "
          "cross-GPU pairs, and check the realised rate on a test split. Fourth, commit the full trajectory and check "
          "solver consistency on every step on the CPU: it is cheap and, in this study, it caught the solver-inversion "
-         "forgery at every faked fraction.")
+         "forgery at every faked fraction below one, leaving only fully forged trajectories to the spot check.")
     Para("{b|Relation to operator-level verification and to language models.} Sampler-level evidence and the "
          "operator-level evidence of TAO {c|yao2026tao} are complementary: where Tier B cannot separate an attack "
          "(" + RW.inseparable() + "), operator-level commitments or trusted execution {c|slalom2019} are required. For LLM inference, output-only detection "

@@ -137,8 +137,17 @@ def rates() -> dict:
     return out
 
 
+F_BOUND = {"F1": 0.5, "F2": 0.5, "F3": 0.5}  # s of the evaluated F runs: a forger saves at most the faked share
+
+
 def beta() -> dict:
-    return {r["attack"]: r for r in rows("wp3", "v1", "r2_4_beta.csv")}
+    """Measured beta_A vs the honest base run. F1-F3: the harness runs the honest trajectory before forging, so
+    its timing does not measure the saving; beta is replaced by its upper bound s (marked bound=True)."""
+    out = {r["attack"]: dict(r) for r in rows("wp3", "v1", "r2_4_beta.csv")}
+    for k, sv in F_BOUND.items():
+        if k in out:
+            out[k] = {**out[k], "beta_median": str(sv), "bound": True}
+    return out
 
 
 def table_deterrence() -> list[list[str]]:
@@ -150,7 +159,8 @@ def table_deterrence() -> list[list[str]]:
         r1 = ra.get(key, {}).get(1)
         b = be.get(key)
         cells = [ci(r1, "rate", "ci_lo", "ci_hi") if r1 else ph("R2.6"),
-                 (f"{float(b['beta_median']):.2f} ({float(b['beta_ci_lo']):.2f}–{float(b['beta_ci_hi']):.2f})"
+                 (f"≤ {float(b['beta_median']):.2f} (bound s)" if b and b.get("bound") else
+                  f"{float(b['beta_median']):.2f} ({float(b['beta_ci_lo']):.2f}–{float(b['beta_ci_hi']):.2f})"
                   if b and b.get("beta_median") not in (None, "") else ph("R2.4"))]
         for k, bp in [(1, 0.0), (1, 1.0), (3, 1.0)]:
             rk = ra.get(key, {}).get(k)
@@ -276,8 +286,9 @@ def narr_r21() -> str:
           f"{labels(n['le10'])}")
     if others:
         lo, hi = min(others.values()), max(others.values())
-        s += (f", but accepted between {pc(lo, 0)}% and {pc(hi, 0)}% of the jobs of the other attacks "
-              f"({labels(list(others))}), whose images stay semantically close to the honest output")
+        rng = f"{pc(lo, 0)}%" if pc(lo, 0) == pc(hi, 0) else f"between {pc(lo, 0)}% and {pc(hi, 0)}%"
+        s += (f", but accepted {rng} of the jobs of the other attack" + ("s" if len(others) > 1 else "")
+              + f" ({labels(list(others))}), whose images stay semantically close to the honest output")
     return s + "."
 
 
@@ -346,11 +357,12 @@ def narr_r27() -> str:
             f"as faked steps. With m set to the measured number of steps above τ{{sub|i}}, Equation 4 matched the "
             f"measurement within {100 * max(abs(x) for x in d_meas):.0f} percentage points over the {len(rs)} (s, k) "
             f"cells. Independently of the spot check, Tier A rejected "
-            + (f"all {ta[0]['n_jobs']}" if min(r['tiera_fail'] for r in ta) == max(r['tiera_fail'] for r in ta) == ta[0]['n_jobs']
-               else f"{min(r['tiera_fail'] for r in ta)}–{max(r['tiera_fail'] for r in ta)} of the 100")
-            + " jobs at every s: "
-            "this implementation of solver inversion leaves solver inconsistencies at the joins between computed and "
-            "forged segments, which the all-step CPU check finds.")
+            + "; ".join(f"{r['tiera_fail']} of {r['n_jobs']} jobs at s = {r['s']:g}" for r in ta)
+            + (". Solver inversion leaves solver inconsistencies at the joins between computed and forged segments, which "
+               "the all-step CPU check finds; a trajectory forged on every step has no such join and passes Tier A, "
+               "and is then caught by Tier B alone." if any(r["s"] >= 1 for r in ta) else
+               ". Solver inversion leaves solver inconsistencies at the joins between computed and forged segments, "
+               "which the all-step CPU check finds."))
 
 
 def narr_r32() -> str:
@@ -368,8 +380,15 @@ def narr_r32() -> str:
     s = ("With a bond equal to the payment (B/P = 1) and the conservative cost ratio c/P = 1, the sampling rate that "
          "deters every attack condition with a positive cost saving at once (Equation 9) is "
          + "; ".join(f"p* = {p:.3f} at k = {k}" if not math.isinf(p) else f"infeasible at k = {k}" for k, p, _ in out)
-         + f" ({out[0][2]} attack conditions). p* falls as k grows because the honest false-rejection margin is spent "
-           "more slowly than detection rises, and it scales linearly with c/P and with 1/(1 + B/P).")
+         + f" ({out[0][2]} attack conditions). ")
+    ps = [p for _, p, _ in out if not math.isinf(p)]
+    if len(ps) > 1 and max(ps) <= 1.05 * min(ps):
+        s += ("p* barely depends on k because the measured per-step separability is already close to 1 at k = 1, so "
+              "further checked steps add honest false rejections rather than detection; one checked step is the "
+              "cost-optimal choice. ")
+    elif len(ps) > 1:
+        s += ("p* " + ("falls" if ps[-1] < ps[0] else "rises") + " with k over the measured range. ")
+    s += "p* scales linearly with c/P and with 1/(1 + B/P)."
     return s
 
 
@@ -380,7 +399,7 @@ def sweep_tiers() -> list[dict]:
     out = []
     for tag in ["s010", "s025", "s050", "s075", "s100"]:
         v = None
-        for node in ("spark3", "spark1"):
+        for node in ("spark3", "spark6", "spark1"):
             c = R_ / f"20261127-wp3-verify-wp3-sweep-f3-{tag}-sdxl-euler-spark1-01-on-{node}"
             if (c / "summary.json").exists():
                 v = c
@@ -470,6 +489,24 @@ def inseparable() -> str:
 def table5_beta(key: str) -> str:
     """Table 5 column: measured beta_A for evaluated attacks; 'not evaluated' otherwise."""
     b = beta().get(key)
+    if b and b.get("bound"):
+        return f"≤ {float(b['beta_median']):.2f} (s; not measured)"
     if b and b.get("beta_median") not in (None, ""):
         return f"{float(b['beta_median']):.2f}"
     return "not evaluated" if key not in dict(ATTACKS) else ph("R2.4")
+
+
+def narr_mc() -> str:
+    rs = rows("wp4", "mc_sweep.csv")
+    if not rs:
+        return ""
+    d = [abs(float(r["detect_sim"]) - float(r["detect_closed"])) for r in rs]
+    firm = [r for r in rs if (float(r["gain_ci_lo"]) > 0) or (float(r["gain_ci_hi"]) < 0)]
+    agree = sum((float(r["gain_mean"]) > 0) == (float(r["gain_closed"]) > 0) for r in firm)
+    natk = len({r["attack"] for r in rs})
+    n_sim = rs[0]["n_sim"]
+    return (f"A Monte Carlo simulation of Equations 4 and 7 with the measured r{{sub|A}}, β{{sub|A}} and α{{sub|s}} "
+            f"({natk} attack conditions with a positive or zero saving, {len(rs):,} cells of (p, k, B/P, s), "
+            f"{int(n_sim):,} simulated jobs each) agreed with the closed form within {100 * max(d):.1f} percentage points "
+            f"of detection, and in the {len(firm):,} cells whose 95% interval of the gain excludes zero the sign of the "
+            f"simulated gain matched Equation 7 in {agree:,}.")

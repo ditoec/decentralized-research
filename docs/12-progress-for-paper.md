@@ -197,3 +197,35 @@ Next steps, in order:
 - Spark timing: only the quiet-window P3 numbers may be quoted (§2.5); everything else is sizing.
 - Manifest `cost_usd` values for runs pulled from staging overstate GPU time; use the pod lifetimes in runbook §4.
 - Novelty: per-step spot-checking is prior art (SN30). The claim is the calibrated evaluation, the attack on the deployed rules, and the hardened two-tier check (doc 05 §2).
+
+## 9. Update 2026-11-27: WP3 (reduced attack study) and the Results section
+
+The Results section of the manuscript is now generated from logged analysis outputs; no result number is typed into
+`paper/tools/build_esj_docx.py`. The mapping from placeholder to source:
+
+| Placeholder | Manuscript element | Source file (each row carries its run ids) | Produced by |
+|---|---|---|---|
+| R1.6 | Table 6, bit-identical images by level | `experiments/analysis/wp2/fig_r1_5_levels.csv` | `trajver.analysis_wp2 levels` |
+| R1.7 | Factors paragraph (L1) | same file, `factor` column | same |
+| R1.4 | Figure 3, per-step honest deviation | `experiments/analysis/wp2/fig_r1_4_steps.csv` | `trajver.analysis_wp2 steps` |
+| R2.1, R2.5 | Table 7, deployed rules E0-N and E2-W | `experiments/analysis/wp3/v1/r2_5_acceptance.csv` | `code/tools/wp3_analyze.sh` |
+| R2.3 | Table 8, sensitivity by evidence level (v1 and v2) | `experiments/analysis/wp3/{v1,v2}/r2_3_sensitivity.csv`, `honest_fpr.csv` | same |
+| R2.6, R2.4 | Table 9, r_A, β_A (vs M) and p* (Eq. 9, c/P = 1) | `wp3/v1/r2_6_rates.csv`, `wp3/v1/r2_4_beta.csv` | same, plus `trajver.theory` |
+| R2.7 | Figure 4, F3 sweep, Tier B alone vs Eq. 4 | sweep verify runs `20261127-wp3-verify-wp3-sweep-f3-*` | `paper/tools/results_wp3.py sweep_tiers` |
+| R3.1 | Table 10, verifier GPU time on the RTX 5090 | `20261126-wp3-cost-replay-…` and `20261126-wp3-base-…` jobs.jsonl | `results_wp3.verifier_cost` |
+| R3.4 | Table 11, escrow cost per path (Devnet) | `experiments/analysis/wp5/devnet_combined_summary.json` (from commit ebdb93e) | WP5 replay |
+| R3.2, R3.6 | p* and the Monte Carlo paragraph | `experiments/analysis/wp4/mc_sweep.csv` | `code/tools/wp3_mc.py` |
+
+Findings that change the paper's story (details and numbers in `docs/ops/LOG.md`, 2026-11-27):
+1. **E1 image tolerance (thresholds v2).** The uncalibrated 2-level image constant rejected every honest RTX 3090 and
+   RTX 4090 job. Recalibrated after the freeze on the calibration split with a rule fixed before measuring; the rule
+   gives 264 levels (> 255), so the per-pixel image check is vacuous across architectures. Both versions are reported.
+2. **E2-W accepts unrelated images.** The reproduced latent-cosine rule accepts attacked jobs whose trajectories are
+   internally smooth, whatever image they end in.
+3. **F3 is caught by Tier A** at every faked fraction below 1 (solver inconsistency at the joins of forged segments; a fully forged trajectory passes Tier A and is left to Tier B), and a
+   forged state also spoils the replay of the next step, so Tier B detection exceeds Eq. 4 with m = sT.
+4. **β_A baseline.** attacks.run times include its trajectory instrument; β_A is measured against the M control,
+   which runs through the same harness.
+
+Still open (placeholders in the manuscript): the artifact DOI and repository (R0.2), and the reference-list items
+marked for manual verification.

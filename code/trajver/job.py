@@ -92,9 +92,12 @@ def canonical_sigmas(model, scheduler: str, steps: int, sampler_name: str, denoi
 
 
 def sample_and_record(model, noise, latent, positive, negative, cfg: float, sampler_name: str,
-                      sigmas: torch.Tensor, seed: int, allow_nondeterministic: bool = False):
+                      sigmas: torch.Tensor, seed: int, allow_nondeterministic: bool = False,
+                      sampler_function=None):
     """``comfy.sample.sample`` with trajectory recording. Shared by Pipeline.run and the node.
 
+    ``sampler_function`` replaces the stock sampler loop (a k-diffusion style function, as ComfyUI's
+    KSAMPLER takes it); used by the realistic forgers, which run the model only at their computed steps.
     Returns (output-space samples, Trajectory without job metadata).
     """
     import comfy.model_management as mm
@@ -103,7 +106,8 @@ def sample_and_record(model, noise, latent, positive, negative, cfg: float, samp
     if sampler_name not in DETERMINISTIC_SAMPLERS and not allow_nondeterministic:
         raise ValueError(f"sampler {sampler_name!r} draws per-step noise on the GPU; not allowed (doc 06 §1.1)")
     rec: dict = {"xs": [], "Ds": []}
-    sampler = comfy.samplers.sampler_object(sampler_name)
+    sampler = (comfy.samplers.KSAMPLER(sampler_function) if sampler_function is not None
+               else comfy.samplers.sampler_object(sampler_name))
     inner = sampler.sampler_function
 
     def recording_sampler(model_k, x, sigmas_dev, *args, **kwargs):
@@ -207,10 +211,11 @@ class Pipeline:
 
     # ----------------------------------------------------------- recording path
     def run(self, spec: JobSpec, sigmas: torch.Tensor | None = None,
-            allow_nondeterministic: bool = False) -> tuple[torch.Tensor, Trajectory]:
+            allow_nondeterministic: bool = False, sampler_function=None) -> tuple[torch.Tensor, Trajectory]:
         """Run the job; return (output-space samples, recorded trajectory).
 
-        ``sigmas`` overrides the schedule (used by attack A1 to run fewer steps).
+        ``sigmas`` overrides the schedule (used by attack A1 to run fewer steps); ``sampler_function``
+        replaces the sampler loop (the realistic forgers of trajver.attacks.forgeries).
         """
         import comfy.sample
 
@@ -220,7 +225,7 @@ class Pipeline:
         if sigmas is None:
             sigmas = self.schedule(spec)
         samples, traj = sample_and_record(self.model, noise, latent, pos, neg, spec.cfg, spec.sampler, sigmas,
-                                          spec.seed, allow_nondeterministic)
+                                          spec.seed, allow_nondeterministic, sampler_function)
         traj.job = self.job_record(spec)
         return samples, traj
 

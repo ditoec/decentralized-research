@@ -65,7 +65,10 @@ KS = (1, 2, 3, 5, 8)
 S_ATTACKS = {"F1", "F2", "F3", "A6"}
 # (attack field, honest field). attacks.run records t_compute_s (sampling + forging, no decode); pilot gen records
 # t_sample_s, t_decode_s and t_total_s (= both). The first pair is the WP3 rule (beta_A = 1 - t_compute/t_sample).
-TIME_FIELDS = (("t_compute_s", "t_sample_s"), ("t_compute_s", "t_compute_s"), ("t_total_s", "t_total_s"))
+# preferred first: the same field on both sides (sampling incl. trajectory capture; attacks.run records it since
+# 2026-11-27); the older pairs remain for runs made before that
+TIME_FIELDS = (("t_sample_s", "t_sample_s"), ("t_compute_s", "t_sample_s"), ("t_compute_s", "t_compute_s"),
+               ("t_total_s", "t_total_s"))
 WARN: list[str] = []
 
 
@@ -416,6 +419,19 @@ def table_beta(attacked: list[Run], honest: list[Run], n_boot: int) -> list[list
             ht[(h.model, h.provider)][job].append((r, h.source_id))
     for (attack, s, model, prov), rs in group(attacked, lambda r: (r.attack, r.s, r.model, r.provider)).items():
         at = [(job, r, a.source_id) for a in rs for job, r in timing(a).items()]
+        if at and all("t_honest_sample_s" in r and "t_sample_s" in r for _, r, _ in at):
+            # paired in one process (attacks.run --pair-honest): the honest generation of the same job, timed on
+            # the same field right before or after the attack, alternating per job
+            ta = [float(r["t_sample_s"]) for _, r, _ in at]
+            th_ = [float(r["t_honest_sample_s"]) for _, r, _ in at]
+            beta = [1 - x / y for x, y in zip(ta, th_)]
+            clusters = [r.get("prompt_id", job.split("_")[0]) for job, r, _ in at]
+            lo, hi = cluster_bootstrap_median(beta, clusters, n_boot=n_boot)
+            ids_ = ";".join(sorted({sid for _, _, sid in at if sid}))
+            out.append([attack, fmt_s(s), model, prov, len(at), statistics.median(beta), lo, hi,
+                        statistics.median(ta), statistics.median(th_), "t_sample_s/t_honest_sample_s (paired)", n_boot,
+                        ids_, ids_])
+            continue
         hj = ht.get((model, prov), {})
         matched = [(job, r, sid, hj[job]) for job, r, sid in at if job in hj]
         if not matched:

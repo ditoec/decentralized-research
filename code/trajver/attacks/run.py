@@ -110,6 +110,12 @@ def main(argv=None):
     ap.add_argument("--run-cfg", type=float, default=None, help="A3: cfg actually used (Turbo: 0 -> 1.0)")
     ap.add_argument("--cheap-sampler", default="euler", help="A4: sampler actually run")
     ap.add_argument("--s", type=float, default=0.5, help="F1-F3, A6: fraction of faked steps")
+    ap.add_argument("--forger", choices=["transform", "realistic"], default="transform",
+                    help="F1-F3: 'transform' edits an honest trajectory (WP3 of 2026-11-26); 'realistic' runs the model "
+                         "only at computed steps from its own states (forgeries.realistic_euler; Euler only)")
+    ap.add_argument("--pair-honest", action="store_true",
+                    help="also time an honest generation of the same claimed job in this process (beta_A on one "
+                         "timer; order alternates per job). Not for A2, whose flags change the whole process")
     ap.add_argument("--prompts", required=True)
     ap.add_argument("--seeds", default="0")
     ap.add_argument("--limit", type=int, default=0)
@@ -127,7 +133,12 @@ def main(argv=None):
     from .. import manifest
     from ..job import JobSpec, Pipeline, sha256_file
     from ..pilot import read_prompts, save_png, sync
-    from .forgeries import f1_copy, f2_interpolate, f3_invert, faked_steps, write_labels
+    from .forgeries import f1_copy, f2_interpolate, f3_invert, faked_steps, realistic_euler, write_labels
+    if a.pair_honest and a.attack == "A2":
+        raise SystemExit("--pair-honest: A2's flags apply to the whole process, so its honest pair would not be "
+                         "honest; time A2 against a pilot gen run on the same card (t_sample_s)")
+    if a.forger == "realistic" and a.sampler != "euler":
+        raise SystemExit("--forger realistic implements the Euler sampler only")
 
     prompts = read_prompts(a.prompts)[: a.limit or None]
     all_prompts = read_prompts(a.prompts)
@@ -139,7 +150,8 @@ def main(argv=None):
                           claimed={"steps": a.steps, "cfg": a.cfg, "sampler": a.sampler, "resolution": f"{res}x{res}"},
                           actual={"flags": a.flags, "cheap_ckpt": a.cheap_ckpt and Path(a.cheap_ckpt).name,
                                   "lora": a.lora and Path(a.lora).name, "run_steps": a.run_steps,
-                                  "cheap_sampler": a.cheap_sampler, "s": a.s},
+                                  "cheap_sampler": a.cheap_sampler, "s": a.s,
+                                  "forger": a.forger, "pair_honest": a.pair_honest},
                           seeds=seeds, prompt_set={"file": Path(a.prompts).name, "n": len(prompts)})
     pipe = Pipeline(a.ckpt, sha)  # the claimed model: its CLIP gives the claimed conditioning, its VAE decodes
     cheap = None
@@ -158,6 +170,7 @@ def main(argv=None):
     rows_path = d / "jobs.jsonl"
     done = {json.loads(l)["job"] for l in rows_path.read_text().splitlines() if l.strip()} if rows_path.exists() else set()
     rng = random.Random(20261124)
+    njob = len(done)
     with open(rows_path, "a") as rows:
         for pid, prompt in prompts:
             for seed in seeds:
@@ -167,62 +180,97 @@ def main(argv=None):
                 claimed = JobSpec(prompt=prompt, negative=a.negative, seed=seed, steps=a.steps, cfg=a.cfg,
                                   sampler=a.sampler, width=res, height=res)
                 label: dict = {"claimed": claimed.to_dict()}
+                njob += 1
+                tt = {"sample": 0.0}
+
+                def G(fn, *args, **kw):  # time a generation call (sampling incl. trajectory capture), as pilot gen
+                    sync()
+                    t = time.perf_counter()
+                    out = fn(*args, **kw)
+                    sync()
+                    tt["sample"] += time.perf_counter() - t
+                    return out
+
+                def honest_pair() -> float:
+                    sync()
+                    t = time.perf_counter()
+                    pipe.run(claimed)
+                    sync()
+                    return time.perf_counter() - t
+
+                honest_first = a.pair_honest and njob % 2 == 0
+                t_honest = honest_pair() if honest_first else None
                 sync()
                 t0 = time.perf_counter()
                 img = None
                 if a.attack in ("A1a", "A1b"):
                     run = replace(claimed, steps=a.run_steps)
-                    samples, traj = pipe.run(run)
+                    samples, traj = G(pipe.run, run)
                     if a.attack == "A1b":
                         traj = relabel_schedule(traj, pipe.schedule(claimed), a.sampler)
                 elif a.attack == "A3":
                     assert cheap is not None
                     run = replace(claimed, steps=a.run_steps, cfg=a.run_cfg if a.run_cfg is not None else claimed.cfg)
-                    samples, traj = cheap.run(run)
+                    samples, traj = G(cheap.run, run)
                     traj = relabel_schedule(traj, pipe.schedule(claimed), a.sampler)
                 elif a.attack == "A4":
-                    samples, traj = pipe.run(replace(claimed, sampler=a.cheap_sampler))
+                    samples, traj = G(pipe.run, replace(claimed, sampler=a.cheap_sampler))
                     traj.sigmas = pipe.schedule(claimed)
                     traj = resolve_all_D(traj, a.sampler)
                 elif a.attack == "A5":
                     half = replace(claimed, width=res // 2, height=res // 2)
-                    samples, traj = pipe.run(half)
+                    samples, traj = G(pipe.run, half)
                     small = pipe.decode(samples)
                     img = torch.nn.functional.interpolate(small.permute(0, 3, 1, 2), scale_factor=2, mode="bicubic",
                                                           align_corners=False).clamp(0, 1).permute(0, 2, 3, 1)
                 elif a.attack == "A6":
-                    samples, traj = pipe.run(claimed)
+                    samples, traj = G(pipe.run, claimed)
                     faked = faked_steps(traj.T, a.s, rng, pattern="tail")
                     traj = f3_invert(traj, faked, a.sampler)
                     label["faked"] = faked
                 elif a.attack == "A7":
                     other = near_duplicate(prompt, rng)
-                    samples, traj = pipe.run(replace(claimed, prompt=other))
+                    samples, traj = G(pipe.run, replace(claimed, prompt=other))
                     label["actual_prompt"] = other
                 elif a.attack == "A8":
                     opid, oprompt = rng.choice([x for x in all_prompts if x[0] != pid])
-                    samples, traj = pipe.run(replace(claimed, prompt=oprompt, seed=seed + 1000))
+                    samples, traj = G(pipe.run, replace(claimed, prompt=oprompt, seed=seed + 1000))
                     label["actual_prompt_id"] = opid
+                elif a.attack in ("F1", "F2", "F3") and a.forger == "realistic":
+                    faked = faked_steps(a.steps, a.s, rng)
+                    samples, traj = G(pipe.run, claimed, sampler_function=realistic_euler(a.attack, faked))
+                    label["faked"] = faked
+                    label["forger"] = "realistic"
                 elif a.attack in ("F1", "F2", "F3"):
-                    samples, traj = pipe.run(claimed)
+                    samples, traj = G(pipe.run, claimed)
                     faked = faked_steps(traj.T, a.s, rng)
                     traj = {"F1": f1_copy(traj, faked), "F2": f2_interpolate(traj, faked),
                             "F3": f3_invert(traj, faked, a.sampler)}[a.attack]
                     label["faked"] = faked
                 else:  # A2 (flags), M
-                    samples, traj = pipe.run(claimed)
+                    samples, traj = G(pipe.run, claimed)
+                sync()
                 sync()
                 t_compute = time.perf_counter() - t0
+                td0 = time.perf_counter()
                 if img is None:
                     if a.attack in ("A1b", "A3", "A4", "A6", "F1", "F2", "F3"):
                         # deliver the image of the committed final state, so E1(c) is consistent
                         samples = pipe.model.model.process_latent_out(traj.x_final.float().to(pipe.model.load_device)).cpu()
                     img = pipe.decode(samples)
+                sync()
+                t_decode = time.perf_counter() - td0
+                if a.pair_honest and not honest_first:
+                    t_honest = honest_pair()
                 traj.job = pipe.job_record(claimed)
                 if a.attack == "M":
                     traj.job["device"] = "NVIDIA GeForce RTX 5090 (claimed)"
                     label["falsified"] = {"device": traj.job["device"]}
+                # t_sample_s: generation calls only (same field as pilot gen's t_sample_s); t_forge_s: the rest of
+                # the attack before decoding (schedule relabelling, D re-solving, trajectory edits)
                 row = {"job": key, "prompt_id": pid, "seed": seed, "attack": a.attack, "t_compute_s": t_compute,
+                       "t_sample_s": tt["sample"], "t_forge_s": t_compute - tt["sample"], "t_decode_s": t_decode,
+                       **({"t_honest_sample_s": t_honest, "honest_first": honest_first} if a.pair_honest else {}),
                        "image_sha256": save_png(Pipeline.to_uint8(img), d / "raw" / "images" / f"{key}.png"),
                        "merkle_root": traj.save(d / "raw" / "traj" / f"{key}.safetensors")}
                 (d / "raw" / "labels").mkdir(exist_ok=True)

@@ -1234,8 +1234,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "checksums.", "decl")
     D("Funding")
     Para("{T|state funder, award number and grant recipient, or:} Funding information is not available.", "decl")
-    ACK = ("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required "
-           "by the journal}")
+    ACK = ("{T|acknowledgements, up to 100 words; ESJ's AI policy requires a GenAI disclosure here (tool, version, "
+           "purpose) and a paragraph in Methods: drafts in docs/15-declarations-for-authors.md}")
     if strip_notes(ACK):  # the section appears once it has text beyond the authoring note
         D("Acknowledgements")
         Para(ACK, "decl")

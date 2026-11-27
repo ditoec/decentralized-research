@@ -9,7 +9,7 @@ For: the paper authors and the tech team. This is a review of the Results the te
 | Bit-identity by level: identical within one GPU model (L0, L2), never across chips or generations (L3, L4) | §4-1, Table 6 | `experiments/analysis/wp2/fig_r1_5_levels.csv` |
 | Software factors on one unit: precision and attention change every image, deterministic mode changes none | §4-1, Factors | same file, `factor` column |
 | Per-step honest deviation, falls about 100× over the steps, same profile for all three x86 → Spark pairs | §4-1, Figure 3 | `wp2/fig_r1_4_steps.csv` |
-| Deployed rules fail: E2-W accepted ≥ 90% of every attack condition, including unrelated images; E0-N accepted 64–70% of A1, A2 and F1–F3 and rejected 0.4% of honest jobs | §4-2, Table 7 | `wp3/v1/r2_5_acceptance.csv` |
+| Deployed rules fail: E2-W accepted ≥ 90% of every attack condition, including unrelated images; E0-N accepted 69–70% of A1 and A2 and 19% of the realistic F2 and F3, and rejected 0.4% of honest jobs | §4-2, Table 7 | `wp3/v1/r2_5_acceptance.csv` |
 | E2-H at k = 1 rejects ≥ 95% of A1, A2, A3 (Turbo, LCM-LoRA) and A8, at an honest false-rejection rate of 1.2% (CI 0.8–1.8%) on 1,800 cross-GPU test jobs | §4-2, Table 8 | `wp3/v2/r2_3_sensitivity.csv`, `honest_fpr.csv` |
 | E1 image tolerance: the uncalibrated 2-level constant rejected every honest RTX 3090/4090 job; recalibrated post-freeze (v2), both versions reported | §4-2 | `wp3/v1`, `wp3/v2`, `docs/ops/LOG.md` |
 | Per-step separability r_A ≥ 50% for every condition at k = 1 | §4-2, Table 9 (r_A column) | `wp3/v1/r2_6_rates.csv` |

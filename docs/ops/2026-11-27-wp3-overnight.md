@@ -68,6 +68,17 @@ On Spark-3 (where the re-run is), copy over from Spark-5:
 
 Run `ITEMS=verify NODE=spark3 TH=../experiments/configs/thresholds_v1_sdxl_euler.json RERUN=<rerun id> RUNS="<runs>"`. Verify the sweep runs where they are; E2-H only is enough for R2.7, so `compare` there may fail harmlessly.
 
+## S7b. thresholds_v2 (E1 image tolerance; operator's approval at 04:20 UTC 2026-11-27)
+- **Rule, fixed before measuring:** `image_max_abs` = 2 × the largest honest calibration-split |decoded − delivered|, pooled over the 3 cards; everything else as in v1.
+- **Calibration measurement:** `trajver.e1img measure --cal-only` on Spark-1, run `20261127-wp3-e1img-cal-spark1-01`, one file per card.
+- **When all three files are complete** (600 rows each):
+  1. fetch them and sanitize;
+  2. `python -m trajver.e1img freeze --base experiments/configs/thresholds_v1_sdxl_euler.json --rows <3 files> --out experiments/configs/thresholds_v2_sdxl_euler.json`;
+  3. commit and push before the analysis uses it.
+- **Patch inputs:** the same measurement on every verified run: the honest test runs on Spark-3 (`20261127-wp3-e1img-test-spark3-01`), and on each pulled attack run and sweep run wherever it is verified.
+- **Patch:** `e1img patch <verify>/verdicts.jsonl --rows ... --thresholds v2 --out <verify>/verdicts_v2.jsonl`.
+- **Reporting:** the analysis reports E1 under v1 and v2; v2 is labelled as post-freeze and calibration-only.
+
 ## S8. Analysis and paper
 1. Fetch the verify outputs, the pod timing metadata and the sweep metadata; sanitize them.
 2. `python -m trajver.analysis_wp3 ... --baseline <base run>` writes the R2 tables and `fig_r2_7_partial.csv`.

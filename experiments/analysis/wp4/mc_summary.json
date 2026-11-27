@@ -2,12 +2,12 @@
  "provisional": false,
  "note": "WP4 params from the WP3 measurements (experiments/analysis/wp3/v1); c/P = 1 is a design assumption.",
  "params_file": "/Users/ekkirinaldi/Documents/Git/thesis-anjasmaradita-gpu/.claude/worktrees/project-analysis-91bc76/experiments/analysis/wp4/mc_params_wp3.json",
- "params_sha256": "c4b0ad3e988ace9cefee38fc327161fb9948686ce554ad33ac5574c203c4dcb7",
- "git_commit": "d0f22fce46def03aa9c5d39c24a11330cad3fdb8",
+ "params_sha256": "4535dd26610c18998238ce6b01cacf4cb54611740ed2f711fdfe1c3903f50ce9",
+ "git_commit": "f647f14c8bba4770e58687db7aeff9653e151337",
  "numpy": "2.5.5",
  "rng": "numpy.random.default_rng (PCG64)",
  "n_rows": 13200,
- "wall_s": 20.71,
+ "wall_s": 21.4,
  "seed": 20261126,
  "n_sim": 20000,
  "T": 30,
@@ -88,7 +88,7 @@
     "beta_A": {
      "value": 0.30981273940245946,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -101,7 +101,7 @@
     "beta_A": {
      "value": 0.0,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_sample_s (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -114,7 +114,7 @@
     "beta_A": {
      "value": 0.7624711115848354,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -127,7 +127,7 @@
     "beta_A": {
      "value": 0.8845279990886049,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -140,7 +140,7 @@
     "beta_A": {
      "value": 0.0,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -151,9 +151,9 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f1-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f1-sdxl-"
     },
     "beta_A": {
-     "value": 0.5,
+     "value": 0.4710842401074069,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -164,9 +164,9 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f2-sdxl-"
     },
     "beta_A": {
-     "value": 0.5,
+     "value": 0.47380455885590034,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    },
    {
@@ -177,9 +177,9 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f3-sdxl-"
     },
     "beta_A": {
-     "value": 0.5,
+     "value": 0.4719095274621301,
      "provisional": false,
-     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+     "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
     }
    }
   ],

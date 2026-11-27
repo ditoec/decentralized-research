@@ -18,10 +18,16 @@
   "20261127-wp3-verify-wp3-atkr-f2-sdxl-euler-rtx5090-01-on-spark5",
   "20261127-wp3-verify-wp3-atkr-f3-sdxl-euler-rtx5090-01-on-spark6"
  ],
- "sweep": [],
+ "sweep": [
+  "20261127-wp3-verify-wp3-sweepr-f3-s010-sdxl-euler-spark1-01-on-spark4",
+  "20261127-wp3-verify-wp3-sweepr-f3-s025-sdxl-euler-spark1-01-on-spark6",
+  "20261127-wp3-verify-wp3-sweepr-f3-s050-sdxl-euler-spark1-01-on-spark1",
+  "20261127-wp3-verify-wp3-sweepr-f3-s075-sdxl-euler-spark5-01-on-spark5",
+  "20261127-wp3-verify-wp3-sweepr-f3-s100-sdxl-euler-spark6-01-on-spark6"
+ ],
  "compare_files": [
   "20261126-wp3-rerun-sdxl-euler-spark3-01"
  ],
- "partial": true,
+ "partial": false,
  "warnings": []
 }

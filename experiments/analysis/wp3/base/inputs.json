@@ -10,6 +10,6 @@
  "compare_files": [
   "20261126-wp3-rerun-sdxl-euler-spark3-01"
  ],
- "partial": true,
+ "partial": false,
  "warnings": []
 }

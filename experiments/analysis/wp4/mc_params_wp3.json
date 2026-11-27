@@ -47,7 +47,7 @@
    "beta_A": {
     "value": 0.30981273940245946,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -60,7 +60,7 @@
    "beta_A": {
     "value": 0.0,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_sample_s (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -73,7 +73,7 @@
    "beta_A": {
     "value": 0.7624711115848354,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -86,7 +86,7 @@
    "beta_A": {
     "value": 0.8845279990886049,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -99,7 +99,7 @@
    "beta_A": {
     "value": 0.0,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -110,9 +110,9 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f1-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f1-sdxl-"
    },
    "beta_A": {
-    "value": 0.5,
+    "value": 0.4710842401074069,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -123,9 +123,9 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f2-sdxl-"
    },
    "beta_A": {
-    "value": 0.5,
+    "value": 0.47380455885590034,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   },
   {
@@ -136,9 +136,9 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f3-sdxl-"
    },
    "beta_A": {
-    "value": 0.5,
+    "value": 0.4719095274621301,
     "provisional": false,
-    "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    "source": "WP3 r2_4_beta.csv, t_sample_s/t_honest_sample_s (paired) (negative medians floored at 0: no saving)"
    }
   }
  ],

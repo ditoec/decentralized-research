@@ -556,7 +556,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
              "An analytical model: an output-only detection ceiling, the detection probability of step spot checks under "
              "partial cheating, and a proof that a rational provider’s best response is all-or-nothing, which gives a "
              "closed-form deterrence condition and a cost-optimal sampling policy.",
-             "An open artifact with code, data and frozen thresholds (https://github.com/ditoec/decentralized-research; {R|R0.2: Zenodo DOI})."])
+             "An open artifact with code, data and frozen thresholds (https://github.com/ditoec/decentralized-research; doi:10.5281/zenodo.24581118)."])
     Para("In short: " + RW.narr_r29() + " Section 2 reviews related work, Section 3 describes "
          "the materials and methods, Section 4 reports and discusses the results, and Section 5 concludes.")
 
@@ -1157,7 +1157,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "P.Y.; project administration, A.R.M. All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
     H2("6-2- Data Availability Statement")
-    Para("The data presented in this study are openly available in the GitHub repository https://github.com/ditoec/decentralized-research, archived at {R|R0.2: Zenodo DOI}. They "
+    Para("The data presented in this study are openly available in the GitHub repository https://github.com/ditoec/decentralized-research, archived at doi:10.5281/zenodo.24581118. They "
          "include code, workflow fingerprints, frozen thresholds, trajectories (or a sample, if storage limits apply) and "
          "checksums.", "decl")
     H2("6-3- Funding")

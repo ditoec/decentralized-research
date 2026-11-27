@@ -475,8 +475,7 @@ ABSTRACT = (
  + RW.abstract_findings() + ". "
  "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
  "and that under step spot checks a rational provider cheats either fully or not at all. This yields a closed-form "
- "deterrence condition and a cost-optimal sampling policy. {R|NEEDS WORK: the forgery results and the cost saving "
- "β_A are being re-measured; update the Findings sentence afterwards}"
+ "deterrence condition and a cost-optimal sampling policy."
 )
 
 
@@ -1052,8 +1051,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "concentrate on jobs that fail against all three cards (6 jobs, against 1 on the calibration split), which "
          "points to the DGX Spark reference images, regenerated for the test split in a separate run, or to a few "
          "prompts. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
-         "them bit for bit with the calibration references, to tell the two causes apart} {R|NEEDS WORK: the F1–F3 rows of Tables 7 and 8 come from forgeries of an honest trajectory "
-         "(see Partial faking) and will change when F1–F3 are regenerated}")
+         "them bit for bit with the calibration references, to tell the two causes apart}")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
           ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
@@ -1067,14 +1065,17 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            image="fig_r2_7_partial.png" if part else None)
     Para("{b|Per-step separability and cost share.} Table 9 gives, for each attack, the per-step separability r{sub|A} "
          "(the share of faked checked steps whose distance exceeds τ{sub|i}), the share of GPU time the attack saves "
-         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} compares each attacked job "
-         "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
-         "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
-         "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
-         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), as in the "
-         "pilot. The negative β{sub|A} of A1b and of the control M, however, are a measurement artefact: the attacked "
-         "jobs were timed over the whole attack harness, including forging and hashing, and the honest jobs over "
-         "sampling only, so M, which computes honestly, appears 13% slower. " + '{R|NEEDS WORK: β_A must be re-measured on the same timing field for attack and honest jobs}. ' + RW.narr_r28())
+         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} is measured in a second session "
+         "on a rented RTX 5090: each attacked job is timed against an honest generation of the same job in the same "
+         "process, in alternating order, on the same timer (sampling including trajectory capture), and A2 against an "
+         "honest run of the same jobs on the same card; the first job of each run is a warm-up and is dropped. The "
+         "controls M and A8, which compute a full honest job, come out at zero, as they should; A2 ran slower than "
+         "honest generation on this card (its fp8 weights are converted at run time) and saves nothing. "
+         + ("Pairing within one process matters: honest sampling of the same job set took {:.1f} s (median) on this "
+            "host and {:.1f} s on the first session's RTX 5090 host. ".format(*RW.host_sampling())
+            if RW.host_sampling() else "")
+         + "For the forgers, which fake a share s of the steps, p* uses Equation 4's detection "
+         "q(s, k) rather than the full-job term 1 − (1 − r{sub|A}){sup|k}. " + RW.narr_r28())
     Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
           "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
           ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],

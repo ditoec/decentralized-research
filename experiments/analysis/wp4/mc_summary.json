@@ -2,12 +2,12 @@
  "provisional": false,
  "note": "WP4 params from the WP3 measurements (experiments/analysis/wp3/v1); c/P = 1 is a design assumption.",
  "params_file": "/Users/ekkirinaldi/Documents/Git/thesis-anjasmaradita-gpu/.claude/worktrees/project-analysis-91bc76/experiments/analysis/wp4/mc_params_wp3.json",
- "params_sha256": "1571ab2b416d458a1fde992e0e83db265302da3f2f223e704c8b6b846945c969",
- "git_commit": "1aa56909168f9ef4fcb56850c75e4ddf31a9fb9c",
+ "params_sha256": "c4b0ad3e988ace9cefee38fc327161fb9948686ce554ad33ac5574c203c4dcb7",
+ "git_commit": "d0f22fce46def03aa9c5d39c24a11330cad3fdb8",
  "numpy": "2.5.5",
  "rng": "numpy.random.default_rng (PCG64)",
  "n_rows": 13200,
- "wall_s": 21.27,
+ "wall_s": 20.71,
  "seed": 20261126,
  "n_sim": 20000,
  "T": 30,
@@ -27,13 +27,13 @@
  "checks": {
   "prop2_eq4_inside_wilson95": {
    "n": 13200,
-   "inside": 11145,
-   "max_abs_diff": 0.012637352835943805
+   "inside": 11551,
+   "max_abs_diff": 0.012689071516183148
   },
   "prop3_eq8_at_s1": {
-   "agree": 1185,
+   "agree": 1191,
    "disagree": 0,
-   "inconclusive_near_boundary": 15,
+   "inconclusive_near_boundary": 9,
    "disagreements": []
   },
   "prop3_interior_maximum_cells": 0,
@@ -86,7 +86,7 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a1b-sdxl-"
     },
     "beta_A": {
-     "value": 0.0,
+     "value": 0.30981273940245946,
      "provisional": false,
      "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
     }
@@ -112,7 +112,7 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3lcm-s"
     },
     "beta_A": {
-     "value": 0.3235167193721803,
+     "value": 0.7624711115848354,
      "provisional": false,
      "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
     }
@@ -125,7 +125,7 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3tur"
     },
     "beta_A": {
-     "value": 0.48717860958870196,
+     "value": 0.8845279990886049,
      "provisional": false,
      "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
     }
@@ -138,7 +138,7 @@
      "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a8-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a8-sdxl-eu"
     },
     "beta_A": {
-     "value": 0.011854089578578364,
+     "value": 0.0,
      "provisional": false,
      "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
     }
@@ -148,7 +148,7 @@
     "r_A": {
      "value": 1.0,
      "provisional": false,
-     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f1-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f1-sdxl-eu"
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f1-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f1-sdxl-"
     },
     "beta_A": {
      "value": 0.5,
@@ -159,9 +159,9 @@
    {
     "name": "F2",
     "r_A": {
-     "value": 1.0,
+     "value": 0.9974683544303797,
      "provisional": false,
-     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f2-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f2-sdxl-eu"
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f2-sdxl-"
     },
     "beta_A": {
      "value": 0.5,
@@ -172,9 +172,9 @@
    {
     "name": "F3",
     "r_A": {
-     "value": 1.0,
+     "value": 0.9974683544303797,
      "provisional": false,
-     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f3-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f3-sdxl-eu"
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f3-sdxl-"
     },
     "beta_A": {
      "value": 0.5,

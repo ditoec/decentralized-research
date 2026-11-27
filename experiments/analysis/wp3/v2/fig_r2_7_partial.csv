@@ -1,1 +1,1 @@
-attack,s,k,n_jobs,n_detected,alpha_s,r_measured,alpha_s_source,model,sampler,run_ids
+attack,s,k,n_jobs,n_detected,alpha_s,r_measured,alpha_s_source,model,sampler,run_ids,partial

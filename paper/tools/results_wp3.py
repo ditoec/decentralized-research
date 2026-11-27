@@ -166,17 +166,36 @@ def table_deterrence() -> list[list[str]]:
                   f"{float(b['beta_median']):.2f} ({float(b['beta_ci_lo']):.2f}–{float(b['beta_ci_hi']):.2f})"
                   if b and b.get("beta_median") not in (None, "") else ph("R2.4"))]
         for k, bp in [(1, 0.0), (1, 1.0), (3, 1.0)]:
-            rk = ra.get(key, {}).get(k)
-            if rk and b and b.get("beta_median") not in (None, "") and k in a_s:
-                if float(b["beta_median"]) <= 0:
-                    cells.append("none needed")
-                    continue
-                p = theory.p_star(k, [(float(b["beta_median"]), float(rk["rate"]))], a_s[k], 1.0, bp, 1.0)
-                cells.append("∞" if math.isinf(p) else ("> 1" if p > 1 else f"{p:.3f}"))
-            else:
-                cells.append(ph("R3.2"))
+            p = pstar_attack(key, k, bp)
+            cells.append(ph("R3.2") if p is None else "none needed" if p == "none" else
+                         "∞" if math.isinf(p) else ("> 1" if p > 1 else f"{p:.3f}"))
         out.append([label] + cells)
     return out
+
+
+S_OF = {"F1": 0.5, "F2": 0.5, "F3": 0.5}  # faked share of the evaluated forgery runs (attacks.run --s)
+
+
+def pstar_attack(key: str, k: int, bp: float, c_over_p: float = 1.0):
+    """Equation 9 for one attack at k checked steps: p* = beta c / ((q - alpha_job)(P + B)), with q = Equation 4's
+    q(s, k) for a forger that fakes a share s (F1-F3), and 1 - (1 - r_A)^k for an attack that alters every step.
+    Returns None when an input is missing, 'none' when the attack saves nothing, inf when the margin is <= 0."""
+    ra, be = rates(), beta()
+    a = ra.get("honest", {}).get(k)
+    r = ra.get(key, {}).get(k)
+    b = be.get(key)
+    if a is None or r is None or not b or b.get("beta_median") in (None, ""):
+        return None
+    beta_ = float(b["beta_median"])
+    if beta_ <= 0:
+        return "none"
+    al, rr = float(a["rate"]), float(r["rate"])
+    if key in S_OF:
+        q = theory.q_spot_check(30, round(S_OF[key] * 30), k, rr, al)
+    else:
+        q = 1 - (1 - rr) ** k
+    margin = q - theory.alpha_job(al, k)
+    return math.inf if margin <= 0 else beta_ * c_over_p / (margin * (1 + bp))
 
 
 def partial() -> list[dict]:
@@ -375,33 +394,30 @@ def narr_r27() -> str:
 
 
 def narr_r32() -> str:
-    ra, be = rates(), beta()
-    a_s = {k: float(v["rate"]) for k, v in ra.get("honest", {}).items()}
+    """p* over the attack conditions with a positive saving, per k (Equation 9 with Equation 4's q for forgers)."""
     out = []
-    for k in (1, 3, 8):
-        atks = [(float(be[a]["beta_median"]), float(ra[a][k]["rate"])) for a, _ in ATTACKS
-                if a != "M" and a in be and k in ra.get(a, {}) and be[a].get("beta_median") not in ("", None)
-                and float(be[a]["beta_median"]) > 0]
-        if atks and k in a_s:
-            out.append((k, theory.p_star(k, atks, a_s[k], 1.0, 1.0, 1.0), len(atks)))
+    for k in (1, 2, 3, 5, 8):
+        ps = {key: pstar_attack(key, k, 1.0) for key, _ in ATTACKS if key != "M"}
+        ps = {key: v for key, v in ps.items() if isinstance(v, float)}
+        if ps:
+            worst = max(ps, key=ps.get)
+            out.append((k, ps[worst], worst, len(ps)))
     if not out:
         return ph("R3.2: best k, p*, required bond ratio, and agreement between theory and measurement")
+    best = min(out, key=lambda t: t[1])
     s = ("With a bond equal to the payment (B/P = 1) and the conservative cost ratio c/P = 1, the sampling rate that "
-         "deters every attack condition with a positive cost saving at once (Equation 9) is "
-         + "; ".join(f"p* = {p:.3f} at k = {k}" if not math.isinf(p) else f"infeasible at k = {k}" for k, p, _ in out)
-         + f" ({out[0][2]} attack conditions). ")
-    ps = [p for _, p, _ in out if not math.isinf(p)]
-    if len(ps) > 1 and max(ps) <= 1.05 * min(ps):
-        s += ("p* barely depends on k because the measured per-step separability is already close to 1 at k = 1, so "
-              "further checked steps add honest false rejections rather than detection; one checked step is the "
-              "cost-optimal choice. ")
-    elif len(ps) > 1:
-        s += ("p* " + ("falls" if ps[-1] < ps[0] else "rises") + " with k over the measured range. ")
-    s += "p* scales linearly with c/P and with 1/(1 + B/P). "
-    paired = [a for a, r in be.items() if "paired" in (r.get("time_fields") or "")]
-    if not paired:
-        s += ("{R|NEEDS WORK: p* and the choice of k depend on β_A, which must be re-measured, and on the F1–F3 "
-              "detection rates, which must be regenerated; recompute both before stating them}")
+         f"deters all {out[0][3]} attack conditions with a positive saving at once (Equation 9, with Equation 4's "
+         "detection q(s, k) for the forgers, which fake a share s = 0.5 of the steps) is "
+         + "; ".join(f"p* = {p:.3f} at k = {k} (set by {_lab(w)})" for k, p, w, _ in out)
+         + f". The cost-optimal choice here is k = {best[0]}: ")
+    first = out[0]
+    if best[0] != first[0]:
+        s += (f"one checked step leaves a partial forger undetected about half the time, so it needs p* = {first[1]:.3f}, "
+              f"while k = {best[0]} brings the forgers below the model substitutions and the requirement down to "
+              f"{best[1]:.3f}; more steps add honest false rejections without lowering it. ")
+    else:
+        s += "further checked steps add honest false rejections rather than detection. "
+    s += "p* scales linearly with c/P and with 1/(1 + B/P)."
     return s
 
 
@@ -412,15 +428,12 @@ def sweep_tiers() -> list[dict]:
     out = []
     for tag in ["s010", "s025", "s050", "s075", "s100"]:
         v, partial_run = None, False
-        for node in ("spark1",):  # session 2: the realistic forger's sweep (doc 14 item 2b)
-            c = R_ / f"20261127-wp3-verify-wp3-sweepr-f3-{tag}-sdxl-euler-spark1-01-on-{node}"
-            if (c / "summary.json").exists():
-                v = c
-                break
-        if v is None:  # a run the memory guard aborted: use the jobs it did verify, and say so (partial)
-            c = R_ / f"20261127-wp3-verify-wp3-sweepr-f3-{tag}-sdxl-euler-spark1-01-on-spark1"
-            if (c / "verdicts.jsonl").exists():
-                v, partial_run = c, True
+        cands = sorted(R_.glob(f"20261127-wp3-verify-wp3-sweepr-f3-{tag}-sdxl-euler-*-on-*"))
+        done_ = [c for c in cands if (c / "summary.json").exists()]
+        if done_:
+            v = done_[0]
+        elif cands and (cands[0] / "verdicts.jsonl").exists():  # aborted by a memory guard: partial, said so
+            v, partial_run = cands[0], True
         if v is None:
             continue
         last = {}
@@ -448,6 +461,26 @@ def cost_ratio(k=1):
     return None
 
 
+def forgery_summary() -> dict | None:
+    """F1-F3 (realistic forger, s = 0.5): measured E2-H rejection at k in {1, 3, 8} (v2) beside Equation 4."""
+    sens, ra = _sens("v2"), rates()
+    keys = [k for k in ("F1", "F2", "F3") if (k, "E2-H", "1") in sens]
+    if not keys or not ra.get("honest"):
+        return None
+    out = {"keys": keys, "q": {}, "pred": {}, "tier_a": [float(sens[(k, "E2-H.tierA", "")]["q"]) for k in keys
+                                                         if (k, "E2-H.tierA", "") in sens]}
+    for kk in (1, 3, 8):
+        out["q"][kk] = [float(sens[(k, "E2-H", str(kk))]["q"]) for k in keys]
+        al = float(ra["honest"][kk]["rate"])
+        out["pred"][kk] = [theory.q_spot_check(30, round(S_OF[k] * 30), kk, float(ra[k][kk]["rate"]), al) for k in keys]
+    return out
+
+
+def _rng(v: list[float]) -> str:
+    lo, hi = pc(min(v), 0), pc(max(v), 0)
+    return f"{lo}%" if lo == hi else f"{lo}–{hi}%"
+
+
 def narr_r29() -> str:
     d, q = deployed_summary(), sens_summary("v2", "E2-H", "1")["q"]
     if not q or not d["E2-W"]["n"]:
@@ -461,8 +494,20 @@ def narr_r29() -> str:
             f"Calibrated trajectory evidence does: E2-H with a single checked step rejected at least 95% of the jobs of "
             f"{len(hi)} of {len(att)} model- and step-substitution conditions ({labels(hi)}) at an honest false-rejection "
             f"rate of {pc(f['fpr'])}% on 1,800 jobs from three GPU generations, once the one uncalibrated tolerance (the "
-            "E1 image check) was set from the calibration split. For the trajectory forgeries the measured detection is "
-            "not yet valid. " + NWF + ".")
+            "E1 image check) was set from the calibration split. " + _forgery_sentence())
+
+
+def _forgery_sentence() -> str:
+    fs = forgery_summary()
+    if not fs:
+        return NWF + "."
+    q, pr = fs["q"], fs["pred"]
+    s = (f"Forgeries that fake half of the steps ({labels(fs['keys'])}) were rejected in {_rng(q[1])} of jobs with one "
+         f"checked step, {_rng(q[3])} with three and {_rng(q[8])} with eight, as Equation 4 predicts "
+         f"({_rng(pr[1])}, {_rng(pr[3])} and {_rng(pr[8])})")
+    if fs["tier_a"] and max(fs["tier_a"]) == 0:
+        s += "; Tier A rejected none of them, because each committed state follows from its committed prediction"
+    return s + "."
 
 
 def abstract_findings() -> str:
@@ -478,6 +523,9 @@ def abstract_findings() -> str:
             f"checked step, the proposed check rejected at least 95% of the jobs of {len(hi)} of {len(att)} model- and "
             f"step-substitution conditions at an honest false-rejection rate of {pc(f['fpr'])}% on 1,800 cross-GPU test jobs"
             + (f", at {100 * cr:.0f}% of the GPU time of re-execution" if cr else "")
+            + (". Forgeries that fake half of the steps were caught in {} of jobs with one checked step and {} with "
+               "three, as the spot-check model predicts".format(_rng(forgery_summary()["q"][1]), _rng(forgery_summary()["q"][3]))
+               if forgery_summary() else "")
             + ". Bit-exact reproduction held only within one GPU model, and one uncalibrated image tolerance "
               "rejected every honest cross-architecture job until it was calibrated")
 
@@ -529,6 +577,18 @@ def narr_mc() -> str:
             f"simulated gain matched Equation 7 in {agree:,}.")
 
 
+def _f3_caption(d: dict) -> str:
+    f3 = [t for t in d["tiles"] if t["column"] == "atkr-f3" and "faked" in t]
+    if not f3:
+        return ""
+    early = [t for t in f3 if {0, 1} <= set(t["faked"])]
+    s = "; F3 skips half of the network calls"
+    if early:
+        s += (f", and in the {len(early)} job{'s' if len(early) > 1 else ''} where it skipped the first two steps, it had no "
+              "earlier state to extrapolate from, copied the noise, and never denoised the image")
+    return s
+
+
 def examples_caption() -> str | None:
     """Caption of the qualitative figure, from experiments/analysis/wp3/fig_examples_sources.json."""
     p = A / "wp3" / "fig_examples_sources.json"
@@ -541,6 +601,17 @@ def examples_caption() -> str | None:
             "advance; prompts from PartiPrompts {c|yu2022parti}). The honest DGX Spark and RTX 5090 images are not "
             f"bit-identical (largest per-pixel difference {min(mx)}–{max(mx)} uint8 levels, shown ×10) yet look the "
             "same; A1 and A2 are visually indistinguishable from the honest output"
-            + ("; the realistic F3 forgery keeps the honest composition" if "atkr-f3" in cols else "")
+            + _f3_caption(d)
             + "; A3's images are degraded by the forged schedule; A8 is unrelated. Illustration only: detection rates "
             "are in Tables 7 and 8")
+
+
+def host_sampling() -> tuple[float, float] | None:
+    """Median honest sampling time of the same job set on the two rented RTX 5090 hosts (session 1 base run,
+    session 2 timebase run; first job dropped)."""
+    R_ = ROOT / "experiments" / "runs"
+    a = _jl(R_ / "20261126-wp3-base-sdxl-euler-rtx5090-01" / "jobs.jsonl")[1:]
+    b = _jl(R_ / "20261127-wp3-timebase-sdxl-euler-rtx5090-01" / "jobs.jsonl")[1:]
+    if not a or not b:
+        return None
+    return statistics.median(r["t_sample_s"] for r in b), statistics.median(r["t_sample_s"] for r in a)

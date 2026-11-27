@@ -1,1 +1,1 @@
-attack,s,model,sampler,evidence,k,n_jobs,n_rejected,n_inconclusive,q,q_ci_lo,q_ci_hi,honest_n,honest_rejected,fpr,fpr_ci_hi,fpr_le_1pct,tau_k,pairs,thresholds_version,thresholds_sha256,run_ids,honest_run_ids
+attack,s,model,sampler,evidence,k,n_jobs,n_rejected,n_inconclusive,q,q_ci_lo,q_ci_hi,honest_n,honest_rejected,fpr,fpr_ci_hi,fpr_le_1pct,tau_k,pairs,thresholds_version,thresholds_sha256,run_ids,honest_run_ids,partial

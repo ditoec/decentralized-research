@@ -75,8 +75,11 @@ def main(img_dir: str) -> None:
                 raw = p.read_bytes()
                 arr = np.asarray(Image.open(p).convert("RGB"))
                 imgs[key] = arr
-                sources["tiles"].append({"column": key, "run_id": run, "job": job,
-                                         "png_sha256": hashlib.sha256(raw).hexdigest()})
+                tile = {"column": key, "run_id": run, "job": job, "png_sha256": hashlib.sha256(raw).hexdigest()}
+                lab = src / key / "labels" / f"{job}.json"
+                if lab.exists():  # forgeries: the faked steps (ground truth, never read by verifiers)
+                    tile["faked"] = json.loads(lab.read_text()).get("faked", [])
+                sources["tiles"].append(tile)
                 ax.imshow(Image.fromarray(arr).resize((256, 256), Image.LANCZOS))
             if r == 0:
                 ax.set_title(head, fontsize=5.5, pad=3)

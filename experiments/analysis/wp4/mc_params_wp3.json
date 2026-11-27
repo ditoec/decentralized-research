@@ -45,7 +45,7 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a1b-sdxl-"
    },
    "beta_A": {
-    "value": 0.0,
+    "value": 0.30981273940245946,
     "provisional": false,
     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
    }
@@ -71,7 +71,7 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3lcm-s"
    },
    "beta_A": {
-    "value": 0.3235167193721803,
+    "value": 0.7624711115848354,
     "provisional": false,
     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
    }
@@ -84,7 +84,7 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3tur"
    },
    "beta_A": {
-    "value": 0.48717860958870196,
+    "value": 0.8845279990886049,
     "provisional": false,
     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
    }
@@ -97,7 +97,7 @@
     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a8-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a8-sdxl-eu"
    },
    "beta_A": {
-    "value": 0.011854089578578364,
+    "value": 0.0,
     "provisional": false,
     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
    }
@@ -107,7 +107,7 @@
    "r_A": {
     "value": 1.0,
     "provisional": false,
-    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f1-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f1-sdxl-eu"
+    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f1-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f1-sdxl-"
    },
    "beta_A": {
     "value": 0.5,
@@ -118,9 +118,9 @@
   {
    "name": "F2",
    "r_A": {
-    "value": 1.0,
+    "value": 0.9974683544303797,
     "provisional": false,
-    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f2-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f2-sdxl-eu"
+    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f2-sdxl-"
    },
    "beta_A": {
     "value": 0.5,
@@ -131,9 +131,9 @@
   {
    "name": "F3",
    "r_A": {
-    "value": 1.0,
+    "value": 0.9974683544303797,
     "provisional": false,
-    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f3-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f3-sdxl-eu"
+    "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01;20261127-wp3-verify-wp3-atkr-f3-sdxl-"
    },
    "beta_A": {
     "value": 0.5,

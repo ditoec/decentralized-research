@@ -30,6 +30,8 @@ fetch() {  # node run...: run metadata only (top-level files, logs/, raw/labels/
   done
 }
 
+fetch_quiet() { local n=$1; shift; for r in "$@"; do
+  ssh -n -o ConnectTimeout=10 "aign-dgx@10.41.3.$((n + 1))" "test -d ~/esj/runs/$r" 2>/dev/null && fetch "$n" "$r"; done; }
 ATK=(a1b a2 a3turbo a3lcm a8 m); ATKR=(f1 f2 f3); TIMED=(a2 a1b a3turbo a3lcm a8 m)
 SW=(s010 s025 s050 s075 s100); SWR=sdxl-euler-spark1-01
 if [ $FETCH = 1 ]; then
@@ -42,7 +44,10 @@ if [ $FETCH = 1 ]; then
     fetch 5 "$g"; fetch "$n" "$V-wp3-verify-wp3-atkr-$f-$X-on-spark$n" "$V-wp3-e0-wp3-atkr-$f-$X-on-spark$n" "$V-wp3-e1img-wp3-atkr-$f-$X-on-spark$n"
   done
   fetch 5 "$V-wp3-timebase-$X"; for t in "${TIMED[@]}"; do fetch 5 "$V-wp3-time-$t-$X"; done
-  for s in "${SW[@]}"; do fetch 1 "$V-wp3-sweepr-f3-$s-$SWR" "$V-wp3-verify-wp3-sweepr-f3-$s-$SWR-on-spark1"; done
+  # sweep levels generated on Spark-1 (s010, s025, s050) or on Spark-5/6 (s075, s100); verified on Sparks 4-6
+  for n in 1 4 5 6; do for s in "${SW[@]}"; do for g in spark1 spark5 spark6; do
+    fetch_quiet "$n" "$V-wp3-sweepr-f3-$s-sdxl-euler-$g-01" "$V-wp3-verify-wp3-sweepr-f3-$s-sdxl-euler-$g-01-on-spark$n"
+  done; done; done
   (cd code && .venv/bin/python tools/sanitize_runs.py ../$RUNS >/dev/null && .venv/bin/python tools/sanitize_runs.py --check ../$RUNS) || exit 1
 fi
 
@@ -65,8 +70,8 @@ ATT=(); for a in "${ATK[@]}"; do v=$RUNS/$V-wp3-verify-wp3-atk-$a-$X-on-spark$(n
   [ -s "$v/verdicts.jsonl" ] && [ -f "$v/summary.json" ] && ATT+=("$v") || echo "not verified yet: $a"; done
 for f in "${ATKR[@]}"; do v=$RUNS/$V-wp3-verify-wp3-atkr-$f-$X-on-spark$(node_r $f)
   [ -s "$v/verdicts.jsonl" ] && [ -f "$v/summary.json" ] && ATT+=("$v") || echo "not verified yet: atkr-$f"; done
-SWP=(); for s in "${SW[@]}"; do v=$RUNS/$V-wp3-verify-wp3-sweepr-f3-$s-$SWR-on-spark1
-  [ -f "$v/summary.json" ] && SWP+=("$v") || echo "sweep not verified yet: $s"; done
+SWP=(); for s in "${SW[@]}"; do v=$(ls -d $RUNS/$V-wp3-verify-wp3-sweepr-f3-$s-sdxl-euler-*-on-* 2>/dev/null | while read d; do [ -f "$d/summary.json" ] && echo "$d"; done | head -1)
+  [ -n "$v" ] && SWP+=("$v") || echo "sweep not verified yet: $s"; done
 # beta_A (doc 14 item 1): paired runs (atkr-*, time-* except A2) and A2 against timebase, one field (t_sample_s)
 TIM=(); for f in "${ATKR[@]}"; do r=$RUNS/$V-wp3-atkr-$f-$X; [ -f "$r/jobs.jsonl" ] && TIM+=("$r"); done
 for t in "${TIMED[@]}"; do r=$RUNS/$V-wp3-time-$t-$X; [ -f "$r/jobs.jsonl" ] && TIM+=("$r") || echo "no timing run yet: $t"; done

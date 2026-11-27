@@ -22,6 +22,8 @@ For: the paper authors and the tech team. This is a review of the Results the te
 
 ## Needs work
 
+**Authoring notes are hidden in the built manuscript (2026-11-27).** The red NEEDS WORK and reference notes, the blue TODOs and the contact placeholder stay in `paper/tools/build_esj_docx.py` but are left out of the .docx and PDF. The build lists each hidden note; `--notes` shows them all again. The Acknowledgements section is omitted until it has text, and the corresponding author's e-mail (`CONTACT_EMAIL`) is blank until the authors set it. Hidden is not resolved: items 3–6 below are still open, and the Conflicts of Interest statement still needs the Vektor Labs declaration confirmed before submission.
+
 The Machine column follows three rules (doc 10 §2.2, runbook §1.1):
 - timing comes only from a rented GPU that the job has to itself, never from a shared Spark;
 - work that is only about numerical results runs on the Sparks, for free;

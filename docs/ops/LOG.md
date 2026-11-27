@@ -224,3 +224,12 @@ One line per action, newest day last; format and rules in [`README.md`](README.m
 - 10:45 UTC · S6b · s100 verify on Spark-1 stopped twice by the memory guard (production dipped to 7.2 GB at 10:23 and 4.4 GB at 10:38 UTC; verify cannot resume, so each restart begins again, and a third stop aborts). Stopped by exact PIDs (chain 3607568, wp3_spark 3628343, spark_run 3628347); no research container left. The partial run is parked as `.aborted-…-on-spark1` and not used. Restarted on Spark-6 from its own copy at 10:45 UTC (`esj/logs/s100_spark6.sh`, run `…-s100-sdxl-euler-spark6-01-on-spark6`), with the fixed `free_while.sh` stopping vllm-chat; 46.2 GB available at start. The s050 and s100 copies on Spark-4 and Spark-6 are restored from `.hold-…`; the empty failed verify folders are removed.
 - 11:08 UTC · S6b · s100 verified on Spark-6 (100 jobs, no guard stop); vllm-chat restarted there by free_while. All five sweep levels verified.
 - 11:15 UTC · S8 · Final WP3 analysis (`wp3_analyze.sh`, no `--partial`): 25 sweep rows, all within 16 points of Equation 4 with m = sT (largest gap s = 0.75, k = 1: 58% vs 74%; 31 of 100 jobs there had a faked step within τ_i). Tier A rejected 0 of 500 sweep jobs. Monte Carlo rerun with the measured paired β for F1–F3. Figures and manuscript rebuilt (5 figures embedded; 3 NEEDS WORK markers left: testbed, RQ1 gaps, E0 follow-up). Doc 14 items 1 and 2 marked done.
+- 12:00 UTC · paper · Decision (operator): hide the authoring notes in the built manuscript for now.
+  - Hidden: 7 red notes (3 NEEDS WORK, 4 on references), 5 blue TODOs and the title-page contact placeholder. `build_esj_docx.py` lists each hidden note; `--notes` restores them.
+  - Text reframed so the hidden notes leave no gaps:
+    - the testbed sentence is removed from the Methods;
+    - the design and RQ1 text now state exactly which Table 6 cells were run;
+    - the E0 paragraph ends on what the present runs cannot separate;
+    - the responsible-disclosure sentence is completed;
+    - Acknowledgements are omitted while empty, and the declarations are renumbered.
+  - Layout: tables kept on one page; equations centred.

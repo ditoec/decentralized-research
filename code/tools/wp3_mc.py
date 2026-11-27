@@ -23,14 +23,14 @@ for r in rates:
     if r["quantity"] != "r_A" or r["k"] != "1" or r["attack"] in ("M", "honest") or r["attack"] not in beta:
         continue
     b = dict(beta[r["attack"]])
-    if r["attack"] in ("F1", "F2", "F3"):  # harness generates honestly before forging: use the bound beta <= s
-        b["beta_median"] = r["s"] or "0.5"
+    if r["attack"] in ("F1", "F2", "F3") and "paired" not in b.get("time_fields", ""):
+        b["beta_median"] = r["s"] or "0.5"  # transform forger (generates honestly first): use the bound beta <= s
     if b["beta_median"] in ("", None):
         continue
     attacks.append({"name": r["attack"],
                     "r_A": {"value": float(r["rate"]), "provisional": False, "source": "WP3 r2_6_rates.csv, k = 1: " + r["run_ids"][:120]},
                     "beta_A": {"value": max(0.0, float(b["beta_median"])), "provisional": False,
-                               "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"}})
+                               "source": "WP3 r2_4_beta.csv, " + (b.get("time_fields") or "") + " (negative medians floored at 0: no saving)"}})
 p = dict(base)
 p.update(provisional=False, note="WP4 params from the WP3 measurements (experiments/analysis/wp3/v1); c/P = 1 is a design assumption.",
          alpha_s={"value": alpha, "provisional": False, "source": "WP3 honest alpha_s, k = 1, 1,800 test jobs"},

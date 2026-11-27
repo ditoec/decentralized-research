@@ -664,3 +664,97 @@ def host_sampling() -> tuple[float, float] | None:
     if not a or not b:
         return None
     return statistics.median(r["t_sample_s"] for r in b), statistics.median(r["t_sample_s"] for r in a)
+
+
+def e0_refcheck_sentence() -> str:
+    """E0 follow-up (doc 14 item 5): the test-split reference procedure against the calibration references."""
+    f = ROOT / "experiments" / "analysis" / "wp3" / "e0_gap" / "refcheck.json"
+    if not f.exists():
+        return ph("NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
+                  "them bit for bit with the calibration references, to tell the two causes apart")
+    r = json.loads(f.read_text())
+    n, same = r["n_jobs"], r["image_identical"]
+    if same == n:
+        return (f"Regenerating {n} calibration jobs (30 prompts, three seeds) with the test-split reference procedure "
+                f"on another DGX Spark reproduced the calibration reference images bit for bit ({same} of {n}), which "
+                "rules out the reference images: the excess belongs to the test jobs themselves.")
+    return (f"Regenerating {n} calibration jobs with the test-split reference procedure on another DGX Spark gave "
+            f"bit-identical images for {same} of {n}, so the reference procedure accounts for part of the excess.")
+
+
+def r1_not_run() -> list[tuple[str, str]]:
+    """Table 6 cells without data: (model and sampler, level)."""
+    levels = ["L0", "L2", "L3", "L4"]
+    return [(row[0], lv) for row in r1_identity() for lv, cell in zip(levels, row[1:]) if cell == "not run"]
+
+
+def r1_scope_sentence() -> str:
+    """Methods: which planned Table 6 cells were not run (empty when all were)."""
+    miss = r1_not_run()
+    if not miss:
+        return ""
+    return ("The cells of Table 6 without data were not run: " + "; ".join(f"{m} at {lv}" for m, lv in miss) + ".")
+
+
+def r1_identity_sentence() -> str:
+    """Results: bit-identity within one GPU model (L0, L2), with any planned cell that has no data named."""
+    vals = [float(c.split(" ")[0]) for r in r1_identity() for c in r[1:3] if c != "not run"]
+    if not vals or min(vals) < 100:
+        return ""
+    miss = [f"{m} at {lv}" for m, lv in r1_not_run() if lv in ("L0", "L2")]
+    return ("every image was bit-identical for both models and both samplers"
+            + (f" (no data for {', '.join(miss)})." if miss else "."))
+
+
+def _testbed() -> dict | None:
+    f = ROOT / "experiments" / "analysis" / "wp5" / "testbed" / "summary.json"
+    return json.loads(f.read_text()) if f.exists() else None
+
+
+def testbed_methods() -> str:
+    """Methods: the testbed demo (runbook §7 item 5); a placeholder until its summary exists."""
+    t = _testbed()
+    if not t:
+        return ph("NEEDS WORK: testbed jobs with injected attackers at three sampling rates would give an independent "
+                  "check of the deterrence region; the testbed demo (runbook §7 item 5) has not been run")
+    ps = sorted({c["p"] for c in t["cells"]})
+    n = t["cells"][0]["n_attacker"]
+    return ("An end-to-end testbed on the Solana Devnet checks the deterrence region at three sampling rates, p ∈ {"
+            + ", ".join(f"{x:g}" for x in ps) + "}: an honest provider and two injected attackers, A3 with SDXL-Turbo "
+            f"and the realistic F2 forger at s = 0.5, each serve the same {n} jobs at every rate, with k = "
+            f"{t['k']} checked steps and B/P = {t['B_over_P']:g}. The providers' outputs are the recorded outputs of "
+            "the rented RTX 5090 in the attack study; every escrow transaction, the on-chain draw, the verification of "
+            "each sampled job on a DGX Spark (and on a second one after a failed verdict) and the settlement are live. "
+            "A verifier receives the job's committed image, its opened steps and the claimed job, never an attack "
+            "label. The on-chain draw decides whether a job is checked; the checked steps are the first k of the "
+            "job's committed opening order.")
+
+
+def narr_testbed() -> str:
+    """Results: realized gain of each injected attacker on Devnet against Equation 7."""
+    t = _testbed()
+    if not t:
+        return ph("R3.6 testbed: realized gain against the deterrence region")
+    run = ROOT / "experiments" / "runs" / t["run_id"]
+    rows = _jl(run / "jobs.jsonl")
+    ev = _jl(run / "events.jsonl")
+    ntx = sum(e["source"] == "chain" for e in ev)
+    nerr = sum(r["outcome"] == "error" for r in rows)
+    hon = [r for r in rows if r["provider"] == "pod-a" and r["outcome"] != "error"]
+    hs = [r for r in hon if r["outcome"] in ("pass", "fail", "unresolved")]
+    hf = sum(r["outcome"] == "fail" for r in hon)
+    parts = []
+    for c in t["cells"]:
+        parts.append(f"{c['attack'].replace('-', ' ')} at p = {c['p']:g}: Δ = {c['delta_mean']:+.2f}P "
+                     f"({c['delta_ci_lo']:+.2f} to {c['delta_ci_hi']:+.2f}; Equation 7: {c['delta_eq7']:+.2f}P)")
+    caught = {(c["attack"], c["p"]): c["outcomes_attacker"].get("fail", 0) for c in t["cells"]}
+    att_s = sum(sum(v for k, v in c["outcomes_attacker"].items() if k in ("pass", "fail", "unresolved")) for c in t["cells"])
+    att_f = sum(caught.values())
+    return (f"The testbed ran {len(rows)} jobs on Devnet ({ntx:,} transactions"
+            + (f"; {nerr} jobs ended in a client or RPC error and are excluded" if nerr else "") + "). "
+            f"Of the attackers' sampled jobs, {att_f} of {att_s} were slashed after two verifiers agreed; the honest "
+            f"provider was sampled {len(hs)} times and slashed {hf} times, a false rejection that both Spark verifiers "
+            "reproduced bit for bit. Realized gain over the honest provider, per job in units of P (c/P = 1, 95% "
+            "bootstrap interval): " + "; ".join(parts) + ". A negative gain means the attack does not pay at that "
+            "rate; the measured and predicted signs agree in "
+            f"{sum((c['delta_mean'] < 0) == (c['delta_eq7'] < 0) for c in t['cells'])} of {len(t['cells'])} cells.")

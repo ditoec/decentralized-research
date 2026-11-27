@@ -1,0 +1,6 @@
+{"job_id": 1795793538001, "p": 1.0, "provider": "pod-a", "job": "p00016_s0", "outcome": "error", "error": "final_verdict: relay exited", "s_wall": 99.7}
+{"job_id": 1795793538002, "p": 1.0, "provider": "pod-b", "job": "p00016_s0", "outcome": "error", "error": "[Errno 32] Broken pipe", "s_wall": 0.0}
+{"job_id": 1795793538003, "p": 1.0, "provider": "pod-c", "job": "p00016_s0", "outcome": "error", "error": "[Errno 32] Broken pipe", "s_wall": 0.0}
+{"job_id": 1795793538004, "p": 1.0, "provider": "pod-a", "job": "p00020_s0", "outcome": "error", "error": "[Errno 32] Broken pipe", "s_wall": 0.0}
+{"job_id": 1795793538005, "p": 1.0, "provider": "pod-b", "job": "p00020_s0", "outcome": "error", "error": "[Errno 32] Broken pipe", "s_wall": 0.0}
+{"job_id": 1795793538006, "p": 1.0, "provider": "pod-c", "job": "p00020_s0", "outcome": "error", "error": "[Errno 32] Broken pipe", "s_wall": 0.0}

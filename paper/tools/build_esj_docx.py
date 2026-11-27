@@ -942,11 +942,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "of Equation 6 are extreme quantiles of the honest distribution: on the DGX Spark systems it runs all 600 "
          "calibration and development prompts, and on each rented card 300 of them plus 200 test prompts, so that each "
          "card is rented once. Every other configuration runs the same 50 prompts (32 calibration, 18 development) on "
-         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the SD1.5 reference "
+         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the reference "
          "jobs on one DGX Spark; level L2 runs 50 prompts in the reference configuration on all six DGX Spark systems "
-         "and on two RTX 5090 cards on different hosts. For SDXL, the same-unit level L0 was not run, and the "
-         "DPM-Solver++(2M) sampler was compared across generations (L4) only; these cells are marked as not run in the "
-         "results.")
+         "and on two RTX 5090 cards on different hosts. " + RW.r1_scope_sentence())
     Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
          "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
          "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
@@ -1029,9 +1027,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "simulated providers fake sT steps, the checked steps are drawn without replacement, and each checked step "
          "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
          "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
-         "interval, from a recorded random seed. {R|NEEDS WORK: testbed jobs with injected attackers at three sampling "
-         "rates would give an independent check of the deterrence region; the testbed demo (runbook §7 item 5) "
-         "has not been run; run it or remove this sentence}")
+         "interval, from a recorded random seed. " + RW.testbed_methods())
 
     # ================================================================== 3 RESULTS AND DISCUSSION
     H1("4- Results and Discussion")
@@ -1040,8 +1036,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     steps = RW.r1_steps()
     Para("{b|Exact reproducibility.} Table 6 reports the share of jobs whose final images are bit-identical across "
          "two runs of the same workflow, by heterogeneity level. On one unit (L0) and across different units of the same "
-         "GPU model (L2), every compared image was bit-identical: SD1.5 with both samplers at both levels, and SDXL with "
-         "the Euler sampler at L2. Across chips of the same "
+         "GPU model (L2), " + RW.r1_identity_sentence() + " Across chips of the same "
          "generation (L3, DGX Spark and RTX 5090) and across generations (L4, RTX 3090 and RTX 4090 against the "
          "Spark), no image was bit-identical. Bit-exact reproduction is therefore available only within one GPU model, "
          "which a permissionless marketplace cannot enforce.")
@@ -1049,7 +1044,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           "pooled over the fp32, fp16 and bf16 profiles",
           ["Model, sampler", "L0 (same unit)", "L2 (same model)", "L3 (same generation)", "L4 (across generations)"],
           RW.r1_identity(), [44, 30, 30, 32, 32])
-    Para("{R|NEEDS WORK: Table 6 has no SDXL run at L0 and no SDXL DPM++ 2M run at L2 or L3, which Section 3-4 plans; run them or narrow the design text}")
+    if RW.r1_not_run():
+        Para("{R|NEEDS WORK: Table 6 has no data for " + ", ".join(f"{m} at {lv}" for m, lv in RW.r1_not_run())
+             + ", which Section 3-4 plans}")
     if fac:
         f = {k: v for k, v in fac.items()}
         Para("{b|Factors.} On one unit (L1), changing the numeric precision ("
@@ -1111,9 +1108,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "400 calibration and test prompts at random 2,000 times gave a held-out rate between 0.8% and 2.9% in 95% of "
          "splits, and 3.3% or more in 0.8%, so prompt sampling alone is an unlikely explanation. The test failures "
          "concentrate on jobs that fail against all three cards (6 jobs, against 1 on the calibration split), which "
-         "points to the DGX Spark reference images, regenerated for the test split in a separate run, or to a few "
-         "prompts; the present runs cannot separate the two. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
-         "them bit for bit with the calibration references, to tell the two causes apart}")
+         "points either to the DGX Spark reference images, regenerated for the test split in a separate run, or to "
+         "the test prompts. " + RW.e0_refcheck_sentence())
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
           ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
@@ -1166,6 +1162,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            "Time to confirmed per transaction (median, p95)"],
           RW.escrow(), [40, 32, 28, 34, 34])
     Para("{b|Monte Carlo.} " + RW.narr_mc())
+    if RW._testbed():
+        Para("{b|Testbed on Devnet.} " + RW.narr_testbed())
     Para("{b|Answer to RQ3.} " + RW.narr_r32() + " The escrow adds a fixed on-chain cost per job (Table 11) that does not "
          "depend on the evidence level.")
 

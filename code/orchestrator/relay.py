@@ -17,10 +17,12 @@ class RelayError(RuntimeError):
 
 class Relay:
     def __init__(self, url: str, keys_json: str | Path, program_dir: Path = PROGRAM_DIR):
+        """``url``: a local validator URL, or "devnet" (public Devnet RPC, throttled, nodes funded by transfer)."""
         if "mainnet" in url:
             raise ValueError("mainnet is never used")
         self.proc = subprocess.Popen(
-            ["npx", "ts-node", "-P", "tsconfig.json", "scripts/relay.ts", "--url", url, "--keys", str(keys_json)],
+            ["npx", "ts-node", "-P", "tsconfig.json", "scripts/relay.ts",
+             *(["--cluster", "devnet"] if url == "devnet" else ["--url", url]), "--keys", str(keys_json)],
             cwd=program_dir, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1)
         self._ids = itertools.count(1)
 

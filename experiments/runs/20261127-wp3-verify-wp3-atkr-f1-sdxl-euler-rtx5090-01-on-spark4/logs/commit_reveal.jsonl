@@ -1,0 +1,200 @@
+{"event": "verifier_commit", "hash": "face5234b9ff9b1f0a4b265c4d5b8a9ed52df46b22bca8c5e9c20781641c3def", "steps": [2, 4, 5, 13, 17, 20, 25, 26], "t": 1795769473.7046714}
+{"event": "reveal_compared", "t": 1795769473.7292917}
+{"event": "verifier_commit", "hash": "2a6351b410ef0cecb4b4e09b0cbd87e73518b60c390c3c155612180275c854a7", "steps": [0, 2, 7, 15, 17, 22, 24, 25], "t": 1795769484.774271}
+{"event": "reveal_compared", "t": 1795769484.7979016}
+{"event": "verifier_commit", "hash": "853f4e72034f9c7911dc763014bbb80ddfea002dd4dc677160738e76278e4c36", "steps": [1, 5, 9, 15, 17, 24, 25, 28], "t": 1795769496.0866072}
+{"event": "reveal_compared", "t": 1795769496.1182487}
+{"event": "verifier_commit", "hash": "a6eb955a285ed31dfae226e47fb2b32aff715c430064a45dc1aed4631016fcd9", "steps": [1, 14, 16, 17, 18, 21, 27, 28], "t": 1795769507.1162274}
+{"event": "reveal_compared", "t": 1795769507.1392727}
+{"event": "verifier_commit", "hash": "3e0eb8a2f6a04591e8a33ce912428eb1b6b87098993d2a699e5bd16d12a64cf0", "steps": [1, 5, 6, 7, 12, 22, 26, 27], "t": 1795769518.4265924}
+{"event": "reveal_compared", "t": 1795769518.446243}
+{"event": "verifier_commit", "hash": "da3df10b3ca3b46cb6b9bbcd0a8b14f78cc2926bc882a62050660bf66eff24ee", "steps": [1, 5, 6, 9, 10, 11, 17, 19], "t": 1795769529.6331372}
+{"event": "reveal_compared", "t": 1795769529.654446}
+{"event": "verifier_commit", "hash": "f46992af718b40b581974ed7a5f5339a34de8752ed1cb331a2abce2f7b403ce6", "steps": [5, 8, 18, 20, 23, 24, 26, 28], "t": 1795769540.8782666}
+{"event": "reveal_compared", "t": 1795769540.899579}
+{"event": "verifier_commit", "hash": "77317da749a248e07989f64ea835ae70b288625d4ed824f3c08bb86ea3117d9e", "steps": [1, 3, 6, 7, 11, 13, 14, 18], "t": 1795769552.211085}
+{"event": "reveal_compared", "t": 1795769552.238816}
+{"event": "verifier_commit", "hash": "8fe358bf69af76cc225d177a76a7aace325ec58c60494feca923924ef1a2ed5e", "steps": [2, 4, 8, 12, 13, 19, 22, 24], "t": 1795769563.2607622}
+{"event": "reveal_compared", "t": 1795769563.2810414}
+{"event": "verifier_commit", "hash": "beb7c32f5e4cf29a1c069061cc2057bc0a31087d66dc5df837e36d4ec282d100", "steps": [2, 3, 4, 10, 11, 16, 22, 25], "t": 1795769574.5652206}
+{"event": "reveal_compared", "t": 1795769574.5874867}
+{"event": "verifier_commit", "hash": "542ffec69e9e61b206af1af0cdc43fada2da7151cf27853e487bc9506d657fd9", "steps": [1, 2, 3, 13, 17, 21, 22, 27], "t": 1795769585.5506375}
+{"event": "reveal_compared", "t": 1795769585.5719428}
+{"event": "verifier_commit", "hash": "7c816e7b6650e1db671d5a2089b0e1f43ebf9061cd095f81ac9a7fa3246f8778", "steps": [1, 2, 3, 6, 9, 14, 21, 22], "t": 1795769596.8864553}
+{"event": "reveal_compared", "t": 1795769596.9087524}
+{"event": "verifier_commit", "hash": "95b6b4ef9c3e12b942030dddc9278e5fc79cd445ef212020c6a06b295378f83b", "steps": [3, 4, 12, 14, 15, 19, 25, 29], "t": 1795769608.2501888}
+{"event": "reveal_compared", "t": 1795769608.275127}
+{"event": "verifier_commit", "hash": "2174fb5933133ddaf61596cb58ee4d10d4d0327d741dd8e4006a2bbff0c2c799", "steps": [0, 3, 6, 14, 21, 26, 27, 28], "t": 1795769619.3240476}
+{"event": "reveal_compared", "t": 1795769619.3456714}
+{"event": "verifier_commit", "hash": "34d9c4805ff176b7ed797ca12f42e256726c61edd8d937a9115f40ff0cb24380", "steps": [2, 5, 8, 9, 12, 14, 25, 26], "t": 1795769630.5956266}
+{"event": "reveal_compared", "t": 1795769630.6133325}
+{"event": "verifier_commit", "hash": "edf454ed2e1a8f83ad084bb31ca452176ca186b7470e2f5a3ca1881ca2828f9d", "steps": [2, 7, 17, 18, 20, 21, 23, 27], "t": 1795769641.6385136}
+{"event": "reveal_compared", "t": 1795769641.6597736}
+{"event": "verifier_commit", "hash": "463ff780db3b51a17c39e6185f7deaf34c37a7a465ad44e475802a1c1bb152d3", "steps": [3, 6, 11, 12, 14, 16, 19, 25], "t": 1795769652.9964106}
+{"event": "reveal_compared", "t": 1795769653.0267525}
+{"event": "verifier_commit", "hash": "1cc24eb90f01162e48f871f4154b55f772cce31775a460b4247a6e2a07ae13aa", "steps": [1, 2, 3, 5, 11, 14, 21, 28], "t": 1795769664.3363419}
+{"event": "reveal_compared", "t": 1795769664.357616}
+{"event": "verifier_commit", "hash": "6863137e95d9dce3e702ab944949073e5e015389fbf4254cf5a59f8b0dedc589", "steps": [6, 13, 20, 21, 23, 25, 26, 27], "t": 1795769675.3955812}
+{"event": "reveal_compared", "t": 1795769675.4171531}
+{"event": "verifier_commit", "hash": "5421109f9a550161547238983c36c49bc41cfb61a6c12f26a26ccad5528e84a5", "steps": [0, 2, 3, 15, 16, 20, 21, 22], "t": 1795769686.7210207}
+{"event": "reveal_compared", "t": 1795769686.7434273}
+{"event": "verifier_commit", "hash": "1e1652aba10c7391a093b5af770fcec5c48dc39b6d58328060cc35bec58afdcf", "steps": [0, 3, 6, 7, 17, 24, 25, 27], "t": 1795769697.7438843}
+{"event": "reveal_compared", "t": 1795769697.7690644}
+{"event": "verifier_commit", "hash": "318567862f6fd219b4dc0603ef993f3c7ade11ef887d3f823474fddf31d21ba8", "steps": [1, 2, 8, 9, 14, 18, 19, 23], "t": 1795769709.05942}
+{"event": "reveal_compared", "t": 1795769709.085711}
+{"event": "verifier_commit", "hash": "7a3174f6ba80c6413c1601b85d3abe51334ebd5efe3b2631f309fc3f49569b19", "steps": [4, 6, 7, 10, 19, 21, 25, 26], "t": 1795769720.093646}
+{"event": "reveal_compared", "t": 1795769720.1176305}
+{"event": "verifier_commit", "hash": "88aeca72068dc688ad6ffa42dd66541a374109dabd57a569e1af12bb24e00b72", "steps": [7, 9, 15, 17, 20, 21, 22, 26], "t": 1795769731.4137347}
+{"event": "reveal_compared", "t": 1795769731.4349148}
+{"event": "verifier_commit", "hash": "9b7626fb4932a47b854e019286c1f202cdfb264f79cb0eab9e9797e5987cc9ba", "steps": [0, 1, 2, 7, 11, 12, 21, 26], "t": 1795769742.7774549}
+{"event": "reveal_compared", "t": 1795769742.794146}
+{"event": "verifier_commit", "hash": "d00ee7a08a28fcc6cc693b6c2c7f6c0cb1a5bfb1d096350a9d02a384fc5baf39", "steps": [2, 5, 13, 14, 16, 22, 26, 27], "t": 1795769753.913016}
+{"event": "reveal_compared", "t": 1795769753.9363682}
+{"event": "verifier_commit", "hash": "867b74be6bd2b44df19801a8766cd4237d258a7de5ad7dee3212570bde1a5c97", "steps": [1, 5, 9, 12, 13, 14, 22, 27], "t": 1795769765.2572632}
+{"event": "reveal_compared", "t": 1795769765.2777774}
+{"event": "verifier_commit", "hash": "45c36ea31a89fe4c933f334f3b12fcdfe31639ff8522f00c1d6644b8e596b08e", "steps": [1, 3, 4, 5, 8, 10, 20, 29], "t": 1795769776.333532}
+{"event": "reveal_compared", "t": 1795769776.3560603}
+{"event": "verifier_commit", "hash": "4d624e96d3d0b18108e84fc31d3fbe26516e677958c0ce9de4c8f7d151e32ee0", "steps": [1, 4, 9, 10, 13, 14, 18, 20], "t": 1795769787.6471226}
+{"event": "reveal_compared", "t": 1795769787.6707885}
+{"event": "verifier_commit", "hash": "f6e965c01a3ebab512a7e280acd59993548b0f7f26fe0f7db9c9d6af639da446", "steps": [2, 5, 11, 12, 14, 19, 27, 29], "t": 1795769799.0135763}
+{"event": "reveal_compared", "t": 1795769799.0421214}
+{"event": "verifier_commit", "hash": "8dbda71a217a547f60fcebaaa9bb234243d1892b20d832be1f37ad8cab4a92b5", "steps": [1, 2, 4, 17, 18, 20, 21, 24], "t": 1795769810.1587713}
+{"event": "reveal_compared", "t": 1795769810.1737952}
+{"event": "verifier_commit", "hash": "d4f3a166069e3fac17a53c924fa96da837eefadce7ab63ca524408ed134b49d4", "steps": [2, 9, 11, 14, 15, 24, 26, 29], "t": 1795769821.5720584}
+{"event": "reveal_compared", "t": 1795769821.5938847}
+{"event": "verifier_commit", "hash": "313e4a90cc4fda40b899f14dc2bae4c9483a353ae6cb5432b1dd7d5573138982", "steps": [2, 5, 7, 10, 15, 17, 20, 21], "t": 1795769832.6348367}
+{"event": "reveal_compared", "t": 1795769832.6577344}
+{"event": "verifier_commit", "hash": "b1d4abbfdedf30d01817bdec3ffa92afa3dad242ad9fee55e849426c856be803", "steps": [3, 4, 8, 11, 16, 18, 19, 27], "t": 1795769844.0354748}
+{"event": "reveal_compared", "t": 1795769844.0568311}
+{"event": "verifier_commit", "hash": "05b72bd6730331592c9ca2d42af617938afe11d69775a8d69365e28d7e20c4c8", "steps": [3, 6, 7, 14, 16, 19, 27, 29], "t": 1795769855.1723804}
+{"event": "reveal_compared", "t": 1795769855.1965356}
+{"event": "verifier_commit", "hash": "9b433d12cccf941297dc6319729f788c49c41ce1caec6fc4577c646795b35c9c", "steps": [0, 1, 2, 6, 11, 17, 19, 28], "t": 1795769866.547948}
+{"event": "reveal_compared", "t": 1795769866.5715065}
+{"event": "verifier_commit", "hash": "95fc23b1b57e5b27450e16e68fadc68edc0c36c0f2dcd6e5264bfbdae2f0eddd", "steps": [4, 8, 11, 12, 15, 21, 26, 27], "t": 1795769877.931148}
+{"event": "reveal_compared", "t": 1795769877.953156}
+{"event": "verifier_commit", "hash": "68fe3edebe0740189645d147c4db682e57d9916fa0d55a925004e0bda64d6115", "steps": [6, 12, 16, 18, 19, 22, 23, 26], "t": 1795769889.100158}
+{"event": "reveal_compared", "t": 1795769889.1218483}
+{"event": "verifier_commit", "hash": "13f896c0ca3adf2e208035391300ac2414cf442ca213f255d48566fed4565c5b", "steps": [1, 2, 6, 10, 16, 17, 24, 28], "t": 1795769900.4353464}
+{"event": "reveal_compared", "t": 1795769900.460422}
+{"event": "verifier_commit", "hash": "f78f665e76138711ad2d2354c3f0057f4dc67f5227c02c590099ee779c16e32c", "steps": [0, 6, 9, 11, 13, 17, 23, 24], "t": 1795769911.621979}
+{"event": "reveal_compared", "t": 1795769911.6498742}
+{"event": "verifier_commit", "hash": "6011e233bc7455953d2763c8287f10db464ebde4384ef0689220d2bbe29df0e8", "steps": [2, 3, 4, 5, 13, 23, 28, 29], "t": 1795769923.0210729}
+{"event": "reveal_compared", "t": 1795769923.0407588}
+{"event": "verifier_commit", "hash": "741c92805d58b61be7aa3eefadbcd81e79df717bd0f78a27da26914bd8820363", "steps": [0, 2, 6, 14, 17, 23, 28, 29], "t": 1795769934.3837817}
+{"event": "reveal_compared", "t": 1795769934.4208088}
+{"event": "verifier_commit", "hash": "5231226ffa6e36a80cb65d9032bca31c4a76a204473d375649249b93dab8936e", "steps": [3, 6, 7, 13, 23, 25, 27, 28], "t": 1795769945.4698992}
+{"event": "reveal_compared", "t": 1795769945.491633}
+{"event": "verifier_commit", "hash": "bd3c7e7dc708e5d36ea8575ed022c5479f9962f35a9317ea315b41ed59a4e0d7", "steps": [2, 3, 5, 6, 9, 19, 21, 26], "t": 1795769956.8638573}
+{"event": "reveal_compared", "t": 1795769956.880289}
+{"event": "verifier_commit", "hash": "eeef61e873b63b0aa833b2859bf2e499e5ddc758b6edc03ce2b880a726b23a51", "steps": [3, 5, 9, 13, 17, 19, 22, 27], "t": 1795769968.038097}
+{"event": "reveal_compared", "t": 1795769968.0656555}
+{"event": "verifier_commit", "hash": "58da8bd5afbb101d28c2254750424b091683bea0f1c7a857e335c4eb6fd49fd4", "steps": [0, 4, 6, 8, 19, 21, 23, 24], "t": 1795769979.486152}
+{"event": "reveal_compared", "t": 1795769979.5080526}
+{"event": "verifier_commit", "hash": "d9d9f78ee5175f8b7bf0c4cf07b31ae3b12ec3b9b2ea4a5da2d2c9c917a3e9a5", "steps": [5, 8, 10, 13, 16, 18, 20, 23], "t": 1795769990.5952349}
+{"event": "reveal_compared", "t": 1795769990.6175032}
+{"event": "verifier_commit", "hash": "b68ef2d30e3d4278643a95f22cebc2b8832fd6fbc78969d5e65289547ada1833", "steps": [0, 2, 8, 13, 16, 18, 22, 28], "t": 1795770001.9256907}
+{"event": "reveal_compared", "t": 1795770001.9484835}
+{"event": "verifier_commit", "hash": "91c288d01291d9cdcd2f5f3448e2e3176990d62ea2de5f1f917dad3c4d527229", "steps": [1, 2, 8, 9, 16, 17, 19, 20], "t": 1795770013.3399868}
+{"event": "reveal_compared", "t": 1795770013.3678987}
+{"event": "verifier_commit", "hash": "620e760f348967d153b992d867456457787013a53de91072c9340a9594f2b416", "steps": [0, 1, 4, 6, 12, 14, 19, 26], "t": 1795770024.4992363}
+{"event": "reveal_compared", "t": 1795770024.5207984}
+{"event": "verifier_commit", "hash": "33ed74a1582bbbf9c1ae4b77d5154f8c425221f72c0b0c6f6514cf97713e0728", "steps": [0, 3, 4, 10, 13, 18, 20, 29], "t": 1795770035.8909364}
+{"event": "reveal_compared", "t": 1795770035.9141357}
+{"event": "verifier_commit", "hash": "b1854ffd9320a806795138f5801859fcf570b32bf7371fad6536e0c535eb6533", "steps": [1, 10, 13, 18, 19, 23, 25, 27], "t": 1795770047.081441}
+{"event": "reveal_compared", "t": 1795770047.1033714}
+{"event": "verifier_commit", "hash": "73356529da8d26abfef735d95fae459ac0ebc77f56f06ff03e3207366b85fcaf", "steps": [5, 6, 7, 8, 16, 19, 26, 27], "t": 1795770058.5041037}
+{"event": "reveal_compared", "t": 1795770058.5348713}
+{"event": "verifier_commit", "hash": "8e6782e4667c7af804e7c93d78c75717f3bd3dc18ecc7757178cbf40a7b90858", "steps": [4, 8, 10, 16, 22, 25, 28, 29], "t": 1795770069.895801}
+{"event": "reveal_compared", "t": 1795770069.9188821}
+{"event": "verifier_commit", "hash": "d379eaa65317a55a03f937c4a24a9535d7679727363aa07fcc845b3ba5778d40", "steps": [0, 6, 12, 15, 16, 20, 27, 29], "t": 1795770081.0198195}
+{"event": "reveal_compared", "t": 1795770081.0422704}
+{"event": "verifier_commit", "hash": "a36d6616cc81ea99daa6c30bf68fc8c0516aa7b013b1d0034fc90341c3b4a621", "steps": [3, 6, 10, 11, 20, 23, 24, 29], "t": 1795770092.4272738}
+{"event": "reveal_compared", "t": 1795770092.455389}
+{"event": "verifier_commit", "hash": "1d44c5f71ca54ad76d7c45a080b1ed755ef2eec2dc8b04dcf2d7c43d2f06e5e5", "steps": [7, 9, 11, 13, 14, 17, 19, 27], "t": 1795770103.6199565}
+{"event": "reveal_compared", "t": 1795770103.6441975}
+{"event": "verifier_commit", "hash": "93572798f406f11a976efbec76075f32ba9441339704471175574cc89fb1a8dc", "steps": [2, 3, 8, 10, 17, 20, 23, 28], "t": 1795770115.0957499}
+{"event": "reveal_compared", "t": 1795770115.1191206}
+{"event": "verifier_commit", "hash": "7f8c595632c22733bdc0e34c77c5d338a0153fce7dc42e4ec56685b9493688dd", "steps": [1, 2, 13, 15, 18, 24, 27, 28], "t": 1795770126.4279816}
+{"event": "reveal_compared", "t": 1795770126.4494886}
+{"event": "verifier_commit", "hash": "dc7ef221a4618aa2c90a4bee235b9e532f51f4b08aa502d8dc36fe9e58bc0e3c", "steps": [3, 4, 8, 15, 18, 22, 24, 28], "t": 1795770138.0056295}
+{"event": "reveal_compared", "t": 1795770138.0278497}
+{"event": "verifier_commit", "hash": "3fb231e9737a95f0ddcdf7730f8151965094ecdfdcd55dae0b8c093478353bd3", "steps": [0, 4, 14, 18, 19, 20, 24, 27], "t": 1795770149.7610667}
+{"event": "reveal_compared", "t": 1795770149.7823672}
+{"event": "verifier_commit", "hash": "8cec97d0688360f8bc25d6e578068f5e59f3f66bd85208b950076d07a9eafafc", "steps": [0, 3, 6, 11, 21, 24, 27, 29], "t": 1795770161.0633352}
+{"event": "reveal_compared", "t": 1795770161.0841072}
+{"event": "verifier_commit", "hash": "5cb63cb5f312cf8677070807b185a6e90beca76b5cb9b0edb978b7cc505c6703", "steps": [4, 5, 9, 17, 18, 20, 27, 28], "t": 1795770172.6519437}
+{"event": "reveal_compared", "t": 1795770172.6727312}
+{"event": "verifier_commit", "hash": "ef585049d7499b73eecb872021a6ec5faa44d4449486909bf3cf20fe108d9a14", "steps": [2, 3, 9, 11, 12, 18, 19, 23], "t": 1795770184.2218153}
+{"event": "reveal_compared", "t": 1795770184.253747}
+{"event": "verifier_commit", "hash": "1bdce32437b6a96b92cc131ac7b089087d31734ba660e9b76712a91b1d5c9064", "steps": [0, 3, 7, 8, 10, 20, 23, 26], "t": 1795770195.7055728}
+{"event": "reveal_compared", "t": 1795770195.7314928}
+{"event": "verifier_commit", "hash": "1b835ae98c9a2a874ddb96e688aabcd78311809c3100f7806c6bbbe875d7a9e4", "steps": [0, 8, 17, 19, 22, 23, 24, 25], "t": 1795770207.0830686}
+{"event": "reveal_compared", "t": 1795770207.11081}
+{"event": "verifier_commit", "hash": "e8d8d386bda5fa179a61808a36c954f92ac6f001efb43346368c7c6e222c39bb", "steps": [4, 7, 10, 13, 14, 17, 22, 28], "t": 1795770218.202056}
+{"event": "reveal_compared", "t": 1795770218.2233298}
+{"event": "verifier_commit", "hash": "81ca4f46f624c950865635290795284f24b2f3897f0065e100c1c452e38cdaed", "steps": [4, 7, 12, 17, 21, 22, 23, 29], "t": 1795770229.6156747}
+{"event": "reveal_compared", "t": 1795770229.6377006}
+{"event": "verifier_commit", "hash": "65490a9c14d97aa88ae2a8cfcffaf014ce7b91e6e248372f0250eef12e58f2e0", "steps": [2, 4, 5, 7, 15, 16, 17, 20], "t": 1795770240.7745407}
+{"event": "reveal_compared", "t": 1795770240.799676}
+{"event": "verifier_commit", "hash": "ec9a7a90dfdd6d9be497670a8225fb177d74bcedaac64ace0721c0514d215561", "steps": [5, 13, 17, 20, 22, 23, 24, 26], "t": 1795770252.2285767}
+{"event": "reveal_compared", "t": 1795770252.2525287}
+{"event": "verifier_commit", "hash": "309e765961e5dc002873e95e85d6a1a68bc7d5d8746b906a5141769d0e54e76d", "steps": [0, 3, 5, 7, 12, 14, 19, 28], "t": 1795770263.3641427}
+{"event": "reveal_compared", "t": 1795770263.3878903}
+{"event": "verifier_commit", "hash": "4c9488f5005df7756ee98d0c29a11b58fea1ad290b3d341b72199ad739eda9a5", "steps": [4, 6, 11, 13, 15, 23, 24, 26], "t": 1795770274.7915597}
+{"event": "reveal_compared", "t": 1795770274.8137562}
+{"event": "verifier_commit", "hash": "8d492b28a756346bb947ebc8f6bb77d2028b850c448295f6f0c788964d724299", "steps": [2, 5, 7, 10, 12, 15, 22, 28], "t": 1795770286.180244}
+{"event": "reveal_compared", "t": 1795770286.2034981}
+{"event": "verifier_commit", "hash": "dac621c24e97c9e717f347412dcaa418e893fa8543ea7001d876a6288b67ae83", "steps": [2, 3, 7, 8, 12, 14, 18, 25], "t": 1795770297.3079479}
+{"event": "reveal_compared", "t": 1795770297.3287663}
+{"event": "verifier_commit", "hash": "a9b2a35bcfceab23f4a1b7b11919aec74c39268e7a46af7acf42ef908d690624", "steps": [2, 4, 8, 9, 12, 16, 23, 26], "t": 1795770308.6957557}
+{"event": "reveal_compared", "t": 1795770308.71753}
+{"event": "verifier_commit", "hash": "87e368086f8a1f3677b7e2d14a6b1b8e0deedd9cb25ff4a6b16ea8b1a130f958", "steps": [0, 4, 5, 14, 16, 21, 22, 25], "t": 1795770319.8747642}
+{"event": "reveal_compared", "t": 1795770319.8902009}
+{"event": "verifier_commit", "hash": "e14ba00b276b10095a372e08d53368e34d4b424f0db336b10952dab13206c2ed", "steps": [1, 2, 8, 17, 18, 21, 22, 29], "t": 1795770331.2225697}
+{"event": "reveal_compared", "t": 1795770331.2573678}
+{"event": "verifier_commit", "hash": "62e976203bf4f2ed209ea240aadfc642d02802d680bcbc90274a3b0864a37d04", "steps": [0, 2, 8, 13, 15, 20, 22, 24], "t": 1795770342.5179443}
+{"event": "reveal_compared", "t": 1795770342.538613}
+{"event": "verifier_commit", "hash": "9a9b29d9327eae7b598c21dcd4801dbb0ad51e1510ce14fac032681644f51736", "steps": [1, 4, 7, 10, 22, 23, 25, 27], "t": 1795770353.8154583}
+{"event": "reveal_compared", "t": 1795770353.8387408}
+{"event": "verifier_commit", "hash": "82aed9e6c6379f6c123d677a15bed4375c1e36e4d142a27fc0194b5815750d41", "steps": [3, 7, 17, 20, 23, 24, 26, 29], "t": 1795770365.1660926}
+{"event": "reveal_compared", "t": 1795770365.1921492}
+{"event": "verifier_commit", "hash": "63fd55f817ee963047f8144b72892aa0ec4980e8aa1a4fd5063f4b62a16d8c01", "steps": [1, 3, 7, 8, 9, 17, 21, 22], "t": 1795770376.3218474}
+{"event": "reveal_compared", "t": 1795770376.3379297}
+{"event": "verifier_commit", "hash": "8e98c952f9eb051c0d98740a39fe0cc05812c0b78d47f2575fafed6f3b1ec228", "steps": [5, 8, 12, 15, 20, 24, 26, 28], "t": 1795770387.7159247}
+{"event": "reveal_compared", "t": 1795770387.732699}
+{"event": "verifier_commit", "hash": "cf5d16b6d71188a940c4e6e7e85e7300fc07dcf3149898d40182076eb2f8d1f9", "steps": [0, 5, 6, 13, 17, 18, 23, 28], "t": 1795770398.7826295}
+{"event": "reveal_compared", "t": 1795770398.8038623}
+{"event": "verifier_commit", "hash": "1e1571f443f335a38d3a4712300f1e2a73775abe99b107285f51ce7ac08ff655", "steps": [1, 6, 10, 13, 14, 16, 23, 27], "t": 1795770410.1388688}
+{"event": "reveal_compared", "t": 1795770410.1619542}
+{"event": "verifier_commit", "hash": "e8c85d3872f5e212ff77480e30e4e0e310447f953fb388983e063cebe2335832", "steps": [0, 7, 8, 17, 21, 23, 24, 27], "t": 1795770421.5116267}
+{"event": "reveal_compared", "t": 1795770421.5281773}
+{"event": "verifier_commit", "hash": "80f1fe23a1d7e7ee9c5b3759c92308d0dbebaa59a4b76e4d131f3b9e51faa7a4", "steps": [1, 4, 5, 8, 13, 20, 26, 29], "t": 1795770432.5499206}
+{"event": "reveal_compared", "t": 1795770432.5704615}
+{"event": "verifier_commit", "hash": "e31077741ecacddcabe41ea902ce9c5ff2bf1b669edc2693fd156f68fa3d3af4", "steps": [4, 8, 10, 16, 17, 18, 20, 23], "t": 1795770443.930522}
+{"event": "reveal_compared", "t": 1795770443.9518633}
+{"event": "verifier_commit", "hash": "e784bc59e4fe9549b22ba3e5ef956dcf815ddb7d26a3830b2386b8332af17294", "steps": [1, 4, 9, 11, 22, 24, 25, 27], "t": 1795770455.0264504}
+{"event": "reveal_compared", "t": 1795770455.048309}
+{"event": "verifier_commit", "hash": "37f1f77cee2687d434e4dffecf99fbd2dc3f2897591640c59e2f81d2ec315404", "steps": [0, 1, 5, 11, 23, 24, 25, 26], "t": 1795770466.4274971}
+{"event": "reveal_compared", "t": 1795770466.4493806}
+{"event": "verifier_commit", "hash": "6b2a383eeaab2ce0f66112facc649c0b6a5437c6d150700057ae568e5cae024c", "steps": [1, 2, 9, 11, 16, 23, 26, 29], "t": 1795770477.7516875}
+{"event": "reveal_compared", "t": 1795770477.7759092}
+{"event": "verifier_commit", "hash": "071745b143fa60bc11f0f86f94b1710fcab8574405f72e0af48bb4f2a1d79036", "steps": [3, 9, 11, 13, 14, 18, 21, 25], "t": 1795770488.974836}
+{"event": "reveal_compared", "t": 1795770488.9966848}
+{"event": "verifier_commit", "hash": "9bc01cdf2837069cce1f0343f157e19f688ee7220d1a778fd759414c8858d15c", "steps": [1, 4, 5, 11, 14, 22, 24, 27], "t": 1795770500.3175051}
+{"event": "reveal_compared", "t": 1795770500.340793}
+{"event": "verifier_commit", "hash": "e0777b832a2e3bc197b946533d9709cdc838353b3791f1d33f020fbfd7ad162e", "steps": [2, 3, 13, 15, 17, 21, 23, 26], "t": 1795770511.4209933}
+{"event": "reveal_compared", "t": 1795770511.450127}
+{"event": "verifier_commit", "hash": "b56783ca04aa203f8e9f6c1c11ed43bd5939ff96e0c875782f1bb7ebed2448f3", "steps": [0, 2, 10, 11, 12, 14, 25, 28], "t": 1795770522.819016}
+{"event": "reveal_compared", "t": 1795770522.8405054}
+{"event": "verifier_commit", "hash": "4f0f85b08a4fab7769a071f54099e8ccdfc2b23ed7bda2f01f9d2680e96a96ed", "steps": [13, 17, 21, 24, 25, 27, 28, 29], "t": 1795770533.9832108}
+{"event": "reveal_compared", "t": 1795770534.0180407}
+{"event": "verifier_commit", "hash": "e8da42cd2e4d4a60362de913f2d5ebcba02a044fa29a9b86d85de54e8da67d6a", "steps": [1, 9, 11, 14, 15, 18, 28, 29], "t": 1795770545.4002}
+{"event": "reveal_compared", "t": 1795770545.4227228}
+{"event": "verifier_commit", "hash": "1ea1a2bdaca2d43bbc0a1fe3a64e5d21a3e2b5beadab797eced11436a5535e6e", "steps": [2, 10, 13, 18, 20, 21, 22, 23], "t": 1795770556.7792008}
+{"event": "reveal_compared", "t": 1795770556.8004878}
+{"event": "verifier_commit", "hash": "206ce3a88561a541ab2b35e8b17ff832a9d469772d1bdd5a464f1669006817ad", "steps": [8, 11, 14, 17, 21, 23, 26, 27], "t": 1795770567.9147599}
+{"event": "reveal_compared", "t": 1795770567.9395046}
+{"event": "verifier_commit", "hash": "f73a7718bdd2c6ed4c4164699b2ca2678945b4f14693a580e238dc9d2c855eca", "steps": [1, 4, 12, 13, 17, 21, 25, 27], "t": 1795770579.2938817}
+{"event": "reveal_compared", "t": 1795770579.3178337}
+{"event": "verifier_commit", "hash": "7171d94ef90fdd049458d9cb66ead9635c7dc899661e2ed1c471151cf6f2edc0", "steps": [1, 4, 9, 18, 20, 21, 26, 27], "t": 1795770590.4550016}
+{"event": "reveal_compared", "t": 1795770590.470182}

@@ -1,0 +1,82 @@
+{
+ "run_id": "20261127-wp3-time-m-sdxl-euler-rtx5090-01",
+ "wp": "wp3",
+ "purpose": "attack M",
+ "git_commit": "c7057b8",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "f7c679f66f18",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "289cbe52-9c7b-f994-a289-16613445e481",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-27T08:31:03.760711+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "attack": "M",
+ "claimed": {
+  "steps": 30,
+  "cfg": 7.0,
+  "sampler": "euler",
+  "resolution": "1024x1024"
+ },
+ "actual": {
+  "flags": "--force-fp16 --use-pytorch-cross-attention",
+  "cheap_ckpt": null,
+  "lora": null,
+  "run_steps": null,
+  "cheap_sampler": "euler",
+  "s": 0.5,
+  "forger": "transform",
+  "pair_honest": true
+ },
+ "seeds": [
+  0
+ ],
+ "prompt_set": {
+  "file": "prompts_rent_test200.txt",
+  "n": 50
+ },
+ "draw_seed_sha256": "c8368a57a039c2772b7dc579c200ae407bb4aca93eb691e64e38e9584dde993a",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-27T08:35:50.028224+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 50,
+  "full_bytes": 863436392,
+  "kept_bytes": 13375464
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "vk7fctha2szhqz",
+ "data_center": "EUR-IS-1",
+ "gpu_uuid": "GPU-289cbe52-9c7b-f994-a289-16613445e481",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 1.2865269124507903,
+ "cost_usd": 1.7882724083065984,
+ "raw_checksums": {
+  "20261127-wp3-time-m-sdxl-euler-rtx5090-01.tar": "5ff52c14d7d5edacb6ad0b114decf89c5014ba22ef6e5836fa277806c6f94b18"
+ },
+ "pulled_unix": 1795770338.496888
+}

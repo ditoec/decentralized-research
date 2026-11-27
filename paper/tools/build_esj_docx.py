@@ -191,8 +191,22 @@ def make_run(base_rpr, s, fmt):
     return r
 
 
+CONTACT_EMAIL = ""  # corresponding author's e-mail for the title-page footnote (set by the authors)
+SHOW_NOTES = "--notes" in sys.argv  # red {R|..} and blue {T|..} authoring notes; hidden unless --notes
+NOTE = re.compile(r"\s*\{(?:R|T)\|[^{}]*\}")
+hidden_notes: list[str] = []
+
+
+def strip_notes(text: str) -> str:
+    if SHOW_NOTES:
+        return text
+    hidden_notes.extend(m.group(0).strip() for m in NOTE.finditer(text))
+    return NOTE.sub("", text).lstrip()
+
+
 def fill_para(p_el, text, base_rpr=None):
     """Remove all content but pPr from paragraph element and add runs from markup text."""
+    text = strip_notes(text)
     for child in list(p_el):
         if child.tag != qn("w:pPr"):
             p_el.remove(child)
@@ -476,7 +490,10 @@ def main(template, out):
     i_a = xml.find("<w:t>a</w:t>", i_contact)
     if i_contact >= 0 and i_a >= 0:
         xml = xml[:i_a] + "<w:t></w:t>" + xml[i_a + len("<w:t>a</w:t>"):]
-    xml = xml.replace("<w:t>uthor@institute.xxx</w:t>", "<w:t>TODO-corresponding-author-email</w:t>")
+    contact = CONTACT_EMAIL or ("TODO-corresponding-author-email" if SHOW_NOTES else "")
+    if not CONTACT_EMAIL and not SHOW_NOTES:
+        hidden_notes.append("CONTACT: corresponding-author e-mail not set (CONTACT_EMAIL)")
+    xml = xml.replace("<w:t>uthor@institute.xxx</w:t>", f"<w:t>{contact}</w:t>")
     assert "institute.xxx" not in xml, "footnote e-mail placeholder not replaced"
     with open(fpath, "w", encoding="utf8") as f:
         f.write(xml)
@@ -925,9 +942,11 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "of Equation 6 are extreme quantiles of the honest distribution: on the DGX Spark systems it runs all 600 "
          "calibration and development prompts, and on each rented card 300 of them plus 200 test prompts, so that each "
          "card is rented once. Every other configuration runs the same 50 prompts (32 calibration, 18 development) on "
-         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the reference "
+         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the SD1.5 reference "
          "jobs on one DGX Spark; level L2 runs 50 prompts in the reference configuration on all six DGX Spark systems "
-         "and on two RTX 5090 cards on different hosts.")
+         "and on two RTX 5090 cards on different hosts. For SDXL, the same-unit level L0 was not run, and the "
+         "DPM-Solver++(2M) sampler was compared across generations (L4) only; these cells are marked as not run in the "
+         "results.")
     Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
          "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
          "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
@@ -1010,8 +1029,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "simulated providers fake sT steps, the checked steps are drawn without replacement, and each checked step "
          "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
          "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
-         "interval, from a recorded random seed. Testbed jobs with injected attackers give an independent "
-         "check of the deterrence region at three sampling rates. {R|NEEDS WORK: the testbed demo (runbook §7 item 5) "
+         "interval, from a recorded random seed. {R|NEEDS WORK: testbed jobs with injected attackers at three sampling "
+         "rates would give an independent check of the deterrence region; the testbed demo (runbook §7 item 5) "
          "has not been run; run it or remove this sentence}")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
@@ -1021,7 +1040,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     steps = RW.r1_steps()
     Para("{b|Exact reproducibility.} Table 6 reports the share of jobs whose final images are bit-identical across "
          "two runs of the same workflow, by heterogeneity level. On one unit (L0) and across different units of the same "
-         "GPU model (L2), every image was bit-identical for both models and both samplers. Across chips of the same "
+         "GPU model (L2), every compared image was bit-identical: SD1.5 with both samplers at both levels, and SDXL with "
+         "the Euler sampler at L2. Across chips of the same "
          "generation (L3, DGX Spark and RTX 5090) and across generations (L4, RTX 3090 and RTX 4090 against the "
          "Spark), no image was bit-identical. Bit-exact reproduction is therefore available only within one GPU model, "
          "which a permissionless marketplace cannot enforce.")
@@ -1092,7 +1112,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "splits, and 3.3% or more in 0.8%, so prompt sampling alone is an unlikely explanation. The test failures "
          "concentrate on jobs that fail against all three cards (6 jobs, against 1 on the calibration split), which "
          "points to the DGX Spark reference images, regenerated for the test split in a separate run, or to a few "
-         "prompts. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
+         "prompts; the present runs cannot separate the two. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
          "them bit for bit with the calibration references, to tell the two causes apart}")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
@@ -1169,7 +1189,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "of quantized substitution is already known to fail {c|cai2025substitution}, and activation-based schemes apply, "
          "so LLM workloads are not evaluated here.")
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
-         "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
+         "attacked offline only; no job was submitted to a live network. {T|record the disclosure to the subnet operators and their response}")
     Para("{b|Limitations.} The attack study is reduced in scope: SDXL with the Euler sampler only, one provider → verifier "
          "direction (rented RTX 5090 → DGX Spark) and nine attack conditions of 100 test jobs each; A2b, A4–A7 and F4 were not "
          "run, and SD1.5 and DPM++ 2M were not attacked. One tolerance, the E1 image tolerance, was corrected after the "
@@ -1202,26 +1222,30 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 
     # ================================================================== 5 DECLARATIONS
     H1("6- Declarations")
-    H2("6-1- Author Contributions")
+    dn = iter(range(1, 20))
+    D = lambda t: H2(f"6-{next(dn)}- {t}")
+    D("Author Contributions")
     Para("Conceptualization, A.R.M.; methodology, A.R.M. and D.E.C.; software, E.R.; validation, E.R.; formal "
          "analysis, D.E.C.; investigation, E.R.; resources, E.R.; data curation, E.R.; writing—original draft "
          "preparation, D.E.C.; writing—review and editing, A.R.M., E.R. and P.Y.; visualization, D.E.C.; supervision, "
          "P.Y.; project administration, A.R.M. All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
-    H2("6-2- Data Availability Statement")
+    D("Data Availability Statement")
     Para("The data presented in this study are openly available in the GitHub repository https://github.com/ditoec/decentralized-research, archived at doi:10.5281/zenodo.24581118. They "
          "include code, workflow fingerprints, frozen thresholds, trajectories (or a sample, if storage limits apply) and "
          "checksums.", "decl")
-    H2("6-3- Funding")
+    D("Funding")
     Para("{T|state funder, award number and grant recipient, or:} Funding information is not available.", "decl")
-    H2("6-4- Acknowledgements")
-    Para("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required by "
-         "the journal}", "decl")
-    H2("6-5- Institutional Review Board Statement")
+    ACK = ("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required "
+           "by the journal}")
+    if strip_notes(ACK):  # the section appears once it has text beyond the authoring note
+        D("Acknowledgements")
+        Para(ACK, "decl")
+    D("Institutional Review Board Statement")
     Para("Not applicable.", "decl")
-    H2("6-6- Informed Consent Statement")
+    D("Informed Consent Statement")
     Para("Not applicable.", "decl")
-    H2("6-7- Conflicts of Interest")
+    D("Conflicts of Interest")
     Para("{T|E.R. is the founder of Vektor Labs: declare any commercial interest in GPU marketplaces or verification, "
          "or confirm none} The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
@@ -1230,4 +1254,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    args = [a for a in sys.argv[1:] if a != "--notes"]
+    main(args[0], args[1])
+    if hidden_notes:
+        print(f"{len(hidden_notes)} authoring notes hidden (build with --notes to show them):")
+        for n in hidden_notes:
+            print("  " + n[:110])

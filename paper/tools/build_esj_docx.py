@@ -475,8 +475,8 @@ ABSTRACT = (
  + RW.abstract_findings() + ". "
  "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
  "and that under step spot checks a rational provider cheats either fully or not at all. This yields a closed-form "
- "deterrence condition and a cost-optimal sampling policy; a partial-faking sweep matches the spot-check model once "
- "the steps a forgery spoils are counted."
+ "deterrence condition and a cost-optimal sampling policy. {R|NEEDS WORK: the forgery results and the cost saving "
+ "β_A are being re-measured; update the Findings sentence afterwards}"
 )
 
 
@@ -965,7 +965,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
          "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
          "interval, from a recorded random seed. Testbed jobs with injected attackers give an independent "
-         "check of the deterrence region at three sampling rates.")
+         "check of the deterrence region at three sampling rates. {R|NEEDS WORK: the testbed demo (runbook §7 item 5) "
+         "has not been run; run it or remove this sentence}")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
     H1("4- Results and Discussion")
@@ -982,6 +983,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           "pooled over the fp32, fp16 and bf16 profiles",
           ["Model, sampler", "L0 (same unit)", "L2 (same model)", "L3 (same generation)", "L4 (across generations)"],
           RW.r1_identity(), [44, 30, 30, 32, 32])
+    Para("{R|NEEDS WORK: Table 6 has no SDXL run at L0 and no SDXL DPM++ 2M run at L2 or L3, which Section 3-4 plans; run them or narrow the design text}")
     if fac:
         f = {k: v for k, v in fac.items()}
         Para("{b|Factors.} On one unit (L1), changing the numeric precision ("
@@ -1029,7 +1031,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
           RW.table_deployed(), [70, 49, 49])
     Para("{b|Calibrated evidence levels.} Table 8 reports the share of attacked jobs rejected (sensitivity q) by each "
          "calibrated evidence level at the frozen thresholds, with the honest false-rejection rate of the same level on "
-         "the 1,800 test jobs in the last row. " + RW.narr_r23())
+         "the 1,800 test jobs in the last row. " + RW.narr_r23() + " Both realised honest rates exceed their targets: "
+         "the 1.2% of E2-H lies above the 1% its per-step tolerances were set for, which is consistent with the "
+         "sampling error of a 99th-percentile tolerance estimated from the calibration split, and the 3.3% of E0 lies "
+         "above the 1% its thresholds were set for. {R|NEEDS WORK: explain the E0 gap between the calibration and test "
+         "splits} {R|NEEDS WORK: the F1–F3 rows of Tables 7 and 8 come from forgeries of an honest trajectory "
+         "(see Partial faking) and will change when F1–F3 are regenerated}")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
           ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
@@ -1047,9 +1054,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
          "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
          "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
-         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), and A1b's "
-         "schedule forgery re-solves every D{sub|i}, which costs more than the ten skipped steps save, so neither saves "
-         "GPU time as implemented here. " + RW.narr_r28())
+         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), as in the "
+         "pilot. The negative β{sub|A} of A1b and of the control M, however, are a measurement artefact: the attacked "
+         "jobs were timed over the whole attack harness, including forging and hashing, and the honest jobs over "
+         "sampling only, so M, which computes honestly, appears 13% slower. " + '{R|NEEDS WORK: β_A must be re-measured on the same timing field for attack and honest jobs}. ' + RW.narr_r28())
     Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
           "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
           ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],
@@ -1092,8 +1100,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "constant of E1 alone rejected every honest cross-architecture job, and the deployed cosine thresholds accepted "
          "unrelated work. Third, calibrate per step against a job-level false-rejection target on held-out honest "
          "cross-GPU pairs, and check the realised rate on a test split. Fourth, commit the full trajectory and check "
-         "solver consistency on every step on the CPU: it is cheap and, in this study, it caught the solver-inversion "
-         "forgery at every faked fraction below one, leaving only fully forged trajectories to the spot check.")
+         "solver consistency on every step on the CPU: it is cheap and rejects careless forgeries, but a forger who "
+         "computes its steps from its own forged states, or re-solves D{sub|i} with exact rounding, passes it, so the "
+         "spot check of Tier B carries the detection.")
     Para("{b|Relation to operator-level verification and to language models.} Sampler-level evidence and the "
          "operator-level evidence of TAO {c|yao2026tao} are complementary: where Tier B cannot separate an attack "
          "(" + RW.inseparable() + "), operator-level commitments or trusted execution {c|slalom2019} are required. For LLM inference, output-only detection "
@@ -1115,7 +1124,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "The full grid of software factors was measured on that one GPU platform, and on x86 only the precision, "
          "deterministic-mode and attention factors were measured. All results hold for the one pinned software stack; "
          "tolerances calibrated on it are not claimed to cover other PyTorch or CUDA versions, which is why the protocol "
-         "pins the image. Finally, re-execution establishes consistency with the committed "
+         "pins the image. Under thresholds v2 the delivered image is not bound to the committed trajectory, so a "
+         "provider could deliver an image other than the one its trajectory produces; closing this gap needs a "
+         "whole-image statistic. Finally, re-execution establishes consistency with the committed "
          "workload, not that a particular GPU performed it.")
 
     # ================================================================== 4 CONCLUSION

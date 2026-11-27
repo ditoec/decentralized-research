@@ -1,0 +1,2 @@
+run_id,wp,node,provider,cloud_type,data_center,hourly_rate_usd,model,model_sha256,resolution,steps,sampler,scheduler,cfg,precision_flags,cli_flags,prompt_set,seeds,retention,draw_seed_sha256,git_commit,comfyui_commit,image_digest,start_time,end_time,jobs_logged,jobs_with_image_sha,images_on_disk,images_mb,traj_mb,opened_mb,mean_s_per_job,pulled_unix,cost_usd
+20261127-wp5-testbed-01,wp5,,,,,,,,,,,,,,,,,,,,,,2026-11-27T16:02:30.461489+00:00,2026-11-27T18:08:18.632200+00:00,450,0,0,0.0,0.0,0.0,,,

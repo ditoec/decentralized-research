@@ -1212,7 +1212,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("This study asked what evidence a decentralized GPU marketplace must demand to detect cost-saving cheating on "
          "diffusion jobs, and at what cost. Honest outputs were bit-identical only within one GPU model under one pinned "
          "software profile, so every cross-hardware rule needs a tolerance (RQ1). " + RW.narr_r29() + " (RQ2). "
-         + RW.narr_r32() + " (RQ3). For marketplaces, the recommendation is to require the committed trajectory, an "
+         + RW.narr_r32() + RW.concl_testbed() + " (RQ3). For marketplaces, the recommendation is to require the committed trajectory, an "
          "all-step solver check on the CPU and a calibrated spot check of one to three steps, settled through an escrow "
          "with a bond. Future work should extend the attack study to more models, samplers and provider–verifier "
          "directions, replace the per-pixel image binding with a statistic that holds across architectures, and add "

@@ -719,15 +719,29 @@ def testbed_methods() -> str:
                   "check of the deterrence region; the testbed demo (runbook §7 item 5) has not been run")
     ps = sorted({c["p"] for c in t["cells"]})
     n = t["cells"][0]["n_attacker"]
-    return ("An end-to-end testbed on the Solana Devnet checks the deterrence region at three sampling rates, p ∈ {"
+    return ("An end-to-end testbed on the Solana Devnet tests Equation 7 at three sampling rates, p ∈ {"
             + ", ".join(f"{x:g}" for x in ps) + "}: an honest provider and two injected attackers, A3 with SDXL-Turbo "
             f"and the realistic F2 forger at s = 0.5, each serve the same {n} jobs at every rate, with k = "
-            f"{t['k']} checked steps and B/P = {t['B_over_P']:g}. The providers' outputs are the recorded outputs of "
-            "the rented RTX 5090 in the attack study; every escrow transaction, the on-chain draw, the verification of "
-            "each sampled job on a DGX Spark (and on a second one after a failed verdict) and the settlement are live. "
-            "A verifier receives the job's committed image, its opened steps and the claimed job, never an attack "
-            "label. The on-chain draw decides whether a job is checked; the checked steps are the first k of the "
-            "job's committed opening order.")
+            f"{t['k']} checked steps, B/P = {t['B_over_P']:g} and thresholds {t.get('thresholds', 'v1')} as frozen. "
+            "The providers' outputs are the recorded outputs of the rented RTX 5090 in the attack study; every escrow "
+            "transaction, the on-chain draw, the verification of each sampled job on a DGX Spark (and on a second one "
+            "after a failed verdict) and the settlement are live. A verifier receives the job's committed image, its "
+            "opened steps and the claimed job, never an attack label. The on-chain draw decides whether a job is "
+            "checked; the checked steps are the first k of the job's committed opening order. The realized gain of "
+            "an attacker is its mean payoff per job minus the honest provider's (payment received, bond lost if "
+            "slashed, GPU time spent, at c/P = 1), with a 95% bootstrap interval over jobs; the prediction is Equation 7 "
+            "with the job-level rates the attack study measured at the same configuration.")
+
+
+def _honest_fail_matches(failed: list[str]) -> bool:
+    """True if every honest job slashed in the testbed was also rejected at E2-H, same k, in the attack study (v1)."""
+    t = _testbed()
+    if t.get("thresholds", "v1") != "v1" or not failed:
+        return False
+    v = ROOT / "experiments" / "runs" / "20261126-wp3-verify-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01-on-spark3"
+    rej = {r["job_id"] for r in _jl(v / "verdicts.jsonl")
+           if r["evidence"] == "E2-H" and r.get("k") == t["k"] and r["verdict"] == "fail"}
+    return all(j in rej for j in failed)
 
 
 def narr_testbed() -> str:
@@ -738,23 +752,62 @@ def narr_testbed() -> str:
     run = ROOT / "experiments" / "runs" / t["run_id"]
     rows = _jl(run / "jobs.jsonl")
     ev = _jl(run / "events.jsonl")
+    lab = json.loads((run / "labels.json").read_text())["providers"]
+    hp = next(n for n, v in lab.items() if v["label"] == "honest")
     ntx = sum(e["source"] == "chain" for e in ev)
     nerr = sum(r["outcome"] == "error" for r in rows)
-    hon = [r for r in rows if r["provider"] == "pod-a" and r["outcome"] != "error"]
-    hs = [r for r in hon if r["outcome"] in ("pass", "fail", "unresolved")]
-    hf = sum(r["outcome"] == "fail" for r in hon)
-    parts = []
-    for c in t["cells"]:
-        parts.append(f"{c['attack'].replace('-', ' ')} at p = {c['p']:g}: Δ = {c['delta_mean']:+.2f}P "
-                     f"({c['delta_ci_lo']:+.2f} to {c['delta_ci_hi']:+.2f}; Equation 7: {c['delta_eq7']:+.2f}P)")
-    caught = {(c["attack"], c["p"]): c["outcomes_attacker"].get("fail", 0) for c in t["cells"]}
-    att_s = sum(sum(v for k, v in c["outcomes_attacker"].items() if k in ("pass", "fail", "unresolved")) for c in t["cells"])
-    att_f = sum(caught.values())
-    return (f"The testbed ran {len(rows)} jobs on Devnet ({ntx:,} transactions"
-            + (f"; {nerr} jobs ended in a client or RPC error and are excluded" if nerr else "") + "). "
-            f"Of the attackers' sampled jobs, {att_f} of {att_s} were slashed after two verifiers agreed; the honest "
-            f"provider was sampled {len(hs)} times and slashed {hf} times, a false rejection that both Spark verifiers "
-            "reproduced bit for bit. Realized gain over the honest provider, per job in units of P (c/P = 1, 95% "
-            "bootstrap interval): " + "; ".join(parts) + ". A negative gain means the attack does not pay at that "
-            "rate; the measured and predicted signs agree in "
-            f"{sum((c['delta_mean'] < 0) == (c['delta_eq7'] < 0) for c in t['cells'])} of {len(t['cells'])} cells.")
+    smp = ("pass", "fail", "unresolved")
+    hon = [r for r in rows if r["provider"] == hp and r["outcome"] != "error"]
+    att = [r for r in rows if r["provider"] != hp and r["outcome"] != "error"]
+    hs, hf = sum(r["outcome"] in smp for r in hon), [r["job"] for r in hon if r["outcome"] == "fail"]
+    a_s, a_f = sum(r["outcome"] in smp for r in att), sum(r["outcome"] == "fail" for r in att)
+    per = []
+    for prov, v in lab.items():
+        if prov == hp:
+            continue
+        rr = [r for r in att if r["provider"] == prov]
+        per.append(f"{v['label'].replace('-', ' ')} {sum(r['outcome'] == 'fail' for r in rr)} of "
+                   f"{sum(r['outcome'] in smp for r in rr)}")
+    cells = t["cells"]
+    sg = lambda x: f"{x:+.2f}".replace("-", "−")  # noqa: E731
+    parts = [f"{c['attack'].replace('-', ' ')} at p = {c['p']:g}: Δ = {sg(c['delta_mean'])}P "
+             f"({sg(c['delta_ci_lo'])} to {sg(c['delta_ci_hi'])}; Equation 7: {sg(c['delta_eq7'])}P)" for c in cells]
+    inside = [c for c in cells if c["delta_ci_lo"] <= c["delta_eq7"] <= c["delta_ci_hi"]]
+    out = [c for c in cells if c not in inside]
+    n = cells[0]["n_attacker"]
+    miss = "; ".join(f"in {c['attack'].replace('-', ' ')} at p = {c['p']:g} the draw sampled {c['n_sampled_attacker']} "
+                     f"of {n} attacked jobs against {c['p'] * n:g} expected" for c in out)
+    pos = all(c["delta_mean"] > 0 for c in cells) and all(c["delta_eq7"] > 0 for c in cells)
+    pst = {c["attack"]: c["p_star"] for c in cells}
+    hon_txt = (f"the honest provider was sampled {hs} times and never slashed" if not hf else
+               f"the honest provider was sampled {hs} times and slashed {len(hf)} time{'s' if len(hf) > 1 else ''} "
+               "(both Spark verifiers returned identical scores"
+               + ("; the attack study had rejected the same job under thresholds v1, which rejected "
+                  f"{pc(t['alpha_k'])}% of the RTX 5090's honest test jobs at k = {t['k']}, mostly through the E1 image "
+                  "tolerance that v2 later corrected" if _honest_fail_matches(hf) else "") + ")")
+    return (f"The testbed ran {len(rows)} jobs on Devnet ({ntx:,} transactions; "
+            + (f"{nerr} jobs ended in a client or RPC error and are excluded" if nerr else "no job ended in an error")
+            + f"). The on-chain draw sampled {a_s} of the attackers' {len(att)} jobs, and {a_f} of them were slashed "
+            f"after two verifiers agreed ({', '.join(per)}); {hon_txt}. Realized gain over the honest provider, per job "
+            "in units of P (95% bootstrap interval): " + "; ".join(parts) + ". "
+            f"Equation 7's prediction lies inside the interval in {len(inside)} of {len(cells)} cells"
+            + (f"; {miss}, and the realized gain is lower accordingly" if out else "") + ". "
+            + (f"Every gain is positive: at B/P = {t['B_over_P']:g} and p ≤ {max(c['p'] for c in cells):g} both attacks "
+               "pay, as Equation 9 with the same rates predicts (p* = "
+               + " and ".join(f"{v:.2f} for {k.replace('-', ' ')}" for k, v in pst.items()) + f" at k = {t['k']}). "
+               if pos else "")
+            + f"With {n} jobs per cell, the testbed checks the settlement path and the sign and size of Equation 7, "
+            "not its precision.")
+
+
+def concl_testbed() -> str:
+    """Conclusion: one clause on the Devnet testbed (empty until it has run)."""
+    t = _testbed()
+    if not t:
+        return ""
+    c = t["cells"]
+    inside = sum(x["delta_ci_lo"] <= x["delta_eq7"] <= x["delta_ci_hi"] for x in c)
+    pay = all(x["delta_mean"] > 0 for x in c)
+    return (f" On a Devnet testbed with injected attackers, Equation 7's predicted gain lay inside the realized gain's "
+            f"95% interval in {inside} of {len(c)} cells"
+            + (f", and both attacks still paid at p ≤ {max(x['p'] for x in c):g}, below p*" if pay else "") + ".")

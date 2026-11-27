@@ -1,0 +1,16 @@
+{"event": "waiting", "mem_available_gb": 35.0, "disk_free_gb": 348.3, "need_mem_gb": 35.0, "time": "2026-11-27T18:22:42+0700"}
+{"event": "started", "container": "0b848baf27fd", "attempt": 1, "mem_available_gb": 35.1, "time": "2026-11-27T18:23:43+0700"}
+{"event": "stopped_by_guard", "stops": 1, "mem_available_gb": 12.6, "disk_free_gb": 347.5, "time": "2026-11-27T18:28:59+0700"}
+{"event": "started", "container": "15f692ceb1cd", "attempt": 2, "mem_available_gb": 35.0, "time": "2026-11-27T18:38:59+0700"}
+{"event": "stopped_by_guard", "stops": 2, "mem_available_gb": 14.2, "disk_free_gb": 347.1, "time": "2026-11-27T18:42:50+0700"}
+{"event": "waiting", "mem_available_gb": 35.0, "disk_free_gb": 347.0, "need_mem_gb": 35.0, "time": "2026-11-27T18:52:50+0700"}
+{"event": "waiting", "mem_available_gb": 35.0, "disk_free_gb": 347.0, "need_mem_gb": 35.0, "time": "2026-11-27T18:53:50+0700"}
+{"event": "started", "container": "e0e522391ecd", "attempt": 3, "mem_available_gb": 35.0, "time": "2026-11-27T18:54:51+0700"}
+{"event": "stopped_by_guard", "stops": 3, "mem_available_gb": 12.6, "disk_free_gb": 346.4, "time": "2026-11-27T19:02:43+0700"}
+{"event": "aborted", "reason": "memory guard tripped repeatedly; workload too large for this node", "time": "2026-11-27T19:02:43+0700"}
+{"event": "started", "container": "5fd03317e2af", "attempt": 1, "mem_available_gb": 35.0, "time": "2026-11-27T19:02:43+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T19:02:53+0700"}
+{"event": "started", "container": "32ad238c515c", "attempt": 1, "mem_available_gb": 120.3, "time": "2026-11-27T23:20:40+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T23:38:04+0700"}
+{"event": "started", "container": "fca61d8fd2c2", "attempt": 1, "mem_available_gb": 120.3, "time": "2026-11-27T23:38:04+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T23:38:14+0700"}

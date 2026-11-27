@@ -423,6 +423,33 @@ def main(template, out):
         cells = t.findall(".//" + qn("w:tc"))
         numcell_p = cells[1].find(qn("w:p"))
         fill_para(numcell_p, f"({counters['eq']})", first_rpr(numcell_p))
+        # centre the formula on the text column: three cells (empty margin | formula, centred | number), the outer
+        # two of equal width, so the formula's centre is the page's centre line
+        total = sum(int(g.get(qn("w:w"))) for g in t.find(qn("w:tblGrid")))
+        side = 1000
+        widths = [side, total - 2 * side, side]
+        margin = copy.deepcopy(cells[1])
+        mp = margin.find(qn("w:p"))
+        for r in mp.findall(qn("w:r")):
+            mp.remove(r)
+        cells[0].addprevious(margin)
+        grid = t.find(qn("w:tblGrid"))
+        for g in list(grid):
+            grid.remove(g)
+        for tc, w in zip(t.findall(".//" + qn("w:tc")), widths):
+            gc = OxmlElement("w:gridCol"); gc.set(qn("w:w"), str(w)); grid.append(gc)
+            tc.find(qn("w:tcPr")).find(qn("w:tcW")).set(qn("w:w"), str(w))
+        eq_p = cells[0].find(qn("w:p"))
+        eq_p.find(qn("w:pPr")).find(qn("w:jc")).set(qn("w:val"), "center")
+        for jc in eq_p.iter(qn("m:jc")):
+            jc.set(qn("m:val"), "center")
+        tblPr = t.find(qn("w:tblPr"))
+        tblPr.find(qn("w:tblW")).attrib.update({qn("w:w"): str(total), qn("w:type"): "dxa"})
+        # schema order in tblPr: tblW, jc, ..., tblLayout, ..., tblLook
+        jt = OxmlElement("w:jc"); jt.set(qn("w:val"), "center"); tblPr.find(qn("w:tblW")).addnext(jt)
+        lay = OxmlElement("w:tblLayout"); lay.set(qn("w:type"), "fixed")
+        look = tblPr.find(qn("w:tblLook"))
+        look.addprevious(lay) if look is not None else tblPr.append(lay)
         add(t)
         return counters["eq"]
 

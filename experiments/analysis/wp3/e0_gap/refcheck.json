@@ -1,0 +1,8 @@
+{
+ "check_run": "20261127-wp3-e0check-cal30-sdxl-euler-spark3-01",
+ "calibration_reference_run": "20261125-wp2-ref-sdxl-fp16-sdpa-euler-nd-spark5-01",
+ "n_jobs": 90,
+ "image_identical": 90,
+ "latent_identical": 90,
+ "differing_jobs": []
+}

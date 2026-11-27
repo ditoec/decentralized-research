@@ -1,0 +1,221 @@
+{
+ "rule": "first three jobs of the attacked test-split job set (seed 0)",
+ "prompt_source": "PartiPrompts (google-research/parti, Apache-2.0)",
+ "tiles": [
+  {
+   "column": "spark",
+   "run_id": "20261126-wp3-rerun-sdxl-euler-spark3-01",
+   "job": "p00016_s0",
+   "png_sha256": "a0abb1edeec734326f05138799071ad7aafa7d92d899580f9fc41623ed6ce9d7"
+  },
+  {
+   "column": "rtx5090",
+   "run_id": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "9ec1c8b1859df36f9342b121ca295be31296798c52d2e930c3b555c684a873ea"
+  },
+  {
+   "column": "a1b",
+   "run_id": "20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "f557f788660d0ee3e7a5e9b2229deb5850e88843966e1a916a5752ca7e205abc"
+  },
+  {
+   "column": "a2",
+   "run_id": "20261126-wp3-atk-a2-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "9902643df7d9503686c526218f71bcded4556fd03788e39541d0c72da0addfc5"
+  },
+  {
+   "column": "a3turbo",
+   "run_id": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "d2bff2caf13552b58ef0e59d5d887125ffbe24a46e55e7f4c21e9cc0fce4050d"
+  },
+  {
+   "column": "a3lcm",
+   "run_id": "20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "ac1fe6eaac978f8f681ccff373151f5b2603ded11e18328224c87487c398b0a4"
+  },
+  {
+   "column": "atkr-f3",
+   "run_id": "20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "019ed8f6e4ac3b6d90bde2c719ed98ac3afb2669bdf121b910a169d36d99709d",
+   "faked": [
+    0,
+    1,
+    4,
+    5,
+    7,
+    13,
+    14,
+    15,
+    19,
+    20,
+    21,
+    22,
+    26,
+    27,
+    28
+   ]
+  },
+  {
+   "column": "a8",
+   "run_id": "20261126-wp3-atk-a8-sdxl-euler-rtx5090-01",
+   "job": "p00016_s0",
+   "png_sha256": "fb1fa7fc8486a7c417be96554313969dce622bc6b205148e07f08f00c1e781d4"
+  },
+  {
+   "column": "spark",
+   "run_id": "20261126-wp3-rerun-sdxl-euler-spark3-01",
+   "job": "p00020_s0",
+   "png_sha256": "699fc2fb7a274576e3cf48f45ffafa4d8786e8f91d8621392a8d7fd75149d67e"
+  },
+  {
+   "column": "rtx5090",
+   "run_id": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "3043ebc181e6a7f5d8ff1dc43529ff910ccc4bab127b227a3eb3f7b0802fcc76"
+  },
+  {
+   "column": "a1b",
+   "run_id": "20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "11640b9278d8fe65345094206f8d59eaf8c8cd4bd6be84bc9a885552d9034191"
+  },
+  {
+   "column": "a2",
+   "run_id": "20261126-wp3-atk-a2-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "55a79a929e530a6c3851b9f6582bdf60244c4cbfb5471d25523860f243c050c5"
+  },
+  {
+   "column": "a3turbo",
+   "run_id": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "3bd1f126603d4d2a57222b7bf9a5534f4d50d2914513f5b3e4ccddcd59d09f43"
+  },
+  {
+   "column": "a3lcm",
+   "run_id": "20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "1f3cefd3669d6e895b67d775c5c3ae28f183af3f24667da5edb666d0e18991b6"
+  },
+  {
+   "column": "atkr-f3",
+   "run_id": "20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "c8a95c78e6083aa8c0acb1e47705c35592f36e1d971aea139ccc63d42ddf898e",
+   "faked": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    9,
+    11,
+    14,
+    17,
+    18,
+    20,
+    23,
+    24,
+    25,
+    26
+   ]
+  },
+  {
+   "column": "a8",
+   "run_id": "20261126-wp3-atk-a8-sdxl-euler-rtx5090-01",
+   "job": "p00020_s0",
+   "png_sha256": "324744b248d6b760633ad2b6100910216ffe01728ecb00e59ef62aa0e69889c9"
+  },
+  {
+   "column": "spark",
+   "run_id": "20261126-wp3-rerun-sdxl-euler-spark3-01",
+   "job": "p00023_s0",
+   "png_sha256": "84228e2348455dc4dffc23f021b170f8e5478466979c9c4ddae5e11093344d45"
+  },
+  {
+   "column": "rtx5090",
+   "run_id": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "fd827f7fb86688a68690ec1d54cf63c8a0ebd0aad00f65c8d06099ab5da553e1"
+  },
+  {
+   "column": "a1b",
+   "run_id": "20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "dc6981c0a49291777e73d5b085f38383694b7b24d34bfc68527a9685a7e7fde7"
+  },
+  {
+   "column": "a2",
+   "run_id": "20261126-wp3-atk-a2-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "21396134f3e81f56d15219890deff69b179af16c12d8c9528070dd11448a9036"
+  },
+  {
+   "column": "a3turbo",
+   "run_id": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "e0ee91b810e4d87381f99276a5f9fe22ce4ab31fbf47d32f54e5fc8e2f5ad370"
+  },
+  {
+   "column": "a3lcm",
+   "run_id": "20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "d5dac3a150e0606367c0db04c77124fddcaed3f06bf5dee355e64528cc72b220"
+  },
+  {
+   "column": "atkr-f3",
+   "run_id": "20261127-wp3-atkr-f3-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "9ea54d5e88fafa46ef2676cad8748ebec82d41b12a6d05defb9857993e7a2cec",
+   "faked": [
+    2,
+    5,
+    7,
+    8,
+    10,
+    11,
+    14,
+    16,
+    17,
+    18,
+    19,
+    20,
+    22,
+    26,
+    29
+   ]
+  },
+  {
+   "column": "a8",
+   "run_id": "20261126-wp3-atk-a8-sdxl-euler-rtx5090-01",
+   "job": "p00023_s0",
+   "png_sha256": "d27f45b5eceb4a2ccc5e6850bf4e592d6cec2719b18f314129887872dc36abdc"
+  }
+ ],
+ "diff": [
+  {
+   "job": "p00016_s0",
+   "max_abs": 102,
+   "mean_abs": 1.00727113087972,
+   "share_equal": 0.23445701599121094
+  },
+  {
+   "job": "p00020_s0",
+   "max_abs": 130,
+   "mean_abs": 2.4292472203572593,
+   "share_equal": 0.10292720794677734
+  },
+  {
+   "job": "p00023_s0",
+   "max_abs": 126,
+   "mean_abs": 1.4717817306518555,
+   "share_equal": 0.19944000244140625
+  }
+ ]
+}

@@ -29,10 +29,12 @@ fi
 if has sweep; then
   for s in ${SWEEP_S:-0.1 0.25 0.5 0.75 1.0}; do
     tag=$(printf "s%03d" "$(awk -v s="$s" 'BEGIN{printf "%d", s*100+0.5}')")
-    id="$DATE-wp3-sweep-f3-$tag-sdxl-euler-$NODE-01"
-    run "$id" python -m trajver.attacks.run --flags="$REF" --wp wp3 --name "sweep-f3-$tag-sdxl-euler-$NODE" \
-      --run-id "$id" --attack F3 --s "$s" --ckpt $SDXL --ckpt-sha256 $SDXL_SHA --prompts $P --seeds 0 \
-      --limit "$LIMIT" --res 1024 --steps 30 --sampler euler
+    # FORGER=realistic: the forger that runs the model only at its computed steps (doc 14 item 2b), run ids sweepr-
+    pre=sweep; [ "${FORGER:-transform}" = realistic ] && pre=sweepr
+    id="$DATE-wp3-$pre-f3-$tag-sdxl-euler-$NODE-01"
+    run "$id" python -m trajver.attacks.run --flags="$REF" --wp wp3 --name "$pre-f3-$tag-sdxl-euler-$NODE" \
+      --run-id "$id" --attack F3 --s "$s" --forger "${FORGER:-transform}" --ckpt $SDXL --ckpt-sha256 $SDXL_SHA \
+      --prompts $P --seeds 0 --limit "$LIMIT" --res 1024 --steps 30 --sampler euler
   done
 fi
 if has verify; then

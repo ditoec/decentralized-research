@@ -12,17 +12,18 @@
   "20261127-wp3-verify-wp3-atk-a2-sdxl-euler-rtx5090-01-on-spark5",
   "20261127-wp3-verify-wp3-atk-a3turbo-sdxl-euler-rtx5090-01-on-spark5",
   "20261127-wp3-verify-wp3-atk-a3lcm-sdxl-euler-rtx5090-01-on-spark4",
-  "20261127-wp3-verify-wp3-atk-f1-sdxl-euler-rtx5090-01-on-spark6",
-  "20261127-wp3-verify-wp3-atk-f2-sdxl-euler-rtx5090-01-on-spark6",
-  "20261127-wp3-verify-wp3-atk-f3-sdxl-euler-rtx5090-01-on-spark5",
   "20261127-wp3-verify-wp3-atk-a8-sdxl-euler-rtx5090-01-on-spark6",
-  "20261127-wp3-verify-wp3-atk-m-sdxl-euler-rtx5090-01-on-spark5"
+  "20261127-wp3-verify-wp3-atk-m-sdxl-euler-rtx5090-01-on-spark5",
+  "20261127-wp3-verify-wp3-atkr-f1-sdxl-euler-rtx5090-01-on-spark4",
+  "20261127-wp3-verify-wp3-atkr-f2-sdxl-euler-rtx5090-01-on-spark5",
+  "20261127-wp3-verify-wp3-atkr-f3-sdxl-euler-rtx5090-01-on-spark6"
  ],
  "sweep": [
-  "20261127-wp3-verify-wp3-sweep-f3-s010-sdxl-euler-spark1-01-on-spark1",
-  "20261127-wp3-verify-wp3-sweep-f3-s025-sdxl-euler-spark1-01-on-spark1",
-  "20261127-wp3-verify-wp3-sweep-f3-s075-sdxl-euler-spark1-01-on-spark6",
-  "20261127-wp3-verify-wp3-sweep-f3-s100-sdxl-euler-spark1-01-on-spark3"
+  "20261127-wp3-verify-wp3-sweepr-f3-s010-sdxl-euler-spark1-01-on-spark4",
+  "20261127-wp3-verify-wp3-sweepr-f3-s025-sdxl-euler-spark1-01-on-spark6",
+  "20261127-wp3-verify-wp3-sweepr-f3-s050-sdxl-euler-spark1-01-on-spark1",
+  "20261127-wp3-verify-wp3-sweepr-f3-s075-sdxl-euler-spark5-01-on-spark5",
+  "20261127-wp3-verify-wp3-sweepr-f3-s100-sdxl-euler-spark6-01-on-spark6"
  ],
  "compare_files": [
   "20261126-wp3-rerun-sdxl-euler-spark3-01"

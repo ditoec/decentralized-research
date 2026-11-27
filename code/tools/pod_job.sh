@@ -102,7 +102,15 @@ if [ ${#LEFT[@]} -gt 0 ]; then
     [ -s /work/secret/draw_seed.hex ] || fail "no draw seed within 24 h"
     SEEDARG=(--seed-file /work/secret/draw_seed.hex)
   fi
-  "$PY" -m trajver.retention extract "${LEFT[@]}" --map "$POD_RETENTION" "${SEEDARG[@]}" || fail "retention extract"
+  # one extraction process per run (no shared files), threads split between them: sequential extraction
+  # took about 10 min per class-O run and 10 unbounded PyTorch processes thrash (LOG 2026-11-27 04:3x UTC)
+  NT=$(( $(nproc) / ${#LEFT[@]} )); [ "$NT" -ge 1 ] || NT=1
+  pids=(); for d in "${LEFT[@]}"; do
+    OMP_NUM_THREADS=$NT MKL_NUM_THREADS=$NT "$PY" -m trajver.retention extract "$d" --map "$POD_RETENTION" "${SEEDARG[@]}" \
+      > "/work/out/extract-$(basename "$d").log" 2>&1 & pids+=($!)
+  done
+  rc=0; for p in "${pids[@]}"; do wait "$p" || rc=1; done
+  [ $rc = 0 ] || fail "retention extract"
   "$PY" -m trajver.retention check "${LEFT[@]}" || fail "retention check"
   for d in "${LEFT[@]}"; do pack_run "$(basename "$d")" || fail "pack $d"; done
 fi

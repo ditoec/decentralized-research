@@ -94,7 +94,8 @@ def fig_partial():
                 alpha=0.8, label=f"Eq. 4, m = sT, k = {k}")
         # Eq. 4 with the measured detectable steps of each job (steps over tau), averaged over the jobs of each s
         ax.plot(s, [statistics.mean(theory.q_spot_check(30, m, k, 1.0, 0.0) for m in r["n_over_tau"]) for r in rk],
-                color=C[i], linewidth=1, linestyle="--", alpha=0.9)
+                color=C[i], linewidth=1, linestyle="--", alpha=0.9,
+                label="Eq. 4, m = steps above τ_i" if i == 0 else None)
     ax.set_xlabel("Faked fraction s (F3, solver inversion; DGX Spark, class F)")
     ax.set_ylabel("Jobs failing Tier B (share)")
     ax.set_ylim(-0.02, 1.05)

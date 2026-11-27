@@ -23,6 +23,7 @@ import docx
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import results_wp3 as RW  # noqa: E402  (every result number comes from experiments/analysis)
+from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Mm
 from lxml import etree
@@ -190,8 +191,22 @@ def make_run(base_rpr, s, fmt):
     return r
 
 
+CONTACT_EMAIL = ""  # corresponding author's e-mail for the title-page footnote (set by the authors)
+SHOW_NOTES = "--notes" in sys.argv  # red {R|..} and blue {T|..} authoring notes; hidden unless --notes
+NOTE = re.compile(r"\s*\{(?:R|T)\|[^{}]*\}")
+hidden_notes: list[str] = []
+
+
+def strip_notes(text: str) -> str:
+    if SHOW_NOTES:
+        return text
+    hidden_notes.extend(m.group(0).strip() for m in NOTE.finditer(text))
+    return NOTE.sub("", text).lstrip()
+
+
 def fill_para(p_el, text, base_rpr=None):
     """Remove all content but pPr from paragraph element and add runs from markup text."""
+    text = strip_notes(text)
     for child in list(p_el):
         if child.tag != qn("w:pPr"):
             p_el.remove(child)
@@ -397,6 +412,20 @@ def main(template, out):
                 p = cell.paragraphs[0]
                 p.style = doc.styles["table-text"]
                 fill_para(p._p, ("{b|" + txt + "}") if ri == 0 and "{" not in txt else txt)
+        # keep each table on one page: caption with the table, no row split, every row kept with the next (a table
+        # longer than a page still breaks, between rows, with its header row repeated)
+        cap = tbl._tbl.getprevious()
+        if cap is not None and cap.tag == qn("w:p"):
+            docx.text.paragraph.Paragraph(cap, doc._body).paragraph_format.keep_with_next = True
+        for ri, row in enumerate(tbl.rows):
+            trPr = row._tr.get_or_add_trPr()
+            trPr.append(OxmlElement("w:cantSplit"))
+            if ri == 0:
+                trPr.append(OxmlElement("w:tblHeader"))
+            if ri < len(tbl.rows) - 1:
+                for cell in row.cells:
+                    for p in cell.paragraphs:
+                        p.paragraph_format.keep_with_next = True
         # spacer paragraph after table
         add(fill_para(copy.deepcopy(proto["body"]), "", rpr["body"]))
 
@@ -408,6 +437,33 @@ def main(template, out):
         cells = t.findall(".//" + qn("w:tc"))
         numcell_p = cells[1].find(qn("w:p"))
         fill_para(numcell_p, f"({counters['eq']})", first_rpr(numcell_p))
+        # centre the formula on the text column: three cells (empty margin | formula, centred | number), the outer
+        # two of equal width, so the formula's centre is the page's centre line
+        total = sum(int(g.get(qn("w:w"))) for g in t.find(qn("w:tblGrid")))
+        side = 1000
+        widths = [side, total - 2 * side, side]
+        margin = copy.deepcopy(cells[1])
+        mp = margin.find(qn("w:p"))
+        for r in mp.findall(qn("w:r")):
+            mp.remove(r)
+        cells[0].addprevious(margin)
+        grid = t.find(qn("w:tblGrid"))
+        for g in list(grid):
+            grid.remove(g)
+        for tc, w in zip(t.findall(".//" + qn("w:tc")), widths):
+            gc = OxmlElement("w:gridCol"); gc.set(qn("w:w"), str(w)); grid.append(gc)
+            tc.find(qn("w:tcPr")).find(qn("w:tcW")).set(qn("w:w"), str(w))
+        eq_p = cells[0].find(qn("w:p"))
+        eq_p.find(qn("w:pPr")).find(qn("w:jc")).set(qn("w:val"), "center")
+        for jc in eq_p.iter(qn("m:jc")):
+            jc.set(qn("m:val"), "center")
+        tblPr = t.find(qn("w:tblPr"))
+        tblPr.find(qn("w:tblW")).attrib.update({qn("w:w"): str(total), qn("w:type"): "dxa"})
+        # schema order in tblPr: tblW, jc, ..., tblLayout, ..., tblLook
+        jt = OxmlElement("w:jc"); jt.set(qn("w:val"), "center"); tblPr.find(qn("w:tblW")).addnext(jt)
+        lay = OxmlElement("w:tblLayout"); lay.set(qn("w:type"), "fixed")
+        look = tblPr.find(qn("w:tblLook"))
+        look.addprevious(lay) if look is not None else tblPr.append(lay)
         add(t)
         return counters["eq"]
 
@@ -434,7 +490,10 @@ def main(template, out):
     i_a = xml.find("<w:t>a</w:t>", i_contact)
     if i_contact >= 0 and i_a >= 0:
         xml = xml[:i_a] + "<w:t></w:t>" + xml[i_a + len("<w:t>a</w:t>"):]
-    xml = xml.replace("<w:t>uthor@institute.xxx</w:t>", "<w:t>TODO-corresponding-author-email</w:t>")
+    contact = CONTACT_EMAIL or ("TODO-corresponding-author-email" if SHOW_NOTES else "")
+    if not CONTACT_EMAIL and not SHOW_NOTES:
+        hidden_notes.append("CONTACT: corresponding-author e-mail not set (CONTACT_EMAIL)")
+    xml = xml.replace("<w:t>uthor@institute.xxx</w:t>", f"<w:t>{contact}</w:t>")
     assert "institute.xxx" not in xml, "footnote e-mail placeholder not replaced"
     with open(fpath, "w", encoding="utf8") as f:
         f.write(xml)
@@ -475,8 +534,7 @@ ABSTRACT = (
  + RW.abstract_findings() + ". "
  "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
  "and that under step spot checks a rational provider cheats either fully or not at all. This yields a closed-form "
- "deterrence condition and a cost-optimal sampling policy. {R|NEEDS WORK: the forgery results and the cost saving "
- "β_A are being re-measured; update the Findings sentence afterwards}"
+ "deterrence condition and a cost-optimal sampling policy."
 )
 
 
@@ -884,9 +942,11 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "of Equation 6 are extreme quantiles of the honest distribution: on the DGX Spark systems it runs all 600 "
          "calibration and development prompts, and on each rented card 300 of them plus 200 test prompts, so that each "
          "card is rented once. Every other configuration runs the same 50 prompts (32 calibration, 18 development) on "
-         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the reference "
+         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the SD1.5 reference "
          "jobs on one DGX Spark; level L2 runs 50 prompts in the reference configuration on all six DGX Spark systems "
-         "and on two RTX 5090 cards on different hosts.")
+         "and on two RTX 5090 cards on different hosts. For SDXL, the same-unit level L0 was not run, and the "
+         "DPM-Solver++(2M) sampler was compared across generations (L4) only; these cells are marked as not run in the "
+         "results.")
     Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
          "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
          "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
@@ -906,10 +966,15 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "evaluates the subset marked in the table, for SDXL with the Euler sampler in the reference configuration, "
          "with a rented RTX 5090 as provider and DGX Spark systems as verifiers, which is the direction of a "
          "marketplace where consumer cards serve jobs: 100 attacked jobs per attack on the test split, the same jobs "
-         "for every attack. Partial faking is evaluated with F3 at five faked fractions s. The saving β{sub|A} is "
-         "measured, not assumed, on the rented GPU, which the job has to itself, against an honest run of the same "
-         "jobs.")
-    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved, median over the same jobs generated honestly on the same card; * evaluated in this study)",
+         "for every attack. The forgers F1–F3 walk the claimed schedule themselves: they run the denoising network "
+         "only at their computed steps, each from their own (possibly forged) state, produce every faked D{sub|i} "
+         "without a network call, and advance with the sampler's own update, so their commitments are consistent "
+         "under Tier A by construction. Partial faking is evaluated with F3 at five faked fractions s. The saving "
+         "β{sub|A} is measured, not assumed, on the rented GPU, which the job has to itself: each attacked job is "
+         "timed against an honest generation of the same job in the same process, in alternating order, on the "
+         "same timer (sampling, including trajectory capture); A2, whose fp8 setting applies to the whole process, "
+         "is timed against an honest run of the same jobs on the same card.")
+    Table("Attacks and forgeries (β{sub|A}: measured share of sampling GPU time saved, median over jobs, each paired with an honest generation of the same job on the same card; * evaluated in this study)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
           [["A1*", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30 (evaluated: 20 steps)", RW.table5_beta("A1b")],
            ["A2*", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", RW.table5_beta("A2")],
@@ -920,9 +985,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["A6", "Early exit", "Truncation, then extrapolation", "not evaluated"],
            ["A7", "Replay", "Output of a near-duplicate prompt", "not evaluated"],
            ["A8*", "Unrelated output", "Sanity control", RW.table5_beta("A8")],
-           ["F1*", "Frame copy", "Each faked state copies the previous one", RW.table5_beta("F1")],
-           ["F2*", "Interpolation", "Linear interpolation between computed anchor steps", RW.table5_beta("F2")],
-           ["F3*", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", RW.table5_beta("F3")],
+           ["F1*", "Frame copy", "Each faked step copies its input state (D{sub|i} = x{sub|i})", RW.table5_beta("F1")],
+           ["F2*", "Prediction reuse", "Each faked step reuses the last computed D{sub|i} (the design's interpolation needs later anchors, which a forger walking the schedule does not have)", RW.table5_beta("F2")],
+           ["F3*", "Solver inversion", "Extrapolate the next state; solve Equation 1 for the faked D{sub|i}", RW.table5_beta("F3")],
            ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "not evaluated"],
            ["M*", "Falsified metadata", "Negative control", RW.table5_beta("M")]],
           [14, 40, 90, 24])
@@ -964,8 +1029,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "simulated providers fake sT steps, the checked steps are drawn without replacement, and each checked step "
          "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
          "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
-         "interval, from a recorded random seed. Testbed jobs with injected attackers give an independent "
-         "check of the deterrence region at three sampling rates. {R|NEEDS WORK: the testbed demo (runbook §7 item 5) "
+         "interval, from a recorded random seed. {R|NEEDS WORK: testbed jobs with injected attackers at three sampling "
+         "rates would give an independent check of the deterrence region; the testbed demo (runbook §7 item 5) "
          "has not been run; run it or remove this sentence}")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
@@ -975,7 +1040,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     steps = RW.r1_steps()
     Para("{b|Exact reproducibility.} Table 6 reports the share of jobs whose final images are bit-identical across "
          "two runs of the same workflow, by heterogeneity level. On one unit (L0) and across different units of the same "
-         "GPU model (L2), every image was bit-identical for both models and both samplers. Across chips of the same "
+         "GPU model (L2), every compared image was bit-identical: SD1.5 with both samplers at both levels, and SDXL with "
+         "the Euler sampler at L2. Across chips of the same "
          "generation (L3, DGX Spark and RTX 5090) and across generations (L4, RTX 3090 and RTX 4090 against the "
          "Spark), no image was bit-identical. Bit-exact reproduction is therefore available only within one GPU model, "
          "which a permissionless marketplace cannot enforce.")
@@ -1023,6 +1089,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "its x{sub|0}, schedule and conditioning checks. A per-pixel maximum cannot bind the delivered image to the "
          "trajectory across architectures; a statistic over the whole image would be needed. Both versions are "
          "reported; v2 is a post-freeze correction of one parameter and is labelled as such.")
+    if RW.examples_caption():
+        Para("Figure 4 shows what the deployed rules and the verifier see: the delivered images of three test jobs, "
+             "honest on two GPUs and under each attack.")
+        Figure("R2.0", "", RW.examples_caption(), image="fig_r2_examples.png")
     Para("{b|Deployed rules.} Table 7 reports the acceptance rate of the reproduced deployed rules under each attack. "
          + RW.narr_r21())
     Table("Acceptance rate (%, 95% Wilson CI) of the deployed rules, SDXL Euler, test split; attacks on a rented "
@@ -1042,9 +1112,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "splits, and 3.3% or more in 0.8%, so prompt sampling alone is an unlikely explanation. The test failures "
          "concentrate on jobs that fail against all three cards (6 jobs, against 1 on the calibration split), which "
          "points to the DGX Spark reference images, regenerated for the test split in a separate run, or to a few "
-         "prompts. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
-         "them bit for bit with the calibration references, to tell the two causes apart} {R|NEEDS WORK: the F1–F3 rows of Tables 7 and 8 come from forgeries of an honest trajectory "
-         "(see Partial faking) and will change when F1–F3 are regenerated}")
+         "prompts; the present runs cannot separate the two. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
+         "them bit for bit with the calibration references, to tell the two causes apart}")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
           ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
@@ -1058,14 +1127,17 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            image="fig_r2_7_partial.png" if part else None)
     Para("{b|Per-step separability and cost share.} Table 9 gives, for each attack, the per-step separability r{sub|A} "
          "(the share of faked checked steps whose distance exceeds τ{sub|i}), the share of GPU time the attack saves "
-         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} compares each attacked job "
-         "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
-         "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
-         "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
-         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), as in the "
-         "pilot. The negative β{sub|A} of A1b and of the control M, however, are a measurement artefact: the attacked "
-         "jobs were timed over the whole attack harness, including forging and hashing, and the honest jobs over "
-         "sampling only, so M, which computes honestly, appears 13% slower. " + '{R|NEEDS WORK: β_A must be re-measured on the same timing field for attack and honest jobs}. ' + RW.narr_r28())
+         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} is measured in a second session "
+         "on a rented RTX 5090: each attacked job is timed against an honest generation of the same job in the same "
+         "process, in alternating order, on the same timer (sampling including trajectory capture), and A2 against an "
+         "honest run of the same jobs on the same card; the first job of each run is a warm-up and is dropped. The "
+         "controls M and A8, which compute a full honest job, come out at zero, as they should; A2 ran slower than "
+         "honest generation on this card (its fp8 weights are converted at run time) and saves nothing. "
+         + ("Pairing within one process matters: honest sampling of the same job set took {:.1f} s (median) on this "
+            "host and {:.1f} s on the first session's RTX 5090 host. ".format(*RW.host_sampling())
+            if RW.host_sampling() else "")
+         + "For the forgers, which fake a share s of the steps, p* uses Equation 4's detection "
+         "q(s, k) rather than the full-job term 1 − (1 − r{sub|A}){sup|k}. " + RW.narr_r28())
     Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
           "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
           ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],
@@ -1117,14 +1189,14 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "of quantized substitution is already known to fail {c|cai2025substitution}, and activation-based schemes apply, "
          "so LLM workloads are not evaluated here.")
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
-         "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
+         "attacked offline only; no job was submitted to a live network. {T|record the disclosure to the subnet operators and their response}")
     Para("{b|Limitations.} The attack study is reduced in scope: SDXL with the Euler sampler only, one provider → verifier "
          "direction (rented RTX 5090 → DGX Spark) and nine attack conditions of 100 test jobs each; A2b, A4–A7 and F4 were not "
          "run, and SD1.5 and DPM++ 2M were not attacked. One tolerance, the E1 image tolerance, was corrected after the "
          "freeze (v2, calibration split only, rule fixed before measuring), and both versions are reported. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
          "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
          "tested (SD1.5 and SDXL on RTX 3090, RTX 4090, RTX 5090 and DGX Spark), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
-         "independent per-step outcomes, which are checked empirically (Figure 4). Reputation is not modelled in Equation "
+         "independent per-step outcomes, which are checked empirically (Figure 5). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
          "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
@@ -1150,26 +1222,30 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 
     # ================================================================== 5 DECLARATIONS
     H1("6- Declarations")
-    H2("6-1- Author Contributions")
+    dn = iter(range(1, 20))
+    D = lambda t: H2(f"6-{next(dn)}- {t}")
+    D("Author Contributions")
     Para("Conceptualization, A.R.M.; methodology, A.R.M. and D.E.C.; software, E.R.; validation, E.R.; formal "
          "analysis, D.E.C.; investigation, E.R.; resources, E.R.; data curation, E.R.; writing—original draft "
          "preparation, D.E.C.; writing—review and editing, A.R.M., E.R. and P.Y.; visualization, D.E.C.; supervision, "
          "P.Y.; project administration, A.R.M. All "
          "authors have read and agreed to the published version of the manuscript.", "decl")
-    H2("6-2- Data Availability Statement")
+    D("Data Availability Statement")
     Para("The data presented in this study are openly available in the GitHub repository https://github.com/ditoec/decentralized-research, archived at doi:10.5281/zenodo.24581118. They "
          "include code, workflow fingerprints, frozen thresholds, trajectories (or a sample, if storage limits apply) and "
          "checksums.", "decl")
-    H2("6-3- Funding")
+    D("Funding")
     Para("{T|state funder, award number and grant recipient, or:} Funding information is not available.", "decl")
-    H2("6-4- Acknowledgements")
-    Para("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required by "
-         "the journal}", "decl")
-    H2("6-5- Institutional Review Board Statement")
+    ACK = ("{T|acknowledgements, up to 100 words; include the statement on AI-assisted writing and editing if required "
+           "by the journal}")
+    if strip_notes(ACK):  # the section appears once it has text beyond the authoring note
+        D("Acknowledgements")
+        Para(ACK, "decl")
+    D("Institutional Review Board Statement")
     Para("Not applicable.", "decl")
-    H2("6-6- Informed Consent Statement")
+    D("Informed Consent Statement")
     Para("Not applicable.", "decl")
-    H2("6-7- Conflicts of Interest")
+    D("Conflicts of Interest")
     Para("{T|E.R. is the founder of Vektor Labs: declare any commercial interest in GPU marketplaces or verification, "
          "or confirm none} The authors declare that there is no conflict of interests regarding the publication of this manuscript. In "
          "addition, the ethical issues, including plagiarism, informed consent, misconduct, data fabrication and/or "
@@ -1178,4 +1254,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    args = [a for a in sys.argv[1:] if a != "--notes"]
+    main(args[0], args[1])
+    if hidden_notes:
+        print(f"{len(hidden_notes)} authoring notes hidden (build with --notes to show them):")
+        for n in hidden_notes:
+            print("  " + n[:110])

@@ -3,7 +3,9 @@
 Solana Anchor program for the escrow substrate of runbook `docs/07-runbook.md` §7 item 1, with
 its TypeScript client, the state-machine tests and the path replay of §7 item 3.
 Program id (localnet): `HmMX8b7GLwUeJv4dw42xHAryRVfQm319ArWNbfj9ePpf`. The program keypair is not
-in the repository. Before deploying to Devnet, generate one and run `anchor keys sync`. Mainnet is never used.
+in the repository; the operator's Mac keeps it in `target/deploy/` (git-ignored). Deploying to Devnet with
+that keypair keeps the same id and the same binary (`program_so_sha256` of the local run). Without it, generate
+a new keypair, run `anchor keys sync` and rebuild. Mainnet is never used.
 
 ## Layout
 
@@ -124,5 +126,44 @@ The four paths are interleaved in a shuffled order each round. Before each job a
 (not counted) forces p = 0 (unsampled) or p = 1 (the other paths). The replay writes
 `experiments/runs/<date>-wp5-escrow-replay-local-NN/` with `manifest.json`, `summary.json` (per path:
 transactions, signatures, compute units and fees per job, and CU per instruction) and `txs.jsonl`
-(one row per transaction with its signature). The script refuses any URL that is not a local validator.
-The Devnet runs and the calculated mainnet fee per path are a later step.
+(one row per transaction with its signature). With `--cluster localnet` (the default) the script refuses
+any URL that is not a local validator.
+
+## Path replay on Devnet
+
+`--cluster devnet` uses `https://api.devnet.solana.com` and no other URL. Any URL containing "mainnet",
+and any RPC that reports Mainnet's genesis hash, is a hard error. The script airdrops nothing on Devnet.
+The `--admin` keypair must already hold Devnet SOL, and the script funds five throwaway actor keypairs
+from it by transfer (saved, git-ignored, as `.anchor/devnet/actors-<run>.json`). On Devnet the deadlines
+are `exec_timeout` 150 slots and `dispute_timeout` 600 slots, and the timeout path keeps
+`exec_timeout` = 2 slots, so it waits for a real deadline. The program is unchanged. The run folder is
+`experiments/runs/<date>-wp5-devnet-replay-NN/`, and `summary.json` also gives the per-transaction
+confirm-time median and p95 and the mean CU.
+
+```bash
+export PATH="$HOME/.cargo/bin:$HOME/.local/share/solana/install/active_release/bin:$PATH"
+solana-keygen new --no-bip39-passphrase -o .anchor/devnet/keypair-payer.json   # git-ignored
+# fund it with Devnet SOL (see below), then deploy the same binary as the local run:
+solana program deploy -u devnet -k .anchor/devnet/keypair-payer.json \
+  --program-id target/deploy/trajescrow-keypair.json target/deploy/trajescrow.so
+npx ts-node -P tsconfig.json scripts/replay.ts --cluster devnet --admin .anchor/devnet/keypair-payer.json --n 100
+```
+
+On the public RPC the replay spaces its requests, confirms by polling `getSignatureStatuses` (the websocket is
+rate-limited), counts 429s per transaction (`rpc_429`), retries dropped connections, keeps failed jobs in
+`jobs.jsonl` with their error, and starts job ids at a time-based base (Job PDAs persist on Devnet). If some
+paths end short of their target, run a top-up and combine:
+
+```bash
+npx ts-node -P tsconfig.json scripts/replay.ts --cluster devnet --admin .anchor/devnet/keypair-payer.json \
+  --only dispute=10,timeout=3 --topup-of <main-run-id> --seed 2   # counts = successful jobs still needed
+python3 scripts/combine_replay.py ../../experiments/runs/<main-run> ../../experiments/runs/<top-up-run>
+```
+
+Funding: since 2026-11-26 the Devnet RPC faucet (`solana airdrop`) answers
+`410 The RPC faucet is closed on this cluster`. Devnet SOL now comes only from the web faucet
+(faucet.solana.com, which needs a sign-in and a CAPTCHA, so a person must request it). A run needs about
+1.80 SOL of program rent (plus the same again for the deploy buffer, refunded afterwards), 0.0032 SOL of
+Job-account rent per job (Job accounts are never closed, so this is 1.29 SOL for 400 jobs), and fees. In
+all that is about 3.5 SOL kept and about 5.3 SOL at the peak.
+The calculated mainnet fee per path is a later step.

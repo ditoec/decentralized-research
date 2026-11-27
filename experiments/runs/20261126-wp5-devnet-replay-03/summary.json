@@ -1,0 +1,498 @@
+{
+ "cluster": "devnet",
+ "paths": {
+  "unsampled": {
+   "n_jobs": 100,
+   "n_ok": 96,
+   "instructions": [
+    "create_job",
+    "accept_job",
+    "commit_result",
+    "draw_sample",
+    "release"
+   ],
+   "tx_per_job": {
+    "n": 100,
+    "mean": 4.8,
+    "min": 0,
+    "median": 5,
+    "p95": 5,
+    "max": 5
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 4.8,
+    "min": 0,
+    "median": 5,
+    "p95": 5,
+    "max": 5
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 74826,
+    "min": 0,
+    "median": 77826,
+    "p95": 82362,
+    "max": 86836
+   },
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 24000,
+    "min": 0,
+    "median": 25000,
+    "p95": 25000,
+    "max": 25000
+   },
+   "ms_to_confirmed_per_job": {
+    "n": 100,
+    "mean": 11111.33,
+    "min": 0,
+    "median": 11099,
+    "p95": 15767,
+    "max": 19425
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 480,
+    "mean": 2314.86,
+    "min": 835,
+    "median": 1369,
+    "p95": 5627,
+    "max": 10237
+   },
+   "compute_units_per_tx_mean": 15588.8,
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 367,
+    "mean": 1433.52,
+    "min": 835,
+    "median": 1321,
+    "p95": 2026,
+    "max": 8158
+   },
+   "n_tx_with_rpc_429": 113,
+   "n_tx_missing_meta": 0,
+   "compute_units_by_instruction": {
+    "create_job": {
+     "n": 96,
+     "mean": 24645.38,
+     "min": 21536,
+     "median": 24536,
+     "p95": 29036,
+     "max": 33536
+    },
+    "accept_job": {
+     "n": 96,
+     "mean": 10873.22,
+     "min": 10873,
+     "median": 10873,
+     "p95": 10873,
+     "max": 10894
+    },
+    "commit_result": {
+     "n": 96,
+     "mean": 5648,
+     "min": 5648,
+     "median": 5648,
+     "p95": 5648,
+     "max": 5648
+    },
+    "draw_sample": {
+     "n": 96,
+     "mean": 9280.5,
+     "min": 9273,
+     "median": 9283,
+     "p95": 9288,
+     "max": 9288
+    },
+    "release": {
+     "n": 96,
+     "mean": 27496.66,
+     "min": 27496,
+     "median": 27496,
+     "p95": 27496,
+     "max": 27517
+    }
+   }
+  },
+  "pass": {
+   "n_jobs": 100,
+   "n_ok": 96,
+   "instructions": [
+    "create_job",
+    "accept_job",
+    "commit_result",
+    "draw_sample",
+    "submit_verdict:commit",
+    "submit_verdict:reveal",
+    "release"
+   ],
+   "tx_per_job": {
+    "n": 100,
+    "mean": 6.72,
+    "min": 0,
+    "median": 7,
+    "p95": 7,
+    "max": 7
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 6.72,
+    "min": 0,
+    "median": 7,
+    "p95": 7,
+    "max": 7
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 94075.8,
+    "min": 0,
+    "median": 97695,
+    "p95": 102205,
+    "max": 109700
+   },
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 33600,
+    "min": 0,
+    "median": 35000,
+    "p95": 35000,
+    "max": 35000
+   },
+   "ms_to_confirmed_per_job": {
+    "n": 100,
+    "mean": 16960.4,
+    "min": 0,
+    "median": 17342,
+    "p95": 24375,
+    "max": 28442
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 672,
+    "mean": 2523.87,
+    "min": 884,
+    "median": 1404,
+    "p95": 5722,
+    "max": 13053
+   },
+   "compute_units_per_tx_mean": 13999.4,
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 481,
+    "mean": 1417.22,
+    "min": 884,
+    "median": 1330,
+    "p95": 1899,
+    "max": 3583
+   },
+   "n_tx_with_rpc_429": 191,
+   "n_tx_missing_meta": 0,
+   "compute_units_by_instruction": {
+    "create_job": {
+     "n": 96,
+     "mean": 24832.88,
+     "min": 21536,
+     "median": 24536,
+     "p95": 29036,
+     "max": 36536
+    },
+    "accept_job": {
+     "n": 96,
+     "mean": 10873,
+     "min": 10873,
+     "median": 10873,
+     "p95": 10873,
+     "max": 10873
+    },
+    "commit_result": {
+     "n": 96,
+     "mean": 5648,
+     "min": 5648,
+     "median": 5648,
+     "p95": 5648,
+     "max": 5648
+    },
+    "draw_sample": {
+     "n": 96,
+     "mean": 9278.66,
+     "min": 9271,
+     "median": 9281,
+     "p95": 9286,
+     "max": 9291
+    },
+    "submit_verdict:commit": {
+     "n": 96,
+     "mean": 7763,
+     "min": 7763,
+     "median": 7763,
+     "p95": 7763,
+     "max": 7763
+    },
+    "submit_verdict:reveal": {
+     "n": 96,
+     "mean": 8015,
+     "min": 8015,
+     "median": 8015,
+     "p95": 8015,
+     "max": 8015
+    },
+    "release": {
+     "n": 96,
+     "mean": 31585.09,
+     "min": 31584,
+     "median": 31584,
+     "p95": 31605,
+     "max": 31605
+    }
+   }
+  },
+  "dispute": {
+   "n_jobs": 100,
+   "n_ok": 90,
+   "instructions": [
+    "create_job",
+    "accept_job",
+    "commit_result",
+    "draw_sample",
+    "submit_verdict:commit",
+    "submit_verdict:reveal",
+    "escalate",
+    "final_verdict:commit",
+    "final_verdict:reveal",
+    "slash"
+   ],
+   "tx_per_job": {
+    "n": 100,
+    "mean": 9,
+    "min": 0,
+    "median": 10,
+    "p95": 10,
+    "max": 10
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 9,
+    "min": 0,
+    "median": 10,
+    "p95": 10,
+    "max": 10
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 112781.41,
+    "min": 0,
+    "median": 123862,
+    "p95": 131367,
+    "max": 137357
+   },
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 45000,
+    "min": 0,
+    "median": 50000,
+    "p95": 50000,
+    "max": 50000
+   },
+   "ms_to_confirmed_per_job": {
+    "n": 100,
+    "mean": 23875.09,
+    "min": 0,
+    "median": 25790,
+    "p95": 35145,
+    "max": 39129
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 900,
+    "mean": 2652.79,
+    "min": 788,
+    "median": 1419,
+    "p95": 5754,
+    "max": 12738
+   },
+   "compute_units_per_tx_mean": 12531.3,
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 618,
+    "mean": 1403.44,
+    "min": 788,
+    "median": 1332,
+    "p95": 1947,
+    "max": 3372
+   },
+   "n_tx_with_rpc_429": 282,
+   "n_tx_missing_meta": 0,
+   "compute_units_by_instruction": {
+    "create_job": {
+     "n": 90,
+     "mean": 24486,
+     "min": 21536,
+     "median": 23036,
+     "p95": 30536,
+     "max": 36536
+    },
+    "accept_job": {
+     "n": 90,
+     "mean": 10873.47,
+     "min": 10873,
+     "median": 10873,
+     "p95": 10873,
+     "max": 10894
+    },
+    "commit_result": {
+     "n": 90,
+     "mean": 5648,
+     "min": 5648,
+     "median": 5648,
+     "p95": 5648,
+     "max": 5648
+    },
+    "draw_sample": {
+     "n": 90,
+     "mean": 9279.11,
+     "min": 9271,
+     "median": 9281,
+     "p95": 9286,
+     "max": 9286
+    },
+    "submit_verdict:commit": {
+     "n": 90,
+     "mean": 7763,
+     "min": 7763,
+     "median": 7763,
+     "p95": 7763,
+     "max": 7763
+    },
+    "submit_verdict:reveal": {
+     "n": 90,
+     "mean": 8016,
+     "min": 8016,
+     "median": 8016,
+     "p95": 8016,
+     "max": 8016
+    },
+    "escalate": {
+     "n": 90,
+     "mean": 7445,
+     "min": 7445,
+     "median": 7445,
+     "p95": 7445,
+     "max": 7445
+    },
+    "final_verdict:commit": {
+     "n": 90,
+     "mean": 7774,
+     "min": 7774,
+     "median": 7774,
+     "p95": 7774,
+     "max": 7774
+    },
+    "final_verdict:reveal": {
+     "n": 90,
+     "mean": 8028,
+     "min": 8028,
+     "median": 8028,
+     "p95": 8028,
+     "max": 8028
+    },
+    "slash": {
+     "n": 90,
+     "mean": 36000.1,
+     "min": 35998,
+     "median": 35998,
+     "p95": 36019,
+     "max": 36019
+    }
+   }
+  },
+  "timeout": {
+   "n_jobs": 100,
+   "n_ok": 97,
+   "instructions": [
+    "create_job",
+    "accept_job",
+    "timeout_refund"
+   ],
+   "tx_per_job": {
+    "n": 100,
+    "mean": 2.91,
+    "min": 0,
+    "median": 3,
+    "p95": 3,
+    "max": 3
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 2.91,
+    "min": 0,
+    "median": 3,
+    "p95": 3,
+    "max": 3
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 61203.97,
+    "min": 0,
+    "median": 61864,
+    "p95": 69343,
+    "max": 72343
+   },
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 14550,
+    "min": 0,
+    "median": 15000,
+    "p95": 15000,
+    "max": 15000
+   },
+   "ms_to_confirmed_per_job": {
+    "n": 100,
+    "mean": 7173.6,
+    "min": 0,
+    "median": 7817,
+    "p95": 12615,
+    "max": 17712
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 291,
+    "mean": 2465.15,
+    "min": 906,
+    "median": 1388,
+    "p95": 5651,
+    "max": 14745
+   },
+   "compute_units_per_tx_mean": 21032.3,
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 214,
+    "mean": 1398.98,
+    "min": 906,
+    "median": 1339,
+    "p95": 1820,
+    "max": 2853
+   },
+   "n_tx_with_rpc_429": 77,
+   "n_tx_missing_meta": 0,
+   "compute_units_by_instruction": {
+    "create_job": {
+     "n": 97,
+     "mean": 24288.58,
+     "min": 21536,
+     "median": 24536,
+     "p95": 30536,
+     "max": 33536
+    },
+    "accept_job": {
+     "n": 97,
+     "mean": 10873,
+     "min": 10873,
+     "median": 10873,
+     "p95": 10873,
+     "max": 10873
+    },
+    "timeout_refund": {
+     "n": 97,
+     "mean": 27935.3,
+     "min": 27934,
+     "median": 27934,
+     "p95": 27955,
+     "max": 27955
+    }
+   }
+  }
+ }
+}

@@ -23,6 +23,7 @@ import docx
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import results_wp3 as RW  # noqa: E402  (every result number comes from experiments/analysis)
+from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Mm
 from lxml import etree
@@ -397,6 +398,20 @@ def main(template, out):
                 p = cell.paragraphs[0]
                 p.style = doc.styles["table-text"]
                 fill_para(p._p, ("{b|" + txt + "}") if ri == 0 and "{" not in txt else txt)
+        # keep each table on one page: caption with the table, no row split, every row kept with the next (a table
+        # longer than a page still breaks, between rows, with its header row repeated)
+        cap = tbl._tbl.getprevious()
+        if cap is not None and cap.tag == qn("w:p"):
+            docx.text.paragraph.Paragraph(cap, doc._body).paragraph_format.keep_with_next = True
+        for ri, row in enumerate(tbl.rows):
+            trPr = row._tr.get_or_add_trPr()
+            trPr.append(OxmlElement("w:cantSplit"))
+            if ri == 0:
+                trPr.append(OxmlElement("w:tblHeader"))
+            if ri < len(tbl.rows) - 1:
+                for cell in row.cells:
+                    for p in cell.paragraphs:
+                        p.paragraph_format.keep_with_next = True
         # spacer paragraph after table
         add(fill_para(copy.deepcopy(proto["body"]), "", rpr["body"]))
 

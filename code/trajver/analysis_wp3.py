@@ -399,6 +399,23 @@ def timing(run: Run) -> dict:
     return {r["job"]: r for r in rows[1:]}  # the first job of a run is the warm-up
 
 
+def load_timing(path) -> Run:
+    """An attack generation run used only for its timings (beta_A); the attack name as in load_run."""
+    path = Path(path)
+    if not (path / "jobs.jsonl").exists():
+        raise SystemExit(f"{path}: no jobs.jsonl (--timing takes attack generation runs)")
+    m = json.loads((path / "manifest.json").read_text())
+    attack = m.get("attack") or "honest"
+    if attack == "honest":
+        raise SystemExit(f"{path}: not an attack run")
+    v = re.search(r"-(?:atk|atkr|time)-(a3[a-z]+)-", path.name)
+    if attack == "A3" and v:
+        attack = {"a3turbo": "A3-Turbo", "a3lcm": "A3-LCM"}.get(v.group(1), attack)
+    s = (m.get("actual") or {}).get("s") if attack in S_ATTACKS else None
+    sampler = (m.get("claimed") or {}).get("sampler") or "unknown"
+    return Run(path.name, path, attack, s, model_label(m), sampler, gpu_label(m), "", None, path.name, path)
+
+
 def load_gen(path) -> Run:
     """A generation run used only for its timings (the honest baseline ``*-wp3-base-*``, a ``pilot gen`` run)."""
     path = Path(path)
@@ -490,6 +507,9 @@ def main(argv=None):
     ap.add_argument("--sweep", nargs="*", default=[])
     ap.add_argument("--baseline", nargs="*", default=[],
                     help="honest generation runs timed on the attacked job set (beta_A); default: the --honest runs' sources")
+    ap.add_argument("--timing", nargs="*", default=[],
+                    help="attack GENERATION runs used only for beta_A (attacks.run --pair-honest, or A2 against "
+                         "--baseline on one field); when given, beta_A comes only from these runs")
     ap.add_argument("--thresholds", required=True)
     ap.add_argument("--th-sha256", default=None)
     ap.add_argument("--compare", default=None, help="folder of pilot compare --e0-out files <run_a>__<run_b>.e0.jsonl")
@@ -528,7 +548,8 @@ def main(argv=None):
     write(out / "r2_4_beta.csv", ["attack", "s", "model", "provider", "n_matched", "beta_median", "beta_ci_lo",
                                   "beta_ci_hi", "t_attack_median_s", "t_honest_median_s", "time_fields", "n_boot",
                                   "run_ids", "honest_run_ids"],
-          table_beta(attacked, [load_gen(p) for p in a.baseline] or honest, a.n_boot), a.partial)
+          table_beta([load_timing(p) for p in a.timing] or attacked, [load_gen(p) for p in a.baseline] or honest,
+                     a.n_boot), a.partial)
     write(out / "fig_r2_7_partial.csv", ["attack", "s", "k", "n_jobs", "n_detected", "alpha_s", "r_measured",
                                          "alpha_s_source", "model", "sampler", "run_ids"],
           table_partial(sweep, honest, th), a.partial)

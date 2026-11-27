@@ -5,14 +5,18 @@
 #
 #   bash code/tools/wp3_analyze.sh [--no-fetch] [--partial]
 #
-# Placement (LOG 2026-11-27, rebalanced 05:12 UTC): Spark-4 a1b a3lcm; Spark-5 a2 a3turbo f3 m (+ cost replay); Spark-6 a8 f1 f2 base;
-# Spark-3 honest test verify/E0/E1-image; Spark-1 the F3 sweep. Node N is 10.41.3.(N+1) (docs/local-nodes.md).
+# Placement (LOG 2026-11-27, rebalanced 05:12 UTC): Spark-4 a1b a3lcm; Spark-5 a2 a3turbo m (+ cost replay); Spark-6 a8 base;
+# Spark-3 honest test verify/E0/E1-image. Session 2 (doc 14 items 1, 2): the realistic forgers atkr-f1/f2/f3 (pulled to
+# Spark-5, verified on Spark-4/5/6), the timing runs time-* and timebase (Spark-5), the realistic F3 sweep sweepr-*
+# (Spark-1). The transform F1-F3 runs and sweep of session 1 are superseded (inflated detection; doc 14 item 2).
+# Node N is 10.41.3.(N+1) (docs/local-nodes.md).
 set -o pipefail  # no -u: bash 3.2 (macOS) treats empty arrays as unbound
 cd "$(dirname "$0")/../.."
 FETCH=1; PARTIAL=(); for x in "$@"; do case $x in --no-fetch) FETCH=0;; --partial) PARTIAL=(--partial);; esac; done
 RUNS=experiments/runs; OUT=experiments/analysis/wp3; PY=code/.venv/bin/python
 D=20261126; V=20261127; X=sdxl-euler-rtx5090-01; RERUN=$D-wp3-rerun-sdxl-euler-spark3-01
-node_of() { case $1 in a1b|a3lcm) echo 4;; a2|a3turbo|f3|m) echo 5;; a8|f1|f2|base) echo 6;; esac; }
+node_of() { case $1 in a1b|a3lcm) echo 4;; a2|a3turbo|m) echo 5;; a8|base) echo 6;; esac; }
+node_r() { case $1 in f1) echo 4;; f2) echo 5;; f3) echo 6;; esac; }  # realistic forgers: verifier Spark
 TH1=experiments/configs/thresholds_v1_sdxl_euler.json; TH2=experiments/configs/thresholds_v2_sdxl_euler.json
 
 fetch() {  # node run...: run metadata only (top-level files, logs/, raw/labels/), never bundles or images
@@ -26,16 +30,19 @@ fetch() {  # node run...: run metadata only (top-level files, logs/, raw/labels/
   done
 }
 
-ATK=(a1b a2 a3turbo a3lcm f1 f2 f3 a8 m)
+ATK=(a1b a2 a3turbo a3lcm a8 m); ATKR=(f1 f2 f3); TIMED=(a2 a1b a3turbo a3lcm a8 m)
+SW=(s010 s025 s050 s075 s100); SWR=sdxl-euler-spark1-01
 if [ $FETCH = 1 ]; then
   for a in "${ATK[@]}"; do n=$(node_of $a); g=$D-wp3-atk-$a-$X
     fetch "$n" "$g" "$V-wp3-verify-wp3-atk-$a-$X-on-spark$n" "$V-wp3-e0-wp3-atk-$a-$X-on-spark$n" "$V-wp3-e1img-wp3-atk-$a-$X-on-spark$n"
   done
   fetch 6 "$D-wp3-base-$X" "$V-wp3-verify-wp3-base-$X-on-spark6" "$V-wp3-e0-wp3-base-$X-on-spark6" "$V-wp3-e1img-wp3-base-$X-on-spark6"
   fetch 5 "$D-wp3-cost-replay-$X"
-  for s in s010 s025 s050 s075 s100; do fetch 1 "$D-wp3-sweep-f3-$s-sdxl-euler-spark1-01" "$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark1"; done
-  for s in s050 s075 s100; do fetch 3 "$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-spark3"; done  # moved to Spark-3 at 05:20 UTC
-  fetch 6 "$V-wp3-verify-wp3-sweep-f3-s075-sdxl-euler-spark1-01-on-spark6"  # s075 also on Spark-6 (05:51 UTC)
+  for f in "${ATKR[@]}"; do n=$(node_r $f); g=$V-wp3-atkr-$f-$X
+    fetch 5 "$g"; fetch "$n" "$V-wp3-verify-wp3-atkr-$f-$X-on-spark$n" "$V-wp3-e0-wp3-atkr-$f-$X-on-spark$n" "$V-wp3-e1img-wp3-atkr-$f-$X-on-spark$n"
+  done
+  fetch 5 "$V-wp3-timebase-$X"; for t in "${TIMED[@]}"; do fetch 5 "$V-wp3-time-$t-$X"; done
+  for s in "${SW[@]}"; do fetch 1 "$V-wp3-sweepr-f3-$s-$SWR" "$V-wp3-verify-wp3-sweepr-f3-$s-$SWR-on-spark1"; done
   (cd code && .venv/bin/python tools/sanitize_runs.py ../$RUNS >/dev/null && .venv/bin/python tools/sanitize_runs.py --check ../$RUNS) || exit 1
 fi
 
@@ -45,6 +52,8 @@ for c in 20261125-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx3090-01 20261125-wp2-r
          20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01; do
   cp "$RUNS/20261126-wp3-e0-${c#*-}-on-spark3/e0.jsonl" "$CMP/${c}__$RERUN.e0.jsonl"
 done
+for f in "${ATKR[@]}"; do e=$RUNS/$V-wp3-e0-wp3-atkr-$f-$X-on-spark$(node_r $f)
+  [ -s "$e/e0.jsonl" ] && cp "$e/e0.jsonl" "$CMP/$V-wp3-atkr-$f-${X}__$RERUN.e0.jsonl" || echo "no E0 yet: atkr-$f"; done
 for a in "${ATK[@]}" base; do
   if [ $a = base ]; then g=$D-wp3-base-$X; e=$RUNS/$V-wp3-e0-wp3-base-$X-on-spark6
   else g=$D-wp3-atk-$a-$X; e=$RUNS/$V-wp3-e0-wp3-atk-$a-$X-on-spark$(node_of $a); fi
@@ -54,18 +63,22 @@ done
 HON=(); for c in rtx3090-01 rtx4090-02 rtx5090-01; do HON+=("$RUNS/20261126-wp3-verify-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-$c-on-spark3"); done
 ATT=(); for a in "${ATK[@]}"; do v=$RUNS/$V-wp3-verify-wp3-atk-$a-$X-on-spark$(node_of $a)
   [ -s "$v/verdicts.jsonl" ] && [ -f "$v/summary.json" ] && ATT+=("$v") || echo "not verified yet: $a"; done
-SWP=(); for s in s010 s025 s050 s075 s100; do v=
-  for nd in spark3 spark6 spark1; do c=$RUNS/$V-wp3-verify-wp3-sweep-f3-$s-sdxl-euler-spark1-01-on-$nd; [ -z "$v" ] && [ -f "$c/summary.json" ] && v=$c; done
+for f in "${ATKR[@]}"; do v=$RUNS/$V-wp3-verify-wp3-atkr-$f-$X-on-spark$(node_r $f)
+  [ -s "$v/verdicts.jsonl" ] && [ -f "$v/summary.json" ] && ATT+=("$v") || echo "not verified yet: atkr-$f"; done
+SWP=(); for s in "${SW[@]}"; do v=$RUNS/$V-wp3-verify-wp3-sweepr-f3-$s-$SWR-on-spark1
   [ -f "$v/summary.json" ] && SWP+=("$v") || echo "sweep not verified yet: $s"; done
+# beta_A (doc 14 item 1): paired runs (atkr-*, time-* except A2) and A2 against timebase, one field (t_sample_s)
+TIM=(); for f in "${ATKR[@]}"; do r=$RUNS/$V-wp3-atkr-$f-$X; [ -f "$r/jobs.jsonl" ] && TIM+=("$r"); done
+for t in "${TIMED[@]}"; do r=$RUNS/$V-wp3-time-$t-$X; [ -f "$r/jobs.jsonl" ] && TIM+=("$r") || echo "no timing run yet: $t"; done
 BASEV=$RUNS/$V-wp3-verify-wp3-base-$X-on-spark6
-# beta_A baseline: the honest pilot-gen run on the same card and jobs (runbook §6; analysis_wp3 refuses an attack run)
-BASEGEN=$RUNS/$D-wp3-base-$X
+# beta_A baseline for A2 (the only unpaired timing run): the session-2 pilot-gen run on the same card, same jobs
+BASEGEN=$RUNS/$V-wp3-timebase-$X
 
 an() {  # out thresholds honest... -- attacked... -- sweep...
   local o=$1 th=$2; shift 2; local h=() t=() w=() z=h
   for x in "$@"; do case $x in --) [ $z = h ] && z=t || z=w;; *) eval "$z+=(\"\$x\")";; esac; done
   TRAJVER_RUNS=$RUNS $PY -m trajver.analysis_wp3 --honest "${h[@]}" ${t[@]:+--attacked "${t[@]}"} ${w[@]:+--sweep "${w[@]}"} \
-    $([ -f "$BASEGEN/jobs.jsonl" ] && echo --baseline "$BASEGEN") --thresholds "$th" --compare "$CMP" --out "$o" "${PARTIAL[@]}" | sed "s#$PWD/##"
+    $([ -f "$BASEGEN/jobs.jsonl" ] && echo --baseline "$BASEGEN") ${TIM[@]:+--timing "${TIM[@]}"} --thresholds "$th" --compare "$CMP" --out "$o" "${PARTIAL[@]}" | sed "s#$PWD/##"
 }
 an "$OUT/v1" "$TH1" "${HON[@]}" -- "${ATT[@]}" -- "${SWP[@]}"
 [ -f "$BASEV/summary.json" ] && an "$OUT/base" "$TH1" "$BASEV" -- --

@@ -137,7 +137,10 @@ def rates() -> dict:
     return out
 
 
-F_BOUND = {"F1": 0.5, "F2": 0.5, "F3": 0.5}  # s of the evaluated F runs: a forger saves at most the faked share
+# Session 1's F1-F3 harness generated honestly before forging, so its timing could not give beta; session 2's
+# realistic forgers are timed paired with an honest generation of the same job (doc 14 items 1-2). The bound is used
+# only when no paired measurement exists.
+F_BOUND = {"F1": 0.5, "F2": 0.5, "F3": 0.5}
 
 
 def beta() -> dict:
@@ -145,7 +148,7 @@ def beta() -> dict:
     its timing does not measure the saving; beta is replaced by its upper bound s (marked bound=True)."""
     out = {r["attack"]: dict(r) for r in rows("wp3", "v1", "r2_4_beta.csv")}
     for k, sv in F_BOUND.items():
-        if k in out:
+        if k in out and "paired" not in (out[k].get("time_fields") or ""):
             out[k] = {**out[k], "beta_median": str(sv), "bound": True}
     return out
 
@@ -406,13 +409,13 @@ def sweep_tiers() -> list[dict]:
     out = []
     for tag in ["s010", "s025", "s050", "s075", "s100"]:
         v, partial_run = None, False
-        for node in ("spark3", "spark6", "spark1"):
-            c = R_ / f"20261127-wp3-verify-wp3-sweep-f3-{tag}-sdxl-euler-spark1-01-on-{node}"
+        for node in ("spark1",):  # session 2: the realistic forger's sweep (doc 14 item 2b)
+            c = R_ / f"20261127-wp3-verify-wp3-sweepr-f3-{tag}-sdxl-euler-spark1-01-on-{node}"
             if (c / "summary.json").exists():
                 v = c
                 break
         if v is None:  # a run the memory guard aborted: use the jobs it did verify, and say so (partial)
-            c = R_ / f"20261127-wp3-verify-wp3-sweep-f3-{tag}-sdxl-euler-spark1-01-on-spark1"
+            c = R_ / f"20261127-wp3-verify-wp3-sweepr-f3-{tag}-sdxl-euler-spark1-01-on-spark1"
             if (c / "verdicts.jsonl").exists():
                 v, partial_run = c, True
         if v is None:

@@ -1,0 +1,109 @@
+{
+ "time": 1795742430.7344477,
+ "host_mem_available_gb": 42.20788,
+ "containers": [
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "7.14%",
+   "mem": "2.694GiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.01%",
+   "mem": "82.36MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "25.42MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.31%",
+   "mem": "920.7MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.65%",
+   "mem": "677.4MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-llm",
+   "image": "vllm",
+   "cpu": "0.96%",
+   "mem": "5.632GiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.02%",
+   "mem": "15.18MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.02%",
+   "mem": "12.03MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.77%",
+   "mem": "107.2MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.63%",
+   "mem": "36.41MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.06%",
+   "mem": "6.16MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "17.75MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "17.39MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.93%",
+   "mem": "785.5MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.35%",
+   "mem": "1.203GiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.46%",
+   "mem": "34.25MiB / 121.6GiB"
+  }
+ ],
+ "vllm": {
+  "cotenant-llm": {
+   "num_requests_running": 0.0,
+   "num_requests_waiting": 0.0,
+   "kv_cache_usage_perc": 0.0
+  }
+ }
+}

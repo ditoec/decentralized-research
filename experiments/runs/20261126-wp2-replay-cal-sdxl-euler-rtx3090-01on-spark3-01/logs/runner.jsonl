@@ -1,0 +1,6 @@
+{"event": "started", "container": "897cf6d94718", "attempt": 1, "mem_available_gb": 43.4, "time": "2026-11-26T22:55:11+0700"}
+{"event": "stopped_by_guard", "stops": 1, "mem_available_gb": 14.8, "disk_free_gb": 365.1, "time": "2026-11-26T23:06:14+0700"}
+{"event": "started", "container": "464240b1b8c4", "attempt": 2, "mem_available_gb": 43.4, "time": "2026-11-26T23:16:14+0700"}
+{"event": "stopped_by_guard", "stops": 2, "mem_available_gb": 11.6, "disk_free_gb": 365.1, "time": "2026-11-26T23:18:57+0700"}
+{"event": "started", "container": "91062a666ae0", "attempt": 3, "mem_available_gb": 43.5, "time": "2026-11-26T23:28:57+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 3, "time": "2026-11-27T02:06:43+0700"}

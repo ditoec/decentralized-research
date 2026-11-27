@@ -1,0 +1,80 @@
+{
+ "run_id": "20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01",
+ "wp": "wp3",
+ "purpose": "attack A3",
+ "git_commit": "f057b18",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "3c7733924049",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "7415f588-4b1c-c68b-97c5-9d3b7fd6ea25",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-27T00:27:52.962488+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "attack": "A3",
+ "claimed": {
+  "steps": 30,
+  "cfg": 7.0,
+  "sampler": "euler",
+  "resolution": "1024x1024"
+ },
+ "actual": {
+  "flags": "--force-fp16 --use-pytorch-cross-attention",
+  "cheap_ckpt": null,
+  "lora": "lcm-lora-sdxl.safetensors",
+  "run_steps": 6,
+  "cheap_sampler": "euler",
+  "s": 0.5
+ },
+ "seeds": [
+  0
+ ],
+ "prompt_set": {
+  "file": "prompts_rent_test200.txt",
+  "n": 100
+ },
+ "draw_seed_sha256": "2275d0590b38ea2ce5df1e0282babd0f9f94520cb547f1d9daa15d9ae224655e",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-27T00:45:24.225688+00:00",
+ "retention": "O",
+ "retention_stats": {
+  "n": 100,
+  "full_bytes": 1726869992,
+  "kept_bytes": 651840544
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "8pcz8qtd5wmapu",
+ "data_center": "EUR-IS-2",
+ "gpu_uuid": "GPU-7415f588-4b1c-c68b-97c5-9d3b7fd6ea25",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 6.936059776412116,
+ "cost_usd": 9.64112308921284,
+ "raw_checksums": {
+  "20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01.tar": "48d86d8e01e6458998ce0bf523a12ae9b823b7090f432660a8d364315d1f2e2c"
+ },
+ "pulled_unix": 1795758955.8152015
+}

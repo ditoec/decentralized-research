@@ -1,0 +1,15 @@
+/opt/esj/venv-main/lib/python3.12/site-packages/torchvision/models/_utils.py:207: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/opt/esj/venv-main/lib/python3.12/site-packages/torchvision/models/_utils.py:222: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=AlexNet_Weights.IMAGENET1K_V1`. You can also use `weights=AlexNet_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|██████████| 223/223 [00:00<00:00, 13083.37it/s]
+{
+ "run_a": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+ "run_b": "20261126-wp3-rerun-sdxl-euler-spark3-01",
+ "n_pairs": 100,
+ "frac_image_identical": 0.0,
+ "frac_latent_identical": null,
+ "frac_root_identical": 0.0,
+ "px_absdiff_median_of_means": 59.80615297953288,
+ "px_absdiff_max": 255
+}

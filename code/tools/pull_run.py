@@ -62,6 +62,9 @@ def main() -> int:
     ap.add_argument("--pod-created-unix", type=float, default=None, help="for billed hours; default pod.json")
     ap.add_argument("--wait", action="store_true", help="poll until the pod job is DONE")
     ap.add_argument("--reveal-seed", default=None, help="draw seed file for class-O runs (after generation)")
+    ap.add_argument("--only", default=None,
+                    help="comma-separated substrings: pull only the matching runs (splits one pod's pull over "
+                         "several Sparks, so each verifier pulls its own runs in parallel)")
     a = ap.parse_args()
     base = a.base.rstrip("/")
     dest = Path(a.dest).expanduser()
@@ -93,7 +96,12 @@ def main() -> int:
         threading.Thread(target=revealer, daemon=True).start()
     bad: list[str] = []
 
+    def wanted(tname: str) -> bool:
+        return not a.only or any(x in tname for x in a.only.split(","))
+
     def pull(tname: str) -> None:
+        if not wanted(tname):
+            return
         run = dest / tname[:-4]
         if tname in pulled or (run / "manifest.json").exists() and \
                 "pulled_unix" in json.loads((run / "manifest.json").read_text()):
@@ -177,7 +185,10 @@ def main() -> int:
             time.sleep(60)
     for tname in index:
         pull(tname)
-    ok = not bad
+    missing = [t for t in index if wanted(t) and t not in pulled]
+    if missing:
+        print("not pulled:", " ".join(missing), flush=True)
+    ok = not bad and not missing
     return 0 if ok else 1
 
 

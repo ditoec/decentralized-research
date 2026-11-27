@@ -1,0 +1,79 @@
+{
+ "run_id": "20261125-wp2-prec-sdxl-bf16-sdpa-euler-nd-rtx4090-02",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (prec, bf16-sdpa-euler-nd)",
+ "git_commit": "70b63088ce5a428d217c1f1ff1bde68b03ed670c",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--bf16-unet",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "7c1e61cc7fb0",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+   8,
+   9
+  ],
+  "gpu_uuid": "64f7ee9c-3f46-4f01-74c0-f57a6e56968a",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-25T21:27:45.936759+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [
+  "--bf16-unet",
+  "--use-pytorch-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_grid50.txt",
+  "sha256": "6cff9d9f6110eb849c3e52b250a13fed10e1a9c0b262be62774a65ff8097de73",
+  "n": 50
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "c51a7b35c2ebef8708da3dc9cb47789f8442991d5bc02737828e0a24a4327826",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-25T21:38:28.335829+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 150,
+  "full_bytes": 2590304736,
+  "kept_bytes": 40121640
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "sd06bsvyyfmec5",
+ "data_center": "EU-RO-1",
+ "gpu_uuid": "GPU-64f7ee9c-3f46-4f01-74c0-f57a6e56968a",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.89,
+ "billed_hours": 9.254174468914668,
+ "cost_usd": 8.236215277334054,
+ "raw_checksums": {
+  "20261125-wp2-prec-sdxl-bf16-sdpa-euler-nd-rtx4090-02.tar": "459d5f9de6f20d516ae0e6f3fdb188f7fa01e09724237aef69e7eb33d993e5f4"
+ },
+ "pulled_unix": 1795662920.028092
+}

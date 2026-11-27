@@ -1,0 +1,68 @@
+{
+ "run_id": "20261126-wp2-grid-sd15-fp32-split-euler-det-spark4-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (grid, fp32-split-euler-det)",
+ "git_commit": "58f57c6e7994a3d7dca223452616a6cd90a48150",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp32",
+  "--use-split-cross-attention",
+  "--deterministic"
+ ],
+ "node": {
+  "hostname": "spark4-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "cd3626b6-dc9e-2fee-89ab-82ba0ad4bb6e",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-26T03:22:38.748665+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [
+  "--force-fp32",
+  "--use-split-cross-attention",
+  "--deterministic"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_grid50.txt",
+  "sha256": "6cff9d9f6110eb849c3e52b250a13fed10e1a9c0b262be62774a65ff8097de73",
+  "n": 50
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "c4295abfc3b8f6654648eaa1baa14dc8edf6b349c040b3d9e2a6ddc413b42631",
+ "image_digest": "sha256:5a4781c0b6041dedc2ebf42c75c4ce91899b9e3c5aca968ada3a8e28e3814c7f",
+ "end_time": "2026-11-26T03:50:58.284142+00:00",
+ "retention": "O",
+ "retention_stats": {
+  "n": 150,
+  "full_bytes": 672427464,
+  "kept_bytes": 270611736
+ }
+}

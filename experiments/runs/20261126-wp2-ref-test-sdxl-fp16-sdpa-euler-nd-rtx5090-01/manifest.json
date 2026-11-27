@@ -1,0 +1,79 @@
+{
+ "run_id": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (ref-test, fp16-sdpa-euler-nd)",
+ "git_commit": "70b63088ce5a428d217c1f1ff1bde68b03ed670c",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "677065824d02",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "25ec9a53-873b-3bdf-08e0-6fc977c029ce",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-26T04:23:44.047830+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_rent_test200.txt",
+  "sha256": "40e456312da0cbb7ab3bc8f63723ecd1f96a0e940932073f2c12cef6e31016d0",
+  "n": 200
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "f3240700eb41184ea1b47515fb87b85e512b870deb7e939ba18a940bfe2ba0ca",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-26T04:54:26.286764+00:00",
+ "retention": "O",
+ "retention_stats": {
+  "n": 600,
+  "full_bytes": 10361218536,
+  "kept_bytes": 3911289576
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "ovdiegthi61b8w",
+ "data_center": "EUR-IS-2",
+ "gpu_uuid": "GPU-25ec9a53-873b-3bdf-08e0-6fc977c029ce",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 17.296582597229214,
+ "cost_usd": 24.042249810148608,
+ "raw_checksums": {
+  "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01.tar": "143151e42fb1127dceda75addd1297004f1d2f5c4aa305cc4ccb61a61dacb5e3"
+ },
+ "pulled_unix": 1795719789.697355
+}

@@ -1,0 +1,15 @@
+{
+ "thresholds": "thresholds_v1_sdxl_euler.json",
+ "thresholds_sha256": "91cdc2f2e1d03be6c94a2d23bbc98dd56b019b1f499338b976fb9ac17953cc58",
+ "thresholds_version": "thresholds_v1_sdxl_euler",
+ "honest": [
+  "20261127-wp3-verify-wp3-base-sdxl-euler-rtx5090-01-on-spark6"
+ ],
+ "attacked": [],
+ "sweep": [],
+ "compare_files": [
+  "20261126-wp3-rerun-sdxl-euler-spark3-01"
+ ],
+ "partial": false,
+ "warnings": []
+}

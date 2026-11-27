@@ -1,0 +1,30 @@
+{
+ "provisional": true,
+ "note": "WP4 Monte Carlo params, PROVISIONAL. No value here is measured: r_A, beta_A and alpha_s come from WP3 (runbook §6, outputs R2.4, R2.6, R2.8), which has not run. The illustrative attacks exist only to exercise the simulator end to end; their outputs must not be reported as results. The WP0b pilot attack runs (20261124-wp0b-verify-atk-*-on-spark5-02, n = 10 jobs each, acceptance counts only) give no per-step separability r_A or cost share beta_A, so nothing is read from them. Replace each null/illustrative value with the WP3 summary value and its run_id, then set provisional to false.",
+ "seed": {"value": 20261126, "provisional": true, "source": "fixed simulation seed (design choice, not a measurement)"},
+ "n_sim": {"value": 20000, "provisional": true, "source": "simulated jobs per cell (design choice)"},
+ "T": {"value": 30, "provisional": true, "source": "denoising steps per job; illustrative, set to the WP3 workflow step count"},
+ "P": {"value": 1.0, "provisional": true, "source": "payment per job, normalised to 1; B = (B/P) * P"},
+ "c": {"value": 0.5, "provisional": true, "source": "illustrative honest GPU cost per job as a fraction of P; replace with the WP3/WP5 cost per job at the dated hourly rate"},
+ "alpha_star": {"value": 0.01, "provisional": true, "source": "design target: job-level false rejection <= 1% (runbook §6); used through Eq. 6 when alpha_s is null"},
+ "alpha_s": {"value": null, "provisional": true, "source": "measured honest per-step false-rejection rate (WP3, R2.8). Null: use the Eq. 6 budget alpha_step_budget(alpha_star, k)"},
+ "attacks": [
+  {"name": "illustrative-separable",
+   "r_A": {"value": 0.9, "provisional": true, "source": "illustrative, not measured"},
+   "beta_A": {"value": 0.9, "provisional": true, "source": "illustrative, not measured"}},
+  {"name": "illustrative-weak",
+   "r_A": {"value": 0.2, "provisional": true, "source": "illustrative, not measured"},
+   "beta_A": {"value": 0.5, "provisional": true, "source": "illustrative, not measured"}},
+  {"name": "F3-partial",
+   "r_A": {"value": null, "provisional": true, "source": "WP3 R2.6 (per-step separability), not yet measured"},
+   "beta_A": {"value": null, "provisional": true, "source": "WP3 R2.4 (cost share avoided), not yet measured"}}
+ ],
+ "grid": {
+  "provisional": true,
+  "source": "sweep grid (design choice); p values include the WP5 testbed points 0.05, 0.1, 0.25; k as in runbook §6",
+  "p": {"value": [0.01, 0.02, 0.05, 0.1, 0.25, 0.5]},
+  "k": {"value": [1, 2, 3, 5, 8]},
+  "BP": {"value": [0, 0.5, 1, 2, 5]},
+  "s": {"value": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]}
+ }
+}

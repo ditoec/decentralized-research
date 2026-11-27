@@ -1,0 +1,13 @@
+fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+p00007_s0 max rel_l2 0.0315
+p00007_s1 max rel_l2 0.0284
+p00007_s2 max rel_l2 0.0489
+p00012_s0 max rel_l2 0.0531
+p00012_s1 max rel_l2 0.0478
+p00012_s2 max rel_l2 0.0478
+p00026_s0 max rel_l2 0.04
+p00026_s1 max rel_l2 0.0546
+p00026_s2 max rel_l2 0.052
+p00033_s0 max rel_l2 0.0517
+p00033_s1 max rel_l2 0.0913

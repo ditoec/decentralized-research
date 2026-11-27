@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.2.0, pluggy-1.7.0 -- /opt/esj/venv-main/bin/python
+rootdir: /opt/esj/code
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collecting ... collected 9 items
+
+tests/integration/test_sd15.py::test_T1_recording_does_not_change_the_output PASSED [ 11%]
+tests/integration/test_sd15.py::test_T2_rerun_gives_the_same_root PASSED [ 22%]
+tests/integration/test_sd15.py::test_final_state_is_the_output PASSED    [ 33%]
+tests/integration/test_sd15.py::test_T3_replay_is_bit_exact PASSED       [ 44%]
+tests/integration/test_sd15.py::test_e1_honest_passes PASSED             [ 55%]
+tests/integration/test_sd15.py::test_e1_catches_wrong_seed_and_prompt PASSED [ 66%]
+tests/integration/test_sd15.py::test_e2h_honest_passes_and_forgeries_fail PASSED [ 77%]
+tests/integration/test_sd15.py::test_dpmpp_2m_tier_a_on_real_model PASSED [ 88%]
+tests/integration/test_sd15.py::test_e2w_honest_and_frame_copy PASSED    [100%]
+
+- generated xml file: /runs/20261126-wp1-acceptance-t1t3-spark3-01/pytest.xml --
+============================== 9 passed in 41.64s ==============================

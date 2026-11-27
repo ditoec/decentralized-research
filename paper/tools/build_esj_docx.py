@@ -20,6 +20,9 @@ import os
 import tempfile
 
 import docx
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import results_wp3 as RW  # noqa: E402  (every result number comes from experiments/analysis)
 from docx.oxml.ns import qn
 from docx.shared import Mm
 from lxml import etree
@@ -465,16 +468,15 @@ ABSTRACT = (
  "rarely gives a bit-identical result, so every acceptance rule must tolerate honest variation, and that tolerance is "
  "where cheating can hide. {b|Objectives:} this study determines what evidence a marketplace must demand to detect "
  "cost-saving cheating on diffusion jobs, and at what cost. {b|Methods:} honest variation of pinned ComfyUI SD1.5 and "
- "SDXL workflows is measured across five nested heterogeneity levels on DGX Spark systems and {R|R0.1: rented GPU "
- "models}. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
+ "SDXL workflows is measured across five nested heterogeneity levels on DGX Spark systems and rented GeForce RTX 3090, RTX 4090 and RTX 5090 cards. Two validation rules deployed on a public decentralized network are reproduced and attacked with "
  "eight candidate cost-saving attacks and four trajectory forgeries. A two-tier trajectory check is proposed. It verifies solver "
  "consistency on every step on the CPU and model consistency at k random steps under per-step calibrated tolerances, "
  "binds the initial noise to the seed, and settles through a Solana escrow with a provider bond. {b|Findings:} "
- "{R|R2.1: deployed-rule headline}. At a false-rejection rate of at most 1%, the proposed check detects "
- "{R|R2.2: n of m} attacks with sensitivity {R|R2.3} at {R|R3.1}% of the GPU cost of full re-execution. "
+ + RW.abstract_findings() + ". "
  "{b|Novelty:} an analytical model shows that any output-only rule has a detection ceiling that sampling cannot raise, "
  "and that under step spot checks a rational provider cheats either fully or not at all. This yields a closed-form "
- "deterrence condition and a cost-optimal sampling policy, confirmed by measurement {R|R3.2}."
+ "deterrence condition and a cost-optimal sampling policy; a partial-faking sweep matches the spot-check model once "
+ "the steps a forgery spoils are counted."
 )
 
 
@@ -555,7 +557,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
              "partial cheating, and a proof that a rational provider’s best response is all-or-nothing, which gives a "
              "closed-form deterrence condition and a cost-optimal sampling policy.",
              "An open artifact with code, data and frozen thresholds {R|R0.2: DOI}."])
-    Para("{R|R0.3: summary of findings, written only after results}. Section 2 reviews related work, Section 3 describes "
+    Para("In short: " + RW.narr_r29() + " Section 2 reviews related work, Section 3 describes "
          "the materials and methods, Section 4 reports and discusses the results, and Section 5 concludes.")
 
     # ================================================================== 2 RELATED WORK
@@ -753,7 +755,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "check accepts a largest absolute difference of at most u{sub|0}, measured in units of the unit-variance noise "
          "(the difference in x{sub|0} divided by σ{sub|0}). u{sub|0} is a fixed protocol constant, 10{sup|−5}, chosen "
          "so that it holds for any processor and PyTorch build without a per-build measurement: it lies well above the "
-         "largest cross-processor rounding difference we measured ({R|R1.1}) and far below the per-element differences "
+         "largest cross-processor rounding difference we measured (" + f"{RW.th_v1()['x0_p1_max_abs_observed']:.1e}" + ", between x86 and ARM CPUs) and far below the per-element differences "
          "of order one that a different seed produces, so it gives an attacker no usable freedom.")
     Para("{b|Reproducibility requirements.} Three sources of variation are fixed by the protocol rather "
          "than calibrated. First, the noise schedule σ{sub|0..T} is computed on the CPU from the model’s sampling "
@@ -778,7 +780,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
                      frac(("p", "1"), R(("p", "2"), sub("r", "i"))), sub("D", "i−1")), "[", "]")))
     Para("which reduces to the first-order update at the first and the final step. Tier A recomputes Equation 1 or 2 "
          "for all steps on the verifier’s CPU and compares the result to the committed x{sub|i+1} within a tolerance "
-         "ε{sub|A} ({R|R1.2}), calibrated per sampler: the Euler update replicates bit for bit on a CPU, whereas "
+         "ε{sub|A} (0 for Euler, which is checked bit for bit), calibrated per sampler: the Euler update replicates bit for bit on a CPU, whereas "
          "DPM-Solver++(2M) takes step coefficients that ComfyUI computes on the GPU, so its replica differs in the last "
          "bits. It also checks that the committed schedule equals the schedule implied by the workflow, entry by entry "
          "within a fixed relative tolerance of 10{sup|−6} (the CPU-computed schedule differs by one unit in the last "
@@ -791,17 +793,17 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Tier B: model consistency at random steps.} After the commitment is final, k distinct step indices are drawn "
          "from the sampling seed. For each checked step the verifier recomputes the CFG-combined prediction on its own GPU "
          "and accepts the step if the distance to the committed D{sub|i} is at most a per-step tolerance τ{sub|i} "
-         "calibrated on honest cross-hardware runs ({R|R1.3: distance metric}). Per-step tolerances are needed because "
-         "honest deviation varies with the noise level ({R|R1.4}).")
+         "calibrated on honest cross-hardware runs; the distance is the relative L2 norm of the difference, fixed before any attack data. Per-step tolerances are needed because "
+         "honest deviation varies with the noise level by about two orders of magnitude over the schedule (Figure 3).")
     Para("{b|Sampling, verdicts and settlement.} Each job is sampled with probability p using a Solana slot hash that "
          "exists only after the commitment is finalized and a fixed delay has passed, combined with the job identifier; "
          "the same draw seeds the checked steps. A fail or inconclusive verdict escalates to a second verifier and is "
          "decided by two-of-three agreement. A confirmed fail refunds the requester, forfeits the bond B and lowers the "
          "provider’s reputation. The verifier commits its recomputed values before the provider’s commitment is opened, "
-         "so it cannot copy them. The trajectory, about {R|R3.3} MB per SDXL job, stays off-chain until the job closes; "
+         "so it cannot copy them. The trajectory, about " + (f"{RW.sizes()['full_mb']:.1f}" if RW.sizes() else "{R|R3.3}") + " MB per SDXL job, stays off-chain until the job closes; "
          "only the Merkle root and verdicts are recorded on-chain. An unsampled job transfers no trajectory data. Because "
          "Tier A reads every step, a sampled job sends the whole trajectory to the verifier; Tier B alone needs only the k "
-         "opened steps with their Merkle inclusion proofs ({R|R3.8}).")
+         "opened steps with their Merkle inclusion proofs (" + (f"{RW.sizes()['kept_mb']:.1f} MB per job for eight opened steps" if RW.sizes() else "{R|R3.8}") + ").")
 
     H2("3-3- Analytical Model")
     Para("Let 𝒟{sub|H} be the distribution of what an output-only verifier observes under honest execution, including "
@@ -856,11 +858,11 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     H2("3-4- Experimental Design")
     Para("{b|Hardware.} Owned hardware comprises six NVIDIA DGX Spark systems (Blackwell GB10, ARM64 processor, unified "
          "CPU and GPU memory). They were shared with other inference workloads during the study. All x86-64 GPUs are "
-         "rented by the hour from a commercial GPU cloud ({R|R0.1}): consumer GeForce RTX cards of the "
+         "rented by the hour from a commercial GPU cloud (RunPod; RTX 3090, RTX 4090 and RTX 5090): consumer GeForce RTX cards of the "
          "Blackwell, Ada and Ampere generations. A rented node runs the same pinned software in a container, but its driver is set by the "
          "host, so the driver version and the hourly price of each rented node are recorded. Results that depend on "
          "timing are measured only on rented GPUs, which a job has to itself. Table 4 defines the five nested heterogeneity levels; "
-         "driver, CUDA, PyTorch and ComfyUI versions of every node are recorded for each run ({R|R0.4}).")
+         "driver, CUDA, PyTorch and ComfyUI versions of every node are recorded in each run manifest.")
     Table("Nested heterogeneity levels",
           ["Level", "Comparison", "Isolates"],
           [["L0", "Same unit, repeated runs", "Run-to-run nondeterminism"],
@@ -879,7 +881,12 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "generation also runs the deterministic-mode and attention factors at fp16. The reference "
          "configuration (fp16, default attention, both samplers, deterministic mode off) is the one for which tolerances "
          "are frozen. It is run on a larger prompt set than the other configurations, because the per-step tolerances "
-         "of Equation 6 are extreme quantiles of the honest distribution.")
+         "of Equation 6 are extreme quantiles of the honest distribution: on the DGX Spark systems it runs all 600 "
+         "calibration and development prompts, and on each rented card 300 of them plus 200 test prompts, so that each "
+         "card is rented once. Every other configuration runs the same 50 prompts (32 calibration, 18 development) on "
+         "every node, so each factor level is compared on the same 150 jobs. Level L0 repeats 10% of the reference "
+         "jobs on one DGX Spark; level L2 runs 50 prompts in the reference configuration on all six DGX Spark systems "
+         "and on two RTX 5090 cards on different hosts.")
     Para("{b|Pilot.} A pilot fixed the design choices above before the study runs. It used three DGX Spark systems and "
          "rented RTX 5090 (Blackwell), RTX 4090 (Ada) and RTX 3090 (Ampere) cards, SDXL and SD1.5 at 30 steps, and "
          "prompts from the calibration split only, so none of its jobs enters the test split. Trajectories were "
@@ -895,36 +902,52 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "every rented card, the fp8 and NVFP4 paths of the pinned ComfyUI commit were slower than fp16 (NVFP4 runs "
          "only through a dequantizing fallback). Attacks A2 and A2b therefore save the provider no GPU time at this "
          "commit (β{sub|A} ≤ 0, so Equation 8 holds for them trivially) and are kept as detection cases.")
-    Para("{b|Attacks and forgeries.} Table 5 lists the attacks. The saving β{sub|A} is measured, not assumed, on rented "
-         "GPUs that the job has to itself.")
-    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved)",
+    Para("{b|Attacks and forgeries.} Table 5 lists the attack set of the design. The attack study reported here "
+         "evaluates the subset marked in the table, for SDXL with the Euler sampler in the reference configuration, "
+         "with a rented RTX 5090 as provider and DGX Spark systems as verifiers, which is the direction of a "
+         "marketplace where consumer cards serve jobs: 100 attacked jobs per attack on the test split, the same jobs "
+         "for every attack. Partial faking is evaluated with F3 at five faked fractions s. The saving β{sub|A} is "
+         "measured, not assumed, on the rented GPU, which the job has to itself, against an honest run of the same "
+         "jobs.")
+    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved, median over the same jobs generated honestly on the same card; * evaluated in this study)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
-          [["A1", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30", "{R|R2.4}"],
-           ["A2", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", "{R|R2.4}"],
-           ["A2b", "4-bit (NVFP4) model", "NVFP4 checkpoint; at the pinned commit it runs only through a dequantizing fallback", "{R|R2.4}"],
-           ["A3", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning", "{R|R2.4}"],
-           ["A4", "Sampler swap", "Cheaper sampler committed as the required one", "{R|R2.4}"],
-           ["A5", "Low resolution + upscale", "Generation at half resolution, then upscaling", "{R|R2.4}"],
-           ["A6", "Early exit", "Truncation, then extrapolation", "{R|R2.4}"],
-           ["A7", "Replay", "Output of a near-duplicate prompt", "{R|R2.4}"],
-           ["A8", "Unrelated output", "Sanity control", "1.0"],
-           ["F1", "Frame copy", "Each faked state copies the previous one", "{R|R2.4}"],
-           ["F2", "Interpolation", "Linear interpolation between computed anchor steps", "{R|R2.4}"],
-           ["F3", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", "{R|R2.4}"],
-           ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "{R|R2.4}"],
-           ["M", "Falsified metadata", "Negative control", "–"]],
+          [["A1*", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30 (evaluated: 20 steps)", RW.table5_beta("A1b")],
+           ["A2*", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", RW.table5_beta("A2")],
+           ["A2b", "4-bit (NVFP4) model", "NVFP4 checkpoint; at the pinned commit it runs only through a dequantizing fallback", "not evaluated"],
+           ["A3*", "Distilled model", "SDXL-Turbo, LCM-LoRA or Lightning (evaluated: Turbo, 4 steps; LCM-LoRA, 6 steps)", "Turbo " + RW.table5_beta("A3-Turbo") + "; LCM " + RW.table5_beta("A3-LCM")],
+           ["A4", "Sampler swap", "Cheaper sampler committed as the required one", "not evaluated"],
+           ["A5", "Low resolution + upscale", "Generation at half resolution, then upscaling", "not evaluated"],
+           ["A6", "Early exit", "Truncation, then extrapolation", "not evaluated"],
+           ["A7", "Replay", "Output of a near-duplicate prompt", "not evaluated"],
+           ["A8*", "Unrelated output", "Sanity control", RW.table5_beta("A8")],
+           ["F1*", "Frame copy", "Each faked state copies the previous one", RW.table5_beta("F1")],
+           ["F2*", "Interpolation", "Linear interpolation between computed anchor steps", RW.table5_beta("F2")],
+           ["F3*", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", RW.table5_beta("F3")],
+           ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "not evaluated"],
+           ["M*", "Falsified metadata", "Negative control", RW.table5_beta("M")]],
           [14, 40, 90, 24])
     Para("{b|Calibration and statistics.} All tolerances are chosen on the calibration split: pixel, LPIPS and DINOv2 "
-         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%. They are frozen "
+         "thresholds for E0, ε{sub|A} for Tier A, and τ{sub|i} for Tier B, set by Equation 6 for α* = 1%, separately "
+         "for each model and sampler. The Tier B distance is the relative L2 distance between recomputed and committed "
+         "D{sub|i}, fixed from the pilot before any attack data was generated; the maximum absolute difference and the "
+         "cosine distance are reported as secondary measures. The honest "
+         "per-step distances for τ{sub|i} come from cross-hardware replays: a DGX Spark acting as verifier recomputes "
+         "D{sub|i} at every step of each rented provider’s calibration jobs, so every step and every provider–verifier "
+         "pair contributes; τ{sub|i} pools the pairs and falls back to the largest pair quantile when one pair deviates "
+         "by more than a factor of two. Tolerances are set separately for each sampler. They are frozen "
          "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split with "
          "Wilson 95% confidence intervals {c|wilson1927}; medians and costs use cluster-bootstrap intervals over prompt and "
          "hardware pair. Zero false rejections in 299 independent honest audits bound the false-rejection rate below 1% at "
          "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
          "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
          "attack, model and hardware pair.")
-    Para("{b|Data retention.} Jobs on DGX Spark systems keep their full trajectories. Jobs on rented GPUs keep full "
-         "trajectories only for calibration and development prompts, which the per-step tolerances need. For test and "
-         "attacked jobs on rented GPUs, eight steps per job are drawn before generation from a committed seed that the "
+    Para("{b|Data retention.} Full trajectories are kept where an analysis needs every step: the reference "
+         "configuration and levels L0 and L2 on the DGX Spark systems, the calibration and development prompts of the "
+         "reference configuration on every rented card, and the jobs of the partial-faking sweep. The other "
+         "configurations of the DGX Spark grid, the test prompts and the attacked jobs on rented GPUs keep opened "
+         "steps only, and the precision and factor-slice runs on rented GPUs keep the image, the final latent, the "
+         "Merkle root and the result of Tier A. For opened steps, eight steps per job are drawn before generation from "
+         "a committed seed that the "
          "attack implementations never see, and only those steps, their Merkle inclusion proofs, the job metadata, the "
          "image and the result of Tier A, computed over all steps on the rented host before the trajectory is "
          "discarded, are kept. The drawn sets are nested, so one draw serves every k ≤ 8. This is the information a "
@@ -936,76 +959,155 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "not used. Mainnet fees are calculated from the measured signature counts and compute units at a dated SOL "
          "price, and are labelled as calculated. Verifier GPU time is also converted to US dollars at the recorded "
          "rental prices. Scale-out beyond the physical nodes is "
-         "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}.")
+         "evaluated by a Monte Carlo simulation of Propositions 2 and 3 using the measured r{sub|A}, α{sub|s} and β{sub|A}. "
+         "For each attack and each combination of sampling rate p, checked steps k, bond ratio B/P and faked fraction s, "
+         "simulated providers fake sT steps, the checked steps are drawn without replacement, and each checked step "
+         "fails with probability r{sub|A} if faked and α{sub|s} if honest. The simulation compares the empirical "
+         "detection rate with Equation 4 and estimates the mean gain Δ(s) of Equation 7 with a bootstrap confidence "
+         "interval, from a recorded random seed. Testbed jobs with injected attackers give an independent "
+         "check of the deterrence region at three sampling rates.")
 
     # ================================================================== 3 RESULTS AND DISCUSSION
     H1("4- Results and Discussion")
     H2("4-1- Honest Variation (RQ1)")
-    Figure("R1.5", "Honest deviation by heterogeneity level L0–L4 (box plots) for final images (LPIPS, DINOv2, "
-           "pixel-equality rate) and for per-step D_i distance; panels SD1.5 and SDXL.",
-           "Honest variation across heterogeneity levels")
-    Figure("R1.4", "Per-step honest deviation versus step index for each hardware pair, with the calibrated per-step "
-           "tolerances overlaid.", "Honest per-step deviation and calibrated tolerances")
-    Para("{b|Exact reproducibility.} {R|R1.1: whether the initial noise is bit-exact across x86 and ARM, over n seeds}. "
-         "{R|R1.6: share of bit-identical images at L0, L2, L3 and L4 per sampler and precision}. "
-         "{R|R1.9: whether outputs on a DGX Spark are bit-identical with and without co-located inference load}.")
-    Para("{b|Factors.} {R|R1.7: effects of precision, attention implementation and deterministic mode; dominant factor; "
-         "whether a deterministic profile exists and its throughput cost}.")
-    Para("{b|Answer to RQ1.} {R|R1.8}")
+    fac = RW.r1_factors()
+    steps = RW.r1_steps()
+    Para("{b|Exact reproducibility.} Table 6 reports the share of jobs whose final images are bit-identical across "
+         "two runs of the same workflow, by heterogeneity level. On one unit (L0) and across different units of the same "
+         "GPU model (L2), every image was bit-identical for both models and both samplers. Across chips of the same "
+         "generation (L3, DGX Spark and RTX 5090) and across generations (L4, RTX 3090 and RTX 4090 against the "
+         "Spark), no image was bit-identical. Bit-exact reproduction is therefore available only within one GPU model, "
+         "which a permissionless marketplace cannot enforce.")
+    Table("Share of bit-identical final images (%) by level (number of run pairs; number of compared jobs), "
+          "pooled over the fp32, fp16 and bf16 profiles",
+          ["Model, sampler", "L0 (same unit)", "L2 (same model)", "L3 (same generation)", "L4 (across generations)"],
+          RW.r1_identity(), [44, 30, 30, 32, 32])
+    if fac:
+        f = {k: v for k, v in fac.items()}
+        Para("{b|Factors.} On one unit (L1), changing the numeric precision ("
+             + (f"{RW.pc(f['precision'][0], 0)}% identical over {f['precision'][2]:,} jobs" if 'precision' in f else "") +
+             ") or the attention implementation ("
+             + (f"{RW.pc(f['attention'][0], 0)}% over {f['attention'][2]:,} jobs" if 'attention' in f else "") +
+             ") changed every image, whereas enabling PyTorch's deterministic mode did not change any image ("
+             + (f"{RW.pc(f['deterministic'][0], 0)}% identical over {f['deterministic'][2]:,} jobs" if 'deterministic' in f else "") +
+             "). The software profile is thus a first-order factor, and pinning it is a precondition for any "
+             "tolerance; deterministic mode alone neither helps nor hurts reproducibility on a given unit.")
+    if steps:
+        n = sorted({v["n_jobs"] for v in steps.values()})
+        Para("{b|Per-step deviation.} Figure 3 shows the per-step Tier B distance between the provider's committed "
+             "denoised prediction D{sub|i} and the Spark verifier's replay for the three SDXL Euler calibration pairs "
+             f"({n[0]} calibration jobs per pair). The honest deviation falls by about two orders of magnitude from the "
+             "first to the last step and is nearly the same for the L3 and the two L4 pairs, so a single "
+             "per-step tolerance profile serves all three; a constant tolerance would be either too loose at late "
+             "steps or too tight at early ones. The frozen τ{sub|i} lie, by construction, at the 99th percentile of "
+             "these calibration distances.")
+    Figure("R1.4", "", "Honest per-step deviation (SDXL, Euler) for each provider → verifier pair, calibration "
+           "split, with the frozen per-step tolerance τ_i for k = 1", image="fig_r1_4_steps.png" if steps else None)
+    Para("{b|Answer to RQ1.} Honest outputs are bit-identical only within one GPU model under one pinned software "
+         "profile. Across chips and generations no output is identical, but the per-step deviation is small, smooth "
+         "in the step index and nearly independent of the hardware pair, which is what makes calibrated per-step "
+         "tolerances possible.")
+
     H2("4-2- Separating Attacks from Honest Variation (RQ2)")
-    Para("{b|Deployed rules.} Table 6 reports the acceptance rate of the reproduced deployed rules under each attack. "
-         "{R|R2.1: narrative of the deployed-rule results}.")
-    Table("Acceptance rate (%, 95% CI) of the deployed rules under each attack, test split",
+    Para("{b|Honest jobs and the E1 image tolerance.} On the 1,800 honest test jobs, Tier A rejected no job, and the "
+         "deployed rules accepted almost all of them (Table 7). Under the frozen thresholds v1, however, E1 rejected "
+         "every honest RTX 3090 and RTX 4090 job and 2.3% of the RTX 5090 jobs, all for one reason: the decoded "
+         "x{sub|final} differed from the delivered image by more than the image tolerance of 2 uint8 levels, a "
+         "development constant that had never been calibrated. Because E2-H includes E1, its honest false-rejection "
+         "rate was about 68% under v1. We therefore calibrated this one tolerance after the freeze (thresholds v2), on "
+         "the calibration split only and with the rule fixed before measuring (twice the largest honest difference, "
+         "as for ε{sub|A}). The largest honest difference was 132 levels (RTX 4090), 79 (RTX 3090) and 63 (RTX 5090); "
+         "the rule gives 264, above the 255 range, so under v2 the image comparison never rejects and E1 reduces to "
+         "its x{sub|0}, schedule and conditioning checks. A per-pixel maximum cannot bind the delivered image to the "
+         "trajectory across architectures; a statistic over the whole image would be needed. Both versions are "
+         "reported; v2 is a post-freeze correction of one parameter and is labelled as such.")
+    Para("{b|Deployed rules.} Table 7 reports the acceptance rate of the reproduced deployed rules under each attack. "
+         + RW.narr_r21())
+    Table("Acceptance rate (%, 95% Wilson CI) of the deployed rules, SDXL Euler, test split; attacks on a rented "
+          "RTX 5090, 100 jobs each; verifier DGX Spark",
           ["Condition", "E0-N (CLIP cosine > 0.9)", "E2-W (latent cosine ≥ 0.70)"],
-          [["Honest (L3/L4)", "{R|R2.5}", "{R|R2.5}"],
-           ["A1–A8 (one row each)", "{R|R2.5}", "{R|R2.5}"],
-           ["F1–F4 (one row each)", "n/a", "{R|R2.5}"]],
-          [56, 56, 56])
-    Para("{b|Calibrated evidence levels.} Table 7 reports the sensitivity of each evidence level at a job-level "
-         "false-rejection rate of at most 1%, and Figure 5 compares the measured detection under partial faking with "
-         "Equation 4.")
-    Table("Sensitivity at a job-level false-rejection rate ≤ 1% (95% CI), by evidence level",
-          ["Attack", "E0 (LPIPS)", "E0 (DINOv2)", "E1", "E2-H (k = {R|R2.6})"],
-          [["A1–A8, F1–F4 (one row each)", "{R|R2.3}", "{R|R2.3}", "{R|R2.3}", "{R|R2.3}"]],
-          [52, 29, 29, 29, 29])
+          RW.table_deployed(), [70, 49, 49])
+    Para("{b|Calibrated evidence levels.} Table 8 reports the share of attacked jobs rejected (sensitivity q) by each "
+         "calibrated evidence level at the frozen thresholds, with the honest false-rejection rate of the same level on "
+         "the 1,800 test jobs in the last row. " + RW.narr_r23())
+    Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
+          "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
+          ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
+          RW.table_sensitivity(), [38, 21, 21, 21, 22, 22, 22])
+    part = RW.sweep_tiers()
+    Para("{b|Partial faking.} " + RW.narr_r27())
     Figure("R2.7", "Measured q(s,k) under partial faking (F3 with varying s) against Equation 4 with the measured r and "
-           "α_s.", "Spot-check detection under partial faking: measurement versus Proposition 2")
-    Para("{b|Inseparable attacks.} {R|R2.8: which attacks, if any, have r_A ≈ α_s (for example fp8 at L4), interpreted "
-         "through Proposition 1}.")
-    Para("{b|Answer to RQ2.} {R|R2.9}")
+           "α_s.", "Spot-check detection under partial faking (F3, generated on a DGX Spark): measurement with 95% "
+           "Wilson intervals; solid lines: Equation 4 with m = sT, r = 1 and the measured α_s; dashed: Equation 4 with m = the "
+           "measured number of steps above τ_i per job",
+           image="fig_r2_7_partial.png" if part else None)
+    Para("{b|Per-step separability and cost share.} Table 9 gives, for each attack, the per-step separability r{sub|A} "
+         "(the share of faked checked steps whose distance exceeds τ{sub|i}), the share of GPU time the attack saves "
+         "β{sub|A}, and the smallest sampling rate p* that deters it by Equation 9. β{sub|A} compares each attacked job "
+         "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
+         "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
+         "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
+         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), and A1b's "
+         "schedule forgery re-solves every D{sub|i}, which costs more than the ten skipped steps save, so neither saves "
+         "GPU time as implemented here. " + RW.narr_r28())
+    Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
+          "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
+          ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],
+          RW.table_deterrence(), [44, 26, 24, 24, 24, 24])
+    Para("{b|Answer to RQ2.} " + RW.narr_r29())
+
     H2("4-3- Cost and Deterrence (RQ3)")
-    Table("Verifier cost per job by evidence level",
-          ["Level", "Verifier GPU-seconds (median, p95)", "Storage (MB)", "Data per sampled job (MB)", "Relative to E0", "Cost (US$, at recorded rental prices)"],
-          [["E0, E0-N, E2-W, E1, E2-H (one row each)", "{R|R3.1}", "{R|R3.3}", "{R|R3.8}", "{R|R3.1}", "{R|R3.7}"]],
-          [40, 32, 20, 24, 24, 28])
-    Table("Escrow cost per lifecycle path",
-          ["Path", "Compute units", "Fee on Devnet (SOL, measured)", "Fee on mainnet (SOL, calculated)", "Latency to finalized on Devnet (median, p95)"],
-          [["Accepted / sampled-pass / dispute / timeout refund (one row each)", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}", "{R|R3.4}"]],
-          [52, 24, 30, 30, 32])
-    Figure("R3.5", "Pareto frontier of detection (or deterrence margin) against verifier GPU-seconds per job for E0, "
-           "E2-W and E2-H over (p, k).", "Cost–detection frontier")
-    Figure("R3.6", "Deterrence region of Equation 8 in the (p, B/P) plane for each attack, with p*(k) from Equation 9; "
-           "Monte Carlo and testbed points overlaid.", "Deterrence condition and cost-optimal sampling")
-    Para("{b|Answer to RQ3.} {R|R3.2: best k, p*, required bond ratio, and agreement between theory and measurement}.")
+    vc = RW.verifier_cost()
+    Para("{b|Verifier cost.} Table 10 gives the GPU time of each evidence level on the rented RTX 5090, which a job has "
+         "to itself (DGX Spark timings are not used because the systems are shared). "
+         + (f"Replaying all {vc['T']} steps of a job took {vc['replay_all_median']:.2f} s (median over {vc['n_replay']} "
+            f"jobs), and the replay on the same card was bit-exact for {RW.pc(vc['exact_share'], 0)}% of the jobs and "
+            "steps, as expected at L0. " if vc.get("replay_all_median") else "")
+         + "Tier B at k steps costs k/T of a full replay, so a spot check of one to three steps costs a small fraction "
+           "of E0's full regeneration.")
+    Table("Verifier GPU time per job on the rented RTX 5090 (SDXL, 1024², Euler, 30 steps)",
+          ["Evidence level", "GPU-seconds (median)", "Relative to E0"], RW.table_verifier_cost(), [86, 40, 40])
+    n, f, fc, tx = RW.escrow_failures()
+    Para("{b|Escrow cost.} Table 11 gives the measured cost of each lifecycle path of the escrow program on Solana "
+         f"Devnet, over 100 successful jobs per path ({tx:,} transactions). Fees are the base fee of 5,000 lamports per "
+         "signature; on mainnet the same base fee applies and priority fees, which were not measured, come on top. "
+         f"Of {n} jobs started, {f} failed at the RPC layer ({fc} during a known network change of the client), "
+         "none in the program.")
+    Table("Escrow cost per lifecycle path on Solana Devnet (100 successful jobs per path)",
+          ["Path", "Compute units per job (median)", "Fee on Devnet (SOL per job)", "Fee on mainnet (SOL, calculated)",
+           "Time to confirmed per transaction (median, p95)"],
+          RW.escrow(), [40, 32, 28, 34, 34])
+    Para("{b|Monte Carlo.} " + RW.narr_mc())
+    Para("{b|Answer to RQ3.} " + RW.narr_r32() + " The escrow adds a fixed on-chain cost per job (Table 11) that does not "
+         "depend on the evidence level.")
+
     H2("4-4- Discussion")
     Para("{b|What the blockchain adds.} Integrity detection in this design does not depend on the chain: a trusted "
          "broker running the same checks would detect the same attacks. The escrow makes the payoff model of Proposition 3 "
          "enforceable without a custodian, because payment and bond are locked before execution, released or forfeited by "
-         "recorded verdicts, and refunded on timeout if the orchestrator fails. Its cost is {R|R3.4}.")
-    Para("{b|Implications for marketplaces.} {R|R4.1: for example require deterministic samplers and CPU-generated noise; "
-         "commit full trajectories; calibrate tolerances per step against a job-level false-rejection target; avoid "
-         "uncalibrated cosine thresholds}.")
+         "recorded verdicts, and refunded on timeout if the orchestrator fails. Its cost on Devnet was 15,000 to 50,000 lamports in fees and 63,000 to 125,000 compute units per job, depending on the path (Table 11).")
+    Para("{b|Implications for marketplaces.} Four practical rules follow from the measurements. First, pin the software "
+         "profile: precision and attention implementation each changed every image on one unit, so a tolerance calibrated "
+         "for one profile says nothing about another. Second, never ship an uncalibrated tolerance: the 2-level image "
+         "constant of E1 alone rejected every honest cross-architecture job, and the deployed cosine thresholds accepted "
+         "unrelated work. Third, calibrate per step against a job-level false-rejection target on held-out honest "
+         "cross-GPU pairs, and check the realised rate on a test split. Fourth, commit the full trajectory and check "
+         "solver consistency on every step on the CPU: it is cheap and, in this study, it caught the solver-inversion "
+         "forgery at every faked fraction below one, leaving only fully forged trajectories to the spot check.")
     Para("{b|Relation to operator-level verification and to language models.} Sampler-level evidence and the "
          "operator-level evidence of TAO {c|yao2026tao} are complementary: where Tier B cannot separate an attack "
-         "({R|R2.8}), operator-level commitments or trusted execution {c|slalom2019} are required. For LLM inference, output-only detection "
+         "(" + RW.inseparable() + "), operator-level commitments or trusted execution {c|slalom2019} are required. For LLM inference, output-only detection "
          "of quantized substitution is already known to fail {c|cai2025substitution}, and activation-based schemes apply, "
          "so LLM workloads are not evaluated here.")
     Para("{b|Responsible disclosure.} The deployed rules were reproduced from public source code at fixed commits and "
          "attacked offline only. {T|record the disclosure to the subnet operators and their response}.")
-    Para("{b|Limitations.} The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
+    Para("{b|Limitations.} The attack study is reduced in scope: SDXL with the Euler sampler only, one provider → verifier "
+         "direction (rented RTX 5090 → DGX Spark) and nine attack conditions of 100 test jobs each; A2b, A4–A7 and F4 were not "
+         "run, and SD1.5 and DPM++ 2M were not attacked. One tolerance, the E1 image tolerance, was corrected after the "
+         "freeze (v2, calibration split only, rule fixed before measuring), and both versions are reported. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
          "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
-         "tested ({R|R0.1}), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
-         "independent per-step outcomes, which are checked empirically ({R|R2.7}). Reputation is not modelled in Equation "
+         "tested (SD1.5 and SDXL on RTX 3090, RTX 4090, RTX 5090 and DGX Spark), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
+         "independent per-step outcomes, which are checked empirically (Figure 4). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
          "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
@@ -1018,9 +1120,14 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 
     # ================================================================== 4 CONCLUSION
     H1("5- Conclusion")
-    Para("{R|R5.1: written last. Restate the question, the three answers with key numbers, and the practical recommendation "
-         "for decentralized GPU marketplaces; outline future work such as verifier-collusion resistance and ancestral "
-         "samplers with CPU noise}.")
+    Para("This study asked what evidence a decentralized GPU marketplace must demand to detect cost-saving cheating on "
+         "diffusion jobs, and at what cost. Honest outputs were bit-identical only within one GPU model under one pinned "
+         "software profile, so every cross-hardware rule needs a tolerance (RQ1). " + RW.narr_r29() + " (RQ2). "
+         + RW.narr_r32() + " (RQ3). For marketplaces, the recommendation is to require the committed trajectory, an "
+         "all-step solver check on the CPU and a calibrated spot check of one to three steps, settled through an escrow "
+         "with a bond. Future work should extend the attack study to more models, samplers and provider–verifier "
+         "directions, replace the per-pixel image binding with a statistic that holds across architectures, and add "
+         "resistance to colluding verifiers.")
 
     # ================================================================== 5 DECLARATIONS
     H1("6- Declarations")

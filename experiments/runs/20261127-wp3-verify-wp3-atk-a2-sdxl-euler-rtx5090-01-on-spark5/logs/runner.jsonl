@@ -1,0 +1,5 @@
+{"event": "waiting", "mem_available_gb": 28.1, "disk_free_gb": 250.7, "need_mem_gb": 35.0, "time": "2026-11-27T11:59:42+0700"}
+{"event": "started", "container": "0677cc92eaba", "attempt": 1, "mem_available_gb": 28.1, "time": "2026-11-27T12:00:42+0700"}
+{"event": "stopped_by_guard", "stops": 1, "mem_available_gb": 11.8, "disk_free_gb": 250.5, "time": "2026-11-27T12:01:43+0700"}
+{"event": "started", "container": "6dc35fb91f85", "attempt": 2, "mem_available_gb": 121.5, "time": "2026-11-27T12:11:43+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 2, "time": "2026-11-27T12:20:30+0700"}

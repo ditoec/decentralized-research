@@ -1,0 +1,79 @@
+{
+ "run_id": "20261125-wp2-prec-sd15-fp32-sdpa-dpmpp_2m-nd-rtx3090-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (prec, fp32-sdpa-dpmpp_2m-nd)",
+ "git_commit": "70b63088ce5a428d217c1f1ff1bde68b03ed670c",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp32",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "e9d21d91a044",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "compute_capability": [
+   8,
+   6
+  ],
+  "gpu_uuid": "7cdf1101-8d70-cd84-9750-4fe36495ac27",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-26T00:47:33.570576+00:00",
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "dpmpp_2m",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "precision_flags": [
+  "--force-fp32",
+  "--use-pytorch-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_grid50.txt",
+  "sha256": "6cff9d9f6110eb849c3e52b250a13fed10e1a9c0b262be62774a65ff8097de73",
+  "n": 50
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "draw_seed_sha256": "40c56a37a3b72b578313b4d15e833d8b9d92b9df5913e031f83b9b3f6ff1dd1a",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-26T01:00:52.114524+00:00",
+ "retention": "I",
+ "retention_stats": {
+  "n": 150,
+  "full_bytes": 672425064,
+  "kept_bytes": 10626048
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "r55nf5uam01yew",
+ "data_center": "EU-CZ-1",
+ "gpu_uuid": "GPU-7cdf1101-8d70-cd84-9750-4fe36495ac27",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 0.5,
+ "billed_hours": 11.769410885572434,
+ "cost_usd": 5.884705442786217,
+ "raw_checksums": {
+  "20261125-wp2-prec-sd15-fp32-sdpa-dpmpp_2m-nd-rtx3090-01.tar": "52542ac11ff07989639f1b2c1297f139f415c37c476e7f4395008e487f3aee19"
+ },
+ "pulled_unix": 1795688569.879192
+}

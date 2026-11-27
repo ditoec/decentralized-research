@@ -1,0 +1,78 @@
+{
+ "run_id": "20261126-wp2-l2-sdxl-fp16-sdpa-euler-nd-rtx5090b-01",
+ "wp": "wp2",
+ "purpose": "WP2 RQ1 honest variation (l2, fp16-sdpa-euler-nd)",
+ "git_commit": "70b63088ce5a428d217c1f1ff1bde68b03ed670c",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "70c9328992ac",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "4767b819-d537-0d62-326e-1a9f6f20ed92",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-26T04:16:57.647863+00:00",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "scheduler": "normal",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "precision_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "pin_batching": true,
+ "prompt_set": {
+  "file": "prompts_l2_50.txt",
+  "sha256": "de4bd1da3a7d2ad5cdf9f82c03350a94dd14f0b5094f3d79e19394aeaad7a2cb",
+  "n": 50
+ },
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "save_traj": true,
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-26T04:24:01.774847+00:00",
+ "retention": "F",
+ "retention_stats": {
+  "n": 0,
+  "full_bytes": 0,
+  "kept_bytes": 0
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "0u5abh48txmasr",
+ "data_center": "EU-RO-1",
+ "gpu_uuid": "GPU-4767b819-d537-0d62-326e-1a9f6f20ed92",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 1.7185377244154612,
+ "cost_usd": 2.3887674369374907,
+ "raw_checksums": {
+  "20261126-wp2-l2-sdxl-fp16-sdpa-euler-nd-rtx5090b-01.tar": "fd0f3b2d219307c738b175e76c96ae09ef5b70c1fbd8630826dbf4b41fa0db59"
+ },
+ "pulled_unix": 1795672802.7358181
+}

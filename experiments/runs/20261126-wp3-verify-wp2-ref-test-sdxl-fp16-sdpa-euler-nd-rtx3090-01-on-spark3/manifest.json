@@ -1,0 +1,45 @@
+{
+ "run_id": "20261126-wp3-verify-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx3090-01-on-spark3",
+ "wp": "wp3",
+ "purpose": "evidence levels E1, E2-H, E2-W",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "spark3-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "a34f4458-ec3a-8f6b-055c-078d89a989a2",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-27T02:48:13.358266+00:00",
+ "source_run": "20261125-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx3090-01",
+ "attack": "honest",
+ "threshold_file_sha256": "91cdc2f2e1d03be6c94a2d23bbc98dd56b019b1f499338b976fb9ac17953cc58",
+ "thresholds_version": "thresholds_v1_sdxl_euler",
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "image_digest": "sha256:5a4781c0b6041dedc2ebf42c75c4ce91899b9e3c5aca968ada3a8e28e3814c7f",
+ "restarts": [
+  "2026-11-27T02:54:27.298540+00:00"
+ ],
+ "end_time": "2026-11-27T03:57:21.575152+00:00"
+}

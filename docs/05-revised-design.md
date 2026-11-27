@@ -84,6 +84,14 @@ RQ1 is pure measurement and always produces a result. RQ2 produces a result whet
 
 Also test **partial cheating**: a provider who skips a fraction s of the steps, which is the attacker parameter in the theory below. The negative control from the draft (falsified metadata) carries over.
 
+**Reduced attack study for the paper (decision of 2026-11-26).** To finish the paper on the current timeline, RQ2 runs on a reduced matrix. The full matrix above stays the design of record for a later extension.
+- **Scope:** SDXL, euler, the reference config; the test split; a rented RTX 5090 as provider and DGX Spark verifiers (the marketplace direction).
+- **Attacks, 100 jobs each:** A1b (20 of 30 steps), A2 (fp8), A3 (SDXL-Turbo, 4 steps; LCM-LoRA, 6 steps), F1, F2, F3 (s = 0.5), A8 and the metadata control M. Partial faking is F3 at s ∈ {0.1, 0.25, 0.5, 0.75, 1.0} on a Spark.
+- **Honest test jobs:** the rented RTX 5090, 4090 and 3090 test-split runs (1,800 SDXL euler jobs).
+- **Tier B metric:** pre-declared as relative L2 before any attack data, from the pilot; max-abs and cosine are reported as secondary. This replaces the dev-split selection of runbook §5 item 2.
+- **Thresholds:** frozen per model and sampler (`thresholds_v1_sdxl_euler.json` first).
+- **Not evaluated, and stated as limitations:** SD1.5, dpmpp_2m, A4–A7, F4, the RTX 3090 provider and the rented-verifier direction.
+
 ### 4.3 Theory: three short results (WP4)
 
 1. **Proposition 1 (output-only ceiling).** For any rule that sees only the output and has false-rejection rate α, sensitivity to an attack is at most α + TV(D_attack, D_honest), where TV is the total-variation distance between attack and honest output distributions and D_honest includes variation across GPUs. Raising p does not raise this ceiling. *Measured by:* estimating the honest band and the attack distributions at each evidence level in RQ2.
@@ -193,7 +201,7 @@ All six Sparks were inventoried on 2026-11-23 and are identical: driver 580.178.
 
 **Will claim** (falsifiable, scoped):
 1. A quantified honest-variation profile for SD1.5 and SDXL in ComfyUI across 4 or 5 GPU models (DGX Spark and consumer GeForce RTX) of 3 generations (Ampere, Ada, Blackwell), with the factors that dominate it.
-2. For each cost-saving attack and evidence level, the detection rate at FPR ≤ 1%, including the attacks that are *not* separable at E0.
+2. For each cost-saving attack and evidence level, the detection rate at FPR ≤ 1%, including the attacks that are *not* separable at E0. *(For the paper: for the attacks and the one model, sampler and provider direction of the reduced study in §4.2; decision of 2026-11-26.)*
 3. E2 reaches detection within X% of E0 for Y of Z attacks, at about (k + c)/T of E0's verifier cost. *(These numbers come from experiments; nothing is assumed in advance.)*
 4. A deterrence condition and a cost-optimal (p, k) that hold within measured error in the Monte Carlo and real runs.
 5. An open artifact: the ComfyUI trajectory-commit node, the escrow program, the datasets and the frozen thresholds.

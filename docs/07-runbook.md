@@ -68,6 +68,14 @@ Addresses and login details are in `docs/local-nodes.md`, which is kept out of g
 ### 1.1 Rules on the Sparks (production is running)
 
 1. **Never stop, restart or change a container you did not start.** That includes the ComfyUI already on Spark-1; it is a production service on a different version. Do not use it.
+   - **Exception (operator's standing permission, 2026-11-26):** to free memory for a research run, a production container may be **stopped and started again** (`docker stop` / `docker start`; `docker pause` keeps the memory, so it does not help). Conditions:
+     - stop the fewest containers that free enough;
+     - leave security monitoring (Wazuh) alone;
+     - restart from a trap on any exit;
+     - confirm the container healthy;
+     - log the stop and start times in `docs/ops/LOG.md`.
+
+     First uses: `vllm-chat` on Spark-3 for the P3 quiet window, and `vllm-asr` on Spark-2 for its L2 run.
 2. Start research containers with the label `research=esj`, a name starting with `esj-`, and a port bound to `127.0.0.1` only. Clean up only containers that carry that label.
 3. **Memory is one pool for the CPU and the GPU.** A research job that runs out of memory can take a production model down. Run SDXL in fp16 as the normal load. Test fp32 on one node, off-peak, before using it in the grid. Do not run FLUX without a window agreed with the platform admin.
 4. The run script must **pause when free memory is below 15 GB or free disk is below 200 GB**, and resume by itself.
@@ -443,6 +451,15 @@ Use the **calibration split only**.
 
 ## 6. RQ2: attacks (WP3, Feb 1–28)
 
+**Reduced study for the paper (decision of 2026-11-26; doc 05 §4.2).** What actually runs:
+- **Workloads:** `tools/workloads/wp3_rent.sh` on a rented RTX 5090 and `tools/workloads/wp3_spark.sh` on the Sparks.
+- **Scope:** SDXL euler, reference config, the first 100 prompts of `prompts_rent_test200.txt` × seed 0 for every attack, so that attacked and honest jobs pair one to one.
+- **Pod runs:** an honest baseline (β_A timing); A1b, A2, A3 Turbo, A3 LCM-LoRA, F1, F2, F3 (s = 0.5), A8 and M; a verifier-cost replay of 50 baseline jobs (R3.1). Retention: `POD_RETENTION='*-wp3-base-*=O,*-wp3-atk-*=O,*=F'`.
+- **Spark runs:** the verifier's honest re-run of the test job set (600 jobs, the E0 reference); the F3 sweep at s ∈ {0.1, 0.25, 0.5, 0.75, 1.0}; then `trajver.verify` and `pilot compare --e0-out` for every attacked run and for the rented honest test runs.
+- **Thresholds:** `experiments/configs/thresholds_v1_sdxl_euler.json` with `--metric rel_l2` pre-declared, committed before the pod starts.
+
+Items 1 to 4 below are the full design, kept for a later extension.
+
 Use the **test split** prompts. Providers: Sparks, plus a rented RTX 5090 and RTX 3090. Verifiers: Sparks, plus a rented RTX 4090. The rented honest data is the other side of each cross-model pair.
 
 1. For each attack A1–A8, F1–F4 and M, produce **100 attacked jobs per cell** (never under 30). A cell is (attack × model × hardware pair). Produce **1,000 honest jobs per stratum** where the pooled pairs allow it, and never under 299. Zero false rejections in 299 bound the false-rejection rate below 1% at 95% confidence; 1,000 still bound it below 1% with up to 4 false rejections. The Spark-provider cells run on the Sparks.
@@ -539,8 +556,8 @@ The paper author draws the five result figures from the data, in the same style 
 
 - [ ] All runs have complete manifests, and raw data is archived with checksums
 - [ ] `thresholds_v1.json` was committed before the first RQ2 run (check the git log dates)
-- [ ] Acceptance tests T1, T2 and T3 passed and are logged
-- [ ] The doc 06 facts were re-confirmed at the pinned ComfyUI commit (noise on CPU, callback semantics, solver formulas)
+- [x] Acceptance tests T1, T2 and T3 passed and are logged: 2026-11-26 on Spark-3 (CUDA, GB10), the pinned image `esj-research:main`, run `20261126-wp1-acceptance-t1t3-spark3-01` (`pytest tests/integration/test_sd15.py`: 9 passed in 41.6 s, JUnit report `pytest.xml`). Earlier on MPS (§3)
+- [x] The doc 06 facts were re-confirmed at the pinned ComfyUI commit (noise on CPU, callback semantics, solver formulas): 2026-11-26 at `8b25bbc`. `comfy/sample.py` `prepare_noise_inner` draws `torch.randn(..., dtype=float32, device="cpu")` from `torch.manual_seed(seed)`; `Noise_RandomNoise` calls `prepare_noise`; `default_noise_sampler` adds 1 to the seed on the CPU and draws on `x.device`; `KSAMPLER.sample`'s `k_callback` forwards `callback(x["i"], x["denoised"], x["x"], total_steps)`; `sample_euler` and `sample_dpmpp_2m` call back with `x` before the update and `denoised` after CFG, and the dpmpp_2m update is `(σ(t_next)/σ(t))·x − expm1(−h)·denoised_d`; the fp8, precision, attention and `--deterministic` flags are in `comfy/cli_args.py`
 - [ ] The offline-only attack policy was followed, and any deployed-network contact went through the paper author
 - [ ] The artifact is ready for Zenodo (R0.2)
 

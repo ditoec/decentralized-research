@@ -1,0 +1,913 @@
+{
+ "run_a": "20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01",
+ "run_b": "20261126-wp3-rerun-sdxl-euler-spark3-01",
+ "n_pairs": 100,
+ "frac_image_identical": 0.0,
+ "frac_latent_identical": null,
+ "frac_root_identical": 0.0,
+ "px_absdiff_median_of_means": 12.235827604929607,
+ "px_absdiff_max": 255,
+ "per_step_D": {},
+ "pairs": [
+  {
+   "job": "p00016_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 172,
+   "px_mean": 9.277340253194174,
+   "px_frac_equal": 0.04916954040527344
+  },
+  {
+   "job": "p00020_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 176,
+   "px_mean": 9.162694613138834,
+   "px_frac_equal": 0.04290548960367838
+  },
+  {
+   "job": "p00023_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 160,
+   "px_mean": 9.516372362772623,
+   "px_frac_equal": 0.03927421569824219
+  },
+  {
+   "job": "p00027_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 208,
+   "px_mean": 10.911504109700521,
+   "px_frac_equal": 0.13941287994384766
+  },
+  {
+   "job": "p00040_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 34.55081335703532,
+   "px_frac_equal": 0.021747907002766926
+  },
+  {
+   "job": "p00050_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 169,
+   "px_mean": 11.17512067159017,
+   "px_frac_equal": 0.05874506632486979
+  },
+  {
+   "job": "p00060_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 162,
+   "px_mean": 12.480066617329916,
+   "px_frac_equal": 0.03928152720133463
+  },
+  {
+   "job": "p00066_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 188,
+   "px_mean": 5.71428902943929,
+   "px_frac_equal": 0.18623065948486328
+  },
+  {
+   "job": "p00072_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 199,
+   "px_mean": 10.026315689086914,
+   "px_frac_equal": 0.05314095815022787
+  },
+  {
+   "job": "p00078_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 219,
+   "px_mean": 23.342247009277344,
+   "px_frac_equal": 0.025293350219726562
+  },
+  {
+   "job": "p00080_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 139,
+   "px_mean": 6.528855641682942,
+   "px_frac_equal": 0.06648858388264973
+  },
+  {
+   "job": "p00084_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 17.097488085428875,
+   "px_frac_equal": 0.06964492797851562
+  },
+  {
+   "job": "p00087_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 109,
+   "px_mean": 3.865699132283529,
+   "px_frac_equal": 0.1480830510457357
+  },
+  {
+   "job": "p00096_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 254,
+   "px_mean": 8.9416135152181,
+   "px_frac_equal": 0.06136767069498698
+  },
+  {
+   "job": "p00103_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 246,
+   "px_mean": 11.29655679066976,
+   "px_frac_equal": 0.038904825846354164
+  },
+  {
+   "job": "p00122_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 229,
+   "px_mean": 17.37135124206543,
+   "px_frac_equal": 0.22451082865397134
+  },
+  {
+   "job": "p00123_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 157,
+   "px_mean": 10.5999116897583,
+   "px_frac_equal": 0.03342024485270182
+  },
+  {
+   "job": "p00131_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 223,
+   "px_mean": 9.40559450785319,
+   "px_frac_equal": 0.03463109334309896
+  },
+  {
+   "job": "p00143_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 193,
+   "px_mean": 7.271966298421224,
+   "px_frac_equal": 0.06265481313069661
+  },
+  {
+   "job": "p00152_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 167,
+   "px_mean": 8.24114958445231,
+   "px_frac_equal": 0.1432180404663086
+  },
+  {
+   "job": "p00161_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 163,
+   "px_mean": 8.851024627685547,
+   "px_frac_equal": 0.1399685541788737
+  },
+  {
+   "job": "p00167_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 184,
+   "px_mean": 10.25310484568278,
+   "px_frac_equal": 0.0476678212483724
+  },
+  {
+   "job": "p00176_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 207,
+   "px_mean": 20.235832532246906,
+   "px_frac_equal": 0.02494653065999349
+  },
+  {
+   "job": "p00180_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 24.55088170369466,
+   "px_frac_equal": 0.02071062723795573
+  },
+  {
+   "job": "p00183_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 199,
+   "px_mean": 9.449897448221842,
+   "px_frac_equal": 0.06156317392985026
+  },
+  {
+   "job": "p00199_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 167,
+   "px_mean": 8.817119598388672,
+   "px_frac_equal": 0.1607672373453776
+  },
+  {
+   "job": "p00203_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 215,
+   "px_mean": 19.857157389322918,
+   "px_frac_equal": 0.025376637776692707
+  },
+  {
+   "job": "p00206_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 16.79313627878825,
+   "px_frac_equal": 0.36466248830159503
+  },
+  {
+   "job": "p00230_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 221,
+   "px_mean": 6.522187868754069,
+   "px_frac_equal": 0.2021366755167643
+  },
+  {
+   "job": "p00252_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 18.430003484090168,
+   "px_frac_equal": 0.04740492502848307
+  },
+  {
+   "job": "p00254_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 192,
+   "px_mean": 8.531375885009766,
+   "px_frac_equal": 0.06080309549967448
+  },
+  {
+   "job": "p00267_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 131,
+   "px_mean": 7.458743095397949,
+   "px_frac_equal": 0.07954025268554688
+  },
+  {
+   "job": "p00272_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 100,
+   "px_mean": 3.741705894470215,
+   "px_frac_equal": 0.10213279724121094
+  },
+  {
+   "job": "p00273_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 250,
+   "px_mean": 12.731803258260092,
+   "px_frac_equal": 0.0538323720296224
+  },
+  {
+   "job": "p00274_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 240,
+   "px_mean": 11.66157341003418,
+   "px_frac_equal": 0.0518347422281901
+  },
+  {
+   "job": "p00279_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 16.086772600809734,
+   "px_frac_equal": 0.03466351826985677
+  },
+  {
+   "job": "p00286_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 197,
+   "px_mean": 12.730158805847168,
+   "px_frac_equal": 0.03978919982910156
+  },
+  {
+   "job": "p00288_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 252,
+   "px_mean": 17.131229718526203,
+   "px_frac_equal": 0.05504544576009115
+  },
+  {
+   "job": "p00292_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 249,
+   "px_mean": 12.45781421661377,
+   "px_frac_equal": 0.07623704274495442
+  },
+  {
+   "job": "p00296_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 251,
+   "px_mean": 9.887614568074545,
+   "px_frac_equal": 0.06411234537760417
+  },
+  {
+   "job": "p00324_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 8.196542421976725,
+   "px_frac_equal": 0.07306639353434245
+  },
+  {
+   "job": "p00338_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 220,
+   "px_mean": 11.317572593688965,
+   "px_frac_equal": 0.044704437255859375
+  },
+  {
+   "job": "p00361_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 136,
+   "px_mean": 9.780716896057129,
+   "px_frac_equal": 0.04749298095703125
+  },
+  {
+   "job": "p00362_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 13.996058781941732,
+   "px_frac_equal": 0.05172284444173177
+  },
+  {
+   "job": "p00385_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 248,
+   "px_mean": 13.634740511576334,
+   "px_frac_equal": 0.04496447245279948
+  },
+  {
+   "job": "p00390_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 17.806001663208008,
+   "px_frac_equal": 0.03074042002360026
+  },
+  {
+   "job": "p00410_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 31.038543383280437,
+   "px_frac_equal": 0.06177234649658203
+  },
+  {
+   "job": "p00411_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 8.481602668762207,
+   "px_frac_equal": 0.0534356435139974
+  },
+  {
+   "job": "p00412_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 9.625508626302084,
+   "px_frac_equal": 0.07500616709391277
+  },
+  {
+   "job": "p00430_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 229,
+   "px_mean": 18.942217508951824,
+   "px_frac_equal": 0.0321661631266276
+  },
+  {
+   "job": "p00441_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 238,
+   "px_mean": 18.550583839416504,
+   "px_frac_equal": 0.04325707753499349
+  },
+  {
+   "job": "p00454_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 239,
+   "px_mean": 15.365221977233887,
+   "px_frac_equal": 0.03999519348144531
+  },
+  {
+   "job": "p00455_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 229,
+   "px_mean": 11.130535443623861,
+   "px_frac_equal": 0.055342674255371094
+  },
+  {
+   "job": "p00458_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 221,
+   "px_mean": 11.16598892211914,
+   "px_frac_equal": 0.049904187520345054
+  },
+  {
+   "job": "p00461_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 173,
+   "px_mean": 9.18100643157959,
+   "px_frac_equal": 0.05118020375569662
+  },
+  {
+   "job": "p00485_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 232,
+   "px_mean": 12.013840993245443,
+   "px_frac_equal": 0.03669579823811849
+  },
+  {
+   "job": "p00496_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 185,
+   "px_mean": 11.260917027791342,
+   "px_frac_equal": 0.04019037882486979
+  },
+  {
+   "job": "p00504_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 234,
+   "px_mean": 13.322830200195312,
+   "px_frac_equal": 0.06265830993652344
+  },
+  {
+   "job": "p00511_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 247,
+   "px_mean": 22.442671457926433,
+   "px_frac_equal": 0.02358404795328776
+  },
+  {
+   "job": "p00533_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 6.153596560160319,
+   "px_frac_equal": 0.08836714426676433
+  },
+  {
+   "job": "p00535_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 174,
+   "px_mean": 13.097527503967285,
+   "px_frac_equal": 0.035503387451171875
+  },
+  {
+   "job": "p00540_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 227,
+   "px_mean": 17.166407585144043,
+   "px_frac_equal": 0.029211044311523438
+  },
+  {
+   "job": "p00541_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 230,
+   "px_mean": 10.579965591430664,
+   "px_frac_equal": 0.05683326721191406
+  },
+  {
+   "job": "p00545_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 18.7386900583903,
+   "px_frac_equal": 0.028964996337890625
+  },
+  {
+   "job": "p00546_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 226,
+   "px_mean": 24.066818873087566,
+   "px_frac_equal": 0.024562517801920574
+  },
+  {
+   "job": "p00548_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 208,
+   "px_mean": 10.61016591389974,
+   "px_frac_equal": 0.03334744771321615
+  },
+  {
+   "job": "p00553_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 15.18021551767985,
+   "px_frac_equal": 0.052284558614095054
+  },
+  {
+   "job": "p00555_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 246,
+   "px_mean": 10.031091372172037,
+   "px_frac_equal": 0.054135640462239586
+  },
+  {
+   "job": "p00556_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 13.236721674601236,
+   "px_frac_equal": 0.03857072194417318
+  },
+  {
+   "job": "p00565_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 235,
+   "px_mean": 10.061233838399252,
+   "px_frac_equal": 0.028268178304036457
+  },
+  {
+   "job": "p00568_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 205,
+   "px_mean": 6.065978368123372,
+   "px_frac_equal": 0.07985623677571614
+  },
+  {
+   "job": "p00572_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 254,
+   "px_mean": 18.193563143412273,
+   "px_frac_equal": 0.055648485819498696
+  },
+  {
+   "job": "p00578_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 11.448102633158365,
+   "px_frac_equal": 0.038772900899251304
+  },
+  {
+   "job": "p00587_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 232,
+   "px_mean": 15.945859909057617,
+   "px_frac_equal": 0.028426170349121094
+  },
+  {
+   "job": "p00592_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 16.473924318949383,
+   "px_frac_equal": 0.035538673400878906
+  },
+  {
+   "job": "p00608_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 152,
+   "px_mean": 11.874582926432291,
+   "px_frac_equal": 0.03296089172363281
+  },
+  {
+   "job": "p00638_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 20.26799710591634,
+   "px_frac_equal": 0.028435707092285156
+  },
+  {
+   "job": "p00643_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 19.36458746592204,
+   "px_frac_equal": 0.04665533701578776
+  },
+  {
+   "job": "p00653_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 202,
+   "px_mean": 10.821067174275717,
+   "px_frac_equal": 0.06764475504557292
+  },
+  {
+   "job": "p00654_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 222,
+   "px_mean": 11.21123472849528,
+   "px_frac_equal": 0.06153043111165365
+  },
+  {
+   "job": "p00666_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 245,
+   "px_mean": 9.92199961344401,
+   "px_frac_equal": 0.06322383880615234
+  },
+  {
+   "job": "p00667_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 208,
+   "px_mean": 13.514965693155924,
+   "px_frac_equal": 0.03947289784749349
+  },
+  {
+   "job": "p00668_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 205,
+   "px_mean": 13.964827219645182,
+   "px_frac_equal": 0.05801804860432943
+  },
+  {
+   "job": "p00676_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 239,
+   "px_mean": 28.13450050354004,
+   "px_frac_equal": 0.02088165283203125
+  },
+  {
+   "job": "p00677_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 232,
+   "px_mean": 17.30421765645345,
+   "px_frac_equal": 0.04104836781819662
+  },
+  {
+   "job": "p00678_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 227,
+   "px_mean": 11.743778864542643,
+   "px_frac_equal": 0.03689765930175781
+  },
+  {
+   "job": "p00679_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 246,
+   "px_mean": 31.360599199930828,
+   "px_frac_equal": 0.04313182830810547
+  },
+  {
+   "job": "p00697_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 208,
+   "px_mean": 13.841948509216309,
+   "px_frac_equal": 0.03250249226888021
+  },
+  {
+   "job": "p00726_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 208,
+   "px_mean": 14.575681686401367,
+   "px_frac_equal": 0.023874600728352863
+  },
+  {
+   "job": "p00727_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 240,
+   "px_mean": 21.15223503112793,
+   "px_frac_equal": 0.069000244140625
+  },
+  {
+   "job": "p00736_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 214,
+   "px_mean": 17.370287259419758,
+   "px_frac_equal": 0.032478650410970054
+  },
+  {
+   "job": "p00737_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 230,
+   "px_mean": 11.981391588846842,
+   "px_frac_equal": 0.04585425059000651
+  },
+  {
+   "job": "p00751_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 247,
+   "px_mean": 15.042052268981934,
+   "px_frac_equal": 0.052872657775878906
+  },
+  {
+   "job": "p00753_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 19.74669583638509,
+   "px_frac_equal": 0.040271759033203125
+  },
+  {
+   "job": "p00759_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 15.633294423421225,
+   "px_frac_equal": 0.03154691060384115
+  },
+  {
+   "job": "p00778_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 207,
+   "px_mean": 19.51790491739909,
+   "px_frac_equal": 0.027245521545410156
+  },
+  {
+   "job": "p00800_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 223,
+   "px_mean": 17.752424558003742,
+   "px_frac_equal": 0.029408772786458332
+  },
+  {
+   "job": "p00806_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 255,
+   "px_mean": 20.066507657368977,
+   "px_frac_equal": 0.02222760518391927
+  },
+  {
+   "job": "p00807_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 214,
+   "px_mean": 8.17587693532308,
+   "px_frac_equal": 0.062444051106770836
+  },
+  {
+   "job": "p00808_s0",
+   "image_equal": false,
+   "latent_equal": null,
+   "root_equal": false,
+   "px_max": 195,
+   "px_mean": 7.603430112202962,
+   "px_frac_equal": 0.06629657745361328
+  }
+ ]
+}

@@ -906,10 +906,15 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "evaluates the subset marked in the table, for SDXL with the Euler sampler in the reference configuration, "
          "with a rented RTX 5090 as provider and DGX Spark systems as verifiers, which is the direction of a "
          "marketplace where consumer cards serve jobs: 100 attacked jobs per attack on the test split, the same jobs "
-         "for every attack. Partial faking is evaluated with F3 at five faked fractions s. The saving β{sub|A} is "
-         "measured, not assumed, on the rented GPU, which the job has to itself, against an honest run of the same "
-         "jobs.")
-    Table("Attacks and forgeries (β{sub|A}: measured share of GPU time saved, median over the same jobs generated honestly on the same card; * evaluated in this study)",
+         "for every attack. The forgers F1–F3 walk the claimed schedule themselves: they run the denoising network "
+         "only at their computed steps, each from their own (possibly forged) state, produce every faked D{sub|i} "
+         "without a network call, and advance with the sampler's own update, so their commitments are consistent "
+         "under Tier A by construction. Partial faking is evaluated with F3 at five faked fractions s. The saving "
+         "β{sub|A} is measured, not assumed, on the rented GPU, which the job has to itself: each attacked job is "
+         "timed against an honest generation of the same job in the same process, in alternating order, on the "
+         "same timer (sampling, including trajectory capture); A2, whose fp8 setting applies to the whole process, "
+         "is timed against an honest run of the same jobs on the same card.")
+    Table("Attacks and forgeries (β{sub|A}: measured share of sampling GPU time saved, median over jobs, each paired with an honest generation of the same job on the same card; * evaluated in this study)",
           ["ID", "Attack", "Implementation", "Saving β{sub|A}"],
           [["A1*", "Fewer steps", "25, 20 or 15 steps with the schedule relabelled as 30 (evaluated: 20 steps)", RW.table5_beta("A1b")],
            ["A2*", "fp8 denoising network", "ComfyUI flag --fp8_e4m3fn-unet", RW.table5_beta("A2")],
@@ -920,9 +925,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            ["A6", "Early exit", "Truncation, then extrapolation", "not evaluated"],
            ["A7", "Replay", "Output of a near-duplicate prompt", "not evaluated"],
            ["A8*", "Unrelated output", "Sanity control", RW.table5_beta("A8")],
-           ["F1*", "Frame copy", "Each faked state copies the previous one", RW.table5_beta("F1")],
-           ["F2*", "Interpolation", "Linear interpolation between computed anchor steps", RW.table5_beta("F2")],
-           ["F3*", "Solver inversion", "Compute m steps; solve Equation 1 for the remaining D{sub|i}", RW.table5_beta("F3")],
+           ["F1*", "Frame copy", "Each faked step copies its input state (D{sub|i} = x{sub|i})", RW.table5_beta("F1")],
+           ["F2*", "Prediction reuse", "Each faked step reuses the last computed D{sub|i} (the design's interpolation needs later anchors, which a forger walking the schedule does not have)", RW.table5_beta("F2")],
+           ["F3*", "Solver inversion", "Extrapolate the next state; solve Equation 1 for the faked D{sub|i}", RW.table5_beta("F3")],
            ["F4", "Cheap-model trajectory", "Complete, consistent trajectory from A2 or A3", "not evaluated"],
            ["M*", "Falsified metadata", "Negative control", RW.table5_beta("M")]],
           [14, 40, 90, 24])
@@ -1023,6 +1028,10 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "its x{sub|0}, schedule and conditioning checks. A per-pixel maximum cannot bind the delivered image to the "
          "trajectory across architectures; a statistic over the whole image would be needed. Both versions are "
          "reported; v2 is a post-freeze correction of one parameter and is labelled as such.")
+    if RW.examples_caption():
+        Para("Figure 4 shows what the deployed rules and the verifier see: the delivered images of three test jobs, "
+             "honest on two GPUs and under each attack.")
+        Figure("R2.0", "", RW.examples_caption(), image="fig_r2_examples.png")
     Para("{b|Deployed rules.} Table 7 reports the acceptance rate of the reproduced deployed rules under each attack. "
          + RW.narr_r21())
     Table("Acceptance rate (%, 95% Wilson CI) of the deployed rules, SDXL Euler, test split; attacks on a rented "
@@ -1124,7 +1133,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "freeze (v2, calibration split only, rule fixed before measuring), and both versions are reported. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
          "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
          "tested (SD1.5 and SDXL on RTX 3090, RTX 4090, RTX 5090 and DGX Spark), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
-         "independent per-step outcomes, which are checked empirically (Figure 4). Reputation is not modelled in Equation "
+         "independent per-step outcomes, which are checked empirically (Figure 5). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
          "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
          "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "

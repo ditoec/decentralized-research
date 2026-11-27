@@ -28,6 +28,24 @@ For: the paper authors and the tech team. This is a review of the Results the te
 | 5 | **E0's honest false-rejection rate is 3.3% on test, against its 1% target** | Needs an explanation (prompt shift between splits, or the threshold rule) | Tech: compare E0 scores on calibration vs test; authors write it up | Flag in Table 8 text |
 | 6 | Administrative: repository and DOI (R0.2); Funding; Acknowledgements (AI-assisted writing statement); Conflicts of interest (Vektor Labs); responsible disclosure to the subnet operators; ComfyUI commit in the reference; three web references to verify by hand | Submission requirements | Authors | Blue TODO and red verify markers |
 
+## Machines needed for the open work
+
+Rules that decide the machine (doc 10 §2.2, runbook §1.1): timing only on a rented GPU that the job has to itself, never on a shared Spark; anything that is only about numerical results runs on the Sparks for free; the RTX 5090 is the provider card of the WP3 attack study, so new attack data should come from the same card to stay comparable.
+
+| # | Work | Machine | Why this machine | Estimate (not measured) |
+|---|---|---|---|---|
+| 1 | Re-time β_A: honest baseline, A1b, A2, A3 Turbo, A3 LCM-LoRA, A8 and M, 100 SDXL Euler jobs each, on one timing field outside the harness | **Rented RTX 5090** (RunPod; the WP2/WP3 card) | Timing must come from a rented card the job has to itself, and the same card as the WP3 provider | About 700 jobs at 3–11 s, roughly 1.5–2.5 h |
+| 2a | Regenerate F1–F3 with the realistic forger (s = 0.5, 100 jobs each) and time them (their β_A becomes measurable) | **Rented RTX 5090** as provider; **Sparks 4–6** as verifiers | Same provider → verifier direction as Tables 7 and 8; generation and timing need the rented card, verification does not | 300 jobs, under 1 h on the pod; verification free |
+| 2b | Regenerate the F3 sweep (s ∈ {0.1, 0.25, 0.5, 0.75, 1}, 100 jobs each) with the realistic forger | **Sparks** (generation and verification, full trajectories) | Numerical result only, no timing; full trajectories stay on site | Free; 500 jobs at about 12 s plus replays, several hours on one Spark |
+| 3 | Testbed demo on Devnet with injected attackers at p ∈ {0.05, 0.1, 0.25} | **One rented consumer pod** (an RTX 3090 is enough) as provider and orchestrator host; **one Spark** as verifier; **Solana Devnet** (free) | The demo checks the deterrence region, not speed, so the cheapest consumer card serves; the Spark connects outward to the pod and Devnet (doc 10 §2.2 rule 9) | Runbook §7 planned about 15 GPU-hours, about US$8 |
+| 4a | SDXL L0: repeat 10% of the SDXL reference jobs on the same Spark | **One Spark** (the one that ran them) | L0 is "same unit", free | About 180 jobs, under 1 h |
+| 4b | SDXL DPM++ 2M at L2: the reference jobs on a second Spark | **Two Sparks** | L2 is "two units of the same model", free | 150 jobs (L2 subset), under 1 h |
+| 4c | SDXL DPM++ 2M at L3: the reference jobs on the RTX 5090, compared with a Spark | **Rented RTX 5090** plus the Spark data | L3 is consumer Blackwell vs Spark | Can share the pod session of items 1 and 2a |
+| 5 | Explain E0's 3.3% honest rate: compare E0 scores on the calibration and test splits | **No new compute**: any machine with the repository (a laptop, or a Spark CPU) | Analysis of existing score files | Minutes |
+| 6 | Administrative items | None | Author decisions | — |
+
+**One rental covers the paid work.** Items 1, 2a and 4c can run in one RTX 5090 session, about 4–6 hours. At the Secure Cloud rate paid in WP2 (about US$1.40/h) that is roughly US$6–9, plus about US$8 for the testbed pod (item 3). Check this against the remaining US$200 budget (doc 10 §2.5) before booking. Items 2b, 4a, 4b and 5 are free.
+
 ## Text corrected in this review (no new numbers)
 
 - **Tier A mechanism.** The draft said solver inversion "leaves solver inconsistencies at the joins" and that Tier A "caught the solver-inversion forgery at every faked fraction below one". Both describe this forgery implementation, not a careful forger. Partial faking and the Discussion now say so, and credit detection to Tier B, as the Methods already did.

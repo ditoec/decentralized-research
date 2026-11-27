@@ -1,0 +1,81 @@
+{
+ "run_id": "20261126-wp3-cost-replay-sdxl-euler-rtx5090-01",
+ "wp": "wp3",
+ "purpose": "verifier replay of every step (Tier B distances, Tier A residuals)",
+ "git_commit": "f057b18",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "3c7733924049",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "7415f588-4b1c-c68b-97c5-9d3b7fd6ea25",
+  "driver": "595.112.07"
+ },
+ "start_time": "2026-11-27T03:22:22.173878+00:00",
+ "provider_run": "20261126-wp3-base-sdxl-euler-rtx5090-01",
+ "provider_node": {
+  "hostname": "3c7733924049",
+  "os": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "compute_capability": [
+   12,
+   0
+  ],
+  "gpu_uuid": "7415f588-4b1c-c68b-97c5-9d3b7fd6ea25",
+  "driver": "595.112.07"
+ },
+ "models": [
+  {
+   "filename": "sd_xl_base_1.0.safetensors",
+   "sha256": "31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b"
+  }
+ ],
+ "sampler": "euler",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "1024x1024",
+ "pin_batching": true,
+ "provider_retention": "F",
+ "draw_seed_sha256": "2275d0590b38ea2ce5df1e0282babd0f9f94520cb547f1d9daa15d9ae224655e",
+ "image_digest": "lock-main:sha256:8865f8b0d4fc7f732dad88d8ec4cb31da76c876a3e4a63f6c31b3f95ec552cc4",
+ "end_time": "2026-11-27T03:55:38.350747+00:00",
+ "retention": "F",
+ "retention_stats": {
+  "n": 0,
+  "full_bytes": 0,
+  "kept_bytes": 0
+ },
+ "provider": "runpod",
+ "cloud_type": "SECURE",
+ "host_id": "8pcz8qtd5wmapu",
+ "data_center": "EUR-IS-2",
+ "gpu_uuid": "GPU-7415f588-4b1c-c68b-97c5-9d3b7fd6ea25",
+ "driver": "595.112.07",
+ "hourly_rate_usd": 1.39,
+ "billed_hours": 4.9431606199344,
+ "cost_usd": 6.870993261708815,
+ "raw_checksums": {
+  "20261126-wp3-cost-replay-sdxl-euler-rtx5090-01.tar": "1ff2429a56fdadae284e0c282fc4e08b879d9ae16d7a8d8defd895378baaec2e"
+ },
+ "pulled_unix": 1795751781.3782356
+}

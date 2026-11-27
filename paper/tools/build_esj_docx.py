@@ -1047,8 +1047,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "with the same job generated honestly on the same rented RTX 5090 (the first job of each run is a warm-up and is "
          "dropped). For F1–F3 the attack harness generates the honest trajectory before forging part of it, so its "
          "timing does not measure what a forger saves; their β{sub|A} is bounded by the faked share s and p* uses that "
-         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), so it "
-         "saves nothing here. " + RW.narr_r28())
+         "bound. A2 ran slower than honest generation on this card (fp8 weights are converted at run time), and A1b's "
+         "schedule forgery re-solves every D{sub|i}, which costs more than the ten skipped steps save, so neither saves "
+         "GPU time as implemented here. " + RW.narr_r28())
     Table("Per-step separability r_A (k = 1, %, 95% CI), cost share β_A (median, 95% bootstrap CI) and the deterring "
           "sampling rate p* of Equation 9 at c/P = 1 (p* scales linearly with c/P)",
           ["Attack", "r_A (%)", "β_A", "p*, k = 1, B/P = 0", "p*, k = 1, B/P = 1", "p*, k = 3, B/P = 1"],

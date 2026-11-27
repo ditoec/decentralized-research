@@ -1,0 +1,3 @@
+{"event": "waiting", "mem_available_gb": 33.3, "disk_free_gb": 331.6, "need_mem_gb": 35.0, "time": "2026-11-27T12:20:00+0700"}
+{"event": "started", "container": "be5eb9b5e640", "attempt": 1, "mem_available_gb": 106.4, "time": "2026-11-27T12:21:00+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T13:11:55+0700"}

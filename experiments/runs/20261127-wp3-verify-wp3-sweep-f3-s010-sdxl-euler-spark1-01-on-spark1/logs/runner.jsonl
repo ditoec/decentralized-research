@@ -1,0 +1,6 @@
+{"event": "waiting", "mem_available_gb": 34.4, "disk_free_gb": 512.9, "need_mem_gb": 35.0, "time": "2026-11-27T10:37:34+0700"}
+{"event": "started", "container": "dcb6db7f33c3", "attempt": 1, "mem_available_gb": 53.7, "time": "2026-11-27T10:38:35+0700"}
+{"event": "stopped_by_guard", "stops": 1, "mem_available_gb": 8.8, "disk_free_gb": 512.5, "time": "2026-11-27T10:53:28+0700"}
+{"event": "started", "container": "78a6baa106c2", "attempt": 2, "mem_available_gb": 54.4, "time": "2026-11-27T11:03:28+0700"}
+{"event": "started", "container": "f87e3afae8d1", "attempt": 1, "mem_available_gb": 54.6, "time": "2026-11-27T11:41:06+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T12:05:16+0700"}

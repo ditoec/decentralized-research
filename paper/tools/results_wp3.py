@@ -350,8 +350,11 @@ def narr_r27() -> str:
         d_meas.append(qm - statistics.mean(theory.q_spot_check(30, m, r["k"], 1.0, 0.0) for m in r["n_over_tau"]))
     ratio = statistics.mean(statistics.mean(r["n_over_tau"]) / max(1, round(r["s"] * 30)) for r in rs if r["k"] == 1)
     ta = [r for r in rs if r["k"] == 1]
+    part = sorted({(r["s"], r["n_jobs"]) for r in rs if r.get("partial")})
+    pn = ("; at s = " + ", ".join(f"{x:g} only {n} of 100 jobs were verified before the node's memory guard aborted the "
+                                   "run" for x, n in part)) if part else ""
     return (f"Figure 4 shows the share of F3 jobs failing Tier B at s ∈ {{{', '.join(f'{x:g}' for x in svals)}}} "
-            f"(100 jobs per s, generated and verified on DGX Spark systems with full trajectories). Detection exceeded "
+            f"(100 jobs per s, generated and verified on DGX Spark systems with full trajectories{pn}). Detection exceeded "
             f"Equation 4 with m = sT by up to {100 * max(d_lab):.0f} percentage points, because each forged state also "
             f"spoils the replay of the step after it: a job had on average {ratio:.1f} times as many steps above τ{{sub|i}} "
             f"as faked steps. With m set to the measured number of steps above τ{{sub|i}}, Equation 4 matched the "
@@ -398,12 +401,16 @@ def sweep_tiers() -> list[dict]:
     R_ = ROOT / "experiments" / "runs"
     out = []
     for tag in ["s010", "s025", "s050", "s075", "s100"]:
-        v = None
+        v, partial_run = None, False
         for node in ("spark3", "spark6", "spark1"):
             c = R_ / f"20261127-wp3-verify-wp3-sweep-f3-{tag}-sdxl-euler-spark1-01-on-{node}"
             if (c / "summary.json").exists():
                 v = c
                 break
+        if v is None:  # a run the memory guard aborted: use the jobs it did verify, and say so (partial)
+            c = R_ / f"20261127-wp3-verify-wp3-sweep-f3-{tag}-sdxl-euler-spark1-01-on-spark1"
+            if (c / "verdicts.jsonl").exists():
+                v, partial_run = c, True
         if v is None:
             continue
         last = {}
@@ -420,7 +427,7 @@ def sweep_tiers() -> list[dict]:
             rr = [last[(j, "E2-H", k)] for j in jobs if (j, "E2-H", k) in last]
             fail = sum(any(float(r["per_step"][str(i)]) > tau[k][str(i)] for i in r["steps"]) for r in rr)
             out.append({"s": int(tag[1:]) / 100, "k": k, "n": len(rr), "tierb_fail": fail, "tiera_fail": ta,
-                        "n_jobs": len(jobs), "n_over_tau": n_over, "run_id": v.name})
+                        "n_jobs": len(jobs), "n_over_tau": n_over, "run_id": v.name, "partial": partial_run})
     return out
 
 

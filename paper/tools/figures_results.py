@@ -87,7 +87,7 @@ def fig_partial():
         s = [r["s"] for r in rk]
         q = [r["tierb_fail"] / r["n"] for r in rk]
         ci = [wilson(r["tierb_fail"], r["n"]) for r in rk]
-        ax.errorbar(s, q, yerr=[[a - l for a, (l, _) in zip(q, ci)], [h - a for a, (_, h) in zip(q, ci)]],
+        ax.errorbar(s, q, yerr=[[max(0, a - l) for a, (l, _) in zip(q, ci)], [max(0, h - a) for a, (_, h) in zip(q, ci)]],
                     fmt=MK[i], color=C[i], markersize=5, capsize=2, linewidth=1, label=f"measured, k = {k}")
         al = a_s.get(k, 0.0)
         ax.plot(grid, [theory.q_spot_check(30, round(g * 30), k, 1.0, al) for g in grid], color=C[i], linewidth=1.5,
@@ -99,8 +99,6 @@ def fig_partial():
     ax.set_ylabel("Jobs failing Tier B (share)")
     ax.set_ylim(-0.02, 1.05)
     ax.legend(fontsize=6.5, loc="lower right", ncol=2)
-    ax.text(0.01, 0.95, "dashed: Eq. 4 with m = measured steps over τ per job", transform=ax.transAxes, fontsize=7,
-            color=MUTED, va="top")
     fig.tight_layout()
     fig.savefig(OUT / "fig_r2_7_partial.png")
     print("wrote", OUT / "fig_r2_7_partial.png")

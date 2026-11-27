@@ -1,0 +1,234 @@
+{
+ "provisional": false,
+ "note": "WP4 params from the WP3 measurements (experiments/analysis/wp3/v1); c/P = 1 is a design assumption.",
+ "params_file": "/Users/ekkirinaldi/Documents/Git/thesis-anjasmaradita-gpu/.claude/worktrees/project-analysis-91bc76/experiments/analysis/wp4/mc_params_wp3.json",
+ "params_sha256": "1571ab2b416d458a1fde992e0e83db265302da3f2f223e704c8b6b846945c969",
+ "git_commit": "1aa56909168f9ef4fcb56850c75e4ddf31a9fb9c",
+ "numpy": "2.5.5",
+ "rng": "numpy.random.default_rng (PCG64)",
+ "n_rows": 13200,
+ "wall_s": 21.27,
+ "seed": 20261126,
+ "n_sim": 20000,
+ "T": 30,
+ "c": 1.0,
+ "P": 1.0,
+ "attacks_run": [
+  "A1b",
+  "A2",
+  "A3-LCM",
+  "A3-Turbo",
+  "A8",
+  "F1",
+  "F2",
+  "F3"
+ ],
+ "attacks_waiting_for_wp3": [],
+ "checks": {
+  "prop2_eq4_inside_wilson95": {
+   "n": 13200,
+   "inside": 11145,
+   "max_abs_diff": 0.012637352835943805
+  },
+  "prop3_eq8_at_s1": {
+   "agree": 1185,
+   "disagree": 0,
+   "inconclusive_near_boundary": 15,
+   "disagreements": []
+  },
+  "prop3_interior_maximum_cells": 0,
+  "n_cells_pk_bp": 1200
+ },
+ "params": {
+  "provisional": false,
+  "note": "WP4 params from the WP3 measurements (experiments/analysis/wp3/v1); c/P = 1 is a design assumption.",
+  "seed": {
+   "value": 20261126,
+   "provisional": true,
+   "source": "fixed simulation seed (design choice, not a measurement)"
+  },
+  "n_sim": {
+   "value": 20000,
+   "provisional": true,
+   "source": "simulated jobs per cell (design choice)"
+  },
+  "T": {
+   "value": 30,
+   "provisional": true,
+   "source": "denoising steps per job; illustrative, set to the WP3 workflow step count"
+  },
+  "P": {
+   "value": 1.0,
+   "provisional": true,
+   "source": "payment per job, normalised to 1; B = (B/P) * P"
+  },
+  "c": {
+   "value": 1.0,
+   "provisional": false,
+   "source": "design assumption c/P = 1 (payment just covers the honest cost)"
+  },
+  "alpha_star": {
+   "value": 0.01,
+   "provisional": true,
+   "source": "design target: job-level false rejection <= 1% (runbook \u00a76); used through Eq. 6 when alpha_s is null"
+  },
+  "alpha_s": {
+   "value": 0.011944444444444445,
+   "provisional": false,
+   "source": "WP3 honest alpha_s, k = 1, 1,800 test jobs"
+  },
+  "attacks": [
+   {
+    "name": "A1b",
+    "r_A": {
+     "value": 0.9625,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a1b-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a1b-sdxl-"
+    },
+    "beta_A": {
+     "value": 0.0,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "A2",
+    "r_A": {
+     "value": 0.9975,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a2-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a2-sdxl-eu"
+    },
+    "beta_A": {
+     "value": 0.0,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "A3-LCM",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3lcm-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3lcm-s"
+    },
+    "beta_A": {
+     "value": 0.3235167193721803,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "A3-Turbo",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a3tur"
+    },
+    "beta_A": {
+     "value": 0.48717860958870196,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "A8",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-a8-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-a8-sdxl-eu"
+    },
+    "beta_A": {
+     "value": 0.011854089578578364,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "F1",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f1-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f1-sdxl-eu"
+    },
+    "beta_A": {
+     "value": 0.5,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "F2",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f2-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f2-sdxl-eu"
+    },
+    "beta_A": {
+     "value": 0.5,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   },
+   {
+    "name": "F3",
+    "r_A": {
+     "value": 1.0,
+     "provisional": false,
+     "source": "WP3 r2_6_rates.csv, k = 1: 20261126-wp3-atk-f3-sdxl-euler-rtx5090-01;20261126-wp3-rerun-sdxl-euler-spark3-01;20261127-wp3-verify-wp3-atk-f3-sdxl-eu"
+    },
+    "beta_A": {
+     "value": 0.5,
+     "provisional": false,
+     "source": "WP3 r2_4_beta.csv vs the honest base run (negative medians floored at 0: no saving)"
+    }
+   }
+  ],
+  "grid": {
+   "provisional": true,
+   "source": "sweep grid (design choice); p values include the WP5 testbed points 0.05, 0.1, 0.25; k as in runbook \u00a76",
+   "p": {
+    "value": [
+     0.01,
+     0.02,
+     0.05,
+     0.1,
+     0.25,
+     0.5
+    ]
+   },
+   "k": {
+    "value": [
+     1,
+     2,
+     3,
+     5,
+     8
+    ]
+   },
+   "BP": {
+    "value": [
+     0,
+     0.5,
+     1,
+     2,
+     5
+    ]
+   },
+   "s": {
+    "value": [
+     0,
+     0.1,
+     0.2,
+     0.3,
+     0.4,
+     0.5,
+     0.6,
+     0.7,
+     0.8,
+     0.9,
+     1.0
+    ]
+   }
+  }
+ }
+}

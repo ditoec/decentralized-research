@@ -125,7 +125,7 @@ def table_sensitivity() -> list[list[str]]:
     for ver, ev, k in cols:
         r = (f1 if ver == "v1" else f2).get((ev, k))
         hon.append(ci(r, "fpr", "ci_lo", "ci_hi") if r else ph("R2.5"))
-    out.append(["Honest false rejection (1,800 test jobs)"] + hon)
+    out.append(["Honest (1,800 test jobs)"] + hon)
     return out
 
 

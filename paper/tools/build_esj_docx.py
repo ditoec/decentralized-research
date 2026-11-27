@@ -150,6 +150,91 @@ def parse(text):
         yield text[pos:], set()
 
 
+# ---------------------------------------------------------------- table column widths from the text they hold
+_FONTS = {}
+_FONT_DIR = "/System/Library/Fonts/Supplemental/"
+_FONT_FILES = {(False, False): "Times New Roman.ttf", (True, False): "Times New Roman Bold.ttf",
+               (False, True): "Times New Roman Italic.ttf", (True, True): "Times New Roman Bold Italic.ttf"}
+
+
+def _font(bold, italic, pt):
+    """Times New Roman at `pt` points, scaled 10x so the advance widths are precise; None if not installed."""
+    key = (bold, italic, pt)
+    if key not in _FONTS:
+        try:
+            from PIL import ImageFont
+            _FONTS[key] = ImageFont.truetype(os.path.join(_FONT_DIR, _FONT_FILES[(bold, italic)]), int(pt * 10))
+        except (ImportError, OSError):
+            _FONTS[key] = None
+    return _FONTS[key]
+
+
+def text_mm(text, bold=False, pt=8.0):
+    """Printed width in mm of one line of marked-up table text (8 pt Times New Roman, the table-text style)."""
+    w = 0.0
+    for s, f in parse(text):
+        size = pt * 0.65 if f & {"sub", "sup"} else pt
+        fn = _font(bold or "b" in f, "i" in f, size)
+        w += (fn.getlength(s) / 10 if fn else len(s) * size * 0.45) * 25.4 / 72
+    return w
+
+
+TABLE_STYLES = [(8.0, 1.905), (8.0, 1.0), (7.5, 1.0), (7.0, 1.0)]  # (font pt, left/right cell margin mm), in order
+
+
+def fit_widths(header, rows, total_mm):
+    """(column widths in mm summing to total_mm, font pt, cell margin mm), so that as many cells as possible stay
+    on one line.
+
+    Each column needs the width of its longest data cell on one line, its longest header word, and half its header
+    (so a header takes at most about two lines). The
+    first style in TABLE_STYLES under which every column fits on one line is used (the template's 8 pt and
+    margins if possible; a dense table gets narrower margins, then a smaller font, never below 7 pt); a table
+    whose prose wraps under every style keeps the template's style. If all columns fit,
+    the spare width goes first to the columns whose full header would otherwise wrap, then in proportion to
+    need. If no style fits, columns are filled smallest-need first (water filling): every column that
+    fits its fair share keeps its full width, and the rest share what is left in proportion to their needs, so
+    only the columns with the longest text wrap."""
+    n = len(header)
+
+    def measure(pt, mar):
+        pad = 2 * mar + 0.6
+        data = [max((text_mm(r[c], pt=pt) for r in rows), default=0) + pad for c in range(n)]
+        hword = [max(text_mm(w, bold=True, pt=pt) for w in re.sub(r"[{}|]", " ", header[c]).split() or [""]) + pad
+                 for c in range(n)]
+        hfull = [text_mm(header[c], bold=True, pt=pt) + pad for c in range(n)]
+        # a header may take two lines, not more: each column is at least half its header's width
+        return [max(d, h, (f - pad) / 2 + pad) for d, h, f in zip(data, hword, hfull)], hfull
+
+    # a smaller style only if it puts every row on one line; prose that wraps anyway keeps the template's style
+    pt, mar = next(((p, m) for p, m in TABLE_STYLES if sum(measure(p, m)[0]) <= total_mm), TABLE_STYLES[0])
+    need, hfull = measure(pt, mar)
+    if sum(need) <= total_mm:
+        w = need[:]
+        spare = total_mm - sum(w)
+        for c in sorted(range(n), key=lambda c: hfull[c] - w[c]):  # cheapest header fixes first
+            gap = hfull[c] - w[c]
+            if 0 < gap <= spare:
+                w[c] += gap
+                spare -= gap
+        tot = sum(w)
+        return [x + spare * x / tot for x in w], pt, mar
+    w, left, open_ = [0.0] * n, total_mm, sorted(range(n), key=lambda c: need[c])
+    while open_:
+        share = left / len(open_)
+        c = open_[0]
+        if need[c] <= share:
+            w[c] = need[c]
+            left -= need[c]
+            open_.pop(0)
+        else:
+            tot = sum(need[c] for c in open_)
+            for c in open_:
+                w[c] = left * need[c] / tot
+            break
+    return w, pt, mar
+
+
 def make_run(base_rpr, s, fmt):
     r = etree.SubElement(etree.Element(qn("w:dummy")), qn("w:r"))
     rpr = copy.deepcopy(base_rpr) if base_rpr is not None else etree.Element(qn("w:rPr"))
@@ -195,6 +280,7 @@ CONTACT_EMAIL = ""  # corresponding author's e-mail for the title-page footnote 
 SHOW_NOTES = "--notes" in sys.argv  # red {R|..} and blue {T|..} authoring notes; hidden unless --notes
 NOTE = re.compile(r"\s*\{(?:R|T)\|[^{}]*\}")
 hidden_notes: list[str] = []
+table_log: list = []  # (caption, column widths in mm) per table, printed with TABLE_WIDTHS=1
 
 
 def strip_notes(text: str) -> str:
@@ -401,10 +487,32 @@ def main(template, out):
         return Caption("figure", caption)
 
     def Table(caption, header, rows, widths_mm):
+        # widths_mm gives the table's total width; the columns are sized from the text they hold (fit_widths)
+        widths_mm, pt, mar = fit_widths(header, rows, sum(widths_mm))
+        table_log.append((caption[:40], pt, mar, [round(x, 1) for x in widths_mm]))
         Caption("table", caption)
         tbl = doc.add_table(rows=1 + len(rows), cols=len(header))  # inserted before sectPr
         tbl.style = doc.styles["Table Grid"]
         tbl.alignment = 1
+        # fixed layout with the grid set to the given widths: Word and LibreOffice lay a table out from w:tblGrid,
+        # which python-docx fills with equal columns, so the per-cell widths alone are ignored
+        tbl.autofit = False
+        tw = int(sum(widths_mm) * 56.7)  # twips per mm
+        tblPr = tbl._tbl.tblPr
+        for tag in ("w:tblW", "w:tblLayout"):
+            old = tblPr.find(qn(tag))
+            if old is not None:
+                tblPr.remove(old)
+        tblW = OxmlElement("w:tblW"); tblW.set(qn("w:w"), str(tw)); tblW.set(qn("w:type"), "dxa"); tblPr.append(tblW)
+        lay = OxmlElement("w:tblLayout"); lay.set(qn("w:type"), "fixed"); tblPr.append(lay)
+        if mar != 1.905:  # narrower left and right cell margins for a dense table
+            cm = OxmlElement("w:tblCellMar")
+            for side in ("left", "right"):
+                e = OxmlElement(f"w:{side}"); e.set(qn("w:w"), str(int(mar * 56.7))); e.set(qn("w:type"), "dxa")
+                cm.append(e)
+            tblPr.append(cm)
+        for gc, w in zip(tbl._tbl.tblGrid.findall(qn("w:gridCol")), widths_mm):
+            gc.set(qn("w:w"), str(int(w * 56.7)))
         for ri, row in enumerate([header] + rows):
             for ci, txt in enumerate(row):
                 cell = tbl.rows[ri].cells[ci]
@@ -412,6 +520,16 @@ def main(template, out):
                 p = cell.paragraphs[0]
                 p.style = doc.styles["table-text"]
                 fill_para(p._p, ("{b|" + txt + "}") if ri == 0 and "{" not in txt else txt)
+                if pt != 8.0:  # smaller font for a dense table (half-points)
+                    for r in p._p.iter(qn("w:r")):
+                        rPr = r.find(qn("w:rPr"))
+                        if rPr is None:
+                            rPr = OxmlElement("w:rPr"); r.insert(0, rPr)
+                        for tag in ("w:sz", "w:szCs"):
+                            old = rPr.find(qn(tag))
+                            if old is not None:
+                                rPr.remove(old)
+                            e = OxmlElement(tag); e.set(qn("w:val"), str(int(pt * 2))); rPr.append(e)
         # keep each table on one page: caption with the table, no row split, every row kept with the next (a table
         # longer than a page still breaks, between rows, with its header row repeated)
         cap = tbl._tbl.getprevious()
@@ -1254,6 +1372,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if a != "--notes"]
     main(args[0], args[1])
+    if os.environ.get("TABLE_WIDTHS"):
+        for cap, pt, mar, w in table_log:
+            print(f"  {cap:42s} {pt} pt, margin {mar} mm, {w}")
     if hidden_notes:
         print(f"{len(hidden_notes)} authoring notes hidden (build with --notes to show them):")
         for n in hidden_notes:

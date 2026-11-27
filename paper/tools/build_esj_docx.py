@@ -1034,8 +1034,16 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "the 1,800 test jobs in the last row. " + RW.narr_r23() + " Both realised honest rates exceed their targets: "
          "the 1.2% of E2-H lies above the 1% its per-step tolerances were set for, which is consistent with the "
          "sampling error of a 99th-percentile tolerance estimated from the calibration split, and the 3.3% of E0 lies "
-         "above the 1% its thresholds were set for. {R|NEEDS WORK: explain the E0 gap between the calibration and test "
-         "splits} {R|NEEDS WORK: the F1–F3 rows of Tables 7 and 8 come from forgeries of an honest trajectory "
+         "above the 1% its thresholds were set for. The E0 gap has two parts. First, E0 passes a job only if both "
+         "LPIPS and DINOv2 lie within their 99% bounds, and the two exceedances overlap only partly, so even on the "
+         "calibration split it rejected 1.4% of honest jobs. Second, on the test split each metric was exceeded about "
+         "twice as often, on all three rented cards (LPIPS 2.0% and DINOv2 2.2%, against 1.0% each). Re-splitting the "
+         "400 calibration and test prompts at random 2,000 times gave a held-out rate between 0.8% and 2.9% in 95% of "
+         "splits, and 3.3% or more in 0.8%, so prompt sampling alone is an unlikely explanation. The test failures "
+         "concentrate on jobs that fail against all three cards (6 jobs, against 1 on the calibration split), which "
+         "points to the DGX Spark reference images, regenerated for the test split in a separate run, or to a few "
+         "prompts. {R|NEEDS WORK: regenerate some calibration jobs with the test-split reference procedure and compare "
+         "them bit for bit with the calibration references, to tell the two causes apart} {R|NEEDS WORK: the F1–F3 rows of Tables 7 and 8 come from forgeries of an honest trajectory "
          "(see Partial faking) and will change when F1–F3 are regenerated}")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
           "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",

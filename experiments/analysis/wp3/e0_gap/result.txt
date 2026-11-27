@@ -1,0 +1,16 @@
+1. Non-pass rate with the frozen v1 E0 thresholds: {'pixel_equal_rate': 0.0, 'lpips_t_pass': 0.0576, 'lpips_t_fail': 0.0789, 'dino_t_pass': 0.9699, 'dino_t_fail': 0.9581}
+calibration rtx3090-01 n=  600  non-pass  1.67%  LPIPS>t_pass 1.33%  DINOv2<t_pass 1.17%  LPIPS median 0.0048  p99 0.0743
+calibration rtx4090-02 n=  600  non-pass  1.17%  LPIPS>t_pass 0.83%  DINOv2<t_pass 0.83%  LPIPS median 0.0047  p99 0.0572
+calibration rtx5090-01 n=  600  non-pass  1.50%  LPIPS>t_pass 0.83%  DINOv2<t_pass 1.00%  LPIPS median 0.0046  p99 0.0543
+test rtx3090-01        n=  600  non-pass  3.33%  LPIPS>t_pass 1.83%  DINOv2<t_pass 2.33%  LPIPS median 0.0054  p99 0.0782
+test rtx4090-02        n=  600  non-pass  3.50%  LPIPS>t_pass 2.50%  DINOv2<t_pass 2.00%  LPIPS median 0.0051  p99 0.0858
+test rtx5090-01        n=  600  non-pass  3.17%  LPIPS>t_pass 1.67%  DINOv2<t_pass 2.33%  LPIPS median 0.0051  p99 0.0745
+calibration pooled     n= 1800  non-pass  1.44%  LPIPS>t_pass 1.00%  DINOv2<t_pass 1.00%  LPIPS median 0.0047  p99 0.0578
+test pooled            n= 1800  non-pass  3.33%  LPIPS>t_pass 2.00%  DINOv2<t_pass 2.22%  LPIPS median 0.0052  p99 0.0782
+
+2. Random 200/200 prompt re-splits (2,000 splits, seed 20261127)
+held-out non-pass: median 1.72%, 95% range 0.78-2.94%; splits at or above the observed 3.33%: 0.8%
+
+3. Concentration of non-pass jobs across the three rented cards
+calibration  non-pass rows  26, distinct jobs  19, failing against 1 / 2 / 3 cards: 13 / 5 / 1
+test         non-pass rows  60, distinct jobs  35, failing against 1 / 2 / 3 cards: 16 / 13 / 6

@@ -287,8 +287,10 @@ def cmd_compare(a):
     per, e0rows = [], []
     step_rel, step_max = {}, {}
     for k in common:
-        r = {"job": k, "image_equal": A[k]["image_sha256"] == B[k]["image_sha256"],
-             "latent_equal": A[k]["latent_sha256"] == B[k]["latent_sha256"]}
+        # attacks.run rows carry no latent_sha256 (and may lack image_sha256): None = not known, and the
+        # pixel comparison below runs whenever equality is not established
+        eq = lambda f: (A[k][f] == B[k][f]) if f in A[k] and f in B[k] else None  # noqa: E731
+        r = {"job": k, "image_equal": eq("image_sha256"), "latent_equal": eq("latent_sha256")}
         if "merkle_root" in A[k] and "merkle_root" in B[k]:
             r["root_equal"] = A[k]["merkle_root"] == B[k]["merkle_root"]
         if not r["image_equal"]:
@@ -325,8 +327,9 @@ def cmd_compare(a):
     n = len(per)
     summary = {
         "run_a": ra.name, "run_b": rb.name, "n_pairs": n,
-        "frac_image_identical": sum(r["image_equal"] for r in per) / n if n else None,
-        "frac_latent_identical": sum(r["latent_equal"] for r in per) / n if n else None,
+        "frac_image_identical": sum(bool(r["image_equal"]) for r in per) / n if n else None,
+        "frac_latent_identical": (sum(bool(r["latent_equal"]) for r in per) / n
+                                  if n and all(r["latent_equal"] is not None for r in per) else None),
         "frac_root_identical": (sum(r.get("root_equal", False) for r in per) / n) if n and "root_equal" in per[0] else None,
         "px_absdiff_median_of_means": statistics.median(r["px_mean"] for r in per) if n else None,
         "px_absdiff_max": max(r["px_max"] for r in per) if n else None,

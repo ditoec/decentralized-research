@@ -1,0 +1,313 @@
+{
+ "runs": [
+  "20261126-wp5-devnet-replay-03",
+  "20261126-wp5-devnet-replay-04"
+ ],
+ "cluster": "devnet",
+ "note": "statistics over the successful jobs' transactions; failed jobs counted separately, split into client-side (inside a known client network outage) and the rest",
+ "client_outage": {
+  "start": "2026-11-26T17:21:00Z",
+  "end": "2026-11-26T17:30:00Z",
+  "note": "operator switched the laptop's network (reported by the coordinating session)"
+ },
+ "paths": {
+  "unsampled": {
+   "n_jobs": 104,
+   "n_ok": 100,
+   "n_failed": 4,
+   "n_failed_client_side": 2,
+   "n_failed_other": 2,
+   "failure_rate_excluding_client_side": 0.0196,
+   "failures_by_error_client_side": {
+    "fetch failed": 1,
+    "before create_job: failed to get recent blockhash: TypeError: fetch failed": 1
+   },
+   "failures_by_error_other": {
+    "fetch failed": 2
+   },
+   "n_tx": 500,
+   "tx_per_job": {
+    "n": 100,
+    "mean": 5.0,
+    "min": 5,
+    "median": 5,
+    "p95": 5,
+    "max": 5
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 5.0,
+    "min": 5,
+    "median": 5,
+    "p95": 5,
+    "max": 5
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 78044.24,
+    "min": 74826,
+    "median": 77831,
+    "p95": 82362,
+    "max": 86836
+   },
+   "compute_units_per_tx_mean": 15608.8,
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 25000.0,
+    "min": 25000,
+    "median": 25000,
+    "p95": 25000,
+    "max": 25000
+   },
+   "fee_lamports_per_tx": {
+    "n": 500,
+    "mean": 5000.0,
+    "min": 5000,
+    "median": 5000,
+    "p95": 5000,
+    "max": 5000
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 500,
+    "mean": 2308.25,
+    "min": 835,
+    "median": 1366,
+    "p95": 5627,
+    "max": 10237
+   },
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 384,
+    "mean": 1429.51,
+    "min": 835,
+    "median": 1319,
+    "p95": 1908,
+    "max": 8158
+   },
+   "n_tx_with_rpc_429": 116,
+   "n_tx_missing_meta": 0
+  },
+  "pass": {
+   "n_jobs": 104,
+   "n_ok": 100,
+   "n_failed": 4,
+   "n_failed_client_side": 0,
+   "n_failed_other": 4,
+   "failure_rate_excluding_client_side": 0.0385,
+   "failures_by_error_client_side": {},
+   "failures_by_error_other": {
+    "fetch failed": 3,
+    "before create_job: fetch failed": 1
+   },
+   "n_tx": 700,
+   "tx_per_job": {
+    "n": 100,
+    "mean": 7.0,
+    "min": 7,
+    "median": 7,
+    "p95": 7,
+    "max": 7
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 7.0,
+    "min": 7,
+    "median": 7,
+    "p95": 7,
+    "max": 7
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 98044.01,
+    "min": 94690,
+    "median": 97695,
+    "p95": 102205,
+    "max": 109700
+   },
+   "compute_units_per_tx_mean": 14006.3,
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 35000.0,
+    "min": 35000,
+    "median": 35000,
+    "p95": 35000,
+    "max": 35000
+   },
+   "fee_lamports_per_tx": {
+    "n": 700,
+    "mean": 5000.0,
+    "min": 5000,
+    "median": 5000,
+    "p95": 5000,
+    "max": 5000
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 700,
+    "mean": 2582.43,
+    "min": 884,
+    "median": 1401,
+    "p95": 5746,
+    "max": 28852
+   },
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 503,
+    "mean": 1414.55,
+    "min": 884,
+    "median": 1328,
+    "p95": 1899,
+    "max": 3583
+   },
+   "n_tx_with_rpc_429": 197,
+   "n_tx_missing_meta": 0
+  },
+  "dispute": {
+   "n_jobs": 110,
+   "n_ok": 100,
+   "n_failed": 10,
+   "n_failed_client_side": 4,
+   "n_failed_other": 6,
+   "failure_rate_excluding_client_side": 0.0566,
+   "failures_by_error_client_side": {
+    "fetch failed": 4
+   },
+   "failures_by_error_other": {
+    "fetch failed": 5,
+    "before create_job: fetch failed": 1
+   },
+   "n_tx": 1000,
+   "tx_per_job": {
+    "n": 100,
+    "mean": 10.0,
+    "min": 10,
+    "median": 10,
+    "p95": 10,
+    "max": 10
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 10.0,
+    "min": 10,
+    "median": 10,
+    "p95": 10,
+    "max": 10
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 125437.84,
+    "min": 122357,
+    "median": 125352,
+    "p95": 131367,
+    "max": 137357
+   },
+   "compute_units_per_tx_mean": 12543.8,
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 50000.0,
+    "min": 50000,
+    "median": 50000,
+    "p95": 50000,
+    "max": 50000
+   },
+   "fee_lamports_per_tx": {
+    "n": 1000,
+    "mean": 5000.0,
+    "min": 5000,
+    "median": 5000,
+    "p95": 5000,
+    "max": 5000
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 1000,
+    "mean": 2727.63,
+    "min": 788,
+    "median": 1399,
+    "p95": 5843,
+    "max": 27308
+   },
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 694,
+    "mean": 1396.1,
+    "min": 788,
+    "median": 1325,
+    "p95": 1837,
+    "max": 3372
+   },
+   "n_tx_with_rpc_429": 306,
+   "n_tx_missing_meta": 0
+  },
+  "timeout": {
+   "n_jobs": 103,
+   "n_ok": 100,
+   "n_failed": 3,
+   "n_failed_client_side": 1,
+   "n_failed_other": 2,
+   "failure_rate_excluding_client_side": 0.0196,
+   "failures_by_error_client_side": {
+    "fetch failed": 1
+   },
+   "failures_by_error_other": {
+    "before create_job: failed to get recent blockhash: TypeError: fetch failed": 1,
+    "fetch failed": 1
+   },
+   "n_tx": 300,
+   "tx_per_job": {
+    "n": 100,
+    "mean": 3.0,
+    "min": 3,
+    "median": 3,
+    "p95": 3,
+    "max": 3
+   },
+   "signatures_per_job": {
+    "n": 100,
+    "mean": 3.0,
+    "min": 3,
+    "median": 3,
+    "p95": 3,
+    "max": 3
+   },
+   "compute_units_per_job": {
+    "n": 100,
+    "mean": 63089.26,
+    "min": 60343,
+    "median": 63343,
+    "p95": 69343,
+    "max": 72343
+   },
+   "compute_units_per_tx_mean": 21029.8,
+   "fee_lamports_per_job": {
+    "n": 100,
+    "mean": 15000.0,
+    "min": 15000,
+    "median": 15000,
+    "p95": 15000,
+    "max": 15000
+   },
+   "fee_lamports_per_tx": {
+    "n": 300,
+    "mean": 5000.0,
+    "min": 5000,
+    "median": 5000,
+    "p95": 5000,
+    "max": 5000
+   },
+   "ms_to_confirmed_per_tx": {
+    "n": 300,
+    "mean": 2499.6,
+    "min": 906,
+    "median": 1388,
+    "p95": 5777,
+    "max": 14745
+   },
+   "ms_to_confirmed_per_tx_no_429": {
+    "n": 220,
+    "mean": 1398.09,
+    "min": 906,
+    "median": 1339,
+    "p95": 1820,
+    "max": 2853
+   },
+   "n_tx_with_rpc_429": 80,
+   "n_tx_missing_meta": 0
+  }
+ }
+}

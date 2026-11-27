@@ -155,6 +155,10 @@ def load_run(path) -> Run:
     for r in jl(path / "verdicts.jsonl"):
         rows[(r["job_id"], r["evidence"], r.get("k"))] = r
     attack = vm.get("attack") or next((r.get("attack") for r in rows.values()), "honest") or "honest"
+    # one attack name can cover several variants (A3: SDXL-Turbo or LCM-LoRA); the generation run id says which
+    v = re.search(r"-atk-(a3[a-z]+)-", sid or path.name)
+    if attack == "A3" and v:
+        attack = {"a3turbo": "A3-Turbo", "a3lcm": "A3-LCM"}.get(v.group(1), attack)
     s = next((r.get("s") for r in rows.values() if r.get("s") is not None), None) if attack in S_ATTACKS else None
     sampler = (sm.get("claimed") or {}).get("sampler") or sm.get("sampler") or "unknown"
     model = model_label(sm) if sm else model_label(vm)

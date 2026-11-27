@@ -568,7 +568,7 @@ The paper author draws the five result figures from the data, in the same style 
 | ID | Content | Source run / section |
 |---|---|---|
 | R0.1 | Rented GPU models | §4.2 manifests |
-| R0.2 | Repository URL and DOI | §9 |
+| R0.2 | Repository URL and DOI. **URL filled 2026-11-27** (GitHub, ditoec/decentralized-research); Zenodo DOI pending | §9 |
 | R0.3 | Summary of findings | Paper author, after all results |
 | R0.4 | Version table | All manifests |
 | R0.5 | Split sizes | **Filled in the manuscript 2026-11-24:** 400 / 200 / 400 PartiPrompts prompts (`experiments/configs/prompts.json`) |

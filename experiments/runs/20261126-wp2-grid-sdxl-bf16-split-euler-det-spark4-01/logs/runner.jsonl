@@ -1,0 +1,12 @@
+{"event": "started", "container": "d1d7b09387ef", "attempt": 1, "mem_available_gb": 48.7, "time": "2026-11-27T05:39:46+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T06:56:54+0700"}
+{"event": "started", "container": "5a365413b2d4", "attempt": 1, "mem_available_gb": 49.1, "time": "2026-11-27T06:56:55+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T06:57:15+0700"}
+{"event": "started", "container": "d3f5c39d67df", "attempt": 1, "mem_available_gb": 48.0, "time": "2026-11-27T13:43:43+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T13:44:08+0700"}
+{"event": "started", "container": "e8e8206c633c", "attempt": 1, "mem_available_gb": 48.2, "time": "2026-11-27T13:44:09+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T13:44:14+0700"}
+{"event": "started", "container": "008ddfd83d04", "attempt": 1, "mem_available_gb": 119.5, "time": "2026-11-27T22:22:53+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T22:23:13+0700"}
+{"event": "started", "container": "3fca31493361", "attempt": 1, "mem_available_gb": 119.8, "time": "2026-11-27T22:23:13+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T22:23:19+0700"}

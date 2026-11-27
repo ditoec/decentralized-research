@@ -1,0 +1,61 @@
+{
+ "run_id": "20261126-wp2-replay-cal-sd15-dpmpp_2m-rtx3090-01on-spark3-01",
+ "wp": "wp2",
+ "purpose": "verifier replay of every step (Tier B distances, Tier A residuals)",
+ "git_commit": "unknown",
+ "git_dirty": false,
+ "trajver_version": "0.1.0",
+ "comfyui_commit": "8b25bbc371b73e876996cf14c917d075d78de2ee",
+ "cli_flags": [
+  "--force-fp16",
+  "--use-pytorch-cross-attention"
+ ],
+ "node": {
+  "hostname": "spark3-esj",
+  "os": "Linux-7.0.0-1019-nvidia-aarch64-with-glibc2.39",
+  "cpu_isa": "aarch64",
+  "cpu_model": "aarch64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GB10",
+  "compute_capability": [
+   12,
+   1
+  ],
+  "gpu_uuid": "a34f4458-ec3a-8f6b-055c-078d89a989a2",
+  "driver": "580.178.04"
+ },
+ "start_time": "2026-11-26T21:59:04.374754+00:00",
+ "provider_run": "20261125-wp2-ref-caldev-sd15-fp16-sdpa-dpmpp_2m-nd-rtx3090-01",
+ "provider_node": {
+  "hostname": "e9d21d91a044",
+  "os": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "cpu_isa": "x86_64",
+  "cpu_model": "x86_64",
+  "python": "3.12.13",
+  "torch": "2.14.1+cu130",
+  "cuda": "13.0",
+  "gpu_name": "NVIDIA GeForce RTX 3090",
+  "compute_capability": [
+   8,
+   6
+  ],
+  "gpu_uuid": "7cdf1101-8d70-cd84-9750-4fe36495ac27",
+  "driver": "595.112.07"
+ },
+ "models": [
+  {
+   "filename": "v1-5-pruned-emaonly.safetensors",
+   "sha256": "6ce0161689b3853acaa03779ec93eafe75a02f4ced659bee03f50797806fa2fa"
+  }
+ ],
+ "sampler": "dpmpp_2m",
+ "steps": 30,
+ "cfg": 7.0,
+ "resolution": "512x512",
+ "pin_batching": true,
+ "provider_retention": "F",
+ "image_digest": "sha256:5a4781c0b6041dedc2ebf42c75c4ce91899b9e3c5aca968ada3a8e28e3814c7f",
+ "end_time": "2026-11-26T22:17:59.726572+00:00"
+}

@@ -1138,7 +1138,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "v2 rejects is also rejected under v1, and v2 was frozen and committed before any attack verification had "
          "finished. A confirmatory run on the 200 test prompts that no run has generated was pre-registered before any "
          "of its jobs (repository, docs/16-confirmatory-run.md), with the honest E2-H false-rejection rate under v2 as "
-         "its primary endpoint and its confirmation criterion fixed in advance. " + RW.confirm_sentence())
+         "its primary endpoint and its confirmation criterion fixed in advance; its result is in Section 4-2."
+         + ("" if RW.confirm() else " " + RW.confirm_sentence()))
     Para("{b|Data retention.} Full trajectories are kept where an analysis needs every step: the reference "
          "configuration and levels L0 and L2 on the DGX Spark systems, the calibration and development prompts of the "
          "reference configuration on every rented card, and the jobs of the partial-faking sweep. The other "
@@ -1231,8 +1232,13 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "and E1 reduces to its x{sub|0}, schedule and conditioning checks. A per-pixel maximum cannot bind the "
          "delivered image to the trajectory across architectures; a statistic over the whole image would be needed. "
          "Both versions are reported. Because v2 corrects one parameter after the freeze, the honest false-rejection "
-         "rates under v2 are exploratory until the pre-registered confirmatory run reports (Section 3-4); the "
-         "attack-detection rates under v2 cannot exceed those under v1, because v2 only removes a check.")
+         "rates under v2 on the test split are exploratory (Section 3-4); the attack-detection rates under v2 cannot "
+         "exceed those under v1, because v2 only removes a check.")
+    if RW.confirm():
+        Para({"confirmed": "{b|The v2 false-rejection rate holds on untouched prompts.} ",
+              "not confirmed": "{b|The v2 false-rejection rate did not hold on untouched prompts.} "}[RW.confirm_status()]
+             + RW.confirm_sentence() + " The RTX 5090 and RTX 3090 had no rental stock when the run was made, so the "
+             "confirmation covers one card (Table 9, last row); the honest rates of the other two cards remain exploratory.")
     if RW.examples_caption():
         Para("Why output-only checks struggle is visible in Figure 4: honest images from two GPUs differ in many "
              "pixels yet look the same, while several attacks produce images that are hard to tell from the honest "
@@ -1266,12 +1272,14 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "alone is an unlikely explanation. The test failures concentrate on jobs that fail against all three cards "
          "(6 jobs, against 1 on the calibration split), which points either to the DGX Spark reference images, "
          "regenerated for the test split in a separate run, or to the test prompts. " + RW.e0_refcheck_sentence()
+         + RW.confirm_e0_sentence()
          + " A realised rate above target is the expected failure mode of any calibrated check, which is why the "
          "protocol reports it on a held-out split rather than assuming the nominal value.")
     Para("{b|Honest rejections belong to jobs, not to cards.} " + RW.narr_clusters())
     Table("Honest false-rejection rate (%) per provider card, SDXL Euler, test split (200 prompts × 3 seeds per card, "
           "verifier DGX Spark), with 95% intervals from a cluster bootstrap over prompts (Wilson at the number of prompts "
-          "when no job or every job was rejected); v2 columns exploratory",
+          "when no job or every job was rejected); v2 columns exploratory on the test split"
+          + ("; last row: the pre-registered confirmatory run on untouched prompts" if RW.confirm() else ""),
           ["Provider → verifier", "E0", "E0-N", "E1 (v1)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 3 (v2)"],
           RW.table_honest_strata(), [44, 21, 21, 21, 21, 21, 21])
     part = RW.sweep_tiers()
@@ -1365,8 +1373,9 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Limitations.} The attack study is reduced in scope: SDXL with the Euler sampler only, one provider → verifier "
          "direction (rented RTX 5090 → DGX Spark) and nine attack conditions of 100 test jobs each; A2b, A4–A7 and F4 were not "
          "run, and SD1.5 and DPM++ 2M were not attacked. One tolerance, the E1 image tolerance, was corrected after the "
-         "freeze (v2, calibration split only, rule fixed before measuring); both versions are reported, and the honest "
-         "false-rejection rates under v2 are exploratory until the pre-registered confirmatory run reports. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
+         "freeze (v2, calibration split only, rule fixed before measuring); both versions are reported, the honest "
+         "false-rejection rates under v2 on the test split are exploratory, and the pre-registered confirmatory run "
+         "covers one card (RTX 4090), because the other two had no rental stock. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
          "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
          "tested (SD1.5 and SDXL on RTX 3090, RTX 4090, RTX 5090 and DGX Spark), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
          "independent per-step outcomes, which are checked empirically (Figure 5). Reputation is not modelled in Equation "

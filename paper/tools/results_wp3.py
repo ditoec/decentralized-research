@@ -562,7 +562,11 @@ def narr_r29() -> str:
             f"rate of {pc(f['fpr'])}% on 1,800 jobs from three GPU generations (95% upper bound "
             f"{honest_upper_clustered() or ph('R2.10')}% with jobs clustered by prompt), once the one uncalibrated "
             "tolerance (the E1 image check) was set from the calibration split; because that was done after the freeze, "
-            "this false-rejection rate is exploratory. " + _forgery_sentence())
+            "this false-rejection rate is exploratory" + {"pending": "", "confirmed": (
+                f", and a pre-registered run on untouched prompts confirmed it on one card ({pc(confirm()['primary']['rate'])}%)"
+                if confirm() else ""), "not confirmed": (
+                f", and a pre-registered run on untouched prompts did not confirm it ({pc(confirm()['primary']['rate'])}% "
+                "on one card)" if confirm() else "")}[confirm_status()] + ". " + _forgery_sentence())
 
 
 def _forgery_sentence() -> str:
@@ -596,8 +600,12 @@ def abstract_findings() -> str:
                "three, as the spot-check model predicts".format(_rng(forgery_summary()["q"][1]), _rng(forgery_summary()["q"][3]))
                if forgery_summary() else "")
             + ". Bit-exact reproduction held only within one GPU model, and one uncalibrated image tolerance "
-              "rejected every honest cross-architecture job until it was recalibrated after the freeze, which makes that "
-              "false-rejection rate exploratory pending a pre-registered confirmatory run")
+              "rejected every honest cross-architecture job until it was recalibrated after the freeze"
+            + {"pending": ", which makes that false-rejection rate exploratory pending a pre-registered confirmatory run",
+               "confirmed": (f"; a pre-registered run on untouched prompts confirmed that false-rejection rate on one card "
+                             f"({pc(confirm()['primary']['rate'])}%)" if confirm() else ""),
+               "not confirmed": (f"; a pre-registered run on untouched prompts did not confirm that false-rejection rate "
+                                 f"({pc(confirm()['primary']['rate'])}% on one card)" if confirm() else "")}[confirm_status()])
 
 
 def sizes() -> dict:
@@ -915,7 +923,7 @@ def table_honest_strata() -> list[list[str]]:
         lab = f"{label} ({int(r0['n_jobs']):,} jobs, {r0['n_prompts']} prompts)"
         out.append([lab] + [cl_ci(c[(v, "honest", key, e, k)]) if (v, "honest", key, e, k) in c else ph("R2.10")
                             for v, e, k in HONEST_COLS])
-    return out
+    return out + confirm_rows()
 
 
 def honest_cluster_summary() -> dict | None:
@@ -1006,9 +1014,40 @@ def latency_cells() -> dict:
     return {k: f"{v['total_s_median']:.1f} s, {v['total_s_p95']:.1f} s" for k, v in lt["by_outcome"].items()}
 
 
-def confirm_sentence() -> str:
+def confirm() -> dict | None:
     p = A / "wp3" / "confirm" / "summary.json"
-    if not p.exists():
-        return ph("C1: confirmatory run (docs/16) not run yet; report its primary endpoint here")
-    d = json.loads(p.read_text())
-    return d.get("sentence", ph("C1"))
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+def confirm_sentence() -> str:
+    d = confirm()
+    return d["sentence"] if d else ph("C1: confirmatory run (docs/16) not run yet; report its primary endpoint here")
+
+
+def confirm_rows() -> list[list[str]]:
+    """Table 9 rows of the confirmatory run, one per card, same columns as the test-split rows."""
+    c = {(r["thresholds"], r["stratum"], r["evidence"], r["k"]): r for r in rows("wp3", "confirm", "cluster_ci.csv")}
+    out = []
+    for key in sorted({r[1] for r in c if r[1] != "pooled"}):
+        r0 = c.get(("v1", key, "E0", ""))
+        n = r0 or c[("v2", key, "E2-H", "1")]
+        lab = f"{key} → Spark, confirmatory ({int(n['n_jobs']):,} jobs, {n['n_prompts']} untouched prompts)"
+        out.append([lab] + [cl_ci(c[(v, key, e, k)]) if (v, key, e, k) in c else "not measured" for v, e, k in HONEST_COLS])
+    return out
+
+
+def confirm_status() -> str:
+    """'confirmed', 'not confirmed' or 'pending' for the wording of the text."""
+    d = confirm()
+    return "pending" if not d else ("confirmed" if d["confirmed"] else "not confirmed")
+
+
+def confirm_e0_sentence() -> str:
+    """Secondary result of the confirmatory run (docs/16): E0 on the untouched prompts."""
+    c = {(r["thresholds"], r["stratum"], r["evidence"], r["k"]): r for r in rows("wp3", "confirm", "cluster_ci.csv")}
+    r = c.get(("v1", "pooled", "E0", ""))
+    if not r:
+        return ""
+    return (f" On the {int(r['n_jobs']):,} jobs of the pre-registered confirmatory run, from {r['n_prompts']} test prompts "
+            f"that no earlier run had generated, E0 rejected {pc(r['rate'])}% ({r['n_rejected']} jobs), close to its "
+            "calibration-split rate, which is consistent with an excess specific to the first 200 test prompts.")

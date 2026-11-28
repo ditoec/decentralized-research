@@ -206,7 +206,7 @@ def partial() -> list[dict]:
 def escrow() -> list[list[str]]:
     p = A / "wp5" / "devnet_combined_summary.json"
     if not p.exists():
-        return [["(one row per path)"] + [ph("R3.4")] * 4]
+        return [["(one row per path)"] + [ph("R3.4")] * 5]
     d = json.loads(p.read_text())["paths"]
     out = []
     for key, label in [("unsampled", "Accepted, not sampled"), ("pass", "Sampled, verdict pass"),
@@ -214,7 +214,8 @@ def escrow() -> list[list[str]]:
         v = d[key]
         cu, fee, ms = v["compute_units_per_job"], v["fee_lamports_per_job"], v["ms_to_confirmed_per_tx"]
         out.append([label, f"{cu['median']:,} ({v['n_ok']} jobs)", f"{fee['median'] / 1e9:.6f}",
-                    f"{fee['median'] / 1e9:.6f} + priority fees", f"{ms['median'] / 1000:.2f} s, {ms['p95'] / 1000:.2f} s"])
+                    f"{fee['median'] / 1e9:.6f} + priority fees", f"{ms['median'] / 1000:.2f} s, {ms['p95'] / 1000:.2f} s",
+                    latency_cells().get({"dispute": "fail"}.get(key, key), "not in the testbed")])
     return out
 
 
@@ -331,7 +332,8 @@ def narr_r23() -> str:
     f = _fpr("v2").get(("E2-H", "1"))
     s = (f"With one checked step (k = 1) and the v2 image tolerance, E2-H rejected at least 95% of the jobs "
          f"of {of(len(hi), len(att))} attack conditions ({labels(hi)}; Table 8) at an honest false-rejection rate of {pc(f['fpr'])}% "
-         f"(95% CI upper bound {pc(f['ci_hi'])}%)" if f else "")
+         f"(95% upper bound {pc(f['ci_hi'])}% for independent jobs, "
+         f"{honest_upper_clustered() or ph('R2.10')}% with jobs clustered by prompt; Table 9)" if f else "")
     if lo:
         grp = defaultdict(list)  # conditions with the same rejection at k = 1 and k = 8 are named together
         for k in lo:
@@ -557,8 +559,10 @@ def narr_r29() -> str:
             + (", including unrelated images" if "A8" in d["E2-W"]["ge90"] else "") + f", and the CLIP rule rejected at least 90% only for {labels(d['E0-N']['le10'])}. "
             f"Calibrated trajectory evidence does: E2-H with a single checked step rejected at least 95% of the jobs of "
             f"{of(len(hi), len(att))} model- and step-substitution conditions ({labels(hi)}) at an honest false-rejection "
-            f"rate of {pc(f['fpr'])}% on 1,800 jobs from three GPU generations, once the one uncalibrated tolerance (the "
-            "E1 image check) was set from the calibration split. " + _forgery_sentence())
+            f"rate of {pc(f['fpr'])}% on 1,800 jobs from three GPU generations (95% upper bound "
+            f"{honest_upper_clustered() or ph('R2.10')}% with jobs clustered by prompt), once the one uncalibrated "
+            "tolerance (the E1 image check) was set from the calibration split; because that was done after the freeze, "
+            "this false-rejection rate is exploratory. " + _forgery_sentence())
 
 
 def _forgery_sentence() -> str:
@@ -586,12 +590,14 @@ def abstract_findings() -> str:
             f"{of(len(d['E2-W']['ge90']), d['E2-W']['n'])} attack conditions" + (", including unrelated images" if "A8" in d["E2-W"]["ge90"] else "") + ". With one "
             f"checked step, the proposed check rejected at least 95% of the jobs of {of(len(hi), len(att))} model- and "
             f"step-substitution conditions at an honest false-rejection rate of {pc(f['fpr'])}% on 1,800 cross-GPU test jobs"
+            + (f" (95% upper bound {honest_upper_clustered()}% with jobs clustered by prompt)" if honest_upper_clustered() else "")
             + (f", at {100 * cr:.0f}% of the GPU time of re-execution" if cr else "")
             + (". Forgeries that fake half of the steps were caught in {} of jobs with one checked step and {} with "
                "three, as the spot-check model predicts".format(_rng(forgery_summary()["q"][1]), _rng(forgery_summary()["q"][3]))
                if forgery_summary() else "")
             + ". Bit-exact reproduction held only within one GPU model, and one uncalibrated image tolerance "
-              "rejected every honest cross-architecture job until it was calibrated")
+              "rejected every honest cross-architecture job until it was recalibrated after the freeze, which makes that "
+              "false-rejection rate exploratory pending a pre-registered confirmatory run")
 
 
 def sizes() -> dict:
@@ -612,7 +618,7 @@ def th_v1() -> dict:
 def inseparable() -> str:
     ra = rates()
     near = [k for k, _ in ATTACKS if k != "M" and 1 in ra.get(k, {}) and float(ra[k][1]["rate"]) < 0.5]
-    return (labels(near) if near else "none of the conditions evaluated here; Table 9")
+    return (labels(near) if near else "none of the conditions evaluated here; Table 10")
 
 
 def table5_beta(key: str) -> str:
@@ -799,7 +805,7 @@ def narr_testbed() -> str:
                   f"{pc(t['alpha_k'])}% of the RTX 5090's honest test jobs at k = {t['k']}, mostly through the E1 image "
                   "tolerance that v2 later corrected" if _honest_fail_matches(hf) else "") + ".")
     return (f"Equation 7's predicted gain lay inside the 95% interval of the realized gain in {len(inside)} of "
-            f"{len(cells)} cells (Table 12)" + (f"; {miss}" if out else "") + ". "
+            f"{len(cells)} cells (Table 13)" + (f"; {miss}" if out else "") + ". "
             + (f"Every gain is positive: at B/P = {t['B_over_P']:g} and p ≤ {max(c['p'] for c in cells):g}, below the "
                "deterring rate of Equation 9 (p* = "
                + " and ".join(f"{v:.2f} for {k.replace('-', ' ')}" for k, v in pst.items()) + f" at k = {t['k']}), "
@@ -813,7 +819,7 @@ def narr_testbed() -> str:
 
 
 def table_testbed() -> list[list[str]]:
-    """Table 12: per cell of the Devnet testbed, sampled and slashed jobs, realized gain and Equation 7."""
+    """Table 13: per cell of the Devnet testbed, sampled and slashed jobs, realized gain and Equation 7."""
     t = _testbed()
     if not t:
         return []
@@ -829,7 +835,7 @@ def table_testbed() -> list[list[str]]:
 
 
 def escrow_ranges() -> tuple[str, str] | None:
-    """Ranges over the lifecycle paths of Table 11: compute units per job and the Devnet fee in lamports."""
+    """Ranges over the lifecycle paths of Table 12: compute units per job and the Devnet fee in lamports."""
     r = escrow()
     if not r:
         return None
@@ -839,7 +845,7 @@ def escrow_ranges() -> tuple[str, str] | None:
 
 
 def narr_r24() -> str:
-    """Table 9 in words: what each attack saves, and which saving sets the deterrence requirement."""
+    """Table 10 in words: what each attack saves, and which saving sets the deterrence requirement."""
     b = {k: float(v["beta_median"]) for k, v in beta().items() if v.get("beta_median") not in (None, "")}
     if not b:
         return ph("R2.4")
@@ -873,3 +879,136 @@ def concl_testbed() -> str:
     return (f" On a Devnet testbed with injected attackers, Equation 7's predicted gain lay inside the realized gain's "
             f"95% interval in {inside} of {len(c)} cells"
             + (f", and both attacks still paid at p ≤ {max(x['p'] for x in c):g}, below p*" if pay else "") + ".")
+
+
+# ------------------------------------------------------------------ co-author review 2026-11-28
+# clustered honest rates (experiments/analysis/wp3/cluster), end-to-end latency (wp5/testbed/latency.json),
+# the pre-registered confirmatory run (docs/16-confirmatory-run.md)
+CARDS = [("RTX 3090", "RTX 3090 → Spark"), ("RTX 4090", "RTX 4090 → Spark"), ("RTX 5090", "RTX 5090 → Spark"),
+         ("pooled", "Pooled")]
+
+
+def _cl() -> dict:
+    return {(r["thresholds"], r["set"], r["stratum"], r["evidence"], r["k"]): r
+            for r in rows("wp3", "cluster", "cluster_ci.csv")}
+
+
+def cl_ci(r: dict, d=1) -> str:
+    """Rate with its clustered 95% interval: cluster bootstrap over prompts, or the Wilson interval at the number
+    of prompts when the bootstrap is degenerate (no job or every job rejected)."""
+    rej, n = int(r["n_rejected"]), int(r["n_jobs"])
+    lo, hi = (r["boot_lo"], r["boot_hi"]) if 0 < rej < n else (r["wilson_eff_lo"], r["wilson_eff_hi"])
+    return f"{pc(r['rate'], d)} ({pc(lo, d)}–{pc(hi, d)})"
+
+
+HONEST_COLS = [("v1", "E0", ""), ("v1", "E0-N", ""), ("v1", "E1", ""), ("v1", "E2-H", "1"), ("v2", "E2-H", "1"),
+               ("v2", "E2-H", "3")]
+
+
+def table_honest_strata() -> list[list[str]]:
+    c = _cl()
+    out = []
+    for key, label in CARDS:
+        r0 = c.get(("v1", "honest", key, "E0", ""))
+        if not r0:
+            return [[ph("R2.10: clustered honest rates")] + [""] * len(HONEST_COLS)]
+        lab = f"{label} ({int(r0['n_jobs']):,} jobs, {r0['n_prompts']} prompts)"
+        out.append([lab] + [cl_ci(c[(v, "honest", key, e, k)]) if (v, "honest", key, e, k) in c else ph("R2.10")
+                            for v, e, k in HONEST_COLS])
+    return out
+
+
+def honest_cluster_summary() -> dict | None:
+    c = _cl()
+    ov = {(r["thresholds"], r["evidence"], str(r["k"])): r
+          for r in json.loads((A / "wp3" / "cluster" / "honest_overlap.json").read_text())} \
+        if (A / "wp3" / "cluster" / "honest_overlap.json").exists() else {}
+    p = c.get(("v2", "honest", "pooled", "E2-H", "1"))
+    if not p or ("v2", "E2-H", "1") not in ov:
+        return None
+    card = lambda v, e, k: [float(c[(v, "honest", s, e, k)]["rate"]) for s, _ in CARDS[:3]]  # noqa: E731
+    deff = [float(c[("v2", "honest", s, "E2-H", "1")]["deff"]) for s, _ in CARDS[:3]]
+    zero = all(int(c[("v1", "honest", s, e, k)]["n_rejected"]) == 0 for s, _ in CARDS for e, k in
+               (("E2-H.tierA", ""), ("E2-W", "3")))
+    return {"pooled": p, "e2h_cards": card("v2", "E2-H", "1"), "e0_cards": card("v1", "E0", ""), "deff_cards": deff,
+            "ov_e2h": ov[("v2", "E2-H", "1")], "ov_e0": ov.get(("v1", "E0", "")), "tier_a_e2w_zero": zero,
+            "e0_pooled": c[("v1", "honest", "pooled", "E0", "")]}
+
+
+def _span(v: list[float], d=1) -> str:
+    a, b = pc(min(v), d), pc(max(v), d)
+    return f"{a}%" if a == b else f"{a}–{b}%"
+
+
+def narr_clusters() -> str:
+    s = honest_cluster_summary()
+    if not s:
+        return ph("R2.10: narrative of the clustered honest rates")
+    p, o, o0 = s["pooled"], s["ov_e2h"], s["ov_e0"]
+    multi = int(o["jobs_by_cards_rejecting"]["2"]) + int(o["jobs_by_cards_rejecting"]["3"])
+    deff = float(p["deff"])
+    txt = (f"Per card, the honest rates are close: E2-H with one checked step rejected {_span(s['e2h_cards'])} of each "
+           f"card's jobs under v2 and E0 {_span(s['e0_cards'])} (Table 9). The rejections are not independent across "
+           f"cards. E2-H's {o['n_rejections']} rejections are {o['n_distinct_jobs']} distinct jobs from "
+           f"{o['n_distinct_prompts']} prompts, {multi} of which were rejected on two or three cards")
+    if o0:
+        txt += f", and E0's {o0['n_rejections']} are {o0['n_distinct_jobs']} distinct jobs"
+    txt += (f": whether an honest job is rejected depends mainly on the job, not on the card. Pooled over the cards, "
+            f"the design effect of E2-H is {deff:.1f}, so the {int(p['n_jobs']):,} jobs carry about as much "
+            f"information as {10 * round(float(p['n_eff']) / 10):.0f} independent ones, and the 95% upper bound of its "
+            f"false-rejection rate rises from {pc(p['wilson_hi'])}% (Wilson, independent jobs) to {pc(p['boot_hi'])}% "
+            f"(cluster bootstrap over prompts); within one card the design effect is "
+            f"{min(s['deff_cards']):.1f}–{max(s['deff_cards']):.1f}. Attacked jobs need no such correction, because "
+            "each of the 100 jobs of an attack is a different prompt.")
+    if s["tier_a_e2w_zero"]:
+        txt += " Tier A and E2-W rejected no honest job on any card."
+    return txt
+
+
+def honest_upper_clustered() -> str | None:
+    s = honest_cluster_summary()
+    return pc(s["pooled"]["boot_hi"]) if s else None
+
+
+def latency() -> dict | None:
+    p = A / "wp5" / "testbed" / "latency.json"
+    return json.loads(p.read_text()) if p.exists() else None
+
+
+def narr_system_cost() -> str:
+    lt, sz = latency(), sizes()
+    if not lt:
+        return ph("R3.9: system-level cost")
+    b = lt["by_outcome"]
+    u, ps, f = b["unsampled"], b["pass"], b["fail"]
+    s = ("A production verifier also spends CPU time on Tier A, moves data and waits for the chain. Tier A reads every "
+         "step of a sampled job on the CPU; its time was not measured separately. ")
+    if sz:
+        s += (f"A sampled job transfers {sz['full_mb']:.1f} MB of trajectory for Tier A, or {sz['kept_mb']:.1f} MB of "
+              "opened steps with their Merkle proofs for Tier B alone, where re-execution needs only the image; an "
+              "unsampled job transfers nothing. ")
+    s += (f"From funding the escrow to closing the job, the Devnet testbed took a median of {u['total_s_median']:.1f} s "
+          f"for an unsampled job, {ps['total_s_median']:.1f} s for a sampled job that passed and "
+          f"{f['total_s_median']:.1f} s for one that failed and went to a second verifier (Table 12; "
+          f"{lt['n_jobs']} jobs). These times exclude provider generation, because the testbed replays recorded "
+          f"outputs; they include the fixed delay before the draw ({ps['draw_s_median']:.1f} s) and verification on "
+          f"the DGX Spark systems ({ps['verify_s_median']:.1f} s per passing job), which were shared with other "
+          "workloads, so the verification part is an upper bound. Orchestrator compute, storage and network prices were "
+          "not measured. The efficiency result of this study is therefore a statement about the verifier's GPU "
+          "computation, not a system-level cost comparison.")
+    return s
+
+
+def latency_cells() -> dict:
+    lt = latency()
+    if not lt:
+        return {}
+    return {k: f"{v['total_s_median']:.1f} s, {v['total_s_p95']:.1f} s" for k, v in lt["by_outcome"].items()}
+
+
+def confirm_sentence() -> str:
+    p = A / "wp3" / "confirm" / "summary.json"
+    if not p.exists():
+        return ph("C1: confirmatory run (docs/16) not run yet; report its primary endpoint here")
+    d = json.loads(p.read_text())
+    return d.get("sentence", ph("C1"))

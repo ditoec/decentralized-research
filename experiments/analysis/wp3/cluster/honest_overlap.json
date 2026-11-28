@@ -1,0 +1,171 @@
+[
+ {
+  "thresholds": "v1",
+  "evidence": "E1",
+  "k": "",
+  "n_rejections": 1214,
+  "n_distinct_jobs": 600,
+  "n_distinct_prompts": 200,
+  "jobs_by_cards_rejecting": {
+   "1": 0,
+   "2": 586,
+   "3": 14
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E2-H",
+  "k": 1,
+  "n_rejections": 1221,
+  "n_distinct_jobs": 600,
+  "n_distinct_prompts": 200,
+  "jobs_by_cards_rejecting": {
+   "1": 0,
+   "2": 579,
+   "3": 21
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E2-H",
+  "k": 2,
+  "n_rejections": 1222,
+  "n_distinct_jobs": 600,
+  "n_distinct_prompts": 200,
+  "jobs_by_cards_rejecting": {
+   "1": 0,
+   "2": 578,
+   "3": 22
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E2-H",
+  "k": 3,
+  "n_rejections": 1220,
+  "n_distinct_jobs": 600,
+  "n_distinct_prompts": 200,
+  "jobs_by_cards_rejecting": {
+   "1": 0,
+   "2": 580,
+   "3": 20
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E2-H",
+  "k": 8,
+  "n_rejections": 1219,
+  "n_distinct_jobs": 600,
+  "n_distinct_prompts": 200,
+  "jobs_by_cards_rejecting": {
+   "1": 0,
+   "2": 581,
+   "3": 19
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E0-N",
+  "k": "",
+  "n_rejections": 7,
+  "n_distinct_jobs": 5,
+  "n_distinct_prompts": 5,
+  "jobs_by_cards_rejecting": {
+   "1": 3,
+   "2": 2,
+   "3": 0
+  }
+ },
+ {
+  "thresholds": "v1",
+  "evidence": "E0",
+  "k": "",
+  "n_rejections": 60,
+  "n_distinct_jobs": 35,
+  "n_distinct_prompts": 33,
+  "jobs_by_cards_rejecting": {
+   "1": 16,
+   "2": 13,
+   "3": 6
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E2-H",
+  "k": 1,
+  "n_rejections": 22,
+  "n_distinct_jobs": 12,
+  "n_distinct_prompts": 8,
+  "jobs_by_cards_rejecting": {
+   "1": 5,
+   "2": 4,
+   "3": 3
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E2-H",
+  "k": 2,
+  "n_rejections": 23,
+  "n_distinct_jobs": 13,
+  "n_distinct_prompts": 10,
+  "jobs_by_cards_rejecting": {
+   "1": 7,
+   "2": 2,
+   "3": 4
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E2-H",
+  "k": 3,
+  "n_rejections": 22,
+  "n_distinct_jobs": 13,
+  "n_distinct_prompts": 10,
+  "jobs_by_cards_rejecting": {
+   "1": 7,
+   "2": 3,
+   "3": 3
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E2-H",
+  "k": 8,
+  "n_rejections": 18,
+  "n_distinct_jobs": 9,
+  "n_distinct_prompts": 8,
+  "jobs_by_cards_rejecting": {
+   "1": 4,
+   "2": 1,
+   "3": 4
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E0-N",
+  "k": "",
+  "n_rejections": 7,
+  "n_distinct_jobs": 5,
+  "n_distinct_prompts": 5,
+  "jobs_by_cards_rejecting": {
+   "1": 3,
+   "2": 2,
+   "3": 0
+  }
+ },
+ {
+  "thresholds": "v2",
+  "evidence": "E0",
+  "k": "",
+  "n_rejections": 60,
+  "n_distinct_jobs": 35,
+  "n_distinct_prompts": 33,
+  "jobs_by_cards_rejecting": {
+   "1": 16,
+   "2": 13,
+   "3": 6
+  }
+ }
+]

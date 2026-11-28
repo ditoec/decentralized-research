@@ -15,14 +15,15 @@
 #         and pilot compare --e0-out against the Spark re-run RERUN (E0 and E0-N scores).
 set -euo pipefail
 ITEMS="${ITEMS:?rerun|sweep|verify}"; NODE="${NODE:?}"; DATE="${DATE:-$(date -u +%Y%m%d)}"; LIMIT="${LIMIT:-100}"
-CFG=../experiments/configs; P=$CFG/prompts_rent_test200.txt
+CFG=../experiments/configs; P=$CFG/${PROMPTS:-prompts_rent_test200.txt}
+# PROMPTS / RERUN_NAME: the confirmatory run (docs/16) uses PROMPTS=prompts_confirm200.txt RERUN_NAME=confirm-rerun
 SDXL=/models/checkpoints/sd_xl_base_1.0.safetensors; SDXL_SHA=31e35c80fc4829d14f90153f4c74cd59c90b779f6afe05a74cd6120b893f7e5b
 REF="--force-fp16 --use-pytorch-cross-attention"
 has() { [[ " $ITEMS " == *" $1 "* ]]; }
 run() { local id=$1; shift; python3 tools/spark_run.py --run-id "$id" ${MARGIN_GB:+--margin-gb "$MARGIN_GB"} -- "$@" || echo "FAILED $id"; }
 if has rerun; then
-  id="$DATE-wp3-rerun-sdxl-euler-$NODE-01"
-  run "$id" python -m trajver.pilot --flags="$REF" gen --wp wp3 --name "rerun-sdxl-euler-$NODE" --run-id "$id" \
+  rn="${RERUN_NAME:-rerun}"; id="$DATE-wp3-$rn-sdxl-euler-$NODE-01"
+  run "$id" python -m trajver.pilot --flags="$REF" gen --wp wp3 --name "$rn-sdxl-euler-$NODE" --run-id "$id" \
     --ckpt $SDXL --ckpt-sha256 $SDXL_SHA --prompts $P --seeds 0,1,2 --res 1024 --steps 30 --sampler euler \
     --save-traj --purpose "WP3 verifier honest re-run of the test job set (E0 reference)"
 fi

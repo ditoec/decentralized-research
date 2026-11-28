@@ -1,0 +1,37 @@
+thresholds,stratum,evidence,k,n_jobs,n_prompts,n_rejected,rate,wilson_lo,wilson_hi,boot_lo,boot_hi,deff,n_eff,wilson_eff_lo,wilson_eff_hi,run_ids
+v1,RTX 4090,E0,,600,200,7,0.011667,0.005663,0.023884,0.003333,0.021667,0.981298,600.0,0.005663,0.023884,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E0-N,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E1,,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-H,1,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-H,2,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-H,3,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-H,8,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-H.tierA,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,RTX 4090,E2-W,3,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E0,,600,200,7,0.011667,0.005663,0.023884,0.003333,0.02,0.981298,600.0,0.005663,0.023884,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E0-N,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E1,,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-H,1,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-H,2,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-H,3,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-H,8,600,200,600,1.0,0.993638,1.0,1.0,1.0,nan,200.0,0.981155,1.0,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-H.tierA,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v1,pooled,E2-W,3,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E0,,600,200,7,0.011667,0.005663,0.023884,0.003333,0.02,0.981298,600.0,0.005663,0.023884,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E0-N,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E1,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-H,1,600,200,8,0.013333,0.006771,0.026087,0.005,0.025,1.232514,486.809917,0.005658,0.026616,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-H,2,600,200,6,0.01,0.004591,0.021644,0.001667,0.02,1.323114,453.475703,0.004724,0.025575,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-H,3,600,200,5,0.008333,0.003565,0.019358,0.001667,0.018333,1.393522,430.563636,0.003615,0.023617,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-H,8,600,200,7,0.011667,0.005663,0.023884,0.003333,0.021667,1.271837,471.758424,0.005839,0.027453,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-H.tierA,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,RTX 4090,E2-W,3,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E0,,600,200,7,0.011667,0.005663,0.023884,0.003333,0.021667,0.981298,600.0,0.005663,0.023884,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E0-N,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E1,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-H,1,600,200,8,0.013333,0.006771,0.026087,0.005,0.025,1.232514,486.809917,0.005658,0.026616,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-H,2,600,200,6,0.01,0.004591,0.021644,0.001667,0.02,1.323114,453.475703,0.004724,0.025575,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-H,3,600,200,5,0.008333,0.003565,0.019358,0.001667,0.018333,1.393522,430.563636,0.003615,0.023617,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-H,8,600,200,7,0.011667,0.005663,0.023884,0.003333,0.021667,1.271837,471.758424,0.005839,0.027453,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-H.tierA,,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4
+v2,pooled,E2-W,3,600,200,0,0.0,0.0,0.006362,0.0,0.0,nan,200.0,0.0,0.018845,20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4

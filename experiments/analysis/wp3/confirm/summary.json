@@ -1,0 +1,27 @@
+{
+ "docs": "docs/16-confirmatory-run.md",
+ "criterion": {
+  "max_rate": 0.02,
+  "max_upper": 0.03
+ },
+ "primary": {
+  "n_jobs": 600,
+  "n_prompts": 200,
+  "n_rejected": 8,
+  "rate": 0.013333333333333334,
+  "lo": 0.005,
+  "hi": 0.025
+ },
+ "confirmed": true,
+ "cards": [
+  "RTX 4090"
+ ],
+ "exploratory_test_split": {
+  "rate": 0.012222222222222223,
+  "n": 1800
+ },
+ "sentence": "The confirmatory run used 600 honest jobs (200 untouched test prompts \u00d7 3 seeds) generated on a newly rented RTX 4090: E2-H with one checked step rejected 1.3% of them under v2 (8 jobs; 95% interval 0.5\u20132.5%, clustered by prompt), against 1.2% on the test split, so the pre-registered criterion (at most 2.0%, upper bound at most 3.0%) was met; E0 rejected 1.2%.",
+ "run_ids": [
+  "20261128-wp3-verify-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01-on-spark4"
+ ]
+}

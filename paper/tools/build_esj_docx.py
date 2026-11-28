@@ -1116,12 +1116,30 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "D{sub|i} at every step of each rented provider’s calibration jobs, so every step and every provider–verifier "
          "pair contributes; τ{sub|i} pools the pairs and falls back to the largest pair quantile when one pair deviates "
          "by more than a factor of two. Tolerances are set separately for each sampler. They are frozen "
-         "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split with "
-         "Wilson 95% confidence intervals {c|wilson1927}; medians and costs use cluster-bootstrap intervals over prompt and "
-         "hardware pair. Zero false rejections in 299 independent honest audits bound the false-rejection rate below 1% at "
-         "95% confidence, which sets the minimum number of honest test jobs per stratum. The target is 1,000 honest test "
-         "jobs per stratum, which keeps the same bound with up to four false rejections, and 100 attacked jobs per "
-         "attack, model and hardware pair.")
+         "with a recorded hash before any attack data is examined. Error rates are reported on the disjoint test split. "
+         "The experimental unit is the prompt. Each prompt is run with three seeds, and every honest test job is "
+         "generated on each of the three rented cards and verified against one DGX Spark reference, so the honest test "
+         "jobs of one prompt share the prompt and the reference image and, across cards, the seed. An attack uses 100 "
+         "different test prompts with seed 0, one job per prompt. Rates on attacked jobs carry Wilson 95% confidence "
+         "intervals {c|wilson1927}. Honest rates are reported per card and pooled, with the Wilson interval and with an "
+         "interval from a cluster bootstrap over prompts (10,000 resamples), which allows for the dependence between "
+         "jobs of one prompt; when no job or every job is rejected, the Wilson interval at the number of prompts is "
+         "used instead. Medians and costs use cluster-bootstrap intervals over prompt and hardware pair. Zero false "
+         "rejections in 299 independent honest audits bound the false-rejection rate below 1% at 95% confidence, which "
+         "set the minimum number of honest test jobs per stratum; the target was 1,000 honest test jobs per stratum and "
+         "100 attacked jobs per attack, model and hardware pair. The test split reached 600 honest jobs per card from "
+         "200 prompts, enough jobs but fewer independent prompts than that minimum, which is a further reason to report "
+         "the clustered interval.")
+    Para("{b|Confirmatory and exploratory results.} Results under the frozen thresholds v1 are confirmatory: every "
+         "threshold was fixed and hashed before the test split was examined. One tolerance was changed after the honest "
+         "test jobs had been examined (thresholds v2, Section 4-2), so the results that this change can improve, the "
+         "honest false-rejection rates of E1 and E2-H under v2, are exploratory and are labelled as such. Attack "
+         "detection under v2 cannot be improved by the change: v2 removes one check and adds none, so every job that "
+         "v2 rejects is also rejected under v1, and v2 was frozen and committed before any attack verification had "
+         "finished. A confirmatory run on the 200 test prompts that no run has generated was pre-registered before any "
+         "of its jobs (repository, docs/16-confirmatory-run.md), with the honest E2-H false-rejection rate under v2 as "
+         "its primary endpoint and its confirmation criterion fixed in advance; its result is in Section 4-2."
+         + ("" if RW.confirm() else " " + RW.confirm_sentence()))
     Para("{b|Data retention.} Full trajectories are kept where an analysis needs every step: the reference "
          "configuration and levels L0 and L2 on the DGX Spark systems, the calibration and development prompts of the "
          "reference configuration on every rented card, and the jobs of the partial-faking sweep. The other "
@@ -1213,7 +1231,14 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "and 63 (RTX 5090); the rule gives 264, above the 255 range, so under v2 the image comparison never rejects "
          "and E1 reduces to its x{sub|0}, schedule and conditioning checks. A per-pixel maximum cannot bind the "
          "delivered image to the trajectory across architectures; a statistic over the whole image would be needed. "
-         "Both versions are reported; v2 is a post-freeze correction of one parameter and is labelled as such.")
+         "Both versions are reported. Because v2 corrects one parameter after the freeze, the honest false-rejection "
+         "rates under v2 on the test split are exploratory (Section 3-4); the attack-detection rates under v2 cannot "
+         "exceed those under v1, because v2 only removes a check.")
+    if RW.confirm():
+        Para({"confirmed": "{b|The v2 false-rejection rate holds on untouched prompts.} ",
+              "not confirmed": "{b|The v2 false-rejection rate did not hold on untouched prompts.} "}[RW.confirm_status()]
+             + RW.confirm_sentence() + " The RTX 5090 and RTX 3090 had no rental stock when the run was made, so the "
+             "confirmation covers one card (Table 9, last row); the honest rates of the other two cards remain exploratory.")
     if RW.examples_caption():
         Para("Why output-only checks struggle is visible in Figure 4: honest images from two GPUs differ in many "
              "pixels yet look the same, while several attacks produce images that are hard to tell from the honest "
@@ -1232,7 +1257,8 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "it lands on one of them, and detection grows with k. Re-execution is thorough but expensive and, at its "
          "frozen thresholds, noisier on honest work than the spot check.")
     Table("Share of attacked jobs rejected (%, 95% Wilson CI) by evidence level at the frozen thresholds; last row: "
-          "honest false-rejection rate. v1: thresholds as frozen; v2: E1 image tolerance recalibrated (post-freeze)",
+          "honest false-rejection rate (Wilson; clustered intervals in Table 9). v1: thresholds as frozen (confirmatory); "
+          "v2: E1 image tolerance recalibrated after the freeze (honest row exploratory)",
           ["Attack", "E0", "E1 (v1)", "E1 (v2)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 8 (v2)"],
           RW.table_sensitivity(), [38, 21, 21, 21, 22, 22, 22])
     Para("{b|Why the realised honest rates exceed their targets.} The 1.2% of E2-H lies above the 1% its per-step "
@@ -1246,8 +1272,16 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "alone is an unlikely explanation. The test failures concentrate on jobs that fail against all three cards "
          "(6 jobs, against 1 on the calibration split), which points either to the DGX Spark reference images, "
          "regenerated for the test split in a separate run, or to the test prompts. " + RW.e0_refcheck_sentence()
+         + RW.confirm_e0_sentence()
          + " A realised rate above target is the expected failure mode of any calibrated check, which is why the "
          "protocol reports it on a held-out split rather than assuming the nominal value.")
+    Para("{b|Honest rejections belong to jobs, not to cards.} " + RW.narr_clusters())
+    Table("Honest false-rejection rate (%) per provider card, SDXL Euler, test split (200 prompts × 3 seeds per card, "
+          "verifier DGX Spark), with 95% intervals from a cluster bootstrap over prompts (Wilson at the number of prompts "
+          "when no job or every job was rejected); v2 columns exploratory on the test split"
+          + ("; last row: the pre-registered confirmatory run on untouched prompts" if RW.confirm() else ""),
+          ["Provider → verifier", "E0", "E0-N", "E1 (v1)", "E2-H, k = 1 (v1)", "E2-H, k = 1 (v2)", "E2-H, k = 3 (v2)"],
+          RW.table_honest_strata(), [44, 21, 21, 21, 21, 21, 21])
     part = RW.sweep_tiers()
     Para("{b|The spot-check model predicts partial faking.} " + RW.narr_r27())
     Figure("R2.7", "Measured q(s,k) under partial faking (F3 with varying s) against Equation 4 with the measured r and "
@@ -1256,7 +1290,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
            "measured number of steps above τ_i per job",
            image="fig_r2_7_partial.png" if part else None)
     Para("{b|Every attack is separable per step; they differ in what they save.} " + RW.narr_r28() + " "
-         + RW.narr_r24() + " The resulting deterring rates per attack are in Table 9; for the forgers, p* uses "
+         + RW.narr_r24() + " The resulting deterring rates per attack are in Table 10; for the forgers, p* uses "
          "Equation 4's detection q(s, k) rather than the full-job term 1 − (1 − r{sub|A}){sup|k}."
          + (" Measuring β{{sub|A}} against an honest run in the same process matters: honest sampling of the same job "
             "set took {:.1f} s (median) on the second session's host and {:.1f} s on the first session's RTX 5090 "
@@ -1273,32 +1307,34 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
          "a Monte Carlo simulation and the Devnet testbed then check the closed form that links them.")
     vc = RW.verifier_cost()
     c1, c3 = RW.cost_ratio(1), RW.cost_ratio(3)
-    Para("{b|A spot check costs a few percent of re-execution.} "
+    Para("{b|In GPU time, a spot check costs a few percent of re-execution.} "
          + (f"On the rented RTX 5090, which a job has to itself, one checked step costs {100 * c1:.1f}% of E0's full "
-            f"regeneration and three steps {100 * c3:.1f}% (Table 10), because Tier B at k steps costs k/T of a full "
-            "replay. " if c1 and c3 else "Tier B at k steps costs k/T of a full replay (Table 10). ")
+            f"regeneration and three steps {100 * c3:.1f}% (Table 11), because Tier B at k steps costs k/T of a full "
+            "replay. " if c1 and c3 else "Tier B at k steps costs k/T of a full replay (Table 11). ")
          + (f"Replaying all {vc['T']} steps took {vc['replay_all_median']:.2f} s (median over {vc['n_replay']} jobs), "
             f"slightly more than the {vc['gen_median']:.2f} s of a fresh generation, and the replay on the same card was "
             f"bit-exact for {RW.pc(vc['exact_share'], 0)}% of the jobs and steps, as expected at L0. "
             if vc.get("replay_all_median") and vc.get("gen_median") else "")
-         + "The verifier's cost is thus set by k, not by the size of the job, and the DGX Spark timings, taken on "
-           "shared systems, are not used.")
+         + "The verifier's GPU cost is thus set by k, not by the size of the job, and the DGX Spark timings, taken on "
+           "shared systems, are not used. These figures count the verifier's GPU computation only.")
     Table("Verifier GPU time per job on the rented RTX 5090 (SDXL, 1024², Euler, 30 steps)",
           ["Evidence level", "GPU-seconds (median)", "Relative to E0"], RW.table_verifier_cost(), [86, 40, 40])
     n, f, fc, tx = RW.escrow_failures()
     er = RW.escrow_ranges()
     Para("{b|Settlement adds a small fixed cost.} "
          + (f"Settling a job on Solana Devnet took {er[0]} compute units and {er[1]} lamports in fees, depending on "
-            f"its lifecycle path (Table 11; 100 successful jobs per path, {tx:,} transactions). " if er else "")
+            f"its lifecycle path (Table 12; 100 successful jobs per path, {tx:,} transactions). " if er else "")
          + "The cost does not depend on the evidence level, so the choice of k is a question of GPU time and "
            "detection, not of chain cost. Fees are the base fee of 5,000 lamports per signature; on mainnet the same "
            "base fee applies and priority fees, which were not measured, come on top. "
            f"Of {n} jobs started, {f} failed at the RPC layer ({fc} during a known network change of the client), "
            "none in the program.")
-    Table("Escrow cost per lifecycle path on Solana Devnet (100 successful jobs per path)",
+    Table("Escrow cost per lifecycle path on Solana Devnet (100 successful jobs per path) and end-to-end time per job "
+          "in the Devnet testbed (450 jobs, recorded provider outputs, so provider generation time is excluded)",
           ["Path", "Compute units per job (median)", "Fee on Devnet (SOL per job)", "Fee on mainnet (SOL, calculated)",
-           "Time to confirmed per transaction (median, p95)"],
-          RW.escrow(), [40, 32, 28, 34, 34])
+           "Time to confirmed per transaction (median, p95)", "Escrow to close per job, testbed (median, p95)"],
+          RW.escrow(), [32, 26, 24, 28, 28, 30])
+    Para("{b|The GPU figure is not the system cost.} " + RW.narr_system_cost())
     Para("{b|The closed form holds in simulation.} " + RW.narr_mc() + " Equations 4 and 7 can therefore be used "
          "directly to choose p and k.")
     if RW._testbed():
@@ -1309,7 +1345,7 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
               ["Attacker", "p", "Attacker jobs sampled (slashed)", "Honest jobs sampled (slashed)",
                "Realized Δ/P (95% CI)", "Equation 7 Δ/P"],
               RW.table_testbed(), [28, 14, 30, 30, 40, 26])
-    Para("{b|Answer to RQ3.} " + RW.narr_r32() + " The escrow adds a fixed on-chain cost per job (Table 11) that does not "
+    Para("{b|Answer to RQ3.} " + RW.narr_r32() + " The escrow adds a fixed on-chain cost per job (Table 12) that does not "
          "depend on the evidence level.")
 
     H2("4-4- Discussion")
@@ -1337,13 +1373,17 @@ def build_body(H1, H2, Para, Bullets, Figure, Table, Eq):
     Para("{b|Limitations.} The attack study is reduced in scope: SDXL with the Euler sampler only, one provider → verifier "
          "direction (rented RTX 5090 → DGX Spark) and nine attack conditions of 100 test jobs each; A2b, A4–A7 and F4 were not "
          "run, and SD1.5 and DPM++ 2M were not attacked. One tolerance, the E1 image tolerance, was corrected after the "
-         "freeze (v2, calibration split only, rule fixed before measuring), and both versions are reported. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
+         "freeze (v2, calibration split only, rule fixed before measuring); both versions are reported, the honest "
+         "false-rejection rates under v2 on the test split are exploratory, and the pre-registered confirmatory run "
+         "covers one card (RTX 4090), because the other two had no rental stock. The verifier pool is assumed honest and non-colluding; incentive mechanisms for verifiers "
          "and counter-collusion contracts {c|luu2015,dong2017} are complementary. Cross-generation results cover only the models "
          "tested (SD1.5 and SDXL on RTX 3090, RTX 4090, RTX 5090 and DGX Spark), from the Ampere, Ada and Blackwell generations; earlier generations were not tested. Deterministic samplers are required. Proposition 3 uses the large-T approximation and "
          "independent per-step outcomes, which are checked empirically (Figure 5). Reputation is not modelled in Equation "
          "7. Mainnet fees are calculated, not measured, and mainnet latency, priority-fee behaviour and transaction "
-         "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no timing result comes from "
-         "them. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
+         "landing rate were not measured. The DGX Spark systems were shared with other workloads, so no GPU-time result comes "
+         "from them, and the verification part of the testbed's end-to-end times is an upper bound. Tier A's CPU time, "
+         "orchestrator compute, storage and network prices were not measured, so the cost results cover the verifier's "
+         "GPU time, data volume, chain fees and end-to-end time only. For rented providers, test and attacked trajectories were kept only at eight pre-drawn steps, so the "
          "partial-faking analysis and any check with k > 8 use jobs generated on the DGX Spark systems. "
          "The full grid of software factors was measured on that one GPU platform, and on x86 only the precision, "
          "deterministic-mode and attention factors were measured. All results hold for the one pinned software stack; "

@@ -1,0 +1,33 @@
+{
+ "run_id": "20261127-wp5-testbed-01",
+ "n_jobs": 450,
+ "by_outcome": {
+  "unsampled": {
+   "n": 379,
+   "escrow_s_median": 3.03,
+   "draw_s_median": 3.63,
+   "verify_s_median": 0.0,
+   "chain_after_s_median": 2.42,
+   "total_s_median": 9.31,
+   "total_s_p95": 11.2
+  },
+  "pass": {
+   "n": 28,
+   "escrow_s_median": 3.04,
+   "draw_s_median": 3.62,
+   "verify_s_median": 16.9,
+   "chain_after_s_median": 5.49,
+   "total_s_median": 29.36,
+   "total_s_p95": 37.33
+  },
+  "fail": {
+   "n": 43,
+   "escrow_s_median": 3.06,
+   "draw_s_median": 3.62,
+   "verify_s_median": 33.77,
+   "chain_after_s_median": 10.01,
+   "total_s_median": 51.35,
+   "total_s_p95": 60.91
+  }
+ }
+}

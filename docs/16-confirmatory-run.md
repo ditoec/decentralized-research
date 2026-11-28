@@ -49,7 +49,7 @@ test split was examined. Two consequences:
   v1 and v2; E0 and E0-N; the deployed rule E2-W.
 - No job is dropped. A job that fails to generate is reported as missing, not replaced.
 
-## Cost (prices read 2026-11-28 ~03:30 UTC, get-gpu-type; balance US$19.50)
+## Cost (prices read 2026-11-28 about 11:55 UTC, get-gpu-type; balance US$19.50)
 
 | Card | Price, Secure / Community | Stock at the read | Estimated hours | Estimated cost |
 |---|---|---|---|---|

@@ -1,0 +1,42 @@
+{
+ "run_id": "20261127-wp5-testbed-dry-01",
+ "wp": "wp5",
+ "purpose": "testbed demo, runbook \u00a77 item 5",
+ "cluster": "devnet",
+ "program_id": "HmMX8b7GLwUeJv4dw42xHAryRVfQm319ArWNbfj9ePpf",
+ "p": [
+  1.0
+ ],
+ "k": 2,
+ "n_per_cell": 2,
+ "payment": 1000000,
+ "verifier_fee": 100000,
+ "bond": 1000000,
+ "jobs": [
+  "p00016_s0",
+  "p00020_s0"
+ ],
+ "verifiers": [
+  "spark5",
+  "spark6"
+ ],
+ "providers": [
+  "pod-a",
+  "pod-b",
+  "pod-c"
+ ],
+ "thresholds": "thresholds_v1_sdxl_euler.json",
+ "start_time": "2026-11-27T15:31:29.696820+00:00",
+ "pubkeys": {
+  "orchestrator": "2JAYN6ATdgbtGeGRw8SDnFuyovHGzs9CAAxKqjHGCr7f",
+  "req": "AaXJt2C1N32hGVdfvzuM1s4mV6v17CBdwd7kzES5rMqg",
+  "pod-a": "1498Br1LwWnt9Byo12mhRvG28CmBUUxXxThcuU9Ag6q1",
+  "pod-b": "DYDRyvFvgPcWt1UPfwu26QyrkuD3mgE4R4N3YPEvS21h",
+  "pod-c": "vvavrk3R9oWJiKy87fhsETGn4rj2e51uLDmau8Rj4aX",
+  "spark5": "AEjhqPLa9KRoCqYbD5jVFkoN5Pj3fqonpCtoDQgkT7A5",
+  "spark6": "8A2HrbZzQUSit7b8Zw4v1D5eqUtr12xoXLjpZ3N67m9S",
+  "admin": "EfAXuBFm3758x5ure2d14Etq5CSWTdioEyRhhVX6wkzy"
+ },
+ "end_time": "2026-11-27T15:34:01.962950+00:00",
+ "swept_lamports": 0
+}

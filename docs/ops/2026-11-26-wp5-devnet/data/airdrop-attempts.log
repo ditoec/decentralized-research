@@ -1,0 +1,30 @@
+2026-11-26T14:40:51Z try=1 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:40:51Z try=1 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:40:51Z try=1 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:40:52Z try=1 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:40:52Z balance=0 SOL
+2026-11-26T14:41:07Z try=2 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:41:08Z try=2 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:41:08Z try=2 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:41:08Z try=2 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:41:09Z balance=0 SOL
+2026-11-26T14:41:39Z try=3 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:41:39Z try=3 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:41:39Z try=3 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:41:39Z try=3 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:41:40Z balance=0 SOL
+2026-11-26T14:42:40Z try=4 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:42:40Z try=4 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:42:40Z try=4 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:42:41Z try=4 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:42:41Z balance=0 SOL
+2026-11-26T14:44:41Z try=5 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:44:42Z try=5 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:44:42Z try=5 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:44:42Z try=5 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:44:43Z balance=0 SOL
+2026-11-26T14:48:43Z try=6 amt=2 cli: Requesting airdrop of 2 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:48:43Z try=6 amt=2 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:48:44Z try=6 amt=1 cli: Requesting airdrop of 1 SOL Error: airdrop request failed. This can happen when the rate limit is reached. 
+2026-11-26T14:48:44Z try=6 amt=1 rpc:  {"jsonrpc":"2.0","error":{"code": 410,"message":"The RPC faucet is closed on this cluster. Request test SOL at https://faucet.solana.com"}, "id": 1 } 
+2026-11-26T14:48:45Z balance=0 SOL

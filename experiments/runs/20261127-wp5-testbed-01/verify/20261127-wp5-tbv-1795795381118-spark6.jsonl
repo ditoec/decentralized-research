@@ -1,0 +1,8 @@
+{"evidence": "E1", "job_id": "p00296_s0", "k": null, "reasons": [], "retention": "O", "score": null, "verdict": "pass"}
+{"evidence": "E2-H.tierA", "job_id": "p00296_s0", "k": null, "reasons": [], "retention": "O", "score": 2.7851281814781347e-08, "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00296_s0", "k": 1, "retention": "O", "score": 0.02789034065523695, "steps": [1], "tier_b": "pass", "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00296_s0", "k": 2, "retention": "O", "score": 0.02789034065523695, "steps": [1, 14], "tier_b": "pass", "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00296_s0", "k": 3, "retention": "O", "score": 0.02789034065523695, "steps": [1, 14, 25], "tier_b": "pass", "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00296_s0", "k": 5, "retention": "O", "score": 0.02789034065523695, "steps": [1, 6, 14, 22, 25], "tier_b": "pass", "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00296_s0", "k": 8, "retention": "O", "score": 0.02789034065523695, "steps": [0, 1, 6, 9, 14, 18, 22, 25], "tier_b": "pass", "verdict": "pass"}
+{"evidence": "E2-W", "job_id": "p00296_s0", "k": 3, "retention": "O", "score": 0.9999991357326508, "verdict": "pass"}

@@ -1,0 +1,7 @@
+attack,provider,p,k,bond_ratio,n_attacker,n_honest,delta_mean,delta_ci_lo,delta_ci_hi,delta_eq7,beta_A,q,alpha_k,p_star,n_sampled_attacker,source,run_id
+A3-Turbo,pod-b,0.05,2,1.0,50,50,0.7645,0.6045,0.8845,0.7882,0.8845,1.0,0.0367,0.4591,3,testbed,20261127-wp5-testbed-01
+F2,pod-c,0.05,2,1.0,50,50,0.4338,0.3538,0.4738,0.4075,0.4738,0.7,0.0367,0.3571,4,testbed,20261127-wp5-testbed-01
+A3-Turbo,pod-b,0.1,2,1.0,50,50,0.5645,0.3645,0.7645,0.6919,0.8845,1.0,0.0367,0.4591,8,testbed,20261127-wp5-testbed-01
+F2,pod-c,0.1,2,1.0,50,50,0.1138,-0.0862,0.3138,0.3411,0.4738,0.7,0.0367,0.3571,10,testbed,20261127-wp5-testbed-01
+A3-Turbo,pod-b,0.25,2,1.0,50,50,0.3245,0.0445,0.6045,0.4029,0.8845,1.0,0.0367,0.4591,15,testbed,20261127-wp5-testbed-01
+F2,pod-c,0.25,2,1.0,50,50,0.2738,0.0738,0.4738,0.1421,0.4738,0.7,0.0367,0.3571,8,testbed,20261127-wp5-testbed-01

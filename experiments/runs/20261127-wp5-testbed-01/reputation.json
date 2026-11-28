@@ -1,0 +1,2709 @@
+{
+ "scores": {
+  "pod-a": 0.7362322774454096,
+  "pod-b": 7.450580596923828e-09,
+  "pod-c": 0.1456428960952759
+ },
+ "history": [
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381001,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381002,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381003,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381004,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381005,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381006,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381007,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381008,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381009,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381010,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381011,
+   "outcome": "fail",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381012,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381013,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381014,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381015,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381016,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381017,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381018,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381019,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381020,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381021,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381022,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381023,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381024,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381025,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381026,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381027,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381028,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381029,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381030,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381031,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381032,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381033,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381034,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381035,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381036,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381037,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381038,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381039,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381040,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381041,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381042,
+   "outcome": "fail",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381043,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381044,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381045,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381046,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381047,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381048,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381049,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381050,
+   "outcome": "fail",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381051,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381052,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381053,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381054,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381055,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381056,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381057,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381058,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381059,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381060,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381061,
+   "outcome": "unsampled",
+   "reputation": 0.5
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381062,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381063,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381064,
+   "outcome": "pass",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381065,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381066,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381067,
+   "outcome": "unsampled",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381068,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381069,
+   "outcome": "unsampled",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381070,
+   "outcome": "unsampled",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381071,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381072,
+   "outcome": "pass",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381073,
+   "outcome": "unsampled",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381074,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381075,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381076,
+   "outcome": "unsampled",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381077,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381078,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381079,
+   "outcome": "unsampled",
+   "reputation": 0.55
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381080,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381081,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381082,
+   "outcome": "pass",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381083,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381084,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381085,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381086,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381087,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381088,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381089,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381090,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381091,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381092,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381093,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381094,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381095,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381096,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381097,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381098,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381099,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381100,
+   "outcome": "unsampled",
+   "reputation": 0.5950000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381101,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381102,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381103,
+   "outcome": "pass",
+   "reputation": 0.6355000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381104,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381105,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381106,
+   "outcome": "unsampled",
+   "reputation": 0.6355000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381107,
+   "outcome": "unsampled",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381108,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381109,
+   "outcome": "unsampled",
+   "reputation": 0.6355000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381110,
+   "outcome": "fail",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381111,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381112,
+   "outcome": "unsampled",
+   "reputation": 0.6355000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381113,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381114,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381115,
+   "outcome": "unsampled",
+   "reputation": 0.6355000000000001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381116,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381117,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381118,
+   "outcome": "pass",
+   "reputation": 0.67195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381119,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381120,
+   "outcome": "unsampled",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381121,
+   "outcome": "unsampled",
+   "reputation": 0.67195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381122,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381123,
+   "outcome": "pass",
+   "reputation": 0.3925
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381124,
+   "outcome": "unsampled",
+   "reputation": 0.67195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381125,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381126,
+   "outcome": "unsampled",
+   "reputation": 0.3925
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381127,
+   "outcome": "pass",
+   "reputation": 0.704755
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381128,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381129,
+   "outcome": "unsampled",
+   "reputation": 0.3925
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381130,
+   "outcome": "unsampled",
+   "reputation": 0.704755
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381131,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381132,
+   "outcome": "pass",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381133,
+   "outcome": "unsampled",
+   "reputation": 0.704755
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381134,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381135,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381136,
+   "outcome": "unsampled",
+   "reputation": 0.704755
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381137,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381138,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381139,
+   "outcome": "unsampled",
+   "reputation": 0.704755
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381140,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381141,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381142,
+   "outcome": "pass",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381143,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381144,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381145,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381146,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381147,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381148,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381149,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381150,
+   "outcome": "unsampled",
+   "reputation": 0.45325000000000004
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381151,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381152,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381153,
+   "outcome": "fail",
+   "reputation": 0.22662500000000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381154,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381155,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381156,
+   "outcome": "unsampled",
+   "reputation": 0.22662500000000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381157,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381158,
+   "outcome": "unsampled",
+   "reputation": 0.0625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381159,
+   "outcome": "unsampled",
+   "reputation": 0.22662500000000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381160,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381161,
+   "outcome": "fail",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381162,
+   "outcome": "unsampled",
+   "reputation": 0.22662500000000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381163,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381164,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381165,
+   "outcome": "unsampled",
+   "reputation": 0.22662500000000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381166,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381167,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381168,
+   "outcome": "fail",
+   "reputation": 0.11331250000000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381169,
+   "outcome": "unsampled",
+   "reputation": 0.7342795
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381170,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381171,
+   "outcome": "unsampled",
+   "reputation": 0.11331250000000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381172,
+   "outcome": "pass",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381173,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381174,
+   "outcome": "fail",
+   "reputation": 0.056656250000000005
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381175,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381176,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381177,
+   "outcome": "unsampled",
+   "reputation": 0.056656250000000005
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381178,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381179,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381180,
+   "outcome": "fail",
+   "reputation": 0.028328125000000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381181,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381182,
+   "outcome": "unsampled",
+   "reputation": 0.03125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381183,
+   "outcome": "unsampled",
+   "reputation": 0.028328125000000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381184,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381185,
+   "outcome": "fail",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381186,
+   "outcome": "unsampled",
+   "reputation": 0.028328125000000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381187,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381188,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381189,
+   "outcome": "unsampled",
+   "reputation": 0.028328125000000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381190,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381191,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381192,
+   "outcome": "fail",
+   "reputation": 0.014164062500000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381193,
+   "outcome": "unsampled",
+   "reputation": 0.7608515499999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381194,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381195,
+   "outcome": "unsampled",
+   "reputation": 0.014164062500000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381196,
+   "outcome": "pass",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381197,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381198,
+   "outcome": "fail",
+   "reputation": 0.007082031250000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381199,
+   "outcome": "unsampled",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381200,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381201,
+   "outcome": "unsampled",
+   "reputation": 0.007082031250000001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381202,
+   "outcome": "unsampled",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381203,
+   "outcome": "unsampled",
+   "reputation": 0.015625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381204,
+   "outcome": "fail",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381205,
+   "outcome": "unsampled",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381206,
+   "outcome": "fail",
+   "reputation": 0.0078125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381207,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381208,
+   "outcome": "unsampled",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381209,
+   "outcome": "unsampled",
+   "reputation": 0.0078125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381210,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381211,
+   "outcome": "unsampled",
+   "reputation": 0.7847663949999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381212,
+   "outcome": "unsampled",
+   "reputation": 0.0078125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381213,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381214,
+   "outcome": "pass",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381215,
+   "outcome": "fail",
+   "reputation": 0.00390625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381216,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381217,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381218,
+   "outcome": "unsampled",
+   "reputation": 0.00390625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381219,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381220,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381221,
+   "outcome": "unsampled",
+   "reputation": 0.00390625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381222,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381223,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381224,
+   "outcome": "fail",
+   "reputation": 0.001953125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381225,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381226,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381227,
+   "outcome": "unsampled",
+   "reputation": 0.001953125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381228,
+   "outcome": "unsampled",
+   "reputation": 0.0035410156250000003
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381229,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381230,
+   "outcome": "fail",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381231,
+   "outcome": "fail",
+   "reputation": 0.0017705078125000002
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381232,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381233,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381234,
+   "outcome": "pass",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381235,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381236,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381237,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381238,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381239,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381240,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381241,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381242,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381243,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381244,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381245,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381246,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381247,
+   "outcome": "unsampled",
+   "reputation": 0.8062897554999999
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381248,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381249,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381250,
+   "outcome": "pass",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381251,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381252,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381253,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381254,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381255,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381256,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381257,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381258,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381259,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381260,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381261,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381262,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381263,
+   "outcome": "unsampled",
+   "reputation": 0.0009765625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381264,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381265,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381266,
+   "outcome": "fail",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381267,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381268,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381269,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381270,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381271,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381272,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381273,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381274,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381275,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381276,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381277,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381278,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381279,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381280,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381281,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381282,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381283,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381284,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381285,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381286,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381287,
+   "outcome": "unsampled",
+   "reputation": 0.00048828125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381288,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381289,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381290,
+   "outcome": "fail",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381291,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381292,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381293,
+   "outcome": "unsampled",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381294,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381295,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381296,
+   "outcome": "unsampled",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381297,
+   "outcome": "unsampled",
+   "reputation": 0.10159345703125001
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381298,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381299,
+   "outcome": "unsampled",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381300,
+   "outcome": "fail",
+   "reputation": 0.05079672851562501
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381301,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381302,
+   "outcome": "unsampled",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381303,
+   "outcome": "unsampled",
+   "reputation": 0.05079672851562501
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381304,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381305,
+   "outcome": "unsampled",
+   "reputation": 0.000244140625
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381306,
+   "outcome": "fail",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381307,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381308,
+   "outcome": "fail",
+   "reputation": 0.0001220703125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381309,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381310,
+   "outcome": "unsampled",
+   "reputation": 0.82566077995
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381311,
+   "outcome": "fail",
+   "reputation": 6.103515625e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381312,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381313,
+   "outcome": "pass",
+   "reputation": 0.843094701955
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381314,
+   "outcome": "unsampled",
+   "reputation": 6.103515625e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381315,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381316,
+   "outcome": "pass",
+   "reputation": 0.8587852317595001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381317,
+   "outcome": "unsampled",
+   "reputation": 6.103515625e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381318,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381319,
+   "outcome": "unsampled",
+   "reputation": 0.8587852317595001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381320,
+   "outcome": "fail",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381321,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381322,
+   "outcome": "unsampled",
+   "reputation": 0.8587852317595001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381323,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381324,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381325,
+   "outcome": "unsampled",
+   "reputation": 0.8587852317595001
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381326,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381327,
+   "outcome": "unsampled",
+   "reputation": 0.025398364257812504
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381328,
+   "outcome": "pass",
+   "reputation": 0.87290670858355
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381329,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381330,
+   "outcome": "fail",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381331,
+   "outcome": "unsampled",
+   "reputation": 0.87290670858355
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381332,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381333,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381334,
+   "outcome": "unsampled",
+   "reputation": 0.87290670858355
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381335,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381336,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381337,
+   "outcome": "pass",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381338,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381339,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381340,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381341,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381342,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381343,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381344,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381345,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381346,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381347,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381348,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381349,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381350,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381351,
+   "outcome": "unsampled",
+   "reputation": 0.012699182128906252
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381352,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381353,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381354,
+   "outcome": "fail",
+   "reputation": 0.006349591064453126
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381355,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381356,
+   "outcome": "unsampled",
+   "reputation": 3.0517578125e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381357,
+   "outcome": "unsampled",
+   "reputation": 0.006349591064453126
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381358,
+   "outcome": "unsampled",
+   "reputation": 0.885616037725195
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381359,
+   "outcome": "fail",
+   "reputation": 1.52587890625e-05
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381360,
+   "outcome": "unsampled",
+   "reputation": 0.006349591064453126
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381361,
+   "outcome": "pass",
+   "reputation": 0.8970544339526756
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381362,
+   "outcome": "fail",
+   "reputation": 7.62939453125e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381363,
+   "outcome": "fail",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381364,
+   "outcome": "unsampled",
+   "reputation": 0.8970544339526756
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381365,
+   "outcome": "unsampled",
+   "reputation": 7.62939453125e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381366,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381367,
+   "outcome": "fail",
+   "reputation": 0.4485272169763378
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381368,
+   "outcome": "fail",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381369,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381370,
+   "outcome": "pass",
+   "reputation": 0.503674495278704
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381371,
+   "outcome": "unsampled",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381372,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381373,
+   "outcome": "unsampled",
+   "reputation": 0.503674495278704
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381374,
+   "outcome": "unsampled",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381375,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381376,
+   "outcome": "pass",
+   "reputation": 0.5533070457508336
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381377,
+   "outcome": "unsampled",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381378,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381379,
+   "outcome": "unsampled",
+   "reputation": 0.5533070457508336
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381380,
+   "outcome": "unsampled",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381381,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381382,
+   "outcome": "unsampled",
+   "reputation": 0.5533070457508336
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381383,
+   "outcome": "unsampled",
+   "reputation": 3.814697265625e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381384,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381385,
+   "outcome": "pass",
+   "reputation": 0.5979763411757502
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381386,
+   "outcome": "fail",
+   "reputation": 1.9073486328125e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381387,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381388,
+   "outcome": "unsampled",
+   "reputation": 0.5979763411757502
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381389,
+   "outcome": "unsampled",
+   "reputation": 1.9073486328125e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381390,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381391,
+   "outcome": "pass",
+   "reputation": 0.6381787070581751
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381392,
+   "outcome": "unsampled",
+   "reputation": 1.9073486328125e-06
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381393,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381394,
+   "outcome": "unsampled",
+   "reputation": 0.6381787070581751
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381395,
+   "outcome": "fail",
+   "reputation": 9.5367431640625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381396,
+   "outcome": "unsampled",
+   "reputation": 0.003174795532226563
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381397,
+   "outcome": "pass",
+   "reputation": 0.6743608363523577
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381398,
+   "outcome": "unsampled",
+   "reputation": 9.5367431640625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381399,
+   "outcome": "fail",
+   "reputation": 0.0015873977661132815
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381400,
+   "outcome": "unsampled",
+   "reputation": 0.6743608363523577
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381401,
+   "outcome": "unsampled",
+   "reputation": 9.5367431640625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381402,
+   "outcome": "pass",
+   "reputation": 0.10142865798950197
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381403,
+   "outcome": "unsampled",
+   "reputation": 0.6743608363523577
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381404,
+   "outcome": "fail",
+   "reputation": 4.76837158203125e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381405,
+   "outcome": "fail",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381406,
+   "outcome": "unsampled",
+   "reputation": 0.6743608363523577
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381407,
+   "outcome": "fail",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381408,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381409,
+   "outcome": "pass",
+   "reputation": 0.7069247527171219
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381410,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381411,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381412,
+   "outcome": "pass",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381413,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381414,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381415,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381416,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381417,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381418,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381419,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381420,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381421,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381422,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381423,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381424,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381425,
+   "outcome": "unsampled",
+   "reputation": 2.384185791015625e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381426,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381427,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381428,
+   "outcome": "fail",
+   "reputation": 1.1920928955078125e-07
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381429,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381430,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381431,
+   "outcome": "fail",
+   "reputation": 5.960464477539063e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381432,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381433,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381434,
+   "outcome": "fail",
+   "reputation": 2.9802322387695312e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381435,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381436,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381437,
+   "outcome": "unsampled",
+   "reputation": 2.9802322387695312e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381438,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381439,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381440,
+   "outcome": "unsampled",
+   "reputation": 2.9802322387695312e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381441,
+   "outcome": "unsampled",
+   "reputation": 0.050714328994750986
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381442,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381443,
+   "outcome": "fail",
+   "reputation": 1.4901161193847656e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381444,
+   "outcome": "pass",
+   "reputation": 0.1456428960952759
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381445,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381446,
+   "outcome": "unsampled",
+   "reputation": 1.4901161193847656e-08
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381447,
+   "outcome": "unsampled",
+   "reputation": 0.1456428960952759
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795795381448,
+   "outcome": "unsampled",
+   "reputation": 0.7362322774454096
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795795381449,
+   "outcome": "fail",
+   "reputation": 7.450580596923828e-09
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795795381450,
+   "outcome": "unsampled",
+   "reputation": 0.1456428960952759
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "n_jobs": 150,
+ "model_load_s": 10.024395782966167,
+ "time_per_image_s": {
+  "median": 14.714722026139498,
+  "p95": 26.94242105912417,
+  "min": 12.245906872209162,
+  "max": 27.37806200934574,
+  "n": 149,
+  "note": "warm; first job excluded"
+ },
+ "memory": {
+  "host_available_before_load_gb": 46.674008,
+  "host_drop_gb": 22.082812,
+  "torch_peak_allocated_gb": 19.297468416,
+  "torch_peak_reserved_gb": 20.004732928,
+  "process_peak_rss_gb": 15.136512,
+  "host_min_available_gb": 24.591196,
+  "host_total_gb": 127.533224,
+  "measured_in_process_with_jobs": 0
+ }
+}

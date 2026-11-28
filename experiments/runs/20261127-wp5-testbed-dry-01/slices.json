@@ -1,0 +1,32 @@
+[
+ {
+  "slice": "20261127-wp5-tb-e16da1dded",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-713d9e6db3",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00020_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c82a2f8952",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-26c646c4c1",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00020_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3af9fdc12e",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-d49daf5891",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00020_s0"
+ }
+]

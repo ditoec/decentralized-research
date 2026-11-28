@@ -1,0 +1,8 @@
+{"event": "started", "container": "88fbba7a6a51", "attempt": 1, "mem_available_gb": 49.3, "time": "2026-11-27T07:18:07+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T08:35:21+0700"}
+{"event": "started", "container": "b50ed3d7f2d4", "attempt": 1, "mem_available_gb": 49.5, "time": "2026-11-27T08:35:22+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T08:35:37+0700"}
+{"event": "started", "container": "73a3f1ef7bce", "attempt": 1, "mem_available_gb": 48.4, "time": "2026-11-27T13:27:55+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T13:28:11+0700"}
+{"event": "started", "container": "91cadb2a6250", "attempt": 1, "mem_available_gb": 48.7, "time": "2026-11-27T13:28:11+0700"}
+{"event": "finished", "ok": true, "exit_code": 0, "attempts": 1, "time": "2026-11-27T13:28:16+0700"}

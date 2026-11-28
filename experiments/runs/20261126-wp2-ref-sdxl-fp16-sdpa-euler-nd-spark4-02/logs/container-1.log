@@ -1,0 +1,23 @@
+{
+ "n_jobs": 180,
+ "model_load_s": 14.054773048032075,
+ "time_per_image_s": {
+  "median": 27.133195971138775,
+  "p95": 27.541073312051594,
+  "min": 12.33314753184095,
+  "max": 27.805477591697127,
+  "n": 179,
+  "note": "warm; first job excluded"
+ },
+ "memory": {
+  "host_available_before_load_gb": 48.755376,
+  "host_drop_gb": 22.433808,
+  "torch_peak_allocated_gb": 19.291291648,
+  "torch_peak_reserved_gb": 20.0278016,
+  "process_peak_rss_gb": 13.339256,
+  "host_min_available_gb": 26.321568,
+  "host_total_gb": 127.533228,
+  "measured_in_process_with_jobs": 0
+ }
+}
+/runs/20261126-wp2-ref-sdxl-fp16-sdpa-euler-nd-spark4-02

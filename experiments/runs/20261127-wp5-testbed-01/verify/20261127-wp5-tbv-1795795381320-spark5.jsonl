@@ -1,0 +1,8 @@
+{"evidence": "E1", "job_id": "p00060_s0", "k": null, "reasons": [], "retention": "O", "score": null, "verdict": "pass"}
+{"evidence": "E2-H.tierA", "job_id": "p00060_s0", "k": null, "reasons": ["solver inconsistency at steps [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]"], "retention": "O", "score": 2.1069266652398187e-08, "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00060_s0", "k": 1, "retention": "O", "score": 1.048834481488166, "steps": [18], "tier_b": "fail", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00060_s0", "k": 2, "retention": "O", "score": 1.048834481488166, "steps": [17, 18], "tier_b": "fail", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00060_s0", "k": 3, "retention": "O", "score": 1.048834481488166, "steps": [17, 18, 27], "tier_b": "fail", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00060_s0", "k": 5, "retention": "O", "score": 1.048834481488166, "steps": [11, 17, 18, 23, 27], "tier_b": "fail", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00060_s0", "k": 8, "retention": "O", "score": 1.1712618136551873, "steps": [1, 2, 5, 11, 17, 18, 23, 27], "tier_b": "fail", "verdict": "fail"}
+{"evidence": "E2-W", "job_id": "p00060_s0", "k": 3, "retention": "O", "score": 0.999618262052536, "verdict": "pass"}

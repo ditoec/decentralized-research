@@ -1,0 +1,184 @@
+{
+ "run_id": "20261127-wp5-testbed-01",
+ "k": 2,
+ "B_over_P": 1.0,
+ "c_over_P": 1.0,
+ "thresholds": "v1",
+ "alpha_k": 0.03666666666666667,
+ "alpha_source": "honest_fpr.csv, rtx5090->spark, E2-H, k = 2",
+ "cells": [
+  {
+   "attack": "A3-Turbo",
+   "provider": "pod-b",
+   "p": 0.05,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.7645,
+   "delta_ci_lo": 0.6045,
+   "delta_ci_hi": 0.8845,
+   "delta_eq7": 0.7882,
+   "beta_A": 0.8845,
+   "q": 1.0,
+   "alpha_k": 0.0367,
+   "p_star": 0.4591,
+   "n_sampled_attacker": 3,
+   "outcomes_attacker": {
+    "unsampled": 47,
+    "fail": 3
+   },
+   "outcomes_honest": {
+    "unsampled": 44,
+    "pass": 6
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  },
+  {
+   "attack": "F2",
+   "provider": "pod-c",
+   "p": 0.05,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.4338,
+   "delta_ci_lo": 0.3538,
+   "delta_ci_hi": 0.4738,
+   "delta_eq7": 0.4075,
+   "beta_A": 0.4738,
+   "q": 0.7,
+   "alpha_k": 0.0367,
+   "p_star": 0.3571,
+   "n_sampled_attacker": 4,
+   "outcomes_attacker": {
+    "unsampled": 46,
+    "fail": 1,
+    "pass": 3
+   },
+   "outcomes_honest": {
+    "unsampled": 44,
+    "pass": 6
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  },
+  {
+   "attack": "A3-Turbo",
+   "provider": "pod-b",
+   "p": 0.1,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.5645,
+   "delta_ci_lo": 0.3645,
+   "delta_ci_hi": 0.7645,
+   "delta_eq7": 0.6919,
+   "beta_A": 0.8845,
+   "q": 1.0,
+   "alpha_k": 0.0367,
+   "p_star": 0.4591,
+   "n_sampled_attacker": 8,
+   "outcomes_attacker": {
+    "unsampled": 42,
+    "fail": 8
+   },
+   "outcomes_honest": {
+    "unsampled": 46,
+    "pass": 4
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  },
+  {
+   "attack": "F2",
+   "provider": "pod-c",
+   "p": 0.1,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.1138,
+   "delta_ci_lo": -0.0862,
+   "delta_ci_hi": 0.3138,
+   "delta_eq7": 0.3411,
+   "beta_A": 0.4738,
+   "q": 0.7,
+   "alpha_k": 0.0367,
+   "p_star": 0.3571,
+   "n_sampled_attacker": 10,
+   "outcomes_attacker": {
+    "fail": 9,
+    "unsampled": 40,
+    "pass": 1
+   },
+   "outcomes_honest": {
+    "unsampled": 46,
+    "pass": 4
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  },
+  {
+   "attack": "A3-Turbo",
+   "provider": "pod-b",
+   "p": 0.25,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.3245,
+   "delta_ci_lo": 0.0445,
+   "delta_ci_hi": 0.6045,
+   "delta_eq7": 0.4029,
+   "beta_A": 0.8845,
+   "q": 1.0,
+   "alpha_k": 0.0367,
+   "p_star": 0.4591,
+   "n_sampled_attacker": 15,
+   "outcomes_attacker": {
+    "unsampled": 35,
+    "fail": 15
+   },
+   "outcomes_honest": {
+    "unsampled": 37,
+    "pass": 12,
+    "fail": 1
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  },
+  {
+   "attack": "F2",
+   "provider": "pod-c",
+   "p": 0.25,
+   "k": 2,
+   "bond_ratio": 1.0,
+   "n_attacker": 50,
+   "n_honest": 50,
+   "delta_mean": 0.2738,
+   "delta_ci_lo": 0.0738,
+   "delta_ci_hi": 0.4738,
+   "delta_eq7": 0.1421,
+   "beta_A": 0.4738,
+   "q": 0.7,
+   "alpha_k": 0.0367,
+   "p_star": 0.3571,
+   "n_sampled_attacker": 8,
+   "outcomes_attacker": {
+    "unsampled": 42,
+    "fail": 6,
+    "pass": 2
+   },
+   "outcomes_honest": {
+    "unsampled": 37,
+    "pass": 12,
+    "fail": 1
+   },
+   "source": "testbed",
+   "run_id": "20261127-wp5-testbed-01"
+  }
+ ]
+}

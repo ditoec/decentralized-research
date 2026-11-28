@@ -1,0 +1,8 @@
+{"evidence": "E1", "job_id": "p00176_s0", "k": null, "reasons": ["E1.image: decoded x_final does not match image"], "retention": "O", "score": null, "verdict": "fail"}
+{"evidence": "E2-H.tierA", "job_id": "p00176_s0", "k": null, "reasons": [], "retention": "O", "score": 2.7647865191493014e-08, "verdict": "pass"}
+{"evidence": "E2-H", "job_id": "p00176_s0", "k": 1, "retention": "O", "score": 0.005893409468719126, "steps": [15], "tier_b": "pass", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00176_s0", "k": 2, "retention": "O", "score": 0.007394299289389812, "steps": [13, 15], "tier_b": "pass", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00176_s0", "k": 3, "retention": "O", "score": 0.013789505928456795, "steps": [8, 13, 15], "tier_b": "pass", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00176_s0", "k": 5, "retention": "O", "score": 0.013789505928456795, "steps": [8, 13, 15, 22, 25], "tier_b": "pass", "verdict": "fail"}
+{"evidence": "E2-H", "job_id": "p00176_s0", "k": 8, "retention": "O", "score": 0.025140020643945323, "steps": [2, 8, 11, 13, 15, 18, 22, 25], "tier_b": "pass", "verdict": "fail"}
+{"evidence": "E2-W", "job_id": "p00176_s0", "k": 3, "retention": "O", "score": 0.9999983012676239, "verdict": "pass"}

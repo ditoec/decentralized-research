@@ -71,3 +71,4 @@ Make one for any stretch of work worth a figure:
 ## Reports
 
 - [`2026-11-26-wp2-rentals/`](2026-11-26-wp2-rentals/README.md): the WP2 rentals and the Spark grid on the night of 2026-11-25/26.
+- [`2026-11-26-wp5-devnet/`](2026-11-26-wp5-devnet/README.md): WP5 Devnet replay, stopped at funding (the RPC faucet is closed).

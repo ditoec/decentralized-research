@@ -1,0 +1,91 @@
+{
+ "time": 1795760915.1332645,
+ "host_mem_available_gb": 48.209472,
+ "containers": [
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "24.06MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-llm",
+   "image": "vllm",
+   "cpu": "2.09%",
+   "mem": "5.868GiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.01%",
+   "mem": "948.4MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.12%",
+   "mem": "22.53MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "1.80%",
+   "mem": "282.2MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.18%",
+   "mem": "210.9MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.08%",
+   "mem": "21.12MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.71%",
+   "mem": "211.6MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.98%",
+   "mem": "43.87MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "1.00%",
+   "mem": "4.734MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "22.69MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "20.53MiB / 121.6GiB"
+  },
+  {
+   "name": "cotenant-svc",
+   "image": "redacted",
+   "cpu": "0.00%",
+   "mem": "1.082GiB / 121.6GiB"
+  }
+ ],
+ "vllm": {
+  "cotenant-llm": {
+   "num_requests_running": 0.0,
+   "num_requests_waiting": 0.0,
+   "kv_cache_usage_perc": 0.0
+  }
+ }
+}

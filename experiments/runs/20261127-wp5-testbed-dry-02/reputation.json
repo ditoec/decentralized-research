@@ -1,0 +1,45 @@
+{
+ "scores": {
+  "pod-a": 0.325,
+  "pod-b": 0.125,
+  "pod-c": 0.125
+ },
+ "history": [
+  {
+   "provider": "pod-a",
+   "job_id": 1795793790001,
+   "outcome": "fail",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795793790002,
+   "outcome": "fail",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795793790003,
+   "outcome": "fail",
+   "reputation": 0.25
+  },
+  {
+   "provider": "pod-a",
+   "job_id": 1795793790004,
+   "outcome": "pass",
+   "reputation": 0.325
+  },
+  {
+   "provider": "pod-b",
+   "job_id": 1795793790005,
+   "outcome": "fail",
+   "reputation": 0.125
+  },
+  {
+   "provider": "pod-c",
+   "job_id": 1795793790006,
+   "outcome": "fail",
+   "reputation": 0.125
+  }
+ ]
+}

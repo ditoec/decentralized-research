@@ -1,0 +1,752 @@
+[
+ {
+  "slice": "20261127-wp5-tb-bb5ee91eb5",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c4d57877a9",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00020_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-85ec41f681",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00023_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-57cc1c2d26",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00027_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1fa3eb225f",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00040_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4fae2c839b",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00050_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-f6d13960e5",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00060_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-2e5606819f",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00066_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1f7092543c",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00072_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-2e2310a485",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00078_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-b629a933ec",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00080_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5e03895df1",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00084_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-9046869158",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00087_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5fa33de731",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00096_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a1d962b30e",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00103_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-f7266fdb6d",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00122_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-704bce5a3d",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00123_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3504669307",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00131_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1cfef73ec8",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00143_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1f20edbe85",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00152_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-42b25cf727",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00161_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-259b56ca5e",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00167_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a9050f8da0",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00176_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4db853ee06",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00180_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-33b48b906e",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00183_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-45ef9f577f",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00199_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-57b238f736",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00203_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-bfe39ef575",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00206_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-855cfae06a",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00230_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7d52364dfe",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00252_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-d8fd06c921",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00254_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-ee6f836c14",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00267_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-58ac519e1e",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00272_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7d11cf78b3",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00273_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-b3d59b5f75",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00274_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6eedb8bced",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00279_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5b5a5248e2",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00286_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6b40f407b1",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00288_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fe75ab8351",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00292_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-65bab3fabb",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00296_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fd1e73c02a",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00324_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-eea91be0e7",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00338_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-912c351d65",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00361_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-277d1ff585",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00362_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-53767cd6de",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00385_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-ce2fdd151a",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00390_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-34a012e139",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00410_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1880815f19",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00411_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fb9c4f4e86",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00412_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-e02c7ebbe1",
+  "src": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+  "job": "p00430_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-8e8ed33c1f",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-f2811b496e",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00020_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-b080049865",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00023_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-99601a146a",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00027_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-15ca9ed720",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00040_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-0a05bd53a4",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00050_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3bf68cc007",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00060_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4d17870557",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00066_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-647420ec85",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00072_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-72e733cd66",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00078_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3c61879ef6",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00080_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5f0f9a29e8",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00084_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-be057bb851",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00087_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-be094d2939",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00096_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7e3caa79fd",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00103_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-113cb67248",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00122_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-92097d6db1",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00123_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fde0191e3d",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00131_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3e13278851",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00143_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5c66357679",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00152_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7584ef1f5b",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00161_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c65aba6c1f",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00167_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-91efc88150",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00176_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-82b18f6eb0",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00180_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1eed0c4caa",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00183_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-85abf87c14",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00199_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-cb97880d9c",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00203_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-167e8bc593",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00206_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7263fb85db",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00230_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c6767b428a",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00252_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-9730f21a93",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00254_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-95dbba7fcc",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00267_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-282e0ba9db",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00272_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a7edd8bee9",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00273_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-e28ea0179c",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00274_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-cdca2fabf3",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00279_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3853a5ae74",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00286_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-54bf126c39",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00288_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-86463d84a7",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00292_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fef9db6dec",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00296_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-911b2bda87",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00324_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-d7284e3a37",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00338_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-92065b9b37",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00361_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4ab3476e13",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00362_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-57b187499e",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00385_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6ff6b3fe2f",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00390_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-99b8059f39",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00410_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-53d0519809",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00411_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-ecf93b4efa",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00412_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5cfb5e8f9b",
+  "src": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+  "job": "p00430_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-fb9fbf9d10",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00016_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a3ee897870",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00020_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c0c60f6e5b",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00023_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5a19e115b7",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00027_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6fb3fb7fd7",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00040_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c0a8c2fdc8",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00050_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-095308956f",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00060_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-0af25f7868",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00066_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-df04c7dab1",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00072_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-19e3370c16",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00078_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6bf910879a",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00080_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7e9f2c060e",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00084_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a3cad658e0",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00087_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-1a047cea46",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00096_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3e8238a780",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00103_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5a13aae20f",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00122_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3b078f9510",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00123_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-148383ef8e",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00131_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-e2a240a6e3",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00143_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-64b94be2db",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00152_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-7a8a98822c",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00161_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c8ce6f3045",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00167_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-190e52b056",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00176_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-cf4add40c7",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00180_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-9f1d33926f",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00183_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-6a330f8eca",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00199_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-df0680c65d",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00203_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-e3e6a51f0e",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00206_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4a4b12b18d",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00230_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4c8af52c65",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00252_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-49a2bbadb5",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00254_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-250b2effb9",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00267_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-4b750eede2",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00272_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-3a6b07d914",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00273_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c17554bbcf",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00274_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-557a61882d",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00279_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-c3db3dbb41",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00286_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-5511b56df5",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00288_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-f013494dd4",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00292_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a8fac7257e",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00296_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-d2377c9104",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00324_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-68d72407ee",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00338_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-84960a1428",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00361_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-e1a9ef6ca2",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00362_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-9283f20130",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00385_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-af8da68492",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00390_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-a29ea83b46",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00410_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-64f4f71d01",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00411_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-87a7364ac4",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00412_s0"
+ },
+ {
+  "slice": "20261127-wp5-tb-891ab7e5c6",
+  "src": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+  "job": "p00430_s0"
+ }
+]

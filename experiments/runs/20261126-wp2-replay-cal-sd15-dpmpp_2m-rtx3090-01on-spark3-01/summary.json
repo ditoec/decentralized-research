@@ -1,0 +1,7 @@
+{
+ "n_jobs": 600,
+ "frac_steps_exact": 0.0,
+ "tier_b_rel_l2_max": 0.14209860321692594,
+ "tier_a_rel_l2_max": 1.2983119626356512e-07,
+ "tier_a_replica_exact_frac": 0.4
+}

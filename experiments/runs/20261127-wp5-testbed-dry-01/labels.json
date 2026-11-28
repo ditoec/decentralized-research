@@ -1,0 +1,17 @@
+{
+ "providers": {
+  "pod-a": {
+   "source_run": "20261126-wp2-ref-test-sdxl-fp16-sdpa-euler-nd-rtx5090-01",
+   "label": "honest"
+  },
+  "pod-b": {
+   "source_run": "20261126-wp3-atk-a3turbo-sdxl-euler-rtx5090-01",
+   "label": "A3-Turbo"
+  },
+  "pod-c": {
+   "source_run": "20261127-wp3-atkr-f2-sdxl-euler-rtx5090-01",
+   "label": "F2"
+  }
+ },
+ "note": "ground truth for the analysis only; never sent to the orchestrator's verifier or the chain"
+}

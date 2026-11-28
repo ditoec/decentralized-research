@@ -60,3 +60,17 @@ test split was examined. Two consequences:
 Hours: setup, generation (the test-split runs took 43, 31 and 86 minutes of generation) and the pull of about
 4 GB of class O bundles before the pod deletes itself. Total about US$4.5 at Secure prices, within the
 US$200 cap. Community is tried first, as before.
+
+## Result (2026-11-28, added after the run; nothing above was changed)
+
+- **Run:** `20261128-wp3-confirm-test-sdxl-fp16-sdpa-euler-nd-rtx4090-03-01`, 600 jobs on a rented RTX 4090 (Secure,
+  US-IL-1, US$0.89/h; pod `nf5dsjpkf1q7gn`, 12:07–13:38 UTC, US$1.34). The RTX 5090 and RTX 3090 had no stock in
+  either cloud, so only this card ran. Verified on Spark-4 (`…-on-spark4`), E1 image rows on Spark-4, E0 against the
+  Spark-3 reference `20261128-wp3-confirm-rerun-sdxl-euler-spark3-01` (`…-e0-…-on-spark3`). No job was dropped.
+- **Primary endpoint:** E2-H, k = 1, v2: 8 of 600 rejected, **1.33%**, 95% cluster-bootstrap interval 0.50–2.50%
+  (200 prompts). **Criterion met** (≤ 2.0% and upper bound ≤ 3.0%). Test split, RTX 4090: 1.17% (7 of 600).
+- **Secondary:** E2-H under v2 at k = 2, 3, 8: 1.00%, 0.83%, 1.17%. Under v1, E1 and so E2-H reject 600 of 600 (the
+  image tolerance, as on the test split). Tier A, E2-W and E0-N reject none. E0 rejects 1.17% (7 jobs), against
+  3.50% for the RTX 4090 on the test split.
+- **Outputs:** `experiments/analysis/wp3/confirm/` (`analyze.sh`, `summarize.py`, `summary.json`, `cluster_ci.csv`,
+  `v1/`, `v2/`); catalog rows and image sheets in `docs/ops/catalog/wp3confirm/`.

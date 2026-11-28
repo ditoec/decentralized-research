@@ -22,8 +22,13 @@ We agree, and have done three things.
   in no prompt list of any run. A confirmatory run on them (600 jobs per card, same three cards, same frozen
   thresholds and analysis) was pre-registered before any of its jobs, with the honest E2-H rate under v2 as its
   primary endpoint and a confirmation criterion fixed in advance (pooled rate ≤ 2.0% and clustered 95% upper
-  bound ≤ 3.0%): `docs/16-confirmatory-run.md`, commit `6aa4746`. [Result to be added when the run is done; until
-  then the paper states that the v2 honest rate is exploratory pending this run.]
+  bound ≤ 3.0%): `docs/16-confirmatory-run.md`, commit `6aa4746`. **Result:** run on 2026-11-28 on a newly rented RTX 4090 (the RTX 5090 and
+  RTX 3090 had no rental stock): E2-H at k = 1 under v2 rejected 8 of 600 honest jobs, 1.3% (95% interval 0.5–2.5%,
+  clustered by prompt), against 1.2% on the test split, so the pre-registered criterion was met. The paper reports
+  it in Section 4-2 ("The v2 false-rejection rate holds on untouched prompts"), as the last row of Table 9, in the
+  answer to RQ2 and in the Abstract, and says that the confirmation covers one card; the other two cards' honest
+  rates stay exploratory. Cost US$1.34. As a secondary result, E0 rejected 1.2% of these jobs, close to its
+  calibration-split rate, against 3.3% on the test split.
 
 **2. Correlated test jobs; experimental unit; clustered uncertainty; results per hardware configuration.**
 

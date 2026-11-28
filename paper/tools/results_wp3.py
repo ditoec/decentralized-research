@@ -289,6 +289,11 @@ def sens_summary(ver="v2", ev="E2-H", k="1") -> dict:
             "n": {key: int(r["n_jobs"]) for key, r in got.items()}}
 
 
+def of(m: int, n: int) -> str:
+    """'all 8' when every condition qualifies, else '5 of the 8'."""
+    return f"all {n}" if m == n else f"{m} of the {n}"
+
+
 def labels(keys) -> str:
     keys = [_lab(k) for k in keys]
     return ", ".join(keys[:-1]) + (" and " if len(keys) > 1 else "") + keys[-1] if keys else "none"
@@ -301,7 +306,7 @@ def narr_r21() -> str:
         return ph("R2.1: narrative of the deployed-rule results")
     others = {k: a for k, a in n["acc"].items() if k not in n["le10"]}
     s = (f"The latent-cosine rule E2-W accepted {pc(w['honest'])}% of the honest jobs and at least 90% of the jobs of "
-         f"{len(w['ge90'])} of the {w['n']} attack conditions ({labels(w['ge90'])})")
+         f"{of(len(w['ge90']), w['n'])} attack conditions ({labels(w['ge90'])}; Table 7)")
     s += (". It cannot see these attacks, because the verifier replays each checked step from the provider's own "
           "state, so any internally smooth trajectory stays above the cosine threshold whatever image it ends in. "
           f"The CLIP rule E0-N accepted {pc(n['honest'])}% of the honest jobs; it rejected at least 90% of the jobs of "
@@ -324,11 +329,16 @@ def narr_r23() -> str:
     hi = [k for k in att if q[k] >= 0.95]
     lo = [k for k in att if q[k] < 0.95]
     f = _fpr("v2").get(("E2-H", "1"))
-    s = (f"With one checked step (k = 1) and the v2 image tolerance, E2-H rejected at least 95% of the jobs of {len(hi)} "
-         f"of the {len(att)} attack conditions ({labels(hi)}) at an honest false-rejection rate of {pc(f['fpr'])}% "
+    s = (f"With one checked step (k = 1) and the v2 image tolerance, E2-H rejected at least 95% of the jobs "
+         f"of {of(len(hi), len(att))} attack conditions ({labels(hi)}; Table 8) at an honest false-rejection rate of {pc(f['fpr'])}% "
          f"(95% CI upper bound {pc(f['ci_hi'])}%)" if f else "")
     if lo:
-        s += "; below that were " + "; ".join(f"{_lab(k)} with {pc(q[k], 0)}% at k = 1 and {pc(q8.get(k, float('nan')), 0)}% at k = 8" for k in lo)
+        grp = defaultdict(list)  # conditions with the same rejection at k = 1 and k = 8 are named together
+        for k in lo:
+            grp[(pc(q[k], 0), pc(q8.get(k, float("nan")), 0))].append(k)
+        s += "; below that were " + "; ".join(
+            (f"{labels(ks)}, each with" if len(ks) > 1 else f"{labels(ks)} with") + f" {a}% at k = 1 and {b}% at k = 8"
+            for (a, b), ks in grp.items())
     if "M" in q:
         s += (f". The control M, honest computation under false device metadata, was rejected in {pc(q['M'], 0)}% of jobs, "
               "the honest rate, as it should be: no evidence level here observes the device")
@@ -429,17 +439,19 @@ def narr_r27() -> str:
     part = sorted({(r["s"], r["n_jobs"]) for r in rs if r.get("partial")})
     pn = ("; at s = " + ", ".join(f"{x:g} only {n} of 100 jobs were verified" for x, n in part)) if part else ""
     tsum = sum(r["tiera_fail"] for r in ta)
-    return (f"Figure 5 shows the share of F3 jobs failing Tier B at s ∈ {{{', '.join(f'{x:g}' for x in svals)}}} "
-            f"(100 jobs per s, generated and verified on DGX Spark systems with full trajectories{pn}), produced by the "
-            "forger that runs its computed steps from its own states. Over the "
-            f"{len(dev)} (s, k) cells the measured share differed from Equation 4 with m = sT, r = 1 and the measured "
-            f"α{{sub|s}} by at most {100 * worst[0]:.0f} percentage points (s = {worst[3]['s']:g}, k = {worst[3]['k']}: "
-            f"{100 * worst[1]:.0f}% measured, {100 * worst[2]:.0f}% predicted). "
+    over = worst[1] < worst[2]
+    return (f"For the forger that runs its computed steps from its own states, the share of F3 jobs failing Tier B "
+            f"stayed within {100 * worst[0]:.0f} percentage points of Equation 4 with m = sT, r = 1 and the measured "
+            f"α{{sub|s}} in all {len(dev)} (s, k) cells (Figure 5; s ∈ {{{', '.join(f'{x:g}' for x in svals)}}}, 100 jobs "
+            f"per s, generated and verified on DGX Spark systems with full trajectories{pn}). The largest gap is at "
+            f"s = {worst[3]['s']:g}, k = {worst[3]['k']} ({100 * worst[1]:.0f}% measured, {100 * worst[2]:.0f}% predicted). "
             + _undetected_sentence(worst) + " "
             + (f"Tier A rejected none of the {sum(r['n_jobs'] for r in ta)} jobs: the forgery is consistent by "
                "construction, so detection rests on the spot check alone, as the model assumes."
                if tsum == 0 else
-               "Tier A rejected " + "; ".join(f"{r['tiera_fail']} of {r['n_jobs']} jobs at s = {r['s']:g}" for r in ta) + "."))
+               "Tier A rejected " + "; ".join(f"{r['tiera_fail']} of {r['n_jobs']} jobs at s = {r['s']:g}" for r in ta) + ".")
+            + (" Equation 4 with m = sT is therefore a usable design estimate for a careful forger, which can overstate "
+               "detection at small k when faked steps stay within the honest tolerance." if over else ""))
 
 
 def narr_r32() -> str:
@@ -454,18 +466,21 @@ def narr_r32() -> str:
     if not out:
         return ph("R3.2: best k, p*, required bond ratio, and agreement between theory and measurement")
     best = min(out, key=lambda t: t[1])
-    s = ("With a bond equal to the payment (B/P = 1) and the conservative cost ratio c/P = 1, the sampling rate that "
-         f"deters all {out[0][3]} attack conditions with a positive saving at once (Equation 9, with Equation 4's "
-         "detection q(s, k) for the forgers, which fake a share s = 0.5 of the steps) is "
-         + "; ".join(f"p* = {p:.3f} at k = {k} (set by {_lab(w)})" for k, p, w, _ in out)
-         + f". The cost-optimal choice here is k = {best[0]}: ")
-    first = out[0]
+    first, rest = out[0], [t for t in out if t[0] > best[0]]
+    s = ("With a bond equal to the payment (B/P = 1) and the conservative cost ratio c/P = 1, a sampling rate of "
+         f"p* = {best[1]:.3f} with k = {best[0]} checked steps deters all {first[3]} attack conditions with a positive "
+         "saving at once (Equation 9, with Equation 4's detection q(s, k) for the forgers, which fake half of the steps), "
+         f"and k = {best[0]} is the cost-optimal choice. ")
     if best[0] != first[0]:
-        s += (f"one checked step leaves a partial forger undetected about half the time, so it needs p* = {first[1]:.3f}, "
-              f"while k = {best[0]} brings the forgers below the model substitutions and the requirement down to "
-              f"{best[1]:.3f}; more steps add honest false rejections without lowering it. ")
+        s += (f"One checked step leaves a partial forger undetected about half the time, so k = {first[0]} needs "
+              f"p* = {first[1]:.3f}, set by {_lab(first[2])}; from k = {best[0]} on, the requirement is set by "
+              f"{_lab(best[2])}, the attack that saves the most GPU time")
+        if rest:
+            s += (f", and more steps only add honest false rejections (p* = {rest[0][1]:.3f} at k = {rest[0][0]}, "
+                  f"{rest[-1][1]:.3f} at k = {rest[-1][0]})")
+        s += ". "
     else:
-        s += "further checked steps add honest false rejections rather than detection. "
+        s += "Further checked steps add honest false rejections rather than detection. "
     s += "p* scales linearly with c/P and with 1/(1 + B/P)."
     return s
 
@@ -538,10 +553,10 @@ def narr_r29() -> str:
     hi = [k for k in att if q[k] >= 0.95]
     f = _fpr("v2").get(("E2-H", "1"))
     return (f"The reproduced deployed rules do not separate cost-saving attacks from honest variation: the latent-cosine "
-            f"rule accepted at least 90% of the jobs of {len(d['E2-W']['ge90'])} of {d['E2-W']['n']} attack conditions"
+            f"rule accepted at least 90% of the jobs of {of(len(d['E2-W']['ge90']), d['E2-W']['n'])} attack conditions"
             + (", including unrelated images" if "A8" in d["E2-W"]["ge90"] else "") + f", and the CLIP rule rejected at least 90% only for {labels(d['E0-N']['le10'])}. "
             f"Calibrated trajectory evidence does: E2-H with a single checked step rejected at least 95% of the jobs of "
-            f"{len(hi)} of {len(att)} model- and step-substitution conditions ({labels(hi)}) at an honest false-rejection "
+            f"{of(len(hi), len(att))} model- and step-substitution conditions ({labels(hi)}) at an honest false-rejection "
             f"rate of {pc(f['fpr'])}% on 1,800 jobs from three GPU generations, once the one uncalibrated tolerance (the "
             "E1 image check) was set from the calibration split. " + _forgery_sentence())
 
@@ -568,8 +583,8 @@ def abstract_findings() -> str:
     f = _fpr("v2").get(("E2-H", "1"))
     cr = cost_ratio(1)
     return (f"the reproduced latent-cosine rule of a deployed subnet accepted at least 90% of the jobs of "
-            f"{len(d['E2-W']['ge90'])} of {d['E2-W']['n']} attack conditions" + (", including unrelated images" if "A8" in d["E2-W"]["ge90"] else "") + ". With one "
-            f"checked step, the proposed check rejected at least 95% of the jobs of {len(hi)} of {len(att)} model- and "
+            f"{of(len(d['E2-W']['ge90']), d['E2-W']['n'])} attack conditions" + (", including unrelated images" if "A8" in d["E2-W"]["ge90"] else "") + ". With one "
+            f"checked step, the proposed check rejected at least 95% of the jobs of {of(len(hi), len(att))} model- and "
             f"step-substitution conditions at an honest false-rejection rate of {pc(f['fpr'])}% on 1,800 cross-GPU test jobs"
             + (f", at {100 * cr:.0f}% of the GPU time of re-execution" if cr else "")
             + (". Forgeries that fake half of the steps were caught in {} of jobs with one checked step and {} with "
@@ -769,37 +784,84 @@ def narr_testbed() -> str:
         per.append(f"{v['label'].replace('-', ' ')} {sum(r['outcome'] == 'fail' for r in rr)} of "
                    f"{sum(r['outcome'] in smp for r in rr)}")
     cells = t["cells"]
-    sg = lambda x: f"{x:+.2f}".replace("-", "−")  # noqa: E731
-    parts = [f"{c['attack'].replace('-', ' ')} at p = {c['p']:g}: Δ = {sg(c['delta_mean'])}P "
-             f"({sg(c['delta_ci_lo'])} to {sg(c['delta_ci_hi'])}; Equation 7: {sg(c['delta_eq7'])}P)" for c in cells]
     inside = [c for c in cells if c["delta_ci_lo"] <= c["delta_eq7"] <= c["delta_ci_hi"]]
     out = [c for c in cells if c not in inside]
     n = cells[0]["n_attacker"]
     miss = "; ".join(f"in {c['attack'].replace('-', ' ')} at p = {c['p']:g} the draw sampled {c['n_sampled_attacker']} "
-                     f"of {n} attacked jobs against {c['p'] * n:g} expected" for c in out)
+                     f"of {n} attacked jobs against {c['p'] * n:g} expected, and the realized gain is lower accordingly"
+                     for c in out)
     pos = all(c["delta_mean"] > 0 for c in cells) and all(c["delta_eq7"] > 0 for c in cells)
     pst = {c["attack"]: c["p_star"] for c in cells}
-    hon_txt = (f"the honest provider was sampled {hs} times and never slashed" if not hf else
-               f"the honest provider was sampled {hs} times and slashed {len(hf)} time{'s' if len(hf) > 1 else ''} "
-               "(both Spark verifiers returned identical scores"
-               + ("; the attack study had rejected the same job under thresholds v1, which rejected "
+    hon_txt = (f"The honest provider was sampled {hs} times and never slashed." if not hf else
+               f"The honest provider was sampled {hs} times and slashed {len(hf)} time{'s' if len(hf) > 1 else ''}; "
+               "both Spark verifiers returned identical scores"
+               + (", and the attack study had rejected the same job under thresholds v1, which rejected "
                   f"{pc(t['alpha_k'])}% of the RTX 5090's honest test jobs at k = {t['k']}, mostly through the E1 image "
-                  "tolerance that v2 later corrected" if _honest_fail_matches(hf) else "") + ")")
-    return (f"The testbed ran {len(rows)} jobs on Devnet ({ntx:,} transactions; "
+                  "tolerance that v2 later corrected" if _honest_fail_matches(hf) else "") + ".")
+    return (f"Equation 7's predicted gain lay inside the 95% interval of the realized gain in {len(inside)} of "
+            f"{len(cells)} cells (Table 12)" + (f"; {miss}" if out else "") + ". "
+            + (f"Every gain is positive: at B/P = {t['B_over_P']:g} and p ≤ {max(c['p'] for c in cells):g}, below the "
+               "deterring rate of Equation 9 (p* = "
+               + " and ".join(f"{v:.2f} for {k.replace('-', ' ')}" for k, v in pst.items()) + f" at k = {t['k']}), "
+               "both attacks pay, as the model says they should. " if pos else "")
+            + f"The run settled all {len(rows)} jobs on Devnet ({ntx:,} transactions; "
             + (f"{nerr} jobs ended in a client or RPC error and are excluded" if nerr else "no job ended in an error")
             + f"). The on-chain draw sampled {a_s} of the attackers' {len(att)} jobs, and {a_f} of them were slashed "
-            f"after two verifiers agreed ({', '.join(per)}); {hon_txt}. Realized gain over the honest provider, per job "
-            "in units of P (95% bootstrap interval): " + "; ".join(parts) + ". "
-            f"Equation 7's prediction lies inside the interval in {len(inside)} of {len(cells)} cells"
-            + (f"; {miss}, and the realized gain is lower accordingly" if out else "") + ". "
-            + (f"Every gain is positive: at B/P = {t['B_over_P']:g} and p ≤ {max(c['p'] for c in cells):g} both attacks "
-               "pay, as Equation 9 with the same rates predicts (p* = "
-               + " and ".join(f"{v:.2f} for {k.replace('-', ' ')}" for k, v in pst.items()) + f" at k = {t['k']}). "
-               if pos else "")
-            + f"With {n} jobs per cell, the testbed checks the settlement path and the sign and size of Equation 7, "
+            f"after two verifiers agreed ({', '.join(per)}). {hon_txt} "
+            f"With {n} jobs per cell, the testbed checks the settlement path and the sign and size of Equation 7, "
             "not its precision.")
 
 
+def table_testbed() -> list[list[str]]:
+    """Table 12: per cell of the Devnet testbed, sampled and slashed jobs, realized gain and Equation 7."""
+    t = _testbed()
+    if not t:
+        return []
+    sg = lambda x: f"{x:+.2f}".replace("-", "−")  # noqa: E731
+    out = []
+    for c in t["cells"]:
+        oa, oh = c["outcomes_attacker"], c["outcomes_honest"]
+        smp = lambda o: sum(v for k, v in o.items() if k in ("pass", "fail", "unresolved"))  # noqa: E731
+        out.append([c["attack"].replace("-", " "), f"{c['p']:g}", f"{smp(oa)} ({oa.get('fail', 0)})",
+                    f"{smp(oh)} ({oh.get('fail', 0)})", f"{sg(c['delta_mean'])} ({sg(c['delta_ci_lo'])} to "
+                    f"{sg(c['delta_ci_hi'])})", sg(c["delta_eq7"])])
+    return out
+
+
+def escrow_ranges() -> tuple[str, str] | None:
+    """Ranges over the lifecycle paths of Table 11: compute units per job and the Devnet fee in lamports."""
+    r = escrow()
+    if not r:
+        return None
+    cu = [int(x[1].split(" ")[0].replace(",", "")) for x in r]
+    fee = [round(float(x[2]) * 1e9) for x in r]
+    return (f"{round(min(cu), -3):,} to {round(max(cu), -3):,}", f"{min(fee):,} to {max(fee):,}")
+
+
+def narr_r24() -> str:
+    """Table 9 in words: what each attack saves, and which saving sets the deterrence requirement."""
+    b = {k: float(v["beta_median"]) for k, v in beta().items() if v.get("beta_median") not in (None, "")}
+    if not b:
+        return ph("R2.4")
+    f2 = lambda k: f"{b[k]:.2f}".replace("-", "−")  # noqa: E731
+    top = max((k for k in b if k not in ("M", "A8")), key=b.get)
+    forg = [b[k] for k in ("F1", "F2", "F3") if k in b]
+    neg = [k for k in b if k not in ("M", "A8") and b[k] < 0]
+    s = (f"The distilled model saves the most GPU time ({_lab(top)}, "
+         f"β{{sub|A}} = {f2(top)}" + (f"; A3 (LCM-LoRA) {f2('A3-LCM')}" if "A3-LCM" in b and top != "A3-LCM" else "") + ")")
+    if forg:
+        rg = f"{min(forg):.2f}" if f"{min(forg):.2f}" == f"{max(forg):.2f}" else f"{min(forg):.2f}–{max(forg):.2f}"
+        s += f", the forgers that fake half of the steps save about half ({rg})"
+    if "A1b" in b:
+        s += f" and dropping a third of the steps saves {f2('A1b')} (A1)"
+    s += "."
+    if neg == ["A2"]:
+        s += (f" {labels(neg)} saved nothing on this card (β{{sub|A}} = " + ", ".join(f2(k) for k in neg) + "; its fp8 "
+              "weights are converted at run time), so it gives a rational provider no reason to cheat;")
+    s += (" the controls M and A8, which compute a full honest job, come out at zero, as they should. Because Equation 9 "
+          "scales p* with β{sub|A}, the largest saving, not the hardest detection, sets the sampling rate once the "
+          "forgers are checked at more than one step (Section 4-3).")
+    return s
 def concl_testbed() -> str:
     """Conclusion: one clause on the Devnet testbed (empty until it has run)."""
     t = _testbed()

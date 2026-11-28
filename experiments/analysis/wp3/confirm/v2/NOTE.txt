@@ -1,0 +1,2 @@
+E1 rows patched with thresholds_v2_sdxl_euler.json (sha256 d62ea967f940000dd861159d6b75dc1919599a1a3e9f917c1d8eef7a8a99f0c0) by trajver.e1img patch;
+all other rows and the Tier B tau as frozen in thresholds_v1_sdxl_euler.json.
